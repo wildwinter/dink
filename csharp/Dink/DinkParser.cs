@@ -29,19 +29,21 @@ public class DinkParser
     
     public static DinkAction? ParseAction(string line)
     {
-        // ^!                                     - Must start with '!'
+        // ^\s* - Optional leading whitespace
+        // [-] - Optional minus symbol (for shuffles etc.)
         // \s* - Optional whitespace
-        // (?:(?<Type>[A-Z0-9_]+)\s*:\s*)?      - Optional Type group
-        // (?<Content>.*?)                      - Capture Content non-greedily (everything until the tags start)
+        // (?:\(\s*(?<Type>[\w].*?)\s*\))?    - Optional Type group: ( optional space, Capture 'Qualifier' (non-greedy), optional space )
+        // \s* - Optional whitespace
+        // (?<Content>[\w].*?)                      - Capture Content non-greedily (everything until the tags start)
         // (?:\s+\#(?<TagValue>\S+))* - Non-capturing group for zero or more tags:
         //                                      - \s+\# - Must have 1+ whitespace, then '#' (per spec)
         //                                      - (?<TagValue>\S+) - Capture group 'TagValue' (the tag string without '#')
-        // $                                      - End of the string
+        // $   
+        //                                    - End of the string
+        const string pattern =
+            @"^\s*[-]?\s*(?:\(\s*(?<Type>[\w].*?)\s*\))?\s*(?<Content>[\w].*?)(?:\s+\#(?<TagValue>\S+))*$";
 
-        const string combinedPattern =
-            @"^!\s*(?:(?<Type>[A-Z0-9_]+)\s*:\s*)?(?<Content>.*?)(?:\s+\#(?<TagValue>\S+))*$";
-
-        Match match = Regex.Match(line, combinedPattern, RegexOptions.Singleline);
+        Match match = Regex.Match(line, pattern, RegexOptions.Singleline);
 
         if (!match.Success)
             return null;
@@ -62,20 +64,22 @@ public class DinkParser
     {
         // Combined Pattern Breakdown:
         // ^\s* - Optional leading whitespace
+        // [-] - Optional minus symbol (for shuffles etc.)
+        // \s* - Optional whitespace
         // (?<CharacterID>[A-Z0-9_]+)           - Capture Group 'CharacterID' (caps, numbers, underscores)
         // \s* - Optional whitespace
-        // (?:\(\s*(?<Qualifier>.*?)\s*\))?    - Optional Qualifier group: [ optional space, Capture 'Qualifier' (non-greedy), optional space ]
+        // (?:\(\s*(?<Qualifier>.*?)\s*\))?    - Optional Qualifier group: ( optional space, Capture 'Qualifier' (non-greedy), optional space )
         // \s* - Optional whitespace
         // :                                      - Mandatory colon
         // \s* - Optional whitespace
-        // (?:\(\s*(?<Direction>.*?)\s*\})?     - Optional Direction group: [ optional space, Capture 'Direction' (non-greedy), optional space ]
+        // (?:\(\s*(?<Direction>.*?)\s*\})?     - Optional Direction group: ( optional space, Capture 'Direction' (non-greedy), optional space )
         // \s* - Optional whitespace
-        // (?<Content>.*?)                      - Capture Content non-greedily (everything until the tags start)
+        // (?<Content>[\w].*?)                      - Capture Content non-greedily (everything until the tags start)
         // (?:\s+\#(?<TagValue>\S+))* - Zero or more tags: (whitespace, #, Capture 'TagValue' without #)
         // $                                      - End of the string
 
         const string pattern =
-            @"^\s*(?<CharacterID>[A-Z0-9_]+)\s*(?:\(\s*(?<Qualifier>.*?)\s*\))?\s*:\s*(?:\(\s*(?<Direction>.*?)\s*\))?\s*(?<Content>.*?)(?:\s+\#(?<TagValue>\S+))*$";
+            @"^\s*[-]?\s*(?<CharacterID>[A-Z0-9_]+)\s*(?:\(\s*(?<Qualifier>.*?)\s*\))?\s*:\s*(?:\(\s*(?<Direction>.*?)\s*\))?\s*(?<Content>[\w].*?)(?:\s+\#(?<TagValue>\S+))*$";
 
         Match match = Regex.Match(line, pattern, RegexOptions.Singleline);
 
@@ -133,7 +137,9 @@ public class DinkParser
         List<DinkScene> parsedScenes = new List<DinkScene>();
         DinkScene? scene = null;
         List<string> comments = new List<string>();
-        string lastKnot="";
+        string lastKnot = "";
+        string lastStitch = "";
+        bool parsing = false;
 
         foreach (var line in lines)
         {
@@ -143,9 +149,10 @@ public class DinkParser
                 comments.Clear();
                 if (scene != null && scene.Beats.Count > 0)
                     parsedScenes.Add(scene);
+                lastKnot = knot;
+                parsing = false;
                 scene = new DinkScene();
                 scene.SceneID = knot;
-                lastKnot = knot;
                 Console.WriteLine($"Scene: {scene}");
             }
             else if (ParseStitch(trimmedLine) is string stitch)
@@ -153,22 +160,28 @@ public class DinkParser
                 comments.Clear();
                 if (scene != null && scene.Beats.Count > 0)
                     parsedScenes.Add(scene);
+                lastStitch = stitch;
+                parsing = false;
                 scene = new DinkScene();
                 scene.SceneID = $"{lastKnot}.{stitch}";
                 Console.WriteLine($"Scene: {scene}");
             }
-            else if (ParseComment(trimmedLine) is string comment)
+            else if (trimmedLine=="#scene")
+            {
+                parsing = true;
+            }
+            else if (parsing && ParseComment(trimmedLine) is string comment)
             {
                 comments.Add(comment);
             }
-            else if (ParseLine(trimmedLine) is DinkLine dinkLine)
+            else if (parsing && ParseLine(trimmedLine) is DinkLine dinkLine)
             {
                 dinkLine.Comments.AddRange(comments);
                 scene?.Beats.Add(dinkLine);
                 comments.Clear();
                 Console.WriteLine(dinkLine);
             }
-            else if (ParseAction(trimmedLine) is DinkAction dinkAction)
+            else if (parsing && ParseAction(trimmedLine) is DinkAction dinkAction)
             {
                 dinkAction.Comments.AddRange(comments);
                 scene?.Beats.Add(dinkAction);
