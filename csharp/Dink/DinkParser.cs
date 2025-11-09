@@ -144,6 +144,16 @@ public class DinkParser
         foreach (var line in lines)
         {
             var trimmedLine = line.Trim();
+   
+            // Check for comment at end.
+            int commentIndex = trimmedLine.LastIndexOf("//");
+            if (commentIndex >= 0)
+            {
+                string comment = trimmedLine.Substring(commentIndex+2).Trim();
+                comments.Add(comment);
+                trimmedLine = trimmedLine.Substring(0, commentIndex).TrimEnd();
+            }
+
             if (ParseKnot(trimmedLine) is string knot)
             {
                 comments.Clear();
