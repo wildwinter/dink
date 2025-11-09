@@ -2,7 +2,7 @@
 -> Part1
 
 = Part1
-This is a scene. #id:scene1_Scene1_Part1_S494
+FRED: This is a scene. #id:scene1_Scene1_Part1_S494
 With several lines. #id:scene1_Scene1_Part1_621G
 -> DONE
 

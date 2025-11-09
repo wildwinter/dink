@@ -57,7 +57,7 @@ public class DinkParser
 
         return action;
     }
-    
+
     public static DinkLine? ParseLine(string line)
     {
         // Combined Pattern Breakdown:
@@ -74,8 +74,8 @@ public class DinkParser
         // (?:\s+\#(?<TagValue>\S+))* - Zero or more tags: (whitespace, #, Capture 'TagValue' without #)
         // $                                      - End of the string
 
-        const string pattern = 
-            @"^\s*(?<CharacterID>[A-Z0-9_]+)\s*(?:\(\s*(?<Qualifier>.*?)\s*\))?\s*:\s*(?:\(\s*(?<Direction>.*?)\s*\))?\s*(?<Content>.*?)(?:\s+\#(?<TagValue>\S+))*$";   
+        const string pattern =
+            @"^\s*(?<CharacterID>[A-Z0-9_]+)\s*(?:\(\s*(?<Qualifier>.*?)\s*\))?\s*:\s*(?:\(\s*(?<Direction>.*?)\s*\))?\s*(?<Content>.*?)(?:\s+\#(?<TagValue>\S+))*$";
 
         Match match = Regex.Match(line, pattern, RegexOptions.Singleline);
 
@@ -83,7 +83,7 @@ public class DinkParser
             return null;
 
         var dinkLine = new DinkLine();
-        
+
         dinkLine.CharacterID = match.Groups["CharacterID"].Value;
         dinkLine.Qualifier = match.Groups["Qualifier"].Value; // Empty string if not present
         dinkLine.Direction = match.Groups["Direction"].Value; // Empty string if not present
@@ -94,5 +94,94 @@ public class DinkParser
         dinkLine.Tags = tags;
         dinkLine.Content = match.Groups["Content"].Value.Trim();
         return dinkLine;
+    }
+
+    public static string? ParseKnot(string line)
+    {
+        // Pattern to extract the identifier
+        const string pattern = @"^\s*={2,}\s*(?<Identifier>\w+)\b.*$";
+
+        Match match = Regex.Match(line, pattern);
+
+        if (match.Success)
+        {
+            // Return the captured 'Identifier' group value
+            return match.Groups["Identifier"].Value;
+        }
+
+        return null;
+    }
+    
+    public static string? ParseStitch(string line)
+    {
+        // Pattern to extract the identifier
+        const string pattern = @"^\s*=\s*(?<Identifier>\w+)\b.*$";
+        
+        Match match = Regex.Match(line, pattern);
+        
+        if (match.Success)
+        {
+            // Return the captured 'Identifier' group value
+            return match.Groups["Identifier"].Value;
+        }
+        
+        return null;
+    }
+
+    public static List<DinkScene> ParseInkLines(List<string> lines)
+    {
+        List<DinkScene> parsedScenes = new List<DinkScene>();
+        DinkScene? scene = null;
+        List<string> comments = new List<string>();
+        string lastKnot="";
+
+        foreach (var line in lines)
+        {
+            var trimmedLine = line.Trim();
+            if (ParseKnot(trimmedLine) is string knot)
+            {
+                comments.Clear();
+                if (scene != null && scene.Beats.Count > 0)
+                    parsedScenes.Add(scene);
+                scene = new DinkScene();
+                scene.SceneID = knot;
+                lastKnot = knot;
+                Console.WriteLine($"Scene: {scene}");
+            }
+            else if (ParseStitch(trimmedLine) is string stitch)
+            {
+                comments.Clear();
+                if (scene != null && scene.Beats.Count > 0)
+                    parsedScenes.Add(scene);
+                scene = new DinkScene();
+                scene.SceneID = $"{lastKnot}.{stitch}";
+                Console.WriteLine($"Scene: {scene}");
+            }
+            else if (ParseComment(trimmedLine) is string comment)
+            {
+                comments.Add(comment);
+            }
+            else if (ParseLine(trimmedLine) is DinkLine dinkLine)
+            {
+                dinkLine.Comments.AddRange(comments);
+                scene?.Beats.Add(dinkLine);
+                comments.Clear();
+                Console.WriteLine(dinkLine);
+            }
+            else if (ParseAction(trimmedLine) is DinkAction dinkAction)
+            {
+                dinkAction.Comments.AddRange(comments);
+                scene?.Beats.Add(dinkAction);
+                comments.Clear();
+                Console.WriteLine(dinkAction);
+            }
+            else
+            {
+                comments.Clear();
+            }
+        }
+        if (scene != null && scene.Beats.Count > 0)
+            parsedScenes.Add(scene);
+        return parsedScenes;
     }
 }

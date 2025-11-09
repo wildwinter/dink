@@ -76,7 +76,9 @@ public class Compiler
         if (!FixLoc(parsedDinkScenes, inkStrings))
             return false;
 
-        // Output Dink beats, and comments
+        // ----- Output Dink -----
+        if (!WriteDink(parsedDinkScenes, Path.Combine(destFolder, rootFilename + "-dink.json")))
+            return false;
 
         // ----- Output lines for localisation -----
         if (!WriteLoc(inkStrings, Path.Combine(destFolder, rootFilename + "-strings.json")))
@@ -193,24 +195,6 @@ public class Compiler
         return success;
     }
 
-    bool WriteLoc(OrderedDictionary inkStrings, string destLocFile)
-    {
-        Console.WriteLine("Writing localisation file: " + destLocFile);
-
-        try
-        {
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string fileContents = JsonSerializer.Serialize(inkStrings, options);
-            File.WriteAllText(destLocFile, fileContents, Encoding.UTF8);
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Error writing out JSON file {destLocFile}: " + ex.Message);
-            return false;
-        }
-        return true;
-    }
-
     bool ParseDinkScenes(List<string> usedInkFiles, List<DinkScene> parsedDinkScenes)
     {
         Console.WriteLine("Parsing Dink scenes...");
@@ -218,27 +202,8 @@ public class Compiler
         {
             Console.WriteLine($"Using Ink file '{inkFile}'");
             var lines = File.ReadAllLines(inkFile);
-            var scene = new DinkScene();
-            parsedDinkScenes.Add(scene);
-            foreach (var line in lines)
-            {
-                var trimmedLine = line.Trim();
-                if (DinkParser.ParseComment(trimmedLine) is string comment)
-                {
-                    Console.WriteLine(comment);
-                }
-                if (DinkParser.ParseLine(trimmedLine) is DinkLine dinkLine)
-                {
-                    scene.Beats.Add(dinkLine);
-                    Console.WriteLine(dinkLine.ToString());
-                }
-                if (DinkParser.ParseAction(trimmedLine) is DinkAction dinkAction)
-                {
-                    scene.Beats.Add(dinkAction);
-                    Console.WriteLine(dinkAction.ToString());
-                }
-                // TODO: Implement parsing logic
-            }
+            var scenes = DinkParser.ParseInkLines(lines.ToList());
+            parsedDinkScenes.AddRange(scenes);
         }
         return true;
     }
@@ -256,7 +221,12 @@ public class Compiler
                 if (beat is DinkAction action)
                 {
                     if (!string.IsNullOrEmpty(action.LineID))
+                    {
+                        // We don't use these for normal actions.
+                        // Maybe want to re-add for closed captions?
                         keysToRemove.Add(action.LineID);
+                        action.LineID = "";
+                    }
                 }
                 else if (beat is DinkLine line)
                 {
@@ -272,6 +242,41 @@ public class Compiler
         {
             if (inkStrings.Contains(key))
                 inkStrings.Remove(key);
+        }
+        return true;
+    }
+
+    bool WriteDink(List<DinkScene> dinkScenes, string destDinkFile)
+    {
+        Console.WriteLine("Writing dink file: " + destDinkFile);
+
+        try
+        {
+            string fileContents = DinkJson.WriteScenes(dinkScenes);
+            File.WriteAllText(destDinkFile, fileContents, Encoding.UTF8);
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error writing out Dink JSON file {destDinkFile}: " + ex.Message);
+            return false;
+        }
+        return true;
+    }
+
+    bool WriteLoc(OrderedDictionary inkStrings, string destLocFile)
+    {
+        Console.WriteLine("Writing localisation file: " + destLocFile);
+
+        try
+        {
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            string fileContents = JsonSerializer.Serialize(inkStrings, options);
+            File.WriteAllText(destLocFile, fileContents, Encoding.UTF8);
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error writing out JSON file {destLocFile}: " + ex.Message);
+            return false;
         }
         return true;
     }
