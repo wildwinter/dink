@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <Version>0.0.0.1</Version>
+    <TargetFramework>net8.0</TargetFramework>
+    <RuntimeIdentifiers>osx-arm64;osx-x64;win-x64;win-x86</RuntimeIdentifiers>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>true</SelfContained>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Dink/Dink.csproj" />
+    <Reference Include="InkLocaliser">
+      <HintPath>../lib/LocaliserLib.dll</HintPath>
+    </Reference>
+    <Reference Include="ink_compiler">
+      <HintPath>../lib/Inklecate/ink_compiler.dll</HintPath>
+    </Reference>
+    <Reference Include="ink-engine-runtime">
+      <HintPath>../lib/Inklecate/ink-engine-runtime.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
