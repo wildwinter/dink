@@ -3,6 +3,9 @@
 
 namespace DinkCompiler;
 
+using System.Collections.Specialized;
+using System.Text;
+using System.Text.Json;
 using Ink;
 using InkLocaliser;
 
@@ -49,26 +52,40 @@ public class Compiler
 
         Console.WriteLine($"Using destination folder: '{destFolder}'");
 
+        string rootFilename = Path.GetFileNameWithoutExtension(sourceInkFile);
+
         // Steps:
 
-        // ----- Make sure Ink files have IDs -----
-        if (!EnsureInkHasIDs(sourceInkFolder))
+        // ----- Process Ink files for string data and IDs -----
+        OrderedDictionary inkStrings = new OrderedDictionary();
+        if (!ProcessInkStrings(sourceInkFolder, inkStrings))
             return false;
 
         // ----- Compile to json -----
-        if (!CompileToJson(sourceInkFile, destFolder))
+        List<string> usedInkFiles = new List<string>();
+        if (!CompileToJson(sourceInkFile, Path.Combine(destFolder, rootFilename + ".json"), usedInkFiles))
             return false;
 
         // Parse ink files, extract Dink beats
-        // Output Dink beats, and lines for localisation, and comments
+        foreach (var inkFile in usedInkFiles)
+        {
+            // TODO: Implement parsing logic
+            Console.WriteLine($"Using Ink file: '{inkFile}'");
+        }
 
-        Console.WriteLine("IDs added complete.");
+        // Output Dink beats, and comments
+
+        // ----- Output lines for localisation -----
+        if (!WriteLoc(inkStrings, Path.Combine(destFolder, rootFilename + "-strings.json")))
+            return false;
+
+        Console.WriteLine("Processing complete.");
         return true;
     }
 
-    private bool EnsureInkHasIDs(string inkFolder)
+    private bool ProcessInkStrings(string inkFolder, OrderedDictionary outStrings)
     {
-        Console.WriteLine("Ensuring Ink files have IDs... " + inkFolder);
+        Console.WriteLine("Processing Ink for IDs and string content... " + inkFolder);
         var localiser = new Localiser(new Localiser.Options()
         {
             folder = inkFolder
@@ -78,10 +95,37 @@ public class Compiler
             Console.Error.WriteLine("Failed to update Ink IDs.");
             return false;
         }
+        foreach (var key in localiser.GetStringKeys())
+        {
+            outStrings.Add(key, localiser.GetString(key));
+        }   
         return true;
     }
 
     List<string> _compileErrors = new List<string>();
+
+    public class InkFileHandler : Ink.IFileHandler {
+
+        private List<string> _outUsedInkFiles;
+
+        public InkFileHandler(List<string> outUsedInkFiles)
+        {
+            _outUsedInkFiles = outUsedInkFiles;
+        }
+
+        public string ResolveInkFilename (string includeName)
+        {
+            var workingDir = Directory.GetCurrentDirectory ();
+            var fullRootInkPath = Path.Combine (workingDir, includeName);
+            return fullRootInkPath;
+        }
+
+        public string LoadInkFileContents (string fullFilename)
+        {
+            _outUsedInkFiles.Add(fullFilename);
+        	return File.ReadAllText(fullFilename);
+        }
+    }
 
     void OnCompileError(string message, ErrorType errorType)
     {
@@ -101,22 +145,24 @@ public class Compiler
         }
     }
 
-    private bool CompileToJson(string sourceInkFile, string destFolder)
+    private bool CompileToJson(string sourceInkFile, string destFile, List<string> outUsedInkFiles)
     {
         bool success = true;
         _compileErrors.Clear();
         Console.WriteLine("Compiling Ink to JSON... " + sourceInkFile);
 
-        string outputFile = Path.Combine(destFolder, Path.ChangeExtension(Path.GetFileName(sourceInkFile), ".json"));
         string cwd = Directory.GetCurrentDirectory();
-        Directory.SetCurrentDirectory(Path.GetDirectoryName(sourceInkFile));
+        Directory.SetCurrentDirectory(Path.GetDirectoryName(sourceInkFile) ?? Directory.GetCurrentDirectory());
 
         string inputString = File.ReadAllText(sourceInkFile);
+        outUsedInkFiles.Add(sourceInkFile);
+        InkFileHandler fileHandler = new InkFileHandler(outUsedInkFiles);
 
         Ink.Compiler compiler = new Ink.Compiler(inputString, new Ink.Compiler.Options
         {
             sourceFilename = sourceInkFile,
-            errorHandler = OnCompileError
+            errorHandler = OnCompileError,
+            fileHandler = fileHandler
         });
         Ink.Runtime.Story story = compiler.Compile();
         success = !(story == null || _compileErrors.Count > 0);
@@ -129,19 +175,34 @@ public class Compiler
         else
         {
             Console.WriteLine("Compilation succeeded.");
-            var jsonStr = story.ToJson();
+            var jsonStr = story?.ToJson();
             try
             {
-                File.WriteAllText(outputFile, jsonStr, new System.Text.UTF8Encoding(false));
-
+                File.WriteAllText(destFile, jsonStr, new System.Text.UTF8Encoding(false));
             }
             catch
             {
-                Console.WriteLine("Could not write to output file '" + outputFile + "'");
+                Console.WriteLine("Could not write to output file '" + destFile + "'");
                 success = false;
             }
         }
         Directory.SetCurrentDirectory(cwd);
         return success;
+    }
+
+    bool WriteLoc(OrderedDictionary inkStrings, string destLocFile)
+    {
+        Console.WriteLine("Writing localisation file: " + destLocFile);
+
+        try {
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            string fileContents = JsonSerializer.Serialize(inkStrings, options);
+            File.WriteAllText(destLocFile, fileContents, Encoding.UTF8);
+        }
+        catch (Exception ex) {
+                Console.Error.WriteLine($"Error writing out JSON file {destLocFile}: " + ex.Message);
+            return false;
+        }
+        return true;
     }
 }
