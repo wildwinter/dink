@@ -183,7 +183,7 @@ public class Compiler
             var jsonStr = story?.ToJson();
             try
             {
-                File.WriteAllText(destFile, jsonStr, new System.Text.UTF8Encoding(false));
+                File.WriteAllText(destFile, jsonStr, Encoding.UTF8);
             }
             catch
             {
@@ -201,8 +201,8 @@ public class Compiler
         foreach (var inkFile in usedInkFiles)
         {
             Console.WriteLine($"Using Ink file '{inkFile}'");
-            var lines = File.ReadAllLines(inkFile);
-            var scenes = DinkParser.ParseInkLines(lines.ToList());
+            var text = File.ReadAllText(inkFile);
+            var scenes = DinkParser.ParseInk(text);
             parsedDinkScenes.AddRange(scenes);
         }
         return true;

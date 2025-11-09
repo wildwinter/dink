@@ -6,6 +6,12 @@
 This is a test file. #id:main_Intro_FDAP
 -> DONE
 
+/* 
+=== FrumpScene
+#scene
+This scene is commented out and should be ignored.
+*/
+
 === TestScene
 #scene
 // Comment

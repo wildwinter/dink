@@ -144,12 +144,12 @@ public class DinkParser
         foreach (var line in lines)
         {
             var trimmedLine = line.Trim();
-   
+
             // Check for comment at end.
             int commentIndex = trimmedLine.LastIndexOf("//");
             if (commentIndex >= 0)
             {
-                string comment = trimmedLine.Substring(commentIndex+2).Trim();
+                string comment = trimmedLine.Substring(commentIndex + 2).Trim();
                 comments.Add(comment);
                 trimmedLine = trimmedLine.Substring(0, commentIndex).TrimEnd();
             }
@@ -176,7 +176,7 @@ public class DinkParser
                 scene.SceneID = $"{lastKnot}.{stitch}";
                 Console.WriteLine($"Scene: {scene}");
             }
-            else if (trimmedLine=="#scene")
+            else if (trimmedLine == "#scene")
             {
                 parsing = true;
             }
@@ -206,5 +206,29 @@ public class DinkParser
         if (scene != null && scene.Beats.Count > 0)
             parsedScenes.Add(scene);
         return parsedScenes;
+    }
+
+    private static string RemoveBlockComments(string text)
+    {
+        const string pattern = @"/\*[\s\S]*?\*/";
+        return Regex.Replace(text, pattern, string.Empty, RegexOptions.Singleline);
+    }
+
+    public static List<string> SplitTextIntoLines(string text)
+    {
+        string[] separators = new string[] { "\r\n", "\n", "\r" };
+        string[] linesArray = text.Split(
+            separator: separators, 
+            options: StringSplitOptions.RemoveEmptyEntries
+        );
+        return linesArray.ToList();
+    }
+    
+    public static List<DinkScene> ParseInk(string text)
+    {
+        List<DinkScene> parsedScenes = new List<DinkScene>();
+        string textWithoutComments = RemoveBlockComments(text);
+        List<string> lines = SplitTextIntoLines(textWithoutComments);
+        return ParseInkLines(lines);
     }
 }
