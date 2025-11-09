@@ -6,6 +6,7 @@ namespace DinkCompiler;
 using System.Collections.Specialized;
 using System.Text;
 using System.Text.Json;
+using Dink;
 using Ink;
 using InkLocaliser;
 
@@ -66,12 +67,14 @@ public class Compiler
         if (!CompileToJson(sourceInkFile, Path.Combine(destFolder, rootFilename + ".json"), usedInkFiles))
             return false;
 
-        // Parse ink files, extract Dink beats
-        foreach (var inkFile in usedInkFiles)
-        {
-            // TODO: Implement parsing logic
-            Console.WriteLine($"Using Ink file: '{inkFile}'");
-        }
+        // ----- Parse ink files, extract Dink beats -----
+        List<DinkScene> parsedDinkScenes = new List<DinkScene>();
+        if (!ParseDinkScenes(usedInkFiles, parsedDinkScenes))
+            return false;
+
+        // ---- Remove any action and character references from the localisation -----
+        if (!FixLoc(parsedDinkScenes, inkStrings))
+            return false;
 
         // Output Dink beats, and comments
 
@@ -194,14 +197,81 @@ public class Compiler
     {
         Console.WriteLine("Writing localisation file: " + destLocFile);
 
-        try {
+        try
+        {
             var options = new JsonSerializerOptions { WriteIndented = true };
             string fileContents = JsonSerializer.Serialize(inkStrings, options);
             File.WriteAllText(destLocFile, fileContents, Encoding.UTF8);
         }
-        catch (Exception ex) {
-                Console.Error.WriteLine($"Error writing out JSON file {destLocFile}: " + ex.Message);
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error writing out JSON file {destLocFile}: " + ex.Message);
             return false;
+        }
+        return true;
+    }
+
+    bool ParseDinkScenes(List<string> usedInkFiles, List<DinkScene> parsedDinkScenes)
+    {
+        Console.WriteLine("Parsing Dink scenes...");
+        foreach (var inkFile in usedInkFiles)
+        {
+            Console.WriteLine($"Using Ink file '{inkFile}'");
+            var lines = File.ReadAllLines(inkFile);
+            var scene = new DinkScene();
+            parsedDinkScenes.Add(scene);
+            foreach (var line in lines)
+            {
+                var trimmedLine = line.Trim();
+                if (DinkParser.ParseComment(trimmedLine) is string comment)
+                {
+                    Console.WriteLine(comment);
+                }
+                if (DinkParser.ParseLine(trimmedLine) is DinkLine dinkLine)
+                {
+                    scene.Beats.Add(dinkLine);
+                    Console.WriteLine(dinkLine.ToString());
+                }
+                if (DinkParser.ParseAction(trimmedLine) is DinkAction dinkAction)
+                {
+                    scene.Beats.Add(dinkAction);
+                    Console.WriteLine(dinkAction.ToString());
+                }
+                // TODO: Implement parsing logic
+            }
+        }
+        return true;
+    }
+
+    bool FixLoc(List<DinkScene> parsedDinkScenes, OrderedDictionary inkStrings)
+    {
+        Console.WriteLine("Fixing localisation entries...");
+
+        var keysToRemove = new List<string>();
+
+        foreach (var scene in parsedDinkScenes)
+        {
+            foreach (var beat in scene.Beats)
+            {
+                if (beat is DinkAction action)
+                {
+                    if (!string.IsNullOrEmpty(action.LineID))
+                        keysToRemove.Add(action.LineID);
+                }
+                else if (beat is DinkLine line)
+                {
+                    if (!string.IsNullOrEmpty(line.LineID))
+                    {
+                        inkStrings[line.LineID] = line.Content;
+                    }
+                }
+            }
+        }
+
+        foreach (var key in keysToRemove)
+        {
+            if (inkStrings.Contains(key))
+                inkStrings.Remove(key);
         }
         return true;
     }
