@@ -33,11 +33,12 @@ Each Dink scene consists of a set of **beats**. Each beat can either be a line o
 At a very simplistic level this can be interpreted as "X happens, then X happens".
 
 ```
-// Comment
+// Comment that applies to the following line
+// Another comment that'll apply to the same line.
 ACTOR (qualifier): (direction) Dialogue line. #tag1 #tag3 #tag4 #id:xxxxxx
 
-// Comment
-!(qualifier) Line of action #tag1 #tag2 #id:xxxxxx
+// Comment will get carried over.
+(Type) Line of action #tag1 #tag2 #id:xxxxxx // This comment too.
 ```
 
 Comments, *qualifier* and *direction* are optional, as are the tags except *#id:* which must exist and be unique.
@@ -51,12 +52,9 @@ DAVE: Morning. #id:intro_XC5r
 // Fred has come in from the street.
 FRED: Hello to you too!
 
-!(SFX) The door slams. #id:intro_yS6G
+(SFX) The door slams. #id:intro_yS6G // Make this loud!
 ```
 
-DAVE: Whoah!
-
-FRED: (alarmed) Whoah!
 
 ## Usage
 
