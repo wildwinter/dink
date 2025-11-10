@@ -20,11 +20,11 @@ public class DinkAction : DinkBeat
 {
     // optional e.g. SFX, AUDIO
     public string Type { get; set; } = string.Empty;
-    public string Content { get; set; } = string.Empty;
+    public string Text { get; set; } = string.Empty;
     public List<string> Tags { get; set; } = new List<string>();
 
     public override string ToString() =>
-        $"Type: '{Type}', Content: '{Content}', Tags: [{string.Join(", ", Tags)}], "+base.ToString();
+        $"Type: '{Type}', Content: '{Text}', Tags: [{string.Join(", ", Tags)}], "+base.ToString();
 }
 
 public class DinkLine : DinkBeat
@@ -34,11 +34,11 @@ public class DinkLine : DinkBeat
     public string Qualifier { get; set; } = string.Empty;
     // optional e.g. loudly
     public string Direction { get; set; } = string.Empty;
-    public string Content { get; set; } = string.Empty;
+    public string Text { get; set; } = string.Empty;
     public List<string> Tags { get; set; } = new List<string>();
 
     public override string ToString() => 
-        $"Char: '{CharacterID}', Qualifier: '{Qualifier}', Direction: '{Direction}', Content: '{Content}', Tags: [{string.Join(", ", Tags)}], "+base.ToString();
+        $"Char: '{CharacterID}', Qualifier: '{Qualifier}', Direction: '{Direction}', Content: '{Text}', Tags: [{string.Join(", ", Tags)}], "+base.ToString();
 }
 
 public class DinkScene

@@ -33,6 +33,9 @@ Each Dink scene consists of a set of **beats**. Each beat can either be a line o
 At a very simplistic level this can be interpreted as "X happens, then X happens".
 
 ```
+== MyScene
+#dink
+
 // Comment that applies to the following line
 // Another comment that'll apply to the same line.
 ACTOR (qualifier): (direction) Dialogue line. #tag1 #tag3 #tag4 #id:xxxxxx

@@ -232,7 +232,7 @@ public class Compiler
                 {
                     if (!string.IsNullOrEmpty(line.LineID))
                     {
-                        inkStrings[line.LineID] = line.Content;
+                        inkStrings[line.LineID] = line.Text;
                     }
                 }
             }

@@ -34,14 +34,14 @@ public class DinkParser
         // \s* - Optional whitespace
         // (?:\(\s*(?<Type>[\w].*?)\s*\))?    - Optional Type group: ( optional space, Capture 'Qualifier' (non-greedy), optional space )
         // \s* - Optional whitespace
-        // (?<Content>[\w].*?)                      - Capture Content non-greedily (everything until the tags start)
+        // (?<Text>[\w].*?)                      - Capture Text non-greedily (everything until the tags start)
         // (?:\s+\#(?<TagValue>\S+))* - Non-capturing group for zero or more tags:
         //                                      - \s+\# - Must have 1+ whitespace, then '#' (per spec)
         //                                      - (?<TagValue>\S+) - Capture group 'TagValue' (the tag string without '#')
         // $   
         //                                    - End of the string
         const string pattern =
-            @"^\s*[-]?\s*(?:\(\s*(?<Type>[\w].*?)\s*\))?\s*(?<Content>[\w].*?)(?:\s+\#(?<TagValue>\S+))*$";
+            @"^\s*[-]?\s*(?:\(\s*(?<Type>[\w].*?)\s*\))?\s*(?<Text>[\w].*?)(?:\s+\#(?<TagValue>\S+))*$";
 
         Match match = Regex.Match(line, pattern, RegexOptions.Singleline);
 
@@ -55,7 +55,7 @@ public class DinkParser
             .ToList();
         action.LineID = ExtractID(tags) ?? string.Empty;
         action.Tags = tags;
-        action.Content = match.Groups["Content"].Value.Trim();
+        action.Text = match.Groups["Text"].Value.Trim();
 
         return action;
     }
@@ -74,12 +74,12 @@ public class DinkParser
         // \s* - Optional whitespace
         // (?:\(\s*(?<Direction>.*?)\s*\})?     - Optional Direction group: ( optional space, Capture 'Direction' (non-greedy), optional space )
         // \s* - Optional whitespace
-        // (?<Content>[\w].*?)                      - Capture Content non-greedily (everything until the tags start)
+        // (?<Text>[\w].*?)                      - Capture Text non-greedily (everything until the tags start)
         // (?:\s+\#(?<TagValue>\S+))* - Zero or more tags: (whitespace, #, Capture 'TagValue' without #)
         // $                                      - End of the string
 
         const string pattern =
-            @"^\s*[-]?\s*(?<CharacterID>[A-Z0-9_]+)\s*(?:\(\s*(?<Qualifier>.*?)\s*\))?\s*:\s*(?:\(\s*(?<Direction>.*?)\s*\))?\s*(?<Content>[\w].*?)(?:\s+\#(?<TagValue>\S+))*$";
+            @"^\s*[-]?\s*(?<CharacterID>[A-Z0-9_]+)\s*(?:\(\s*(?<Qualifier>.*?)\s*\))?\s*:\s*(?:\(\s*(?<Direction>.*?)\s*\))?\s*(?<Text>[\w].*?)(?:\s+\#(?<TagValue>\S+))*$";
 
         Match match = Regex.Match(line, pattern, RegexOptions.Singleline);
 
@@ -96,7 +96,7 @@ public class DinkParser
             .ToList();
         dinkLine.LineID = ExtractID(tags) ?? string.Empty;
         dinkLine.Tags = tags;
-        dinkLine.Content = match.Groups["Content"].Value.Trim();
+        dinkLine.Text = match.Groups["Text"].Value.Trim();
         return dinkLine;
     }
 
@@ -176,7 +176,7 @@ public class DinkParser
                 scene.SceneID = $"{lastKnot}.{stitch}";
                 Console.WriteLine($"Scene: {scene}");
             }
-            else if (trimmedLine == "#scene")
+            else if (trimmedLine == "#dink")
             {
                 parsing = true;
             }

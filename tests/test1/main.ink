@@ -8,12 +8,12 @@ This is a test file. #id:main_Intro_FDAP
 
 /* 
 === FrumpScene
-#scene
+#dink
 This scene is commented out and should be ignored.
 */
 
 === TestScene
-#scene
+#dink
 // Comment
 // Another comment for the same line.
 ACTOR: This is a line I am saying. #id:main_TestScene_16U4 #tag1 #tag2
@@ -26,7 +26,7 @@ FRED: Glad that's over with! #id:main_TestScene_IQIS
 -> DONE
 
 === Barks
-#scene
+#dink
 {shuffle:
 - FRED: Bark1 #id:main_Barks_O037 // This is for the one-legged version.
 - FRED: Bark2 #id:main_Barks_UWZ2
