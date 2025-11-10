@@ -147,7 +147,7 @@ public class DinkParser
 
             // Check for comment at end.
             int commentIndex = trimmedLine.LastIndexOf("//");
-            if (commentIndex >= 0)
+            if (commentIndex > 0)
             {
                 string comment = trimmedLine.Substring(commentIndex + 2).Trim();
                 comments.Add(comment);
