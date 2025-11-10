@@ -12,19 +12,10 @@ public class DinkBeat
     public string LineID { get; set; } = string.Empty;
     public List<string> Comments { get; set; } = new List<string>();
 
-    public override string ToString() =>
-        $"LineID: {LineID}, Comments: [{string.Join(",", Comments)}]";
-}
-
-public class DinkAction : DinkBeat
-{
-    // optional e.g. SFX, AUDIO
-    public string Type { get; set; } = string.Empty;
-    public string Text { get; set; } = string.Empty;
     public List<string> Tags { get; set; } = new List<string>();
 
     public override string ToString() =>
-        $"Type: '{Type}', Content: '{Text}', Tags: [{string.Join(", ", Tags)}], "+base.ToString();
+        $", Tags: [{string.Join(", ", Tags)}], LineID: {LineID}, Comments: [{string.Join(",", Comments)}]";
 }
 
 public class DinkLine : DinkBeat
@@ -35,10 +26,19 @@ public class DinkLine : DinkBeat
     // optional e.g. loudly
     public string Direction { get; set; } = string.Empty;
     public string Text { get; set; } = string.Empty;
-    public List<string> Tags { get; set; } = new List<string>();
 
     public override string ToString() => 
-        $"Char: '{CharacterID}', Qualifier: '{Qualifier}', Direction: '{Direction}', Content: '{Text}', Tags: [{string.Join(", ", Tags)}], "+base.ToString();
+        $"Char: '{CharacterID}', Qualifier: '{Qualifier}', Direction: '{Direction}', Content: '{Text}'"+base.ToString();
+}
+
+public class DinkAction : DinkBeat
+{
+    // optional e.g. SFX, AUDIO
+    public string Type { get; set; } = string.Empty;
+    public string Text { get; set; } = string.Empty;
+
+    public override string ToString() =>
+        $"Type: '{Type}', Content: '{Text}'" + base.ToString();
 }
 
 public class DinkScene
