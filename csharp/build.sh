@@ -2,7 +2,7 @@
 
 rm -rf ./dist/*
 
-version="0.0.0.1"
+version=$npm_package_version
 targets=("osx-arm64" "osx-x64" "win-x86" "win-x64")
 
 cd Dink
