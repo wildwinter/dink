@@ -4,7 +4,6 @@
 namespace DinkCompiler;
 
 using System.Text;
-using System.Text.Json;
 using Dink;
 using Ink;
 using InkLocaliser;
