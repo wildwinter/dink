@@ -3,7 +3,6 @@
 
 namespace DinkCompiler;
 
-using System.Collections.Specialized;
 using System.Text;
 using System.Text.Json;
 using Dink;
@@ -12,7 +11,8 @@ using InkLocaliser;
 
 public class Compiler
 {
-    public class Options {
+    public class Options
+    {
         // Source ink file.
         public string source = "";
 
@@ -21,7 +21,8 @@ public class Compiler
     }
     private Options _options;
 
-    public Compiler(Options? options = null) {
+    public Compiler(Options? options = null)
+    {
         _options = options ?? new Options();
     }
     public bool Run()
@@ -58,7 +59,7 @@ public class Compiler
         // Steps:
 
         // ----- Process Ink files for string data and IDs -----
-        OrderedDictionary inkStrings = new OrderedDictionary();
+        LocStrings inkStrings = new LocStrings();
         if (!ProcessInkStrings(sourceInkFolder, inkStrings))
             return false;
 
@@ -88,7 +89,7 @@ public class Compiler
         return true;
     }
 
-    private bool ProcessInkStrings(string inkFolder, OrderedDictionary outStrings)
+    private bool ProcessInkStrings(string inkFolder, LocStrings outStrings)
     {
         Console.WriteLine("Processing Ink for IDs and string content... " + inkFolder);
         var localiser = new Localiser(new Localiser.Options()
@@ -102,14 +103,23 @@ public class Compiler
         }
         foreach (var key in localiser.GetStringKeys())
         {
-            outStrings.Add(key, localiser.GetString(key));
-        }   
+            LocEntry entry = new LocEntry
+            {
+                ID = key,
+                text = localiser.GetString(key),
+                speaker = "",
+                comments = new List<string>()
+            };
+            
+            outStrings.SetEntry(entry);
+        }
         return true;
     }
 
     List<string> _compileErrors = new List<string>();
 
-    public class InkFileHandler : Ink.IFileHandler {
+    public class InkFileHandler : Ink.IFileHandler
+    {
 
         private List<string> _outUsedInkFiles;
 
@@ -118,17 +128,17 @@ public class Compiler
             _outUsedInkFiles = outUsedInkFiles;
         }
 
-        public string ResolveInkFilename (string includeName)
+        public string ResolveInkFilename(string includeName)
         {
-            var workingDir = Directory.GetCurrentDirectory ();
-            var fullRootInkPath = Path.Combine (workingDir, includeName);
+            var workingDir = Directory.GetCurrentDirectory();
+            var fullRootInkPath = Path.Combine(workingDir, includeName);
             return fullRootInkPath;
         }
 
-        public string LoadInkFileContents (string fullFilename)
+        public string LoadInkFileContents(string fullFilename)
         {
             _outUsedInkFiles.Add(fullFilename);
-        	return File.ReadAllText(fullFilename);
+            return File.ReadAllText(fullFilename);
         }
     }
 
@@ -137,15 +147,15 @@ public class Compiler
         switch (errorType)
         {
             case ErrorType.Author:
-                _compileErrors.Add("Author: "+message);
+                _compileErrors.Add("Author: " + message);
                 break;
 
             case ErrorType.Warning:
-                _compileErrors.Add("Warning: "+message);
+                _compileErrors.Add("Warning: " + message);
                 break;
 
             case ErrorType.Error:
-                _compileErrors.Add("Error: "+message);
+                _compileErrors.Add("Error: " + message);
                 break;
         }
     }
@@ -208,7 +218,7 @@ public class Compiler
         return true;
     }
 
-    bool FixLoc(List<DinkScene> parsedDinkScenes, OrderedDictionary inkStrings)
+    bool FixLoc(List<DinkScene> parsedDinkScenes, LocStrings inkStrings)
     {
         Console.WriteLine("Fixing localisation entries...");
 
@@ -225,23 +235,25 @@ public class Compiler
                         // We don't use these for normal actions.
                         // Maybe want to re-add for closed captions?
                         keysToRemove.Add(action.LineID);
-                        action.LineID = "";
                     }
                 }
                 else if (beat is DinkLine line)
                 {
-                    if (!string.IsNullOrEmpty(line.LineID))
+                    LocEntry entry = new LocEntry()
                     {
-                        inkStrings[line.LineID] = line.Text;
-                    }
+                        ID = line.LineID,
+                        text = line.Text,
+                        comments = line.GetComments(["LOC","VO"]),
+                        speaker = line.CharacterID
+                    };
+                    inkStrings.SetEntry(entry);
                 }
             }
         }
 
         foreach (var key in keysToRemove)
         {
-            if (inkStrings.Contains(key))
-                inkStrings.Remove(key);
+            inkStrings.RemoveEntry(key);
         }
         return true;
     }
@@ -263,14 +275,13 @@ public class Compiler
         return true;
     }
 
-    bool WriteLoc(OrderedDictionary inkStrings, string destLocFile)
+    bool WriteLoc(LocStrings inkStrings, string destLocFile)
     {
         Console.WriteLine("Writing localisation file: " + destLocFile);
 
         try
         {
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string fileContents = JsonSerializer.Serialize(inkStrings, options);
+            string fileContents = inkStrings.ToJson();
             File.WriteAllText(destLocFile, fileContents, Encoding.UTF8);
         }
         catch (Exception ex)

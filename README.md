@@ -41,12 +41,15 @@ At a very simplistic level this can be interpreted as "X happens, then X happens
 ACTOR (qualifier): (direction) Dialogue line. #tag1 #tag3 #tag4 #id:xxxxxx
 
 // Comment will get carried over.
+// LOC: This comment will go to the localisers
 (Type) Line of action #tag1 #tag2 #id:xxxxxx // This comment too.
 ```
 
 Comments, *qualifier* and *direction* are optional, as are the tags except *#id:* which must exist and be unique.
 
 ```
+// VO: This comment will go to the voice actors
+// This comment will go to everyone
 DAVE (V.O.): It was a quiet morning in May... #id:intro_R6Sg
 
 // Dave is working at the counter

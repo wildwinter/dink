@@ -14,6 +14,16 @@ public class DinkBeat
 
     public List<string> Tags { get; set; } = new List<string>();
 
+    // Looks for comments that e.g. start with VO:
+    public List<string> GetComments(params string[] prefixes) 
+    {
+        // The logic remains the same, as an array implements IEnumerable<string>
+        return Comments
+            .Where(comment => prefixes.Any(prefix => 
+                comment.StartsWith(prefix + ":"))) 
+            .ToList();
+    }
+
     public override string ToString() =>
         $", Tags: [{string.Join(", ", Tags)}], LineID: {LineID}, Comments: [{string.Join(",", Comments)}]";
 }

@@ -17,6 +17,9 @@ This scene is commented out and should be ignored.
 // Comment
 // Another comment for the same line.
 ACTOR: This is a line I am saying. #id:main_TestScene_16U4 #tag1 #tag2
+
+// VO: This comment goes to the voice actor.
+// LOC: This comment goes to the localisers
 ACTOR (O.S.): This is another line. #id:main_TestScene_FF1T
 // Fred is angry.
 FRED: (loudly) This is a loud line! #id:main_TestScene_BQ1E
