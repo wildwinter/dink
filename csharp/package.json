@@ -9,7 +9,7 @@
         "build:dc": "cd DinkCompiler && dotnet build",
         "build": "npm run build:di && npm run build:dc",
 
-        "test": "npm run build && cd DinkCompiler.Tests && dotnet test",
+        "test": "npm run build && cd Dink.Tests && dotnet test",
               
         "pack": "./build.sh"
     }
