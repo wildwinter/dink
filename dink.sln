@@ -8,7 +8,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dink", "csharp\Dink\Dink.cs
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DinkCompiler", "csharp\DinkCompiler\DinkCompiler.csproj", "{31766958-78F8-CE7A-AEF0-2B1A06B19813}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DinkCompilerTests", "csharp\DinkCompiler.Tests\DinkCompilerTests.csproj", "{EBD654EE-A8DF-D35F-984C-D6064E0F927B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DinkTests", "csharp\Dink.Tests\DinkTests.csproj", "{EBD654EE-A8DF-D35F-984C-D6064E0F927B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
