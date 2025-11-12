@@ -225,27 +225,30 @@ public class Compiler
 
         foreach (var scene in parsedDinkScenes)
         {
-            foreach (var beat in scene.Beats)
+            foreach (var snippet in scene.Snippets)
             {
-                if (beat is DinkAction action)
+                foreach (var beat in snippet.Beats)
                 {
-                    if (!string.IsNullOrEmpty(action.LineID))
+                    if (beat is DinkAction action)
                     {
-                        // We don't use these for normal actions.
-                        // Maybe want to re-add for closed captions?
-                        keysToRemove.Add(action.LineID);
+                        if (!string.IsNullOrEmpty(action.LineID))
+                        {
+                            // We don't use these for normal actions.
+                            // Maybe want to re-add for closed captions?
+                            keysToRemove.Add(action.LineID);
+                        }
                     }
-                }
-                else if (beat is DinkLine line)
-                {
-                    LocEntry entry = new LocEntry()
+                    else if (beat is DinkLine line)
                     {
-                        ID = line.LineID,
-                        text = line.Text,
-                        comments = line.GetComments(["LOC","VO"]),
-                        speaker = line.CharacterID
-                    };
-                    inkStrings.SetEntry(entry);
+                        LocEntry entry = new LocEntry()
+                        {
+                            ID = line.LineID,
+                            text = line.Text,
+                            comments = line.GetComments(["LOC", "VO"]),
+                            speaker = line.CharacterID
+                        };
+                        inkStrings.SetEntry(entry);
+                    }
                 }
             }
         }

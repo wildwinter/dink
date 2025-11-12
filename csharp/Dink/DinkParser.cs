@@ -136,6 +136,7 @@ public class DinkParser
     {
         List<DinkScene> parsedScenes = new List<DinkScene>();
         DinkScene? scene = null;
+        DinkSnippet? snippet = null;
         List<string> comments = new List<string>();
         string lastKnot = "";
         string lastStitch = "";
@@ -157,24 +158,27 @@ public class DinkParser
             if (ParseKnot(trimmedLine) is string knot)
             {
                 comments.Clear();
-                if (scene != null && scene.Beats.Count > 0)
+                if (snippet != null && scene != null && snippet.Beats.Count > 0)
+                    scene.Snippets.Add(snippet);
+                if (scene != null && scene.Snippets.Count > 0)
                     parsedScenes.Add(scene);
                 lastKnot = knot;
                 parsing = false;
                 scene = new DinkScene();
                 scene.SceneID = knot;
+                snippet = new DinkSnippet();
+                snippet.SnippetID = "";
                 Console.WriteLine($"Scene: {scene}");
             }
             else if (ParseStitch(trimmedLine) is string stitch)
             {
                 comments.Clear();
-                if (scene != null && scene.Beats.Count > 0)
-                    parsedScenes.Add(scene);
+                if (snippet != null && scene != null && snippet.Beats.Count > 0)
+                    scene.Snippets.Add(snippet);
                 lastStitch = stitch;
-                parsing = false;
-                scene = new DinkScene();
-                scene.SceneID = $"{lastKnot}.{stitch}";
-                Console.WriteLine($"Scene: {scene}");
+                snippet = new DinkSnippet();
+                snippet.SnippetID = stitch;
+                Console.WriteLine($"Snippet: {snippet}");
             }
             else if (trimmedLine == "#dink")
             {
@@ -187,14 +191,14 @@ public class DinkParser
             else if (parsing && ParseLine(trimmedLine) is DinkLine dinkLine)
             {
                 dinkLine.Comments.AddRange(comments);
-                scene?.Beats.Add(dinkLine);
+                snippet?.Beats.Add(dinkLine);
                 comments.Clear();
                 Console.WriteLine(dinkLine);
             }
             else if (parsing && ParseAction(trimmedLine) is DinkAction dinkAction)
             {
                 dinkAction.Comments.AddRange(comments);
-                scene?.Beats.Add(dinkAction);
+                snippet?.Beats.Add(dinkAction);
                 comments.Clear();
                 Console.WriteLine(dinkAction);
             }
@@ -203,7 +207,9 @@ public class DinkParser
                 comments.Clear();
             }
         }
-        if (scene != null && scene.Beats.Count > 0)
+        if (snippet != null && scene != null && snippet.Beats.Count > 0)
+            scene.Snippets.Add(snippet);
+        if (scene != null && scene.Snippets.Count > 0)
             parsedScenes.Add(scene);
         return parsedScenes;
     }
@@ -226,7 +232,6 @@ public class DinkParser
     
     public static List<DinkScene> ParseInk(string text)
     {
-        List<DinkScene> parsedScenes = new List<DinkScene>();
         string textWithoutComments = RemoveBlockComments(text);
         List<string> lines = SplitTextIntoLines(textWithoutComments);
         return ParseInkLines(lines);

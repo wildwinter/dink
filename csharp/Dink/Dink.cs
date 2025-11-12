@@ -51,10 +51,18 @@ public class DinkAction : DinkBeat
         $"Type: '{Type}', Content: '{Text}'" + base.ToString();
 }
 
+public class DinkSnippet
+{
+    public string SnippetID { get; set; } = string.Empty;
+    public List<DinkBeat> Beats { get; set; } = new List<DinkBeat>();
+
+    public override string ToString() => $"Snippet: '{SnippetID}'";
+}
+
 public class DinkScene
 {
     public string SceneID { get; set; } = string.Empty;
-    public List<DinkBeat> Beats { get; set; } = new List<DinkBeat>();
+    public List<DinkSnippet> Snippets { get; set; } = new List<DinkSnippet>();
 
     public override string ToString() => $"Scene: '{SceneID}'";
 }

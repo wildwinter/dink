@@ -1,7 +1,7 @@
 # dink
 **dink** 
 
-BLABHBABAB
+BLABHBABAB WORK IN PROGRESS
 ```
 ```
 ### Contents
@@ -14,7 +14,7 @@ BLABHBABAB
 * [License](#license)
 
 ## The Basics
-The `Fountain.Parser` supplied in the tools will take this:
+The `DinkCompiler` supplied in the tools will take this:
 ```
 Something
 ```
@@ -28,7 +28,15 @@ Releases are available in the releases area in [Github](https://github.com/wildw
 
 ## The Dink Spec
 
-Each Dink scene consists of a set of **beats**. Each beat can either be a line of dialogue, or a line of action.
+A Dink **scene** is the equivalent of an Ink **knot**. 
+
+Each Dink scene consists of one or more Dink **snippets**. A Dink snippet is the equivalent of an ink **stitch**.
+
+A scene might only contain one, the "main" snippet, which is unnamed. Any further snippets will be named after the stitch.
+
+Each **snippet** consists of **beats**.
+
+Each beat can either be a **line of dialogue**, or a **line of action**.
 
 At a very simplistic level this can be interpreted as "X happens, then X happens".
 
@@ -43,11 +51,15 @@ ACTOR (qualifier): (direction) Dialogue line. #tag1 #tag3 #tag4 #id:xxxxxx
 // Comment will get carried over.
 // LOC: This comment will go to the localisers
 (Type) Line of action #tag1 #tag2 #id:xxxxxx // This comment too.
+-> DONE
 ```
 
-Comments, *qualifier* and *direction* are optional, as are the tags except *#id:* which must exist and be unique.
+Comments, *qualifier* and *direction* are optional, as are the tags except *#id:* which must exist and be unique. The Dink compiler will generate these (based on the Ink Localiser tool I made a while back).
 
+Here is a simple scene, with only one (anonymous) snippet:
 ```
+== MyScene
+#dink
 // VO: This comment will go to the voice actors
 // This comment will go to everyone
 DAVE (V.O.): It was a quiet morning in May... #id:intro_R6Sg
@@ -59,8 +71,22 @@ DAVE: Morning. #id:intro_XC5r
 FRED: Hello to you too!
 
 (SFX) The door slams. #id:intro_yS6G // Make this loud!
+-> DONE
 ```
 
+Here is a scene with an anonymous snippet to start and then another:
+```
+== MyOtherScene
+#dink
+// This is the anon snippet
+FRED (V.O.): It was a cold day in December... #id:main_MyOtherScene_R6Sg
+-> Part2
+
+= Part2
+// This is the snippet called Part2
+FRED: Good morning! i#d:main_MyOtherScene_Part2_R6Sg
+-> DONE
+```
 
 ## Usage
 
