@@ -86,7 +86,6 @@ public static class DinkJson
 
     public static string WriteScenes(List<DinkScene> scenes)
     {
-        // Use JsonSerializer.Serialize with the list as the type parameter.
         return JsonSerializer.Serialize(scenes, DefaultOptions);
     }
 
