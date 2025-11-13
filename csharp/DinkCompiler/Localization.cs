@@ -5,9 +5,9 @@ using System.Text.Json;
 public struct LocEntry
 {
     public required string ID { get; set; }
-    public required string text { get; set; }
-    public required List<string> comments { get; set; }
-    public required string speaker { get; set; }
+    public required string Text { get; set; }
+    public required List<string> Comments { get; set; }
+    public required string Speaker { get; set; }
 }
 
 class LocStrings

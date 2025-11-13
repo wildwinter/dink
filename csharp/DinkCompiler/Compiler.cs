@@ -76,6 +76,15 @@ public class Compiler
         if (!FixLoc(parsedDinkScenes, inkStrings))
             return false;
 
+        // ---- Pull out anything that should go to the recording booth -----
+        VoiceLines voiceLines = new VoiceLines();
+        if (!BuildVoiceLines(parsedDinkScenes, voiceLines))
+            return false;
+
+        // ----- Output Voice Lines -----
+        if (!voiceLines.WriteToExcel(rootFilename, Path.Combine(destFolder, rootFilename + ".xlsx")))
+            return false;
+
         // ----- Output Dink -----
         if (!WriteDink(parsedDinkScenes, Path.Combine(destFolder, rootFilename + "-dink.json")))
             return false;
@@ -105,9 +114,9 @@ public class Compiler
             LocEntry entry = new LocEntry
             {
                 ID = key,
-                text = localiser.GetString(key),
-                speaker = "",
-                comments = new List<string>()
+                Text = localiser.GetString(key),
+                Speaker = "",
+                Comments = new List<string>()
             };
             
             outStrings.SetEntry(entry);
@@ -243,9 +252,9 @@ public class Compiler
                         LocEntry entry = new LocEntry()
                         {
                             ID = line.LineID,
-                            text = line.Text,
-                            comments = line.GetComments(["LOC", "VO"]),
-                            speaker = line.CharacterID
+                            Text = line.Text,
+                            Comments = line.GetComments(["LOC", "VO"]),
+                            Speaker = line.CharacterID
                         };
                         inkStrings.SetEntry(entry);
                     }
@@ -260,6 +269,37 @@ public class Compiler
         return true;
     }
 
+    bool BuildVoiceLines(List<DinkScene> dinkScenes, VoiceLines outVoiceLines)
+    {
+        Console.WriteLine("Extracting voice lines...");
+
+        foreach (var scene in dinkScenes)
+        {
+            foreach (var snippet in scene.Snippets)
+            {
+                foreach (var beat in snippet.Beats)
+                {
+                    if (beat is DinkLine line)
+                    {
+                        VoiceEntry entry = new VoiceEntry()
+                        {
+                            ID = line.LineID,
+                            Character = line.CharacterID,
+                            Qualifier = line.Qualifier,
+                            Line = line.Text,
+                            Direction = line.Direction,
+                            Comments = line.GetComments(["VO"]),
+                            Tags = line.GetTags(["a"])
+                        };
+                        outVoiceLines.SetEntry(entry);
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+    
     bool WriteDink(List<DinkScene> dinkScenes, string destDinkFile)
     {
         Console.WriteLine("Writing dink file: " + destDinkFile);

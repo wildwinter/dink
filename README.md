@@ -14,10 +14,12 @@ BLABHBABAB WORK IN PROGRESS
 * [License](#license)
 
 ## The Basics
-The `DinkCompiler` supplied in the tools will take this:
-```
-Something
-```
+The `DinkCompiler` will take in an Ink file (for example, `myproject.ink`) and its includes, process it, and the results are the following:
+* Any lines of text in the source Ink file that don't have a unique identifier of the form `#id:xxx` tags will have been added. (Resulting in an updated `myproject.ink`.)
+* The Ink file will have been compiled to JSON. (Resulting in `myproject.json`.)
+* Any sections of the Ink that follow the **[Dink format](#the-dink-spec)** will have been scanned, and the resulting Dink structures including comments are output to JSON. (Resulting in `myproject-dink.json`.)
+* Text strings are exported (after adjusting for Dink) to JSON in a form that can be easily interpreted. Includes line text, comments, and if it's a voice line will include the speaker and any performance direction. (Resulting in `myproject-strings.json`.)
+* Voice lines parsed by Dink are exported to an Excel file containing voice-specific coments and tags. (Resulting in `myproject.xslx`.)
 
 ## Source Code
 The source can be found on [Github](https://github.com/wildwinter/dink), and is available under the MIT license.
@@ -89,6 +91,24 @@ FRED: Good morning! i#d:main_MyOtherScene_Part2_R6Sg
 ```
 
 ## Usage
+## Command-Line Tool
+This is a command-line utility with a few arguments. A few simple examples:
+
+Use the file `main.ink` (and any included ink files) as the source, and output the resulting files in the `somewhere` folder:
+
+`./DinkCompiler --source=../../tests/test1/main.ink --destFolder=../somewhere`
+
+### Arguments
+* `--source=<sourceInkFile>`
+    
+    Entrypoint to use for the Ink processing.
+    e.g. `--source=some/folder/with/main.ink`
+
+* `--destFolder=<folder>`
+    
+    Root folder to scan for Ink files to localise relative to working dir. 
+    e.g. `--destFolder=gameInkFiles/` 
+    Default is the current working dir.
 
 ### Overview
 * xxx
