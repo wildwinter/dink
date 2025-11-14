@@ -1,2 +1,2 @@
-./DinkCompiler --source=../../tests/test1/main.ink 
-
+Add comment to whole scene.
+Audio tags.
