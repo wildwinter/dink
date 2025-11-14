@@ -82,7 +82,7 @@ public class Compiler
             return false;
 
         // ----- Output Voice Lines -----
-        if (!voiceLines.WriteToExcel(rootFilename, Path.Combine(destFolder, rootFilename + ".xlsx")))
+        if (!voiceLines.WriteToExcel(rootFilename, Path.Combine(destFolder, rootFilename + "-voice.xlsx")))
             return false;
 
         // ----- Output Dink -----
@@ -91,6 +91,9 @@ public class Compiler
 
         // ----- Output lines for localisation -----
         if (!WriteLoc(inkStrings, Path.Combine(destFolder, rootFilename + "-strings.json")))
+            return false;
+        // ----- Output Voice Lines -----
+        if (!inkStrings.WriteToExcel(rootFilename, Path.Combine(destFolder, rootFilename + "-strings.xlsx")))
             return false;
 
         Console.WriteLine("Processing complete.");

@@ -1,7 +1,7 @@
 namespace DinkCompiler;
 
 using System.Text.Json;
-
+using ClosedXML.Excel; 
 public struct LocEntry
 {
     public required string ID { get; set; }
@@ -50,19 +50,46 @@ class LocStrings
         return JsonSerializer.Serialize(entriesToSerialize, new JsonSerializerOptions { WriteIndented = true });
     }
 
-    public static LocStrings FromJson(string jsonString)
+    struct LocEntryExport
     {
-        var newLocStrings = new LocStrings();
-        
-        var deserializedEntries = JsonSerializer.Deserialize<List<LocEntry>>(jsonString);
-        if (deserializedEntries != null)
+        public required string ID { get; set; }
+        public required string Text { get; set; }
+        public required string Speaker { get; set; }
+        public required string Comments { get; set; }
+    }
+
+    public bool WriteToExcel(string rootName, string destLocFile)
+    {
+        var recordsToExport = OrderedEntries.Select(v => new LocEntryExport
         {
-            foreach (var entry in deserializedEntries)
+            ID = v.ID,
+            Speaker = v.Speaker,
+            Text = v.Text,
+            Comments = string.Join(", ", v.Comments)
+        }).ToList();
+
+        try
+        {
+            using (var workbook = new XLWorkbook())
             {
-                newLocStrings.SetEntry(entry);
+                var worksheet = workbook.Worksheets.Add("Voice Lines - " + rootName);
+
+                var table = worksheet.Cell("A1").InsertTable(recordsToExport);
+
+                worksheet.ColumnsUsed().AdjustToContents();
+
+                table.FirstRow().Style.Fill.BackgroundColor = XLColor.LightBlue;
+                table.FirstRow().Style.Font.Bold = true;
+
+                workbook.SaveAs(destLocFile);
             }
         }
-        
-        return newLocStrings;
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error writing out localisation Excel file {destLocFile}: " + ex.Message);
+            return false;
+        }
+        return true;
     }
+
 }

@@ -18,8 +18,8 @@ The `DinkCompiler` will take in an Ink file (for example, `myproject.ink`) and i
 * Any lines of text in the source Ink file that don't have a unique identifier of the form `#id:xxx` tags will have been added. (Resulting in an updated `myproject.ink`.)
 * The Ink file will have been compiled to JSON. (Resulting in `myproject.json`.)
 * Any sections of the Ink that follow the **[Dink format](#the-dink-spec)** will have been scanned, and the resulting Dink structures including comments are output to JSON. (Resulting in `myproject-dink.json`.)
-* Text strings are exported (after adjusting for Dink) to JSON in a form that can be easily interpreted. Includes line text, comments, and if it's a voice line will include the speaker and any performance direction. (Resulting in `myproject-strings.json`.)
-* Voice lines parsed by Dink are exported to an Excel file containing voice-specific coments and tags. (Resulting in `myproject.xslx`.)
+* Text strings are exported (after adjusting for Dink) to JSON in a form that can be easily interpreted. Includes line text, comments, and if it's a voice line will include the speaker and any performance direction. (Resulting in `myproject-strings.json`.) They are also exported to an Excel file. (Resulting in `myproject-strings.xslx`)
+* Voice lines parsed by Dink are exported to an Excel file containing voice-specific coments and tags. (Resulting in `myproject-voice.xslx`.)
 
 ## Source Code
 The source can be found on [Github](https://github.com/wildwinter/dink), and is available under the MIT license.
