@@ -1,1 +1,4 @@
-Include actions? option
+Include actions locale? option
+Branching comments for script
+Test JS example
+Include master language setting
