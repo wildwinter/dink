@@ -1,9 +1,37 @@
 # dink
-**dink** 
 
-BLABHBABAB WORK IN PROGRESS
+**Very much work in progress!**
+
+*Dink*, a contraction of *dialogue ink*, is a way of formatting dialogue lines while using/writing in Ink, and a set of tools for parsing and supporting that content.
+
+Ink is a system of writing for text flow, so it's a bit of an odd idea to restrict it, really, using Ink for only a part of its potential. But there are a lot of us now using Ink for controlling the flow of spoken dialogue lines and scenes.
+
+So this presents a markup for specifying dialogue lines and scene actions in an easy to write/read form, and tools to help integrate that into a project.
+
+```c
+=== MyScene
+#dink
+FRED (O.S.): It was a cold day in November...
+
+Cut to a shot of a boat.
+
+FRED (O.S.): (guilty) It wasn't me who sank the boat.
+FRED (O.S.): It was Dave.
+
+// Art: Remember Dave has a red hat.
+Zoom in on Dave standing on deck.
+DAVE: Thar she blows! 
+-> DONE
 ```
-```
+
+### Tools
+* The `DinkCompiler`:
+  * Adds IDs to all the lines of Ink for localisation and voice.
+  * Compiles the Ink using *inklecate*.
+  * Parses any Dink scenes and produces a JSON file detailing them (e.g. who is the actor for each line? What are the directions?)
+  * Produces a JSON file and an Excel file with all the strings in (for localisation or runtime use).
+  * Produces an Excel file for voice recording.
+  
 ### Contents
 * [The Basics](#the-basics)
 * [Source Code](#source-code)
@@ -25,8 +53,7 @@ The `DinkCompiler` will take in an Ink file (for example, `myproject.ink`) and i
 The source can be found on [Github](https://github.com/wildwinter/dink), and is available under the MIT license.
 
 ## Releases
-Releases are available in the releases area in [Github](https://github.com/wildwinter/dink/releases):
-???
+Releases will be available in the releases area in [Github](https://github.com/wildwinter/dink/releases).
 
 ## The Dink Spec
 
