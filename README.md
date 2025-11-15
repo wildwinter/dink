@@ -174,7 +174,7 @@ Use the file `main.ink` (and any included ink files) as the source, and output t
 
 * `--destFolder=<folder>`
     
-    Root folder to scan for Ink files to localise relative to working dir. 
+    Folder to put all the output files. 
     e.g. `--destFolder=gameInkFiles/` 
     Default is the current working dir.
 
