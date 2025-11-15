@@ -63,8 +63,8 @@ public class DinkAction : DinkBeat
 public class DinkSnippet
 {
     public string SnippetID { get; set; } = string.Empty;
+    public List<string> Comments { get; set; } = new List<string>();
     public List<DinkBeat> Beats { get; set; } = new List<DinkBeat>();
-
     public override string ToString() => $"Snippet: '{SnippetID}'";
 }
 

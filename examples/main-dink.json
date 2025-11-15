@@ -4,6 +4,10 @@
     "Snippets": [
       {
         "SnippetID": "",
+        "Comments": [
+          "This comment should apply to Test Scene.",
+          "And so should this."
+        ],
         "Beats": [
           {
             "$type": "line",
@@ -13,7 +17,7 @@
             "Text": "This is a line I am saying.",
             "LineID": "main_TestScene_16U4",
             "Comments": [
-              "Comment",
+              "Comment for a line.",
               "Another comment for the same line."
             ],
             "Tags": [
@@ -81,6 +85,7 @@
     "Snippets": [
       {
         "SnippetID": "",
+        "Comments": [],
         "Beats": [
           {
             "$type": "line",
@@ -173,6 +178,7 @@
     "Snippets": [
       {
         "SnippetID": "Part1",
+        "Comments": [],
         "Beats": [
           {
             "$type": "line",
@@ -196,6 +202,9 @@
       },
       {
         "SnippetID": "Part2",
+        "Comments": [
+          "This comment should appear on Part2"
+        ],
         "Beats": [
           {
             "$type": "action",
@@ -209,6 +218,7 @@
       },
       {
         "SnippetID": "Part3",
+        "Comments": [],
         "Beats": [
           {
             "$type": "action",
@@ -234,6 +244,7 @@
       },
       {
         "SnippetID": "Part4",
+        "Comments": [],
         "Beats": [
           {
             "$type": "line",
@@ -279,6 +290,7 @@
       },
       {
         "SnippetID": "Right",
+        "Comments": [],
         "Beats": [
           {
             "$type": "action",
@@ -302,6 +314,7 @@
       },
       {
         "SnippetID": "Left",
+        "Comments": [],
         "Beats": [
           {
             "$type": "action",

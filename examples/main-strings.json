@@ -1,149 +1,149 @@
 ﻿[
   {
     "ID": "scene1_Scene1_Part1_S494",
-    "text": "This is a scene.",
-    "comments": [],
-    "speaker": "FRED"
+    "Text": "This is a scene.",
+    "Comments": [],
+    "Speaker": "FRED"
   },
   {
     "ID": "scene1_Scene1_Part3_9MXL",
-    "text": "Let\u0027s see if this works, shall we?",
-    "comments": [],
-    "speaker": "DAVE"
+    "Text": "Let\u0027s see if this works, shall we?",
+    "Comments": [],
+    "Speaker": "DAVE"
   },
   {
     "ID": "scene1_Scene1_Part4_T9GZ",
-    "text": "Go right",
-    "comments": [],
-    "speaker": ""
+    "Text": "Go right",
+    "Comments": [],
+    "Speaker": ""
   },
   {
     "ID": "scene1_Scene1_Part4_F0PF",
-    "text": "Go right!",
-    "comments": [],
-    "speaker": "FRED"
+    "Text": "Go right!",
+    "Comments": [],
+    "Speaker": "FRED"
   },
   {
     "ID": "scene1_Scene1_Part4_9L7I",
-    "text": "Go left",
-    "comments": [],
-    "speaker": ""
+    "Text": "Go left",
+    "Comments": [],
+    "Speaker": ""
   },
   {
     "ID": "scene1_Scene1_Part4_DNII",
-    "text": "Go left!",
-    "comments": [],
-    "speaker": "FRED"
+    "Text": "Go left!",
+    "Comments": [],
+    "Speaker": "FRED"
   },
   {
     "ID": "scene1_Scene1_Part4_Q8FK",
-    "text": "Skip it",
-    "comments": [],
-    "speaker": ""
+    "Text": "Skip it",
+    "Comments": [],
+    "Speaker": ""
   },
   {
     "ID": "scene1_Scene1_Part4_AJDP",
-    "text": "Carry on then.",
-    "comments": [],
-    "speaker": "FRED"
+    "Text": "Carry on then.",
+    "Comments": [],
+    "Speaker": "FRED"
   },
   {
     "ID": "scene1_Scene1_Part4_0YY1",
-    "text": "Okay.",
-    "comments": [],
-    "speaker": "GEORGE"
+    "Text": "Okay.",
+    "Comments": [],
+    "Speaker": "GEORGE"
   },
   {
     "ID": "scene1_Scene1_Right_WM69",
-    "text": "You sure you want to go right?",
-    "comments": [],
-    "speaker": "GEORGE"
+    "Text": "You sure you want to go right?",
+    "Comments": [],
+    "Speaker": "GEORGE"
   },
   {
     "ID": "scene1_Scene1_Left_MIM6",
-    "text": "You sure you want to go left?",
-    "comments": [],
-    "speaker": "GEORGE"
+    "Text": "You sure you want to go left?",
+    "Comments": [],
+    "Speaker": "GEORGE"
   },
   {
     "ID": "scene1_Scene1_OtherContent_FSDK",
-    "text": "This content is nothing at all to do with Dink!",
-    "comments": [],
-    "speaker": ""
+    "Text": "This content is nothing at all to do with Dink!",
+    "Comments": [],
+    "Speaker": ""
   },
   {
     "ID": "main_Intro_FDAP",
-    "text": "This is a test file.",
-    "comments": [],
-    "speaker": ""
+    "Text": "This is a test file.",
+    "Comments": [],
+    "Speaker": ""
   },
   {
     "ID": "main_TestScene_16U4",
-    "text": "This is a line I am saying.",
-    "comments": [],
-    "speaker": "ACTOR"
+    "Text": "This is a line I am saying.",
+    "Comments": [],
+    "Speaker": "ACTOR"
   },
   {
     "ID": "main_TestScene_FF1T",
-    "text": "This is another line.",
-    "comments": [
+    "Text": "This is another line.",
+    "Comments": [
       "VO: This comment goes to the voice actor.",
       "LOC: This comment goes to the localisers"
     ],
-    "speaker": "ACTOR"
+    "Speaker": "ACTOR"
   },
   {
     "ID": "main_TestScene_BQ1E",
-    "text": "This is a loud line!",
-    "comments": [],
-    "speaker": "FRED"
+    "Text": "This is a loud line!",
+    "Comments": [],
+    "Speaker": "FRED"
   },
   {
     "ID": "main_TestScene_IQIS",
-    "text": "Glad that\u0027s over with!",
-    "comments": [],
-    "speaker": "FRED"
+    "Text": "Glad that\u0027s over with!",
+    "Comments": [],
+    "Speaker": "FRED"
   },
   {
     "ID": "main_Barks_O037",
-    "text": "Bark1",
-    "comments": [],
-    "speaker": "FRED"
+    "Text": "Bark1",
+    "Comments": [],
+    "Speaker": "FRED"
   },
   {
     "ID": "main_Barks_UWZ2",
-    "text": "Bark2",
-    "comments": [],
-    "speaker": "FRED"
+    "Text": "Bark2",
+    "Comments": [],
+    "Speaker": "FRED"
   },
   {
     "ID": "main_Barks_1ZG8",
-    "text": "Bark3",
-    "comments": [],
-    "speaker": "FRED"
+    "Text": "Bark3",
+    "Comments": [],
+    "Speaker": "FRED"
   },
   {
     "ID": "main_Barks_JFG1",
-    "text": "Bark4",
-    "comments": [],
-    "speaker": "FRED"
+    "Text": "Bark4",
+    "Comments": [],
+    "Speaker": "FRED"
   },
   {
     "ID": "main_Barks_X291",
-    "text": "Response to Bark 4.",
-    "comments": [],
-    "speaker": "JIM"
+    "Text": "Response to Bark 4.",
+    "Comments": [],
+    "Speaker": "JIM"
   },
   {
     "ID": "main_Barks_L2SX",
-    "text": "Bark5",
-    "comments": [],
-    "speaker": "FRED"
+    "Text": "Bark5",
+    "Comments": [],
+    "Speaker": "FRED"
   },
   {
     "ID": "main_Barks_N07F",
-    "text": "Bark6",
-    "comments": [],
-    "speaker": "FRED"
+    "Text": "Bark6",
+    "Comments": [],
+    "Speaker": "FRED"
   }
 ]

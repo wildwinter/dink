@@ -2,6 +2,7 @@
 
 -> Barks
 
+// This comment shouldn't appear
 === Intro
 This is a test file. #id:main_Intro_FDAP
 -> DONE
@@ -12,9 +13,11 @@ This is a test file. #id:main_Intro_FDAP
 This scene is commented out and should be ignored.
 */
 
+// This comment should apply to Test Scene.
+// And so should this.
 === TestScene
 #dink
-// Comment
+// Comment for a line.
 // Another comment for the same line.
 ACTOR: This is a line I am saying. #id:main_TestScene_16U4 #tag1 #tag2
 

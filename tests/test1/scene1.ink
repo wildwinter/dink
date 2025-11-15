@@ -7,6 +7,7 @@ FRED: This is a scene. #id:scene1_Scene1_Part1_S494
 With several lines. #id:scene1_Scene1_Part1_621G
 -> DONE
 
+// This comment should appear on Part2
 = Part2
 And here's part 2. #id:scene1_Scene1_Part2_N5RW
 -> DONE

@@ -16,7 +16,7 @@ BLABHBABAB WORK IN PROGRESS
 ## The Basics
 The `DinkCompiler` will take in an Ink file (for example, `myproject.ink`) and its includes, process it, and the results are the following:
 * Any lines of text in the source Ink file that don't have a unique identifier of the form `#id:xxx` tags will have been added. (Resulting in an updated `myproject.ink`.)
-* The Ink file will have been compiled to JSON. (Resulting in `myproject.json`.)
+* The Ink file will have been compiled to JSON as Ink usually does. (Resulting in `myproject.json`.)
 * Any sections of the Ink that follow the **[Dink format](#the-dink-spec)** will have been scanned, and the resulting Dink structures including comments are output to JSON. (Resulting in `myproject-dink.json`.)
 * Text strings are exported (after adjusting for Dink) to JSON in a form that can be easily interpreted. Includes line text, comments, and if it's a voice line will include the speaker and any performance direction. (Resulting in `myproject-strings.json`.) They are also exported to an Excel file. (Resulting in `myproject-strings.xslx`)
 * Voice lines parsed by Dink are exported to an Excel file containing voice-specific coments and tags. (Resulting in `myproject-voice.xslx`.)
@@ -42,7 +42,7 @@ Each beat can either be a **line of dialogue**, or a **line of action**.
 
 At a very simplistic level this can be interpreted as "X happens, then X happens".
 
-```
+```c
 == MyScene
 #dink
 
@@ -59,7 +59,7 @@ ACTOR (qualifier): (direction) Dialogue line. #tag1 #tag3 #tag4 #id:xxxxxx
 Comments, *qualifier* and *direction* are optional, as are the tags except *#id:* which must exist and be unique. The Dink compiler will generate these (based on the Ink Localiser tool I made a while back).
 
 Here is a simple scene, with only one (anonymous) snippet:
-```
+```c
 == MyScene
 #dink
 // VO: This comment will go to the voice actors
@@ -77,18 +77,38 @@ FRED: Hello to you too!
 ```
 
 Here is a scene with an anonymous snippet to start and then another:
-```
+```c
 == MyOtherScene
 #dink
 // This is the anon snippet
 FRED (V.O.): It was a cold day in December... #id:main_MyOtherScene_R6Sg
 -> Part2
 
-= Part2
 // This is the snippet called Part2
-FRED: Good morning! i#d:main_MyOtherScene_Part2_R6Sg
+= Part2
+// This is fred talking.
+FRED: Good morning! #id:main_MyOtherScene_Part2_R6Sg
 -> DONE
 ```
+
+### Comments
+Comments use `//` to make them meaningful to Dink, but any content in block-style comments
+(e.g. `/* */`) will be skipped, like in normal Ink.
+
+Comments *above* a snippet (i.e. above the knot or the stitch) will appear in the comments for that snippet.
+
+Comments above a beat will appear in the comments for that beat, and so will comments on the end of a beat.
+
+```c
+// This comment will appear in the comments for MyScene's main snippet
+// And so will this comment.
+== MyScene
+#dink
+// This comment will appear in the comments for this next beat
+DAVE (V.O.): It was a quiet morning in May... #id:intro_R6Sg // And so will this comment.
+-> DONE
+```
+
 
 ## Usage
 ## Command-Line Tool
