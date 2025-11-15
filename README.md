@@ -37,7 +37,6 @@ DAVE: Thar she blows!
 * [Source Code](#source-code)
 * [Releases](#releases)
 * [Usage](#usage)
-    * [Overview](#overview)
 * [Contributors](#contributors)
 * [License](#license)
 
@@ -156,9 +155,6 @@ Use the file `main.ink` (and any included ink files) as the source, and output t
     Root folder to scan for Ink files to localise relative to working dir. 
     e.g. `--destFolder=gameInkFiles/` 
     Default is the current working dir.
-
-### Overview
-* xxx
 
 ## Contributors
 * [wildwinter](https://github.com/wildwinter) - original author
