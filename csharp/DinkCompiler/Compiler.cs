@@ -86,12 +86,16 @@ public class Compiler
         if (!voiceLines.WriteToExcel(rootFilename, characters, Path.Combine(destFolder, rootFilename + "-voice.xlsx")))
             return false;
 
-        // ----- Output Dink -----
-        if (!WriteDink(parsedDinkScenes, Path.Combine(destFolder, rootFilename + "-dink.json")))
+        // ----- Output Dink Structure -----
+        if (!WriteStructuredDink(parsedDinkScenes, Path.Combine(destFolder, rootFilename + "-dink-structure.json")))
             return false;
 
-        // ----- Output lines for localisation (Json) -----
-        if (!WriteLoc(inkStrings, Path.Combine(destFolder, rootFilename + "-strings.json")))
+        // ----- Output Dink Minimal for runtime -----
+        if (!WriteMinimalDink(parsedDinkScenes, Path.Combine(destFolder, rootFilename + "-dink-min.json")))
+            return false;
+
+        // ----- Output lines minimal for runtime -----
+        if (!WriteMinimalStrings(inkStrings, Path.Combine(destFolder, rootFilename + "-strings-min.json")))
             return false;
 
         // ----- Output lines for localisation (Excel) -----
@@ -290,12 +294,13 @@ public class Compiler
                 {
                     if (beat is DinkAction action)
                     {
-                        if (!string.IsNullOrEmpty(action.LineID))
+                        LocEntry entry = new LocEntry()
                         {
-                            // We don't use these for normal actions.
-                            // Maybe want to re-add for closed captions?
-                            keysToRemove.Add(action.LineID);
-                        }
+                            ID = action.LineID,
+                            Text = action.Text,
+                            Comments = action.GetComments(["LOC", "VO"]),
+                            Speaker = ""
+                        };
                     }
                     else if (beat is DinkLine line)
                     {
@@ -351,9 +356,9 @@ public class Compiler
         return true;
     }
 
-    bool WriteDink(List<DinkScene> dinkScenes, string destDinkFile)
+    bool WriteStructuredDink(List<DinkScene> dinkScenes, string destDinkFile)
     {
-        Console.WriteLine("Writing dink file: " + destDinkFile);
+        Console.WriteLine("Writing structured dink file: " + destDinkFile);
 
         try
         {
@@ -368,18 +373,35 @@ public class Compiler
         return true;
     }
 
-    bool WriteLoc(LocStrings inkStrings, string destLocFile)
+    bool WriteMinimalDink(List<DinkScene> dinkScenes, string destDinkFile)
     {
-        Console.WriteLine("Writing localisation file: " + destLocFile);
+        Console.WriteLine("Writing minimal dink file: " + destDinkFile);
 
         try
         {
-            string fileContents = inkStrings.ToJson();
-            File.WriteAllText(destLocFile, fileContents, Encoding.UTF8);
+            string fileContents = DinkJson.WriteMinimal(dinkScenes);
+            File.WriteAllText(destDinkFile, fileContents, Encoding.UTF8);
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"Error writing out JSON file {destLocFile}: " + ex.Message);
+            Console.Error.WriteLine($"Error writing out Dink JSON file {destDinkFile}: " + ex.Message);
+            return false;
+        }
+        return true;
+    }
+
+    bool WriteMinimalStrings(LocStrings inkStrings, string destStringsFile)
+    {
+        Console.WriteLine("Writing strings file: " + destStringsFile);
+
+        try
+        {
+            string fileContents = inkStrings.WriteMinimal();
+            File.WriteAllText(destStringsFile, fileContents, Encoding.UTF8);
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error writing out JSON file {destStringsFile}: " + ex.Message);
             return false;
         }
         return true;

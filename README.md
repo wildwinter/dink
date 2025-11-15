@@ -28,9 +28,11 @@ DAVE: Thar she blows!
 * The `DinkCompiler`:
   * Adds IDs to all the lines of Ink for localisation and voice.
   * Compiles the Ink using *inklecate*.
-  * Parses any Dink scenes and produces a JSON file detailing them (e.g. who is the speaker for each line? What are the directions?)
+  * Parses any Dink scenes and produces a JSON file detailing that structure (e.g. who is the speaker for each line? What are the directions?). 
+  * Also produces a minimal JSON file giving metadata for each line that Ink won't provide.
   * If a list of character names is supplied, checks that all the Dink scenes use valid characters.
-  * Produces a JSON file and an Excel file with all the strings in (for localisation or runtime use).
+  * Produces a JSON file with all the strings used in Ink and Dink needed for runtime.
+  * Produces an Excel file with all the strings in for localisation.
   * Produces an Excel file for voice recording, including mapping to actors if supplied.
   
 ### Contents
@@ -43,12 +45,13 @@ DAVE: Thar she blows!
 
 ## The Basics
 The `DinkCompiler` will take in an Ink file (for example, `myproject.ink`) and its includes, process it, and the results are the following:
-* Any lines of text in the source Ink file that don't have a unique identifier of the form `#id:xxx` tags will have been added. (Resulting in an updated `myproject.ink`.)
-* The Ink file will have been compiled to JSON as Ink usually does. (Resulting in `myproject.json`.)
-* Any sections of the Ink that follow the **[Dink format](#the-dink-spec)** will have been scanned, and the resulting Dink structures including comments are output to JSON. (Resulting in `myproject-dink.json`.)
-* If a `characters.json` is present in the same folder as the main ink file, every parsed dialogue line will be checked to make sure it uses one of those characters.
-* Text strings are exported (after adjusting for Dink) to JSON in a form that can be easily interpreted. Includes line text, comments, and if it's a voice line will include the speaker and any performance direction. (Resulting in `myproject-strings.json`.) They are also exported to an Excel file. (Resulting in `myproject-strings.xslx`) 
-* Voice lines parsed by Dink are exported to an Excel file containing voice-specific coments and tags. (Resulting in `myproject-voice.xslx`.) Any tags with `#a:` on the front (a for audio) will be sent to the voice line document.
+* **Updated Source File (`myproject.ink`)**: Any lines of text in the source Ink file that don't have a unique identifier of the form `#id:xxx` tags will have been added. 
+* **Compiled Ink File (`myproject.json`)**: The Ink file compiled to JSON using `inklecate`, as Ink usually does. 
+* **Dink Structure File (`myproject-dink-structure.json`)**: A JSON structure containing all the Dink scenes and their snippets and beats, and useful information such as tags, lines, comments and so on. This is most likely to be useful in your edit pipeline for updating items in your editor based on Dink scripts - for example, creating placeholder scene layouts.
+* **Dink Runtime File (`myproject-dink-min.json`)**: A JSON structure containing one entry for each LineID, with the runtime data you'll need for each line that you won't get from Ink e.g. the character speaking etc.
+* **Strings File for Localisation (`myproject-strings.xslx`)**: An Excel file containing an entry for every string in Ink that needs localisation. When they are Dink lines, will include helpful data such as comments, the character speaking.
+* **Strings Runtime File (`myproject-strings-min.json`)**: A JSON file containing an entry for every string in Ink, along with the string used in the original script. This is probably your master language file for runtime - you'll want to create copies of it for your localisation. When you display an Ink or Dink line you'll want to use the string data in here rather than in Ink itself.
+* **Voice Script File for Recording (`myproject-voice.xslx`)**: An Excel file containing an entry for every line of dialogue that needs to be recorded, along with helpful comments and direction, and if you have provided a `characters.json` file, the Actor associated with the character.
 
 ## Source Code
 The source can be found on [Github](https://github.com/wildwinter/dink), and is available under the MIT license.

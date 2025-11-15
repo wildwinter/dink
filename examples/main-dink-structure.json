@@ -10,7 +10,7 @@
         ],
         "Beats": [
           {
-            "$type": "line",
+            "BeatType": "Line",
             "CharacterID": "LAURA",
             "Qualifier": "",
             "Direction": "",
@@ -26,7 +26,7 @@
             ]
           },
           {
-            "$type": "line",
+            "BeatType": "Line",
             "CharacterID": "LAURA",
             "Qualifier": "O.S.",
             "Direction": "",
@@ -39,7 +39,7 @@
             "Tags": []
           },
           {
-            "$type": "line",
+            "BeatType": "Line",
             "CharacterID": "FRED",
             "Qualifier": "",
             "Direction": "loudly",
@@ -51,7 +51,7 @@
             "Tags": []
           },
           {
-            "$type": "action",
+            "BeatType": "Action",
             "Type": "",
             "Text": "Now bounce around the place!",
             "LineID": "main_TestScene_79PN",
@@ -59,7 +59,7 @@
             "Tags": []
           },
           {
-            "$type": "action",
+            "BeatType": "Action",
             "Type": "SFX",
             "Text": "Make a bang noise!",
             "LineID": "main_TestScene_96IR",
@@ -67,7 +67,7 @@
             "Tags": []
           },
           {
-            "$type": "line",
+            "BeatType": "Line",
             "CharacterID": "FRED",
             "Qualifier": "",
             "Direction": "",
@@ -88,7 +88,7 @@
         "Comments": [],
         "Beats": [
           {
-            "$type": "line",
+            "BeatType": "Line",
             "CharacterID": "FRED",
             "Qualifier": "",
             "Direction": "",
@@ -100,7 +100,7 @@
             "Tags": []
           },
           {
-            "$type": "line",
+            "BeatType": "Line",
             "CharacterID": "FRED",
             "Qualifier": "",
             "Direction": "",
@@ -110,7 +110,7 @@
             "Tags": []
           },
           {
-            "$type": "line",
+            "BeatType": "Line",
             "CharacterID": "FRED",
             "Qualifier": "",
             "Direction": "",
@@ -122,7 +122,7 @@
             "Tags": []
           },
           {
-            "$type": "action",
+            "BeatType": "Action",
             "Type": "",
             "Text": "Testing a normal line.",
             "LineID": "main_Barks_046M",
@@ -130,7 +130,7 @@
             "Tags": []
           },
           {
-            "$type": "line",
+            "BeatType": "Line",
             "CharacterID": "FRED",
             "Qualifier": "",
             "Direction": "",
@@ -140,7 +140,7 @@
             "Tags": []
           },
           {
-            "$type": "line",
+            "BeatType": "Line",
             "CharacterID": "JIM",
             "Qualifier": "",
             "Direction": "",
@@ -150,7 +150,7 @@
             "Tags": []
           },
           {
-            "$type": "line",
+            "BeatType": "Line",
             "CharacterID": "FRED",
             "Qualifier": "",
             "Direction": "shouting",
@@ -160,7 +160,7 @@
             "Tags": []
           },
           {
-            "$type": "line",
+            "BeatType": "Line",
             "CharacterID": "FRED",
             "Qualifier": "",
             "Direction": "",
@@ -181,7 +181,7 @@
         "Comments": [],
         "Beats": [
           {
-            "$type": "line",
+            "BeatType": "Line",
             "CharacterID": "FRED",
             "Qualifier": "",
             "Direction": "",
@@ -191,7 +191,7 @@
             "Tags": []
           },
           {
-            "$type": "action",
+            "BeatType": "Action",
             "Type": "",
             "Text": "With several lines.",
             "LineID": "scene1_Scene1_Part1_621G",
@@ -207,7 +207,7 @@
         ],
         "Beats": [
           {
-            "$type": "action",
+            "BeatType": "Action",
             "Type": "",
             "Text": "And here\u0027s part 2.",
             "LineID": "scene1_Scene1_Part2_N5RW",
@@ -221,7 +221,7 @@
         "Comments": [],
         "Beats": [
           {
-            "$type": "action",
+            "BeatType": "Action",
             "Type": "",
             "Text": "Dave walks into the room.",
             "LineID": "scene1_Scene1_Part3_UZOH",
@@ -231,7 +231,7 @@
             "Tags": []
           },
           {
-            "$type": "line",
+            "BeatType": "Line",
             "CharacterID": "DAVE",
             "Qualifier": "",
             "Direction": "quietly",
@@ -247,7 +247,7 @@
         "Comments": [],
         "Beats": [
           {
-            "$type": "line",
+            "BeatType": "Line",
             "CharacterID": "FRED",
             "Qualifier": "",
             "Direction": "",
@@ -257,7 +257,7 @@
             "Tags": []
           },
           {
-            "$type": "line",
+            "BeatType": "Line",
             "CharacterID": "FRED",
             "Qualifier": "",
             "Direction": "",
@@ -267,7 +267,7 @@
             "Tags": []
           },
           {
-            "$type": "line",
+            "BeatType": "Line",
             "CharacterID": "FRED",
             "Qualifier": "",
             "Direction": "",
@@ -277,7 +277,7 @@
             "Tags": []
           },
           {
-            "$type": "line",
+            "BeatType": "Line",
             "CharacterID": "GEORGE",
             "Qualifier": "",
             "Direction": "",
@@ -293,7 +293,7 @@
         "Comments": [],
         "Beats": [
           {
-            "$type": "action",
+            "BeatType": "Action",
             "Type": "",
             "Text": "George swerves the car right.",
             "LineID": "scene1_Scene1_Right_3V6T",
@@ -301,7 +301,7 @@
             "Tags": []
           },
           {
-            "$type": "line",
+            "BeatType": "Line",
             "CharacterID": "GEORGE",
             "Qualifier": "",
             "Direction": "upset",
@@ -317,7 +317,7 @@
         "Comments": [],
         "Beats": [
           {
-            "$type": "action",
+            "BeatType": "Action",
             "Type": "",
             "Text": "George swerves the car left.",
             "LineID": "scene1_Scene1_Left_HZ7B",
@@ -325,7 +325,7 @@
             "Tags": []
           },
           {
-            "$type": "line",
+            "BeatType": "Line",
             "CharacterID": "GEORGE",
             "Qualifier": "",
             "Direction": "upset",

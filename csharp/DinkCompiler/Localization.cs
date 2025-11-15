@@ -33,12 +33,6 @@ class LocStrings
         _ids.Remove(id);
     }
     
-    public string ToJson()
-    {
-        var entriesToSerialize = this.OrderedEntries.ToList();
-        return JsonSerializer.Serialize(entriesToSerialize, new JsonSerializerOptions { WriteIndented = true });
-    }
-
     struct LocEntryExport
     {
         public required string ID { get; set; }
@@ -79,6 +73,24 @@ class LocStrings
             return false;
         }
         return true;
+    }
+
+    public string WriteMinimal()
+    {
+        var options = new JsonSerializerOptions { WriteIndented = false };
+        var lines = new List<string>();
+
+        foreach (var entry in OrderedEntries)
+        {
+            object obj = new
+            {
+                LineID = entry.ID,
+                Text = entry.Text
+            };
+            lines.Add(JsonSerializer.Serialize(obj, options));       
+        }
+
+        return "[\n"+string.Join(",\n", lines)+"\n]";
     }
 
 }

@@ -5,8 +5,9 @@ using System.Text.Json.Serialization;
 
 namespace Dink;
 
-[JsonDerivedType(typeof(DinkAction), typeDiscriminator: "action")]
-[JsonDerivedType(typeof(DinkLine), typeDiscriminator: "line")]
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "BeatType")]
+[JsonDerivedType(typeof(DinkAction), typeDiscriminator: "Action")]
+[JsonDerivedType(typeof(DinkLine), typeDiscriminator: "Line")]
 public class DinkBeat
 {
     public string LineID { get; set; } = string.Empty;
@@ -98,8 +99,43 @@ public static class DinkJson
         return JsonSerializer.Serialize(scenes, DefaultOptions);
     }
 
-    public static List<DinkScene> ReadScenes(string json)
+    public static string WriteMinimal(List<DinkScene> scenes)
     {
-        return JsonSerializer.Deserialize<List<DinkScene>>(json, DefaultOptions)!;
+        var options = new JsonSerializerOptions { WriteIndented = false };
+        var lines = new List<string>();
+
+        foreach (var scene in scenes)
+        {
+            foreach (var snippet in scene.Snippets)
+            {
+                foreach (var beat in snippet.Beats)
+                {
+                    object obj;
+                    if (beat is DinkAction action)
+                    {
+                        obj = new
+                        {
+                            LineID = action.LineID,
+                            BeatType = "Action",
+                            Type = action.Type
+                        };
+                        lines.Add(JsonSerializer.Serialize(obj, options));
+                    }
+                    else if (beat is DinkLine line)
+                    {
+                        obj = new
+                        {
+                            LineID = line.LineID,
+                            BeatType = "Line",
+                            CharacterID = line.CharacterID,
+                            Qualifier = line.Qualifier
+                        };
+                        lines.Add(JsonSerializer.Serialize(obj, options));
+                    }
+                }
+            }
+        }
+
+        return "[\n"+string.Join(",\n", lines)+"\n]";
     }
 }
