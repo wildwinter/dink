@@ -11,7 +11,7 @@
         "Beats": [
           {
             "$type": "line",
-            "CharacterID": "ACTOR",
+            "CharacterID": "LAURA",
             "Qualifier": "",
             "Direction": "",
             "Text": "This is a line I am saying.",
@@ -27,7 +27,7 @@
           },
           {
             "$type": "line",
-            "CharacterID": "ACTOR",
+            "CharacterID": "LAURA",
             "Qualifier": "O.S.",
             "Direction": "",
             "Text": "This is another line.",

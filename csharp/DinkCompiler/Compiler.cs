@@ -57,19 +57,21 @@ public class Compiler
 
         // Steps:
 
+        // ----- Read characters -----
+        string charFile = Path.Combine(sourceInkFolder, "characters.json");
+        // Character list is optional.
+        ReadCharacters(charFile, out Characters? characters);
+
         // ----- Process Ink files for string data and IDs -----
-        LocStrings inkStrings = new LocStrings();
-        if (!ProcessInkStrings(sourceInkFolder, inkStrings))
+        if (!ProcessInkStrings(sourceInkFolder, out LocStrings inkStrings))
             return false;
 
         // ----- Compile to json -----
-        List<string> usedInkFiles = new List<string>();
-        if (!CompileToJson(sourceInkFile, Path.Combine(destFolder, rootFilename + ".json"), usedInkFiles))
+        if (!CompileToJson(sourceInkFile, Path.Combine(destFolder, rootFilename + ".json"), out List<String> usedInkFiles))
             return false;
 
         // ----- Parse ink files, extract Dink beats -----
-        List<DinkScene> parsedDinkScenes = new List<DinkScene>();
-        if (!ParseDinkScenes(usedInkFiles, parsedDinkScenes))
+        if (!ParseDinkScenes(usedInkFiles, characters, out List<DinkScene> parsedDinkScenes))
             return false;
 
         // ---- Remove any action and character references from the localisation -----
@@ -77,22 +79,22 @@ public class Compiler
             return false;
 
         // ---- Pull out anything that should go to the recording booth -----
-        VoiceLines voiceLines = new VoiceLines();
-        if (!BuildVoiceLines(parsedDinkScenes, voiceLines))
+        if (!BuildVoiceLines(parsedDinkScenes, out VoiceLines voiceLines))
             return false;
 
         // ----- Output Voice Lines -----
-        if (!voiceLines.WriteToExcel(rootFilename, Path.Combine(destFolder, rootFilename + "-voice.xlsx")))
+        if (!voiceLines.WriteToExcel(rootFilename, characters, Path.Combine(destFolder, rootFilename + "-voice.xlsx")))
             return false;
 
         // ----- Output Dink -----
         if (!WriteDink(parsedDinkScenes, Path.Combine(destFolder, rootFilename + "-dink.json")))
             return false;
 
-        // ----- Output lines for localisation -----
+        // ----- Output lines for localisation (Json) -----
         if (!WriteLoc(inkStrings, Path.Combine(destFolder, rootFilename + "-strings.json")))
             return false;
-        // ----- Output Voice Lines -----
+
+        // ----- Output lines for localisation (Excel) -----
         if (!inkStrings.WriteToExcel(rootFilename, Path.Combine(destFolder, rootFilename + "-strings.xlsx")))
             return false;
 
@@ -100,8 +102,24 @@ public class Compiler
         return true;
     }
 
-    private bool ProcessInkStrings(string inkFolder, LocStrings outStrings)
+    private bool ReadCharacters(string charFile, out Characters? outCharacters)
     {
+        if (File.Exists(charFile))
+        {
+            string fileText = File.ReadAllText(charFile);
+            outCharacters = Characters.FromJson(fileText);
+            Console.WriteLine($"Read {charFile}.");
+            return true;
+        }
+        Console.WriteLine($"{charFile} not found - won't check characters.");
+        outCharacters = null;
+        return false;
+    }
+
+    private bool ProcessInkStrings(string inkFolder, out LocStrings inkStrings)
+    {
+        inkStrings = new LocStrings();
+
         Console.WriteLine("Processing Ink for IDs and string content... " + inkFolder);
         var localiser = new Localiser(new Localiser.Options()
         {
@@ -121,8 +139,8 @@ public class Compiler
                 Speaker = "",
                 Comments = new List<string>()
             };
-            
-            outStrings.SetEntry(entry);
+
+            inkStrings.Set(entry);
         }
         return true;
     }
@@ -171,8 +189,10 @@ public class Compiler
         }
     }
 
-    private bool CompileToJson(string sourceInkFile, string destFile, List<string> outUsedInkFiles)
+    private bool CompileToJson(string sourceInkFile, string destFile, out List<string> usedInkFiles)
     {
+        usedInkFiles = new List<string>();
+                
         bool success = true;
         _compileErrors.Clear();
         Console.WriteLine("Compiling Ink to JSON... " + sourceInkFile);
@@ -181,8 +201,8 @@ public class Compiler
         Directory.SetCurrentDirectory(Path.GetDirectoryName(sourceInkFile) ?? Directory.GetCurrentDirectory());
 
         string inputString = File.ReadAllText(sourceInkFile);
-        outUsedInkFiles.Add(sourceInkFile);
-        InkFileHandler fileHandler = new InkFileHandler(outUsedInkFiles);
+        usedInkFiles.Add(sourceInkFile);
+        InkFileHandler fileHandler = new InkFileHandler(usedInkFiles);
 
         Ink.Compiler compiler = new Ink.Compiler(inputString, new Ink.Compiler.Options
         {
@@ -216,14 +236,41 @@ public class Compiler
         return success;
     }
 
-    bool ParseDinkScenes(List<string> usedInkFiles, List<DinkScene> parsedDinkScenes)
+    bool ParseDinkScenes(List<string> usedInkFiles, Characters? characters, out List<DinkScene> parsedDinkScenes)
     {
+        parsedDinkScenes = new List<DinkScene>();
+
         Console.WriteLine("Parsing Dink scenes...");
         foreach (var inkFile in usedInkFiles)
         {
             Console.WriteLine($"Using Ink file '{inkFile}'");
             var text = File.ReadAllText(inkFile);
             var scenes = DinkParser.ParseInk(text);
+
+            if (characters!=null)
+            {
+                foreach(var scene in scenes)
+                {
+                    foreach (var snippet in scene.Snippets)
+                    {
+                        foreach(var beat in snippet.Beats)
+                        {
+                            if (beat is DinkLine line)
+                            {
+                                if (!characters.Has(line.CharacterID))
+                                {
+                                    if (snippet.SnippetID.Length == 0)
+                                        Console.Error.WriteLine($"Error in file {inkFile}, scene {scene.SceneID}, line {line.LineID} - character '{line.CharacterID}' not in the characters file.:");
+                                    else
+                                        Console.Error.WriteLine($"Error in file {inkFile}, scene {scene.SceneID}, snippet {snippet.SnippetID}, line {line.LineID} - character '{line.CharacterID}' not in the characters file.:");
+                                    return false;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
             parsedDinkScenes.AddRange(scenes);
         }
         return true;
@@ -259,7 +306,7 @@ public class Compiler
                             Comments = line.GetComments(["LOC", "VO"]),
                             Speaker = line.CharacterID
                         };
-                        inkStrings.SetEntry(entry);
+                        inkStrings.Set(entry);
                     }
                 }
             }
@@ -267,13 +314,14 @@ public class Compiler
 
         foreach (var key in keysToRemove)
         {
-            inkStrings.RemoveEntry(key);
+            inkStrings.Remove(key);
         }
         return true;
     }
 
-    bool BuildVoiceLines(List<DinkScene> dinkScenes, VoiceLines outVoiceLines)
+    bool BuildVoiceLines(List<DinkScene> dinkScenes, out VoiceLines voiceLines)
     {
+        voiceLines = new VoiceLines();
         Console.WriteLine("Extracting voice lines...");
 
         foreach (var scene in dinkScenes)
@@ -294,7 +342,7 @@ public class Compiler
                             Comments = line.GetComments(["VO"]),
                             Tags = line.GetTags(["a"])
                         };
-                        outVoiceLines.SetEntry(entry);
+                        voiceLines.Set(entry);
                     }
                 }
             }
@@ -302,7 +350,7 @@ public class Compiler
 
         return true;
     }
-    
+
     bool WriteDink(List<DinkScene> dinkScenes, string destDinkFile)
     {
         Console.WriteLine("Writing dink file: " + destDinkFile);

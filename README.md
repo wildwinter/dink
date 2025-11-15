@@ -28,9 +28,10 @@ DAVE: Thar she blows!
 * The `DinkCompiler`:
   * Adds IDs to all the lines of Ink for localisation and voice.
   * Compiles the Ink using *inklecate*.
-  * Parses any Dink scenes and produces a JSON file detailing them (e.g. who is the actor for each line? What are the directions?)
+  * Parses any Dink scenes and produces a JSON file detailing them (e.g. who is the speaker for each line? What are the directions?)
+  * If a list of character names is supplied, checks that all the Dink scenes use valid characters.
   * Produces a JSON file and an Excel file with all the strings in (for localisation or runtime use).
-  * Produces an Excel file for voice recording.
+  * Produces an Excel file for voice recording, including mapping to actors if supplied.
   
 ### Contents
 * [The Basics](#the-basics)
@@ -45,6 +46,7 @@ The `DinkCompiler` will take in an Ink file (for example, `myproject.ink`) and i
 * Any lines of text in the source Ink file that don't have a unique identifier of the form `#id:xxx` tags will have been added. (Resulting in an updated `myproject.ink`.)
 * The Ink file will have been compiled to JSON as Ink usually does. (Resulting in `myproject.json`.)
 * Any sections of the Ink that follow the **[Dink format](#the-dink-spec)** will have been scanned, and the resulting Dink structures including comments are output to JSON. (Resulting in `myproject-dink.json`.)
+* If a `characters.json` is present in the same folder as the main ink file, every parsed dialogue line will be checked to make sure it uses one of those characters.
 * Text strings are exported (after adjusting for Dink) to JSON in a form that can be easily interpreted. Includes line text, comments, and if it's a voice line will include the speaker and any performance direction. (Resulting in `myproject-strings.json`.) They are also exported to an Excel file. (Resulting in `myproject-strings.xslx`) 
 * Voice lines parsed by Dink are exported to an Excel file containing voice-specific coments and tags. (Resulting in `myproject-voice.xslx`.) Any tags with `#a:` on the front (a for audio) will be sent to the voice line document.
 
@@ -135,6 +137,23 @@ DAVE (V.O.): It was a quiet morning in May... #id:intro_R6Sg // And so will this
 -> DONE
 ```
 
+### Characters List
+You can supply a `characters.json` file in the same folder as the main Ink file. If, so it should
+be this format:
+
+```json
+[
+    {"ID":"FRED", "Actor":"Dave"},
+    {"ID":"JIM", "Actor":""},
+]
+```
+When the Dink scripts are parsed, the character name on a Dink line like:
+```c
+FRED (O.S): (hurriedly) Look out!
+```
+Will be checked against that characters list, and if it isn't present the process will fail.
+
+The Actors column will be copied in to the voice script export, for ease of use with recording.
 
 ## Usage
 ## Command-Line Tool

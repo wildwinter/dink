@@ -18,7 +18,7 @@ class VoiceLines
     private List<string> _ids = new List<string>();
 
     public IEnumerable<VoiceEntry> OrderedEntries => _ids.Select(id => _entries[id]);
-    public void SetEntry(VoiceEntry entry)
+    public void Set(VoiceEntry entry)
     {
         if (!_ids.Contains(entry.ID))
         {
@@ -27,42 +27,27 @@ class VoiceLines
 
         _entries[entry.ID] = entry;
     }
-
-    public bool GetEntry(string id, out VoiceEntry entry)
-    {
-        if (_entries.TryGetValue(id, out var voiceEntry))
-        {
-            entry = voiceEntry;
-            return true;
-        }
-        entry = default;
-        return false;
-    }
-
-    public void RemoveEntry(string id)
-    {
-        _entries.Remove(id);
-        _ids.Remove(id);
-    }
-
+    
     struct VoiceEntryExport
     {
         public required string ID { get; set; }
         public required string Character { get; set; }
         public required string Qualifier { get; set; }
+        public required string Actor { get; set; }
         public required string Line { get; set; }
         public required string Direction { get; set; }
         public required string Comments { get; set; }
         public required string Tags { get; set; }
     }
         
-    public bool WriteToExcel(string rootName, string destVoiceFile)
+    public bool WriteToExcel(string rootName, Characters? characters, string destVoiceFile)
     {
         var recordsToExport = OrderedEntries.Select(v => new VoiceEntryExport
         {
             ID = v.ID,
             Character = v.Character,
             Qualifier = v.Qualifier,
+            Actor = (characters != null) ? characters.Get(v.Character)?.Actor ?? "" : "", 
             Line = v.Line,
             Direction = v.Direction,
             Comments = string.Join(", ", v.Comments),

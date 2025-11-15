@@ -17,7 +17,7 @@ class LocStrings
 
     public IEnumerable<LocEntry> OrderedEntries => _ids.Select(id => _entries[id]);
 
-    public void SetEntry(LocEntry entry)
+    public void Set(LocEntry entry)
     {
         if (!_ids.Contains(entry.ID))
         {
@@ -27,18 +27,7 @@ class LocStrings
         _entries[entry.ID] = entry;
     }
 
-    public bool GetEntry(string id, out LocEntry entry)
-    {
-        if (_entries.TryGetValue(id, out var locEntry))
-        {
-            entry = locEntry;
-            return true;
-        }
-        entry = default;
-        return false;
-    }
-
-    public void RemoveEntry(string id)
+    public void Remove(string id)
     {
         _entries.Remove(id);
         _ids.Remove(id);

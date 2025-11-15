@@ -81,7 +81,7 @@
     "ID": "main_TestScene_16U4",
     "Text": "This is a line I am saying.",
     "Comments": [],
-    "Speaker": "ACTOR"
+    "Speaker": "LAURA"
   },
   {
     "ID": "main_TestScene_FF1T",
@@ -90,7 +90,7 @@
       "VO: This comment goes to the voice actor.",
       "LOC: This comment goes to the localisers"
     ],
-    "Speaker": "ACTOR"
+    "Speaker": "LAURA"
   },
   {
     "ID": "main_TestScene_BQ1E",
