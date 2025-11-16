@@ -164,18 +164,18 @@ This is a command-line utility with a few arguments. A few simple examples:
 
 Use the file `main.ink` (and any included ink files) as the source, and output the resulting files in the `somewhere` folder:
 
-`./DinkCompiler --source=../../tests/test1/main.ink --destFolder=../somewhere`
+`./DinkCompiler --source ../../tests/test1/main.ink --destFolder ../somewhere`
 
 ### Arguments
-* `--source=<sourceInkFile>`
+* `--source <sourceInkFile>` (REQUIRED)
     
     Entrypoint to use for the Ink processing.
-    e.g. `--source=some/folder/with/main.ink`
+    e.g. `--source some/folder/with/main.ink`
 
-* `--destFolder=<folder>`
+* `--destFolder <folder>`
     
     Folder to put all the output files. 
-    e.g. `--destFolder=gameInkFiles/` 
+    e.g. `--destFolder gameInkFiles/` 
     Default is the current working dir.
 
 ## Contributors
