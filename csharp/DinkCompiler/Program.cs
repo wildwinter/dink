@@ -19,10 +19,17 @@ Option<FileInfo> destFolderOption = new("--destFolder")
 };
 command.Options.Add(destFolderOption);
 
+Option<bool> locActionBeatsOption = new("--locActionBeatText")
+{
+    Description = "If true, include action beat text in the string exports. If false, keeps it in Dink minimal export."
+};
+command.Options.Add(locActionBeatsOption);
+
 command.SetAction(parseResult =>
 {
     options.source = parseResult.GetValue<FileInfo>(sourceOption)?.FullName ?? "";
     options.destFolder = parseResult.GetValue<FileInfo>(destFolderOption)?.FullName ?? "";
+    options.locActionBeats = parseResult.GetValue<bool>(locActionBeatsOption);
 
     var compiler = new Compiler(options);
     if (!compiler.Run()) {

@@ -17,6 +17,13 @@ public class Compiler
 
         // Folder to output compiled assets to.
         public string destFolder = "";
+
+        // If false (default), assumes that ACTION Beats shouldn't
+        // get their text localised, and so will not be in the string tables
+        // but will be in the Dink minimal. 
+        // If true, includes the text of action beats in the string tables
+        // to be localised, and not in the Dink minimal
+        public bool locActionBeats = false;
     }
     private Options _options;
 
@@ -53,6 +60,10 @@ public class Compiler
 
         Console.WriteLine($"Using destination folder: '{destFolder}'");
 
+        if (_options.locActionBeats)
+        {
+            Console.WriteLine($"Including action beat text in localization output.");
+        }
         string rootFilename = Path.GetFileNameWithoutExtension(sourceInkFile);
 
         // Steps:
@@ -284,8 +295,6 @@ public class Compiler
     {
         Console.WriteLine("Fixing localisation entries...");
 
-        var keysToRemove = new List<string>();
-
         foreach (var scene in parsedDinkScenes)
         {
             foreach (var snippet in scene.Snippets)
@@ -294,13 +303,22 @@ public class Compiler
                 {
                     if (beat is DinkAction action)
                     {
-                        LocEntry entry = new LocEntry()
+                        if (_options.locActionBeats) {
+                            // Include action beat in the string table.
+                            LocEntry entry = new LocEntry()
+                            {
+                                ID = action.LineID,
+                                Text = action.Text,
+                                Comments = action.GetComments(["LOC", "VO"]),
+                                Speaker = ""
+                            };
+                            inkStrings.Set(entry);
+                        }
+                        else
                         {
-                            ID = action.LineID,
-                            Text = action.Text,
-                            Comments = action.GetComments(["LOC", "VO"]),
-                            Speaker = ""
-                        };
+                            // Remove action beats from the string table.
+                            inkStrings.Remove(action.LineID);
+                        }
                     }
                     else if (beat is DinkLine line)
                     {
@@ -315,11 +333,6 @@ public class Compiler
                     }
                 }
             }
-        }
-
-        foreach (var key in keysToRemove)
-        {
-            inkStrings.Remove(key);
         }
         return true;
     }
@@ -379,7 +392,7 @@ public class Compiler
 
         try
         {
-            string fileContents = DinkJson.WriteMinimal(dinkScenes);
+            string fileContents = DinkJson.WriteMinimal(dinkScenes, !_options.locActionBeats);
             File.WriteAllText(destDinkFile, fileContents, Encoding.UTF8);
         }
         catch (Exception ex)

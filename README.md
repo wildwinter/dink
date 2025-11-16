@@ -169,14 +169,21 @@ Use the file `main.ink` (and any included ink files) as the source, and output t
 ### Arguments
 * `--source <sourceInkFile>` (REQUIRED)
     
-    Entrypoint to use for the Ink processing.
+    Entrypoint to use for the Ink processing.\
     e.g. `--source some/folder/with/main.ink`
 
 * `--destFolder <folder>`
     
-    Folder to put all the output files. 
-    e.g. `--destFolder gameInkFiles/` 
+    Folder to put all the output files.\
+    e.g. `--destFolder gameInkFiles/`\
     Default is the current working dir.
+
+* `--locActionBeats`
+
+    If true, includes the text of action beats as something that
+    needs to be localised by including it in `-strings` files.\
+    If false, skips that text, but does include it in `-dink-min`.\
+    Default is false.
 
 ## Contributors
 * [wildwinter](https://github.com/wildwinter) - original author
