@@ -55,7 +55,7 @@ class LocStrings
         {
             using (var workbook = new XLWorkbook())
             {
-                var worksheet = workbook.Worksheets.Add("Voice Lines - " + rootName);
+                var worksheet = workbook.Worksheets.Add("Text Lines - " + rootName);
 
                 var table = worksheet.Cell("A1").InsertTable(recordsToExport);
 

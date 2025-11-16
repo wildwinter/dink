@@ -144,7 +144,7 @@ DAVE (V.O.): It was a quiet morning in May... #id:intro_R6Sg // And so will this
 You can supply a `characters.json` file in the same folder as the main Ink file. If, so it should
 be this format:
 
-```json
+```jsonc
 [
     {"ID":"FRED", "Actor":"Dave"},
     {"ID":"JIM", "Actor":""},
@@ -184,6 +184,31 @@ Use the file `main.ink` (and any included ink files) as the source, and output t
     needs to be localised by including it in `-strings` files.\
     If false, skips that text, but does include it in `-dink-min`.\
     Default is false.
+
+* `--project project\config.jsonc`
+
+    If supplied, configuration will be read from the given JSON file, instead
+    of given as command-line switches. This also means that the folder that the
+    supplied file is in will be treated as a potential source file for the Ink
+    and for the characters.json if those aren't fully qualified paths.
+
+### Config File
+
+A JSON or JSONC file (i.e. JSON with comments) having all or some of the required options:
+```jsonc
+{
+    // What's the source Ink file?
+   "source":"main.ink",
+
+    // Where's the folder to output everything?
+    "destFolder":"../examples",
+
+    // Localise actions?
+    // Default is false, which means no text in Action beats
+    // will be localised
+    "locActionBeats":false
+}
+```
 
 ## Contributors
 * [wildwinter](https://github.com/wildwinter) - original author

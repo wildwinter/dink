@@ -10,75 +10,30 @@ using InkLocaliser;
 
 public class Compiler
 {
-    public class Options
+    private CompilerEnvironment _env;
+
+    public Compiler(CompilerOptions? options = null)
     {
-        // Source ink file.
-        public string source = "";
-
-        // Folder to output compiled assets to.
-        public string destFolder = "";
-
-        // If false (default), assumes that ACTION Beats shouldn't
-        // get their text localised, and so will not be in the string tables
-        // but will be in the Dink minimal. 
-        // If true, includes the text of action beats in the string tables
-        // to be localised, and not in the Dink minimal
-        public bool locActionBeats = false;
-    }
-    private Options _options;
-
-    public Compiler(Options? options = null)
-    {
-        _options = options ?? new Options();
+        _env = new CompilerEnvironment(options ?? new CompilerOptions());
     }
     public bool Run()
     {
-        string sourceInkFile = _options.source;
-        if (String.IsNullOrWhiteSpace(sourceInkFile))
-        {
-            Console.Error.WriteLine("No Ink file specified.");
+        if (!_env.Init())
             return false;
-        }
-
-        sourceInkFile = Path.GetFullPath(sourceInkFile);
-        Console.WriteLine($"Using source ink file: '{sourceInkFile}'");
-
-        if (Path.GetExtension(sourceInkFile).ToLower() != ".ink" || !File.Exists(sourceInkFile))
-        {
-            Console.Error.WriteLine("Ink file name invalid or file missing.");
-            return false;
-        }
-
-        string sourceInkFolder = Path.GetDirectoryName(sourceInkFile) ?? "";
-
-        string destFolder = _options.destFolder;
-        if (String.IsNullOrWhiteSpace(destFolder))
-            destFolder = Environment.CurrentDirectory;
-        destFolder = Path.GetFullPath(destFolder);
-        if (!Directory.Exists(destFolder))
-            Directory.CreateDirectory(destFolder);
-
-        Console.WriteLine($"Using destination folder: '{destFolder}'");
-
-        if (_options.locActionBeats)
-        {
-            Console.WriteLine($"Including action beat text in localization output.");
-        }
-        string rootFilename = Path.GetFileNameWithoutExtension(sourceInkFile);
 
         // Steps:
 
         // ----- Read characters -----
-        string charFile = Path.Combine(sourceInkFolder, "characters.json");
+        string? charFile = _env.FindFileInSource("characters.json");
         // Character list is optional.
         ReadCharacters(charFile, out Characters? characters);
 
         // ----- Process Ink files for string data and IDs -----
-        if (!ProcessInkStrings(sourceInkFolder, out LocStrings inkStrings))
+        if (!ProcessInkStrings(_env.SourceInkFolder, out LocStrings inkStrings))
             return false;
 
         // ----- Compile to json -----
-        if (!CompileToJson(sourceInkFile, Path.Combine(destFolder, rootFilename + ".json"), out List<String> usedInkFiles))
+        if (!CompileToJson(_env.SourceInkFile, _env.MakeDestFile(".json"), out List<String> usedInkFiles))
             return false;
 
         // ----- Parse ink files, extract Dink beats -----
@@ -94,32 +49,32 @@ public class Compiler
             return false;
 
         // ----- Output Voice Lines -----
-        if (!voiceLines.WriteToExcel(rootFilename, characters, Path.Combine(destFolder, rootFilename + "-voice.xlsx")))
+        if (!voiceLines.WriteToExcel(_env.RootFilename, characters, _env.MakeDestFile("-voice.xlsx")))
             return false;
 
         // ----- Output Dink Structure -----
-        if (!WriteStructuredDink(parsedDinkScenes, Path.Combine(destFolder, rootFilename + "-dink-structure.json")))
+        if (!WriteStructuredDink(parsedDinkScenes, _env.MakeDestFile("-dink-structure.json")))
             return false;
 
         // ----- Output Dink Minimal for runtime -----
-        if (!WriteMinimalDink(parsedDinkScenes, Path.Combine(destFolder, rootFilename + "-dink-min.json")))
+        if (!WriteMinimalDink(parsedDinkScenes, _env.MakeDestFile("-dink-min.json")))
             return false;
 
         // ----- Output lines minimal for runtime -----
-        if (!WriteMinimalStrings(inkStrings, Path.Combine(destFolder, rootFilename + "-strings-min.json")))
+        if (!WriteMinimalStrings(inkStrings, _env.MakeDestFile("-strings-min.json")))
             return false;
 
         // ----- Output lines for localisation (Excel) -----
-        if (!inkStrings.WriteToExcel(rootFilename, Path.Combine(destFolder, rootFilename + "-strings.xlsx")))
+        if (!inkStrings.WriteToExcel(_env.RootFilename, _env.MakeDestFile("-strings.xlsx")))
             return false;
 
         Console.WriteLine("Processing complete.");
         return true;
     }
 
-    private bool ReadCharacters(string charFile, out Characters? outCharacters)
+    private bool ReadCharacters(string? charFile, out Characters? outCharacters)
     {
-        if (File.Exists(charFile))
+        if (charFile!=null && File.Exists(charFile))
         {
             string fileText = File.ReadAllText(charFile);
             outCharacters = Characters.FromJson(fileText);
@@ -303,7 +258,7 @@ public class Compiler
                 {
                     if (beat is DinkAction action)
                     {
-                        if (_options.locActionBeats) {
+                        if (_env.LocActionBeats) {
                             // Include action beat in the string table.
                             LocEntry entry = new LocEntry()
                             {
@@ -392,7 +347,7 @@ public class Compiler
 
         try
         {
-            string fileContents = DinkJson.WriteMinimal(dinkScenes, !_options.locActionBeats);
+            string fileContents = DinkJson.WriteMinimal(dinkScenes, !_env.LocActionBeats);
             File.WriteAllText(destDinkFile, fileContents, Encoding.UTF8);
         }
         catch (Exception ex)

@@ -1,21 +1,24 @@
 using DinkCompiler;
 using System.CommandLine;
-
-var options = new Compiler.Options();
+using System.Text.Json;
 
 RootCommand command = new("Compiler chain for Dink");
 
-Option<FileInfo> sourceOption = new("--source")
+Option<string> projectOption = new("--project")
 {
-    Description = "The root Ink file to use as the source for the compile.",
-    Required = true
+    Description = "A project setting json file to read the options from e.g. dinkproject.jsonc.",
+};
+command.Options.Add(projectOption);
+
+Option<string> sourceOption = new("--source")
+{
+    Description = "The root Ink file to use as the source for the compile."
 };
 command.Options.Add(sourceOption);
 
-Option<FileInfo> destFolderOption = new("--destFolder")
+Option<string> destFolderOption = new("--destFolder")
 {
-    Description = "The destination folder to write out all the compiled files.",
-    DefaultValueFactory = parseResult => new FileInfo(Environment.CurrentDirectory)
+    Description = "The destination folder to write out all the compiled files."
 };
 command.Options.Add(destFolderOption);
 
@@ -25,11 +28,36 @@ Option<bool> locActionBeatsOption = new("--locActionBeatText")
 };
 command.Options.Add(locActionBeatsOption);
 
+command.Validators.Add(result =>
+{
+    // Is a project file specified?
+    var isProjectPresent = result.GetResult(projectOption) is not null;
+    if (!isProjectPresent)
+    {
+        // Enforce some vars
+        var isSourcePresent = result.GetResult(sourceOption) is not null;
+        if (!isSourcePresent)
+        {
+            result.AddError("Either '--project' or '--source' must be specified.");
+        }
+    }
+});
+
 command.SetAction(parseResult =>
 {
-    options.source = parseResult.GetValue<FileInfo>(sourceOption)?.FullName ?? "";
-    options.destFolder = parseResult.GetValue<FileInfo>(destFolderOption)?.FullName ?? "";
-    options.locActionBeats = parseResult.GetValue<bool>(locActionBeatsOption);
+    CompilerOptions options = new CompilerOptions();
+    
+    string? projectFile = parseResult.GetValue<string>(projectOption);
+    if (projectFile!=null)
+        options = CompilerOptions.LoadFromProjectFile(projectFile)??options;
+
+    options.Source = parseResult.GetValue<string>(sourceOption)??options.Source;
+    options.DestFolder = parseResult.GetValue<string>(destFolderOption)??options.DestFolder;
+    if (parseResult.GetValue<bool>(locActionBeatsOption))
+        options.LocActionBeats = true;
+
+//    Console.WriteLine(JsonSerializer.Serialize(options, new JsonSerializerOptions{IncludeFields = true}));
+//    return 0;
 
     var compiler = new Compiler(options);
     if (!compiler.Run()) {
