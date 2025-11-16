@@ -140,7 +140,7 @@ DAVE (V.O.): It was a quiet morning in May... #id:intro_R6Sg // And so will this
 -> DONE
 ```
 
-### Characters List
+### Character List
 You can supply a `characters.json` file in the same folder as the main Ink file. If, so it should
 be this format:
 
@@ -154,9 +154,9 @@ When the Dink scripts are parsed, the character name on a Dink line like:
 ```c
 FRED (O.S): (hurriedly) Look out!
 ```
-Will be checked against that characters list, and if it isn't present the process will fail.
+will be checked against that character list, and if it isn't present the process will fail.
 
-The Actors column will be copied in to the voice script export, for ease of use with recording.
+The **Actors** column will be copied in to the voice script export, for ease of use with recording.
 
 ## Usage
 ## Command-Line Tool
@@ -165,6 +165,9 @@ This is a command-line utility with a few arguments. A few simple examples:
 Use the file `main.ink` (and any included ink files) as the source, and output the resulting files in the `somewhere` folder:
 
 `./DinkCompiler --source ../../tests/test1/main.ink --destFolder ../somewhere`
+
+Or instead, grab all the settings from a project file:
+`./DinkCompiler --project dinkproject.jsonc`
 
 ### Arguments
 * `--source <sourceInkFile>` (REQUIRED)
@@ -185,7 +188,7 @@ Use the file `main.ink` (and any included ink files) as the source, and output t
     If false, skips that text, but does include it in `-dink-min`.\
     Default is false.
 
-* `--project project\config.jsonc`
+* `--project project/config.jsonc`
 
     If supplied, configuration will be read from the given JSON file, instead
     of given as command-line switches. This also means that the folder that the
