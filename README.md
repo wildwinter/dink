@@ -8,7 +8,7 @@ Ink is a system of writing for text flow, so it's a bit of an odd idea to restri
 
 So this presents a markup for specifying dialogue lines and scene actions in an easy to write/read form, and tools to help integrate that into a project.
 
-```c
+```cpp
 === MyScene
 #dink
 FRED (O.S.): It was a cold day in November...
@@ -73,7 +73,7 @@ Each beat can either be a **line of dialogue**, or a **line of action**.
 
 At a very simplistic level this can be interpreted as "X happens, then X happens".
 
-```c
+```cpp
 == MyScene
 #dink
 
@@ -90,7 +90,7 @@ ACTOR (qualifier): (direction) Dialogue line. #tag1 #tag3 #tag4 #id:xxxxxx
 Comments, *qualifier* and *direction* are optional, as are the tags except *#id:* which must exist and be unique. The Dink compiler will generate these (based on the Ink Localiser tool I made a while back).
 
 Here is a simple scene, with only one (anonymous) snippet:
-```c
+```cpp
 == MyScene
 #dink
 // VO: This comment will go to the voice actors
@@ -108,7 +108,7 @@ FRED: Hello to you too!
 ```
 
 Here is a scene with an anonymous snippet to start and then another:
-```c
+```cpp
 == MyOtherScene
 #dink
 // This is the anon snippet
@@ -130,7 +130,7 @@ Comments *above* a snippet (i.e. above the knot or the stitch) will appear in th
 
 Comments above a beat will appear in the comments for that beat, and so will comments on the end of a beat.
 
-```c
+```cpp
 // This comment will appear in the comments for MyScene's main snippet
 // And so will this comment.
 == MyScene
