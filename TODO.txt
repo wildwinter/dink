@@ -1,6 +1,6 @@
 Branching comments for script
 Test JS example
 Validate non-Dink lines?
-Get rid of Dink comments.
 
 For TCR:
+Validate non-Dink lines?
