@@ -5,6 +5,13 @@ using System.Linq;
 
 public class DinkParser
 {
+    public static bool Verbose = false;
+    public static void Log(string str)
+    {
+        if (Verbose)
+            Console.WriteLine(str);
+    }
+
     public static string? ParseComment(string line)
     {
         if (line.StartsWith("//"))
@@ -166,7 +173,7 @@ public class DinkParser
                 snippet.SnippetID = "";
                 snippet.Comments.AddRange(comments);
                 comments.Clear();
-                Console.WriteLine($"Scene: {scene}");
+                Log($"Scene: {scene}");
             }
             else if (ParseStitch(trimmedLine) is string stitch)
             {
@@ -176,7 +183,7 @@ public class DinkParser
                 snippet.SnippetID = stitch;
                 snippet.Comments.AddRange(comments);
                 comments.Clear();
-                Console.WriteLine($"Snippet: {snippet}");
+                Log($"Snippet: {snippet}");
             }
             else if (trimmedLine == "#dink")
             {
@@ -191,14 +198,14 @@ public class DinkParser
                 dinkLine.Comments.AddRange(comments);
                 snippet?.Beats.Add(dinkLine);
                 comments.Clear();
-                Console.WriteLine(dinkLine);
+                Log(dinkLine.ToString());
             }
             else if (parsing && ParseAction(trimmedLine) is DinkAction dinkAction)
             {
                 dinkAction.Comments.AddRange(comments);
                 snippet?.Beats.Add(dinkAction);
                 comments.Clear();
-                Console.WriteLine(dinkAction);
+                Log(dinkAction.ToString());
             }
             else
             {
