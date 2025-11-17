@@ -7,6 +7,11 @@
 This is a test file. #id:main_Intro_FDAP
 -> DONE
 
+=== Intro2
+// This is here to see if Dink will notice there's no #dink tag
+LAURA: This is an earlier line I am saying. #id:main_Intro2_PCBU
+-> DONE
+
 /* 
 === FrumpScene
 #dink

@@ -12,6 +12,7 @@
 {"LineID":"scene1_Scene1_Left_MIM6","Text":"You sure you want to go left?"},
 {"LineID":"scene1_Scene1_OtherContent_FSDK","Text":"This content is nothing at all to do with Dink!"},
 {"LineID":"main_Intro_FDAP","Text":"This is a test file."},
+{"LineID":"main_Intro2_PCBU","Text":"LAURA: This is an earlier line I am saying."},
 {"LineID":"main_TestScene_16U4","Text":"This is a line I am saying."},
 {"LineID":"main_TestScene_FF1T","Text":"This is another line."},
 {"LineID":"main_TestScene_BQ1E","Text":"This is a loud line!"},

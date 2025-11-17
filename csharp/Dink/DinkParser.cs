@@ -174,6 +174,7 @@ public class DinkParser
                 snippet.Comments.AddRange(comments);
                 comments.Clear();
                 Log($"Scene: {scene}");
+                continue;
             }
             else if (ParseStitch(trimmedLine) is string stitch)
             {
@@ -184,21 +185,33 @@ public class DinkParser
                 snippet.Comments.AddRange(comments);
                 comments.Clear();
                 Log($"Snippet: {snippet}");
+                continue;
             }
             else if (trimmedLine == "#dink")
             {
                 parsing = true;
+                continue;
             }
             else if (ParseComment(trimmedLine) is string comment)
             {
                 comments.Add(comment);
+                continue;
             }
-            else if (parsing && ParseLine(trimmedLine) is DinkLine dinkLine)
+            else if (ParseLine(trimmedLine) is DinkLine dinkLine)
             {
-                dinkLine.Comments.AddRange(comments);
-                snippet?.Beats.Add(dinkLine);
-                comments.Clear();
-                Log(dinkLine.ToString());
+                if (!parsing)
+                {
+                    Console.WriteLine("A Dink line is present in a block without a #dink tag. This doesn't look right!");
+                    Console.WriteLine($"    {trimmedLine}");
+                }
+                else
+                {
+                    dinkLine.Comments.AddRange(comments);
+                    snippet?.Beats.Add(dinkLine);
+                    comments.Clear();
+                    Log(dinkLine.ToString());
+                    continue;
+                }
             }
             else if (parsing && ParseAction(trimmedLine) is DinkAction dinkAction)
             {
@@ -206,11 +219,9 @@ public class DinkParser
                 snippet?.Beats.Add(dinkAction);
                 comments.Clear();
                 Log(dinkAction.ToString());
+                continue;
             }
-            else
-            {
-                comments.Clear();
-            }
+            comments.Clear();
         }
         if (snippet != null && scene != null && snippet.Beats.Count > 0)
             scene.Snippets.Add(snippet);

@@ -1,8 +1,6 @@
 Branching comments for script
 Test JS example
-Validate non-Dink lines?
 Validate recorded WAVs
 Line/script status + stats
 
 For TCR:
-Validate non-Dink lines?
