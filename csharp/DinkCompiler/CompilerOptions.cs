@@ -1,7 +1,12 @@
 namespace DinkCompiler;
 
 using System.Text.Json;
-using DocumentFormat.OpenXml.Bibliography;
+
+public class AudioFolder
+{
+    public required string State { get; set; }
+    public required string Folder { get; set; }
+}
 
 public class CompilerOptions
 {
@@ -21,6 +26,20 @@ public class CompilerOptions
     // If true, includes the text of action beats in the string tables
     // to be localised, and not in the Dink minimal
     public bool LocActionBeats = false;
+
+    // This is the default where the game will look for
+    // audio files that start with the ID names of the lines.
+    // The folders (and their children) will be searched in this
+    // order, so if a line is found in (say) the Audio/Recorded folder first, 
+    // its status in the voice script will be set to Recorded.
+    // If not found, the status will be set to Missing.
+    public List<AudioFolder> AudioFolders { get; set; } = new()
+    {
+        new AudioFolder { State = "Final",    Folder = "Audio/Final" },
+        new AudioFolder { State = "Recorded", Folder = "Audio/Recorded" },
+        new AudioFolder { State = "Scratch",  Folder = "Audio/Scratch" },
+        new AudioFolder { State = "TTS",      Folder = "Audio/TTS" }
+    };
 
     public static CompilerOptions? LoadFromProjectFile(string projectFile)
     {
@@ -70,13 +89,15 @@ public class CompilerEnvironment
     public string DestFolder {get; private set;}
     public bool LocActionBeats {get{return _options.LocActionBeats;}}
     public string RootFilename {get{return Path.GetFileNameWithoutExtension(SourceInkFile);}}
-
+    public List<AudioFolder> AudioFolders {get; private set;}
+    
     public CompilerEnvironment(CompilerOptions options)
     {
         _options = options;    
         SourceInkFile = "";
         ProjectFile = "";
         DestFolder = "";
+        AudioFolders = new List<AudioFolder>();
     }
 
     public bool Init()
@@ -126,6 +147,23 @@ public class CompilerEnvironment
         if (LocActionBeats)
             Console.WriteLine($"Including action beat text in localization output.");
 
+        string audioFolderRoot = ProjectFolder;
+        if (string.IsNullOrEmpty(audioFolderRoot))
+            audioFolderRoot = SourceInkFolder;
+        foreach (var audioFolder in _options.AudioFolders)
+        {
+            var expandedFolder = audioFolder.Folder;
+            if (!Path.IsPathFullyQualified(expandedFolder))
+                expandedFolder = Path.Join(audioFolderRoot,expandedFolder);
+            if (!Directory.Exists(expandedFolder))
+            {
+                Console.WriteLine($"Warning: Audio folder '{expandedFolder}' doesn't exist.");
+            }
+            else
+            {
+                AudioFolders.Add(new AudioFolder { State = audioFolder.State, Folder = expandedFolder });
+            }
+        }
         return true;
     }
 

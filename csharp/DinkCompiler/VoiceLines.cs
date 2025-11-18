@@ -38,9 +38,46 @@ class VoiceLines
         public required string Direction { get; set; }
         public required string Comments { get; set; }
         public required string Tags { get; set; }
+        public required string AudioStatus {get; set;}
+    }
+
+    public Dictionary<string, string?> GatherAudioFileStatuses(List<AudioFolder> audioFolders)
+    {
+        var idArray = OrderedEntries.Select(v => v.ID).ToArray();
+        var result = idArray.ToDictionary(
+            id => id,
+            id => (string?)null,
+            StringComparer.OrdinalIgnoreCase);
+
+        foreach (var audioFolder in audioFolders)
+        {
+            string audioFolderRoot = audioFolder.Folder;
+
+            if (string.IsNullOrWhiteSpace(audioFolderRoot) || !Directory.Exists(audioFolderRoot))
+                continue;
+
+            foreach (var filePath in Directory.EnumerateFiles(audioFolderRoot, "*", SearchOption.AllDirectories))
+            {
+                var nameWithoutExt = Path.GetFileNameWithoutExtension(filePath);
+
+                // Only compare IDs to the *filename*, never to folder names
+                foreach (var id in idArray)
+                {
+                    if (result[id] == null &&
+                        nameWithoutExt.StartsWith(id, StringComparison.OrdinalIgnoreCase))
+                    {
+                        result[id] = audioFolder.State;
+                    }
+                }
+            }
+        }
+
+        return result;
     }
         
-    public bool WriteToExcel(string rootName, Characters? characters, string destVoiceFile)
+    public bool WriteToExcel(string rootName, Characters? characters, 
+                            Dictionary<string, string?> audioFileStatuses, 
+                            string destVoiceFile)
     {
         var recordsToExport = OrderedEntries.Select(v => new VoiceEntryExport
         {
@@ -51,7 +88,8 @@ class VoiceLines
             Line = v.Line,
             Direction = v.Direction,
             Comments = string.Join(", ", v.Comments),
-            Tags = string.Join(", ", v.Tags)
+            Tags = string.Join(", ", v.Tags),
+            AudioStatus = audioFileStatuses[v.ID]??"Unknown"
         }).ToList();
 
         try

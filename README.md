@@ -24,7 +24,7 @@ DAVE: Thar she blows!
 -> DONE
 ```
 
-### Tools
+## Summary
 * The `DinkCompiler`:
   * Adds IDs to all the lines of Ink for localisation and voice.
   * Compiles the Ink using *inklecate*.
@@ -33,13 +33,18 @@ DAVE: Thar she blows!
   * If a list of character names is supplied, checks that all the Dink scenes use valid characters.
   * Produces a JSON file with all the strings used in Ink and Dink needed for runtime.
   * Produces an Excel file with all the strings in for localisation.
-  * Produces an Excel file for voice recording, including mapping to actors if supplied.
+  * Produces an Excel file for voice recording, including mapping to actors if supplied. Checks the **status of existing audio files** to figure out what has actually been recorded.
   
 ### Contents
 * [The Basics](#the-basics)
 * [Source Code](#source-code)
 * [Releases](#releases)
 * [Usage](#usage)
+  * [The Dink Spec](#the-dink-spec)
+  * [Character List](#character-list)
+  * [Audio File Status](#audio-file-status)
+  * [Command-Line Tool](#command-line-tool)
+  * [Config File](#config-file)
 * [Contributors](#contributors)
 * [License](#license)
 
@@ -59,7 +64,9 @@ The source can be found on [Github](https://github.com/wildwinter/dink), and is 
 ## Releases
 Releases will be available in the releases area in [Github](https://github.com/wildwinter/dink/releases).
 
-## The Dink Spec
+## Usage
+
+### The Dink Spec
 
 A Dink **scene** is the equivalent of an Ink **knot**. 
 
@@ -122,7 +129,7 @@ FRED: Good morning! #id:main_MyOtherScene_Part2_R6Sg
 -> DONE
 ```
 
-### Comments
+#### Comments
 Comments use `//` to make them meaningful to Dink, but any content in block-style comments
 (e.g. `/* */`) will be skipped, like in normal Ink.
 
@@ -158,8 +165,33 @@ will be checked against that character list, and if it isn't present the process
 
 The **Actors** column will be copied in to the voice script export, for ease of use with recording.
 
-## Usage
-## Command-Line Tool
+### Audio File Status
+
+*You don't need to use this, but it might be handy!*
+
+This tool assumes that you want to store your audio dialogue files in folders somewhere in your game. And that you put them into different folders depending on the status of the audio line.
+
+It assumes that you name your audio file after the LineID of the line.
+
+So, if you have this line:
+```cpp
+DAVE: Morning. #id:intro_XC5r
+```
+Then you probablt have a file named `intro_XC5r.wav` or something similar. Any file extension is fine, so long as the filename starts with the line ID. So `intro_XC5r_v1.mp3` is also fine.
+
+By default, the voice export routine will look for something matching that file in the following order:
+* `./Audio/Final`
+* `./Audio/Recorded`
+* `./Audio/Scratch`
+* `./Audio/TTS`
+
+And the first one it finds, it will set as the `AudioStatus` of the file in the output `-voice.xlsx` Excel voice recording file. Or `Unknown` if it can't find it at all.
+
+(All these folders are searched for under your project folder if you have one, or your main Ink file folder otherwise.)
+
+This list of folders and statuses can be customised in the [Project Config File](#config-file).
+
+### Command-Line Tool
 This is a command-line utility with a few arguments. A few simple examples:
 
 Use the file `main.ink` (and any included ink files) as the source, and output the resulting files in the `somewhere` folder:
@@ -169,7 +201,7 @@ Use the file `main.ink` (and any included ink files) as the source, and output t
 Or instead, grab all the settings from a project file:
 `./DinkCompiler --project dinkproject.jsonc`
 
-### Arguments
+#### Arguments
 * `--source <sourceInkFile>` (REQUIRED)
     
     Entrypoint to use for the Ink processing.\
@@ -209,7 +241,20 @@ A JSON or JSONC file (i.e. JSON with comments) having all or some of the require
     // Localise actions?
     // Default is false, which means no text in Action beats
     // will be localised
-    "locActionBeats":false
+    "locActionBeats":false,
+
+    // This is the default where the game will look for
+    // audio files that start with the ID names of the lines.
+    // The folders (and their children) will be searched in this
+    // order, so if a line is found in (say) the Audio/Recorded folder first, 
+    // its status in the voice script will be set to Recorded.
+    // If not found, the status will be set to Missing.
+    "audioFolders":[
+        {"state":"Final", "folder":"Audio/Final"},
+        {"state":"Recorded", "folder":"Audio/Recorded"},
+        {"state":"Scratch", "folder":"Audio/Scratch"},
+        {"state":"TTS", "folder":"Audio/TTS"}
+    ]
 }
 ```
 

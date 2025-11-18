@@ -8,5 +8,18 @@
     // Localise actions?
     // Default is false, which means no text in Action beats
     // will be localised
-    "locActionBeats":false
+    "locActionBeats":false,
+
+    // This is the default where the game will look for
+    // audio files that start with the ID names of the lines.
+    // The folders (and their children) will be searched in this
+    // order, so if a line is found in (say) the Audio/Recorded folder first, 
+    // its status in the voice script will be set to Recorded.
+    // If not found, the status will be set to Missing.
+    "audioFolders":[
+        {"state":"Final", "folder":"Audio/Final"},
+        {"state":"Recorded", "folder":"Audio/Recorded"},
+        {"state":"Scratch", "folder":"Audio/Scratch"},
+        {"state":"TTS", "folder":"Audio/TTS"}
+    ]
 }

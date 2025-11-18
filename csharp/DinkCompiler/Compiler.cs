@@ -49,7 +49,8 @@ public class Compiler
             return false;
 
         // ----- Output Voice Lines -----
-        if (!voiceLines.WriteToExcel(_env.RootFilename, characters, _env.MakeDestFile("-voice.xlsx")))
+        var audioFileStatuses = voiceLines.GatherAudioFileStatuses(_env.AudioFolders);
+        if (!voiceLines.WriteToExcel(_env.RootFilename, characters, audioFileStatuses, _env.MakeDestFile("-voice.xlsx")))
             return false;
 
         // ----- Output Dink Structure -----
