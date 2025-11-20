@@ -1,0 +1,161 @@
+html, body {
+    font-family: sans-serif;
+    background: white;
+    color: #000000;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+div {
+    display:block;
+    position:relative;
+}
+
+.outerContainer {
+    padding: 0;
+    margin: 0;
+    position:relative;
+    display: grid;
+    grid-template-columns: minmax(480px, 60%) 1fr;
+    height: 100vh;
+}
+
+#column-left {
+    overflow-y: auto;
+}
+
+#column-right {
+    overflow-y: auto;
+}
+
+#story {
+    padding:10px;
+    height:100vh;
+    overflow-y: auto;
+    background-color: rgba(255, 255, 255);
+}
+
+#map-container {
+    /* Positioning context for absolute symbols */
+    position: relative; 
+    width: 100%;
+    border: 1px solid #ccc;
+}
+
+#map-container.locked::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); 
+    z-index: 1000; /* Must be higher than any content inside */
+    cursor: not-allowed; /* Optional: Provides user feedback */
+}
+
+.map-image {
+    /* Image scales to fit column, maintaining aspect ratio */
+    width: 100%;
+    height: auto;
+    display: block; 
+}
+
+.map-hit-area {
+    /* The responsive, invisible click/hover area */
+    position: absolute;
+    width: 2.5vw;  /* Responsive size for easy clicking */
+    height: 2.5vw; 
+    transform: translate(-50%, -50%); 
+    cursor: pointer;
+    z-index: 5; /* Ensures hit area is above the map */
+}
+
+.map-symbol-visual {
+    /* The small, centered visual dot (fixed size) */
+    width: 12px;
+    height: 12px;
+    background-color: #e63946;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 0 4px rgba(0,0,0,0.4);
+    
+    /* Center the visual dot within the responsive hit area */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.map-tooltip {
+    /* Hide by default */
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s, visibility 0.3s;
+    
+    /* Positioning relative to the map-hit-area */
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    
+    /* Visual styling */
+    background-color: #333;
+    color: white;
+    padding: 10px 14px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    min-width: 160px;
+    max-width: 250px;
+    z-index: 10;
+}
+
+/* SHOW TOOLTIP ON HOVER */
+.map-hit-area:hover .map-tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Tooltip Content Elements (using CSS content and attr()) */
+.tooltip-title::before {
+    content: attr(data-title);
+    font-weight: bold;
+    display: block;
+    padding-bottom: 4px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid #555;
+}
+
+.tooltip-description::before {
+    content: attr(data-description);
+    display: block;
+    font-size: 0.9em;
+}
+
+/* Tooltip Arrow */
+.map-tooltip::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -6px;
+    transform: translateX(-50%);
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid #333; /* Matches background color */
+}
+
+#reset-container {
+    position: absolute;
+    top:0px;
+    right:0px;
+}
+
+#reset-container button {
+    font-size: 12px;
+    font-weight: bold;
+}

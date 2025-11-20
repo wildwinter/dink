@@ -139,7 +139,8 @@ public class CompilerEnvironment
         DestFolder = _options.DestFolder;
         if (String.IsNullOrWhiteSpace(DestFolder))
             DestFolder = Environment.CurrentDirectory;
-        DestFolder = Path.GetFullPath(DestFolder);
+        if (!Path.IsPathFullyQualified(DestFolder))
+            DestFolder = Path.Combine(ProjectFolder, DestFolder);
         if (!Directory.Exists(DestFolder))
             Directory.CreateDirectory(DestFolder);
         Console.WriteLine($"Using destination folder: '{DestFolder}'");
