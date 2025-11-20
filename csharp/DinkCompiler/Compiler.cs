@@ -222,19 +222,22 @@ public class Compiler
             {
                 foreach(var scene in scenes)
                 {
-                    foreach (var snippet in scene.Snippets)
+                    foreach (var block in scene.Blocks) 
                     {
-                        foreach(var beat in snippet.Beats)
+                        foreach (var snippet in block.Snippets)
                         {
-                            if (beat is DinkLine line)
+                            foreach(var beat in snippet.Beats)
                             {
-                                if (!characters.Has(line.CharacterID))
+                                if (beat is DinkLine line)
                                 {
-                                    if (snippet.SnippetID.Length == 0)
-                                        Console.Error.WriteLine($"Error in file {inkFile}, scene {scene.SceneID}, line {line.LineID} - character '{line.CharacterID}' not in the characters file.:");
-                                    else
-                                        Console.Error.WriteLine($"Error in file {inkFile}, scene {scene.SceneID}, snippet {snippet.SnippetID}, line {line.LineID} - character '{line.CharacterID}' not in the characters file.:");
-                                    return false;
+                                    if (!characters.Has(line.CharacterID))
+                                    {
+                                        if (snippet.SnippetID.Length == 0)
+                                            Console.Error.WriteLine($"Error in file {inkFile}, scene {scene.SceneID}, line {line.LineID} - character '{line.CharacterID}' not in the characters file.:");
+                                        else
+                                            Console.Error.WriteLine($"Error in file {inkFile}, scene {scene.SceneID}, snippet {snippet.SnippetID}, line {line.LineID} - character '{line.CharacterID}' not in the characters file.:");
+                                        return false;
+                                    }
                                 }
                             }
                         }
@@ -253,39 +256,42 @@ public class Compiler
 
         foreach (var scene in parsedDinkScenes)
         {
-            foreach (var snippet in scene.Snippets)
+            foreach( var block in scene.Blocks)
             {
-                foreach (var beat in snippet.Beats)
+                foreach (var snippet in block.Snippets)
                 {
-                    if (beat is DinkAction action)
+                    foreach (var beat in snippet.Beats)
                     {
-                        if (_env.LocActionBeats) {
-                            // Include action beat in the string table.
+                        if (beat is DinkAction action)
+                        {
+                            if (_env.LocActionBeats) {
+                                // Include action beat in the string table.
+                                LocEntry entry = new LocEntry()
+                                {
+                                    ID = action.LineID,
+                                    Text = action.Text,
+                                    Comments = action.GetComments(["LOC", "VO"]),
+                                    Speaker = ""
+                                };
+                                inkStrings.Set(entry);
+                            }
+                            else
+                            {
+                                // Remove action beats from the string table.
+                                inkStrings.Remove(action.LineID);
+                            }
+                        }
+                        else if (beat is DinkLine line)
+                        {
                             LocEntry entry = new LocEntry()
                             {
-                                ID = action.LineID,
-                                Text = action.Text,
-                                Comments = action.GetComments(["LOC", "VO"]),
-                                Speaker = ""
+                                ID = line.LineID,
+                                Text = line.Text,
+                                Comments = line.GetComments(["LOC", "VO"]),
+                                Speaker = line.CharacterID
                             };
                             inkStrings.Set(entry);
                         }
-                        else
-                        {
-                            // Remove action beats from the string table.
-                            inkStrings.Remove(action.LineID);
-                        }
-                    }
-                    else if (beat is DinkLine line)
-                    {
-                        LocEntry entry = new LocEntry()
-                        {
-                            ID = line.LineID,
-                            Text = line.Text,
-                            Comments = line.GetComments(["LOC", "VO"]),
-                            Speaker = line.CharacterID
-                        };
-                        inkStrings.Set(entry);
                     }
                 }
             }
@@ -300,23 +306,26 @@ public class Compiler
 
         foreach (var scene in dinkScenes)
         {
-            foreach (var snippet in scene.Snippets)
+            foreach (var block in scene.Blocks)
             {
-                foreach (var beat in snippet.Beats)
+                foreach (var snippet in block.Snippets)
                 {
-                    if (beat is DinkLine line)
+                    foreach (var beat in snippet.Beats)
                     {
-                        VoiceEntry entry = new VoiceEntry()
+                        if (beat is DinkLine line)
                         {
-                            ID = line.LineID,
-                            Character = line.CharacterID,
-                            Qualifier = line.Qualifier,
-                            Line = line.Text,
-                            Direction = line.Direction,
-                            Comments = line.GetComments(["VO"]),
-                            Tags = line.GetTags(["a"])
-                        };
-                        voiceLines.Set(entry);
+                            VoiceEntry entry = new VoiceEntry()
+                            {
+                                ID = line.LineID,
+                                Character = line.CharacterID,
+                                Qualifier = line.Qualifier,
+                                Line = line.Text,
+                                Direction = line.Direction,
+                                Comments = line.GetComments(["VO"]),
+                                Tags = line.GetTags(["a"])
+                            };
+                            voiceLines.Set(entry);
+                        }
                     }
                 }
             }

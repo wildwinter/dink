@@ -52,7 +52,7 @@ DAVE: Thar she blows!
 The `DinkCompiler` will take in an Ink file (for example, `myproject.ink`) and its includes, process it, and the results are the following:
 * **Updated Source File (`myproject.ink`)**: Any lines of text in the source Ink file that don't have a unique identifier of the form `#id:xxx` tags will have been added. 
 * **Compiled Ink File (`myproject.json`)**: The Ink file compiled to JSON using `inklecate`, as Ink usually does. 
-* **Dink Structure File (`myproject-dink-structure.json`)**: A JSON structure containing all the Dink scenes and their snippets and beats, and useful information such as tags, lines, comments and so on. This is most likely to be useful in your edit pipeline for updating items in your editor based on Dink scripts - for example, creating placeholder scene layouts.
+* **Dink Structure File (`myproject-dink-structure.json`)**: A JSON structure containing all the Dink scenes and their blocks, snippets, and beats, and useful information such as tags, lines, comments and so on. This is most likely to be useful in your edit pipeline for updating items in your editor based on Dink scripts - for example, creating placeholder scene layouts.
 * **Dink Runtime File (`myproject-dink-min.json`)**: A JSON structure containing one entry for each LineID, with the runtime data you'll need for each line that you won't get from Ink e.g. the character speaking etc.
 * **Strings File for Localisation (`myproject-strings.xslx`)**: An Excel file containing an entry for every string in Ink that needs localisation. When they are Dink lines, will include helpful data such as comments, the character speaking.
 * **Strings Runtime File (`myproject-strings-min.json`)**: A JSON file containing an entry for every string in Ink, along with the string used in the original script. This is probably your master language file for runtime - you'll want to create copies of it for your localisation. When you display an Ink or Dink line you'll want to use the string data in here rather than in Ink itself.
@@ -70,9 +70,11 @@ Releases will be available in the releases area in [Github](https://github.com/w
 
 A Dink **scene** is the equivalent of an Ink **knot**. 
 
-Each Dink scene consists of one or more Dink **snippets**. A Dink snippet is the equivalent of an ink **stitch**.
+Each Dink scene consists of one or more Dink **blocks**. A Dink block is the equivalent of an ink **stitch**.
 
-A scene might only contain one, the "main" snippet, which is unnamed. Any further snippets will be named after the stitch.
+A scene might only contain one block, the "main" block, which is unnamed. Any further blocks will be named after the stitch.
+
+Each Dink block consists of one or more Dink **snippets**. A Dink snuppet is the equivalent of an Ink flow fragment - it is a run of lines that doesn't have any flow changes or diversions in it.
 
 Each **snippet** consists of **beats**.
 
@@ -96,7 +98,7 @@ ACTOR (qualifier): (direction) Dialogue line. #tag1 #tag3 #tag4 #id:xxxxxx
 
 Comments, *qualifier* and *direction* are optional, as are the tags except *#id:* which must exist and be unique. The Dink compiler will generate these (based on the Ink Localiser tool I made a while back).
 
-Here is a simple scene, with only one (anonymous) snippet:
+Here is a simple scene, with only one (anonymous) block:
 ```cpp
 == MyScene
 #dink
@@ -114,15 +116,15 @@ FRED: Hello to you too!
 -> DONE
 ```
 
-Here is a scene with an anonymous snippet to start and then another:
+Here is a scene with an anonymous block to start and then another:
 ```cpp
 == MyOtherScene
 #dink
-// This is the anon snippet
+// This is the anon block
 FRED (V.O.): It was a cold day in December... #id:main_MyOtherScene_R6Sg
 -> Part2
 
-// This is the snippet called Part2
+// This is the block called Part2
 = Part2
 // This is fred talking.
 FRED: Good morning! #id:main_MyOtherScene_Part2_R6Sg
@@ -133,12 +135,12 @@ FRED: Good morning! #id:main_MyOtherScene_Part2_R6Sg
 Comments use `//` to make them meaningful to Dink, but any content in block-style comments
 (e.g. `/* */`) will be skipped, like in normal Ink.
 
-Comments *above* a snippet (i.e. above the knot or the stitch) will appear in the comments for that snippet.
+Comments *above* a block (i.e. above the knot or the stitch) will appear in the comments for that block.
 
 Comments above a beat will appear in the comments for that beat, and so will comments on the end of a beat.
 
 ```cpp
-// This comment will appear in the comments for MyScene's main snippet
+// This comment will appear in the comments for MyScene's main block
 // And so will this comment.
 == MyScene
 #dink

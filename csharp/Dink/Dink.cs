@@ -17,7 +17,6 @@ public class DinkBeat
     // Looks for comments that e.g. start with VO:
     public List<string> GetComments(params string[] prefixes)
     {
-        // The logic remains the same, as an array implements IEnumerable<string>
         return Comments
             .Where(comment => prefixes.Any(prefix =>
                 comment.StartsWith(prefix + ":")))
@@ -26,7 +25,6 @@ public class DinkBeat
     
     public List<string> GetTags(params string[] prefixes) 
     {
-        // The logic remains the same, as an array implements IEnumerable<string>
         return Tags
             .Where(tag => prefixes.Any(prefix => 
                 tag.StartsWith(prefix + ":"))) 
@@ -45,7 +43,6 @@ public class DinkLine : DinkBeat
     // optional e.g. loudly
     public string Direction { get; set; } = string.Empty;
     public string Text { get; set; } = string.Empty;
-
     public override string ToString() => 
         $"Char: '{CharacterID}', Qualifier: '{Qualifier}', Direction: '{Direction}', Content: '{Text}'"+base.ToString();
 }
@@ -55,23 +52,29 @@ public class DinkAction : DinkBeat
     // optional e.g. SFX, AUDIO
     public string Type { get; set; } = string.Empty;
     public string Text { get; set; } = string.Empty;
-
     public override string ToString() =>
         $"Type: '{Type}', Content: '{Text}'" + base.ToString();
 }
 
+// Equivalent of an Ink flow fragment
 public class DinkSnippet
 {
     public string SnippetID { get; set; } = string.Empty;
-    public List<string> Comments { get; set; } = new List<string>();
     public List<DinkBeat> Beats { get; set; } = new List<DinkBeat>();
     public override string ToString() => $"Snippet: '{SnippetID}'";
+}
+
+public class DinkBlock
+{
+    public string BlockID { get; set; } = string.Empty;
+    public List<string> Comments { get; set; } = new List<string>();
+    public List<DinkSnippet> Snippets { get; set; } = new List<DinkSnippet>();
+    public override string ToString() => $"Block: '{BlockID}'";
 }
 
 public class DinkScene
 {
     public string SceneID { get; set; } = string.Empty;
-    public List<DinkSnippet> Snippets { get; set; } = new List<DinkSnippet>();
-
+    public List<DinkBlock> Blocks { get; set; } = new List<DinkBlock>();
     public override string ToString() => $"Scene: '{SceneID}'";
 }

@@ -12,6 +12,39 @@ public class DinkParser
             Console.WriteLine(str);
     }
 
+    public static bool IsFlowBreakingLine(string line)
+    {
+        line = line.Trim();
+        if (string.IsNullOrEmpty(line))
+            return false;
+    
+        if (line.StartsWith("*") ||
+            line.StartsWith("-") ||
+            line.StartsWith("+"))
+        {
+            return true;
+        }
+
+        if (line.Contains("->") || line.Contains("<-"))
+        {
+            return true;
+        }
+
+        int openCount = 0;
+        int closeCount = 0;
+
+        foreach (char c in line)
+        {
+            if (c == '{') openCount++;
+            else if (c == '}') closeCount++;
+        }
+
+        if (openCount > closeCount)
+            return true;
+
+        return false;
+    }
+ 
     public static string? ParseComment(string line)
     {
         if (line.StartsWith("//"))
@@ -139,10 +172,22 @@ public class DinkParser
         return null;
     }
 
+    private static readonly Random _rng = new Random();
+    private const string Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    public static string GenerateID()
+    {
+        char[] buffer = new char[4];
+        for (int i = 0; i < 4; i++)
+            buffer[i] = Chars[_rng.Next(Chars.Length)];
+        return new string(buffer);
+    }
+
     public static List<DinkScene> ParseInkLines(List<string> lines)
     {
         List<DinkScene> parsedScenes = new List<DinkScene>();
         DinkScene? scene = null;
+        DinkBlock? block = null;
         DinkSnippet? snippet = null;
         List<string> comments = new List<string>();
         bool parsing = false;
@@ -160,29 +205,53 @@ public class DinkParser
                 trimmedLine = trimmedLine.Substring(0, commentIndex).TrimEnd();
             }
 
+            if (IsFlowBreakingLine(trimmedLine))
+            {
+                if (snippet != null && block != null && snippet.Beats.Count > 0)
+                    block.Snippets.Add(snippet);
+
+                snippet = new DinkSnippet();
+                snippet.SnippetID = GenerateID();
+            }
+
             if (ParseKnot(trimmedLine) is string knot)
             {
-                if (snippet != null && scene != null && snippet.Beats.Count > 0)
-                    scene.Snippets.Add(snippet);
-                if (scene != null && scene.Snippets.Count > 0)
+                if (snippet != null && block != null && snippet.Beats.Count > 0)
+                    block.Snippets.Add(snippet);
+                if (block != null && scene != null && block.Snippets.Count > 0)
+                    scene.Blocks.Add(block);
+                if (scene != null && scene.Blocks.Count > 0)
                     parsedScenes.Add(scene);
                 parsing = false;
+
                 scene = new DinkScene();
                 scene.SceneID = knot;
+
+                block = new DinkBlock();
+                block.BlockID = "";
+                block.Comments.AddRange(comments);
+
                 snippet = new DinkSnippet();
-                snippet.SnippetID = "";
-                snippet.Comments.AddRange(comments);
+                snippet.SnippetID = GenerateID();
+
                 comments.Clear();
                 Log($"Scene: {scene}");
                 continue;
             }
             else if (ParseStitch(trimmedLine) is string stitch)
             {
-                if (snippet != null && scene != null && snippet.Beats.Count > 0)
-                    scene.Snippets.Add(snippet);
+                if (snippet != null && block != null && snippet.Beats.Count > 0)
+                    block.Snippets.Add(snippet);
+                if (block != null && scene != null && block.Snippets.Count > 0)
+                    scene.Blocks.Add(block);
+
+                block = new DinkBlock();
+                block.BlockID = stitch;
+                block.Comments.AddRange(comments);
+
                 snippet = new DinkSnippet();
-                snippet.SnippetID = stitch;
-                snippet.Comments.AddRange(comments);
+                snippet.SnippetID = GenerateID();
+                
                 comments.Clear();
                 Log($"Snippet: {snippet}");
                 continue;
@@ -223,10 +292,14 @@ public class DinkParser
             }
             comments.Clear();
         }
-        if (snippet != null && scene != null && snippet.Beats.Count > 0)
-            scene.Snippets.Add(snippet);
-        if (scene != null && scene.Snippets.Count > 0)
+
+        if (snippet != null && block != null && snippet.Beats.Count > 0)
+            block.Snippets.Add(snippet);
+        if (block != null && scene != null && block.Snippets.Count > 0)
+            scene.Blocks.Add(block);
+        if (scene != null && scene.Blocks.Count > 0)
             parsedScenes.Add(scene);
+
         return parsedScenes;
     }
 
@@ -234,6 +307,45 @@ public class DinkParser
     {
         const string pattern = @"/\*[\s\S]*?\*/";
         return Regex.Replace(text, pattern, string.Empty, RegexOptions.Singleline);
+    }
+
+    // Figures out what existing snippet ID contains the updated set of Line IDs.
+    public static string? FindExistingSnippetID(
+        IEnumerable<string> newBeatIds,
+        IEnumerable<DinkSnippet> existingSnippets,
+        double minOverlapScore = 0.5)
+    {
+        // Turn the new beats into a hash set for fast operations.
+        var newSet = new HashSet<string>(newBeatIds, StringComparer.OrdinalIgnoreCase);
+
+        string? bestId = null;
+        double bestScore = 0.0;
+
+        foreach (var s in existingSnippets)
+        {
+            // Extract BeatIDs from the snippet.
+            var oldSet = new HashSet<string>(
+                s.Beats.Select(b => b.LineID),
+                StringComparer.OrdinalIgnoreCase
+            );
+
+            int intersection = newSet.Intersect(oldSet).Count();
+            int union = newSet.Union(oldSet).Count();
+
+            if (union == 0)
+                continue;
+
+            double score = (double)intersection / union;
+
+            if (score > bestScore)
+            {
+                bestScore = score;
+                bestId = s.SnippetID;
+            }
+        }
+
+        // Only reuse an existing snippet if similarity exceeds threshold.
+        return bestScore >= minOverlapScore ? bestId : null;
     }
 
     public static List<string> SplitTextIntoLines(string text)
