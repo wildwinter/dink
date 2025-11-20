@@ -74,7 +74,7 @@ Each Dink scene consists of one or more Dink **blocks**. A Dink block is the equ
 
 A scene might only contain one block, the "main" block, which is unnamed. Any further blocks will be named after the stitch.
 
-Each Dink block consists of one or more Dink **snippets**. A Dink snuppet is the equivalent of an Ink flow fragment - it is a run of lines that doesn't have any flow changes or diversions in it.
+Each Dink block consists of one or more Dink **snippets**. A Dink snippet is the equivalent of an Ink flow fragment - it is a run of lines that doesn't have any flow changes or diversions in it.
 
 Each **snippet** consists of **beats**.
 
