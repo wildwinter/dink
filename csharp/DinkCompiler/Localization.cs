@@ -82,15 +82,10 @@ class LocStrings
 
         foreach (var entry in OrderedEntries)
         {
-            object obj = new
-            {
-                LineID = entry.ID,
-                Text = entry.Text
-            };
-            lines.Add(JsonSerializer.Serialize(obj, options));       
+            lines.Add($"\t\"{entry.ID}\": \"{entry.Text}\"");  
         }
 
-        return "[\n"+string.Join(",\n", lines)+"\n]";
+        return "{\n"+string.Join(",\n", lines)+"\n}";
     }
 
 }

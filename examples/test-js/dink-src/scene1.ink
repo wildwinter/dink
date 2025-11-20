@@ -5,18 +5,21 @@
 = Part1
 FRED: This is a scene. #id:scene1_Scene1_Part1_S494
 With several lines. #id:scene1_Scene1_Part1_621G
--> DONE
++ [Part2 #id:scene1_Scene1_Part1_VXIU]
+    -> Part2
 
 // This comment should appear on Part2
 = Part2
 And here's part 2. #id:scene1_Scene1_Part2_N5RW
--> DONE
++ [Part3 #id:scene1_Scene1_Part2_CF6W]
+    -> Part3
 
 = Part3
 // This is part 3
 Dave walks into the room. #id:scene1_Scene1_Part3_UZOH
 DAVE: (quietly) Let's see if this works, shall we? #id:scene1_Scene1_Part3_9MXL
--> DONE
++ [Part4 #id:scene1_Scene1_Part3_YTMH]
+    -> Part4
 
 = Part4
 // There is a choice here.
@@ -31,18 +34,22 @@ DAVE: (quietly) Let's see if this works, shall we? #id:scene1_Scene1_Part3_9MXL
     FRED: Carry on then. #id:scene1_Scene1_Part4_AJDP
 -
 GEORGE: Okay. #id:scene1_Scene1_Part4_0YY1
--> DONE
++ [Back #id:scene1_Scene1_Part4_PZV1]
+    -> Main
 
 = Right
 George swerves the car right. #id:scene1_Scene1_Right_3V6T
 GEORGE: (upset) You sure you want to go right? #id:scene1_Scene1_Right_WM69
--> DONE
++ [Back #id:scene1_Scene1_Right_P8FP]
+    -> Main
 
 = Left
 George swerves the car left. #id:scene1_Scene1_Left_HZ7B
 GEORGE: (upset) You sure you want to go left? #id:scene1_Scene1_Left_MIM6
--> DONE
++ [Back #id:scene1_Scene1_Left_WXCN]
+    -> Main
 
 == OtherContent
 This content is nothing at all to do with Dink! #id:scene1_Scene1_OtherContent_FSDK
--> DONE
++ [Back #id:scene1_OtherContent_VZWQ]
+    -> Main

@@ -49,7 +49,6 @@ public static class DinkJson
                             {
                                 obj = new
                                 {
-                                    LineID = action.LineID,
                                     BeatType = "Action",
                                     Type = action.Type,
                                     Text = action.Text
@@ -59,29 +58,27 @@ public static class DinkJson
                             {
                                 obj = new
                                 {
-                                    LineID = action.LineID,
                                     BeatType = "Action",
                                     Type = action.Type
                                 };
                             }
-                            lines.Add(JsonSerializer.Serialize(obj, options));
+                            lines.Add($"\t\"{beat.LineID}\": {JsonSerializer.Serialize(obj, options)}");
                         }
                         else if (beat is DinkLine line)
                         {
                             obj = new
                             {
-                                LineID = line.LineID,
                                 BeatType = "Line",
                                 CharacterID = line.CharacterID,
                                 Qualifier = line.Qualifier
                             };
-                            lines.Add(JsonSerializer.Serialize(obj, options));
+                            lines.Add($"\t\"{beat.LineID}\": {JsonSerializer.Serialize(obj, options)}");
                         }
                     }
                 }
             }
         }
 
-        return "[\n"+string.Join(",\n", lines)+"\n]";
+        return "{\n"+string.Join(",\n", lines)+"\n}";
     }
 }
