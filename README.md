@@ -34,6 +34,11 @@ DAVE: Thar she blows!
   * Optionally produces a JSON file detailing the Dink structure (e.g. who is the speaker for each line? What are the directions?).
   * Optionally produces an Excel file with all the strings in for localization.
   * Optionally produces an Excel file for voice recording, including mapping to actors if supplied. Checks the **status of existing audio files** to figure out what has actually been recorded.
+* At runtime:
+  * Load the compiled Ink story, as normal. (Remember, Dink compiled it for you!)
+  * Load the Dink runtime data, which will give you extra information about each line of dialogue or action - the speaker, the direction etc.
+  * Load the strings file that Dink generated, and use it to display the strings at runtime. (Because if you want you can swap it out for translations, instead of using the strings embedded in the Ink.)
+  * All these extra features are only for Knots and Stitches tagged as #dink. All your other Ink will work as usual (but you will get the localization for free!).
   
 ### Contents
 * [The Basics](#the-basics)
@@ -270,7 +275,7 @@ A JSON or JSONC file (i.e. JSON with comments) having all or some of the require
     
     // If true, outputs the voice file (xlsx)
     "outputRecordingScript": false,
-    
+
     // This is the default where the game will look for
     // audio files that start with the ID names of the lines.
     // The folders (and their children) will be searched in this
