@@ -209,7 +209,7 @@ bool IsFlowBreakingLine(const FString& InInput)
         }
     }
 
-    return OpenCount > CloseCount;
+    return OpenCount != CloseCount;
 }
 
 bool ParseComment(const FString& line, FString& outComment)
