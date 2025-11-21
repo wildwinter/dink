@@ -39,7 +39,7 @@ public class DinkParser
             else if (c == '}') closeCount++;
         }
 
-        if (openCount > closeCount)
+        if (openCount != closeCount)
             return true;
 
         return false;
