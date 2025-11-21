@@ -21,7 +21,7 @@ public:
     EDinkBeatType BeatType;
 
     UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
-    FString LineID;
+    FName LineID;
 
     UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
     TArray<FString> Comments;
