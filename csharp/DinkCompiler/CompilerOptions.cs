@@ -27,6 +27,15 @@ public class CompilerOptions
     // to be localised, and not in the Dink minimal
     public bool LocActionBeats = false;
 
+    // If true, outputs the structured dink file (json)
+    public bool OutputDinkStructure = false;
+
+    // If true, outputs the strings file (xlsx)
+    public bool OutputLocalization = false;
+
+    // If true, outputs the voice file (xlsx)
+    public bool OutputRecordingScript = false;
+
     // This is the default where the game will look for
     // audio files that start with the ID names of the lines.
     // The folders (and their children) will be searched in this
@@ -88,6 +97,9 @@ public class CompilerEnvironment
     }
     public string DestFolder {get; private set;}
     public bool LocActionBeats {get{return _options.LocActionBeats;}}
+    public bool OutputDinkStructure {get{return _options.OutputDinkStructure;}}
+    public bool OutputLocalization {get{return _options.OutputLocalization;}}
+    public bool OutputRecordingScript {get{return _options.OutputRecordingScript;}}
     public string RootFilename {get{return Path.GetFileNameWithoutExtension(SourceInkFile);}}
     public List<AudioFolder> AudioFolders {get; private set;}
     

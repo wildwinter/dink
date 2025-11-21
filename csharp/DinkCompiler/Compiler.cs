@@ -49,13 +49,19 @@ public class Compiler
             return false;
 
         // ----- Output Voice Lines -----
-        var audioFileStatuses = voiceLines.GatherAudioFileStatuses(_env.AudioFolders);
-        if (!voiceLines.WriteToExcel(_env.RootFilename, characters, audioFileStatuses, _env.MakeDestFile("-voice.xlsx")))
-            return false;
+        if (_env.OutputRecordingScript)
+        {
+            var audioFileStatuses = voiceLines.GatherAudioFileStatuses(_env.AudioFolders);
+            if (!voiceLines.WriteToExcel(_env.RootFilename, characters, audioFileStatuses, _env.MakeDestFile("-voice.xlsx")))
+                return false;
+        }
 
         // ----- Output Dink Structure -----
-        if (!WriteStructuredDink(parsedDinkScenes, _env.MakeDestFile("-dink-structure.json")))
-            return false;
+        if (_env.OutputDinkStructure)
+        {
+            if (!WriteStructuredDink(parsedDinkScenes, _env.MakeDestFile("-dink-structure.json")))
+                return false;
+        }
 
         // ----- Output Dink Minimal for runtime -----
         if (!WriteMinimalDink(parsedDinkScenes, _env.MakeDestFile("-dink-min.json")))
@@ -66,8 +72,11 @@ public class Compiler
             return false;
 
         // ----- Output lines for localisation (Excel) -----
-        if (!inkStrings.WriteToExcel(_env.RootFilename, _env.MakeDestFile("-strings.xlsx")))
-            return false;
+        if (_env.OutputLocalization)
+        {
+            if (!inkStrings.WriteToExcel(_env.RootFilename, _env.MakeDestFile("-strings.xlsx")))
+                return false;
+        }
 
         Console.WriteLine("Processing complete.");
         return true;

@@ -28,6 +28,24 @@ Option<bool> locActionBeatsOption = new("--locActionBeatText")
 };
 command.Options.Add(locActionBeatsOption);
 
+Option<bool> dinkStructureOption = new("--dinkStructure")
+{
+    Description = "Output the structured Dink JSON file."
+};
+command.Options.Add(dinkStructureOption);
+
+Option<bool> stringsOption = new("--localization")
+{
+    Description = "Output the strings Excel file."
+};
+command.Options.Add(stringsOption);
+
+Option<bool> voiceOption = new("--recordingScript")
+{
+    Description = "Output the voice lines Excel file."
+};
+command.Options.Add(voiceOption);
+
 command.Validators.Add(result =>
 {
     // Is a project file specified?
@@ -55,6 +73,12 @@ command.SetAction(parseResult =>
     options.DestFolder = parseResult.GetValue<string>(destFolderOption)??options.DestFolder;
     if (parseResult.GetValue<bool>(locActionBeatsOption))
         options.LocActionBeats = true;
+    if (parseResult.GetValue<bool>(dinkStructureOption))
+        options.OutputDinkStructure = true;
+    if (parseResult.GetValue<bool>(stringsOption))
+        options.OutputLocalization = true;
+    if (parseResult.GetValue<bool>(voiceOption))
+        options.OutputRecordingScript = true;
 
 //    Console.WriteLine(JsonSerializer.Serialize(options, new JsonSerializerOptions{IncludeFields = true}));
 //    return 0;
