@@ -4,7 +4,7 @@ DEFINE_LOG_CATEGORY_STATIC(LogDink, Warning, All);
 
 FString FDinkBeat::ToString() const
 {
-    FString dump = FString::Printf(TEXT("[%s] "), *LineID);
+    FString dump = FString::Printf(TEXT("[%s] "), *LineID.ToString());
 
     if (BeatType == EDinkBeatType::Line) {
 
@@ -18,7 +18,7 @@ FString FDinkBeat::ToString() const
     }
     else if (BeatType == EDinkBeatType::Action)
     {
-        dump += FString::Printf(TEXT("Action"), *LineID);
+        dump += FString::Printf(TEXT("Action"), *LineID.ToString());
 
         if (!Type.IsEmpty())
             dump += FString::Printf(TEXT(" | Type: %s"), *Type);
@@ -54,7 +54,7 @@ void FDinkBeat::ParseTags(const FString& tagsRaw, FDinkBeat& outDinkBeat) {
             {
                 FString trimmed = tag.TrimStart();
                 if (trimmed.StartsWith("id:")) {
-                    outDinkBeat.LineID = trimmed.Mid(3);
+                    outDinkBeat.LineID = FName(trimmed.Mid(3));
                 }
                 else
                 {
@@ -64,7 +64,7 @@ void FDinkBeat::ParseTags(const FString& tagsRaw, FDinkBeat& outDinkBeat) {
         }
     }
 
-    if (outDinkBeat.LineID.IsEmpty()) {
+    if (outDinkBeat.LineID.IsNone()) {
         UE_LOG(LogDink, Warning, TEXT("Dink beat is missing a LineID! %s"), *outDinkBeat.ToString());
     }
 }
@@ -146,7 +146,7 @@ FString FDinkSnippet::ToString() const
     FString dump = FString::Printf(TEXT("  Snippet:%s Beats:%d"), *SnippetID.ToString(), Beats.Num());
     for (const FDinkBeat& beat : Beats)
     {
-        dump+= FString::Printf(TEXT("\n    %s"), *beat.ToString());
+        dump += FString::Printf(TEXT("\n    %s"), *beat.ToString());
     }
     return dump;
 }
@@ -274,7 +274,7 @@ bool UDinkParser::ParseInkLines(const TArray<FString>& lines, TArray<FDinkScene>
     TArray<FString> comments;
     bool parsing = false;
 
-    for (const FString line: lines)
+    for (const FString line : lines)
     {
         FString trimmedLine = line.TrimStartAndEnd();
         FString comment;
@@ -357,7 +357,7 @@ bool UDinkParser::ParseInkLines(const TArray<FString>& lines, TArray<FDinkScene>
         }
         else if (ParseLine(trimmedLine, dinkBeat))
         {
-            if (!parsing) 
+            if (!parsing)
             {
                 UE_LOG(LogDink, Warning, TEXT("Read line that looks like Dink, but it's not in a #dink-tagged part of the Ink. This looks wrong!"));
                 UE_LOG(LogDink, Warning, TEXT("    %s"), *dinkBeat.ToString());
@@ -394,17 +394,17 @@ bool UDinkParser::ParseInkLines(const TArray<FString>& lines, TArray<FDinkScene>
     return true;
 }
 
-static FString FindExistingSnippetID(
-    const TArray<FString>& NewBeatIds,
-    const TArray<FSnippet>& ExistingSnippets,
+static FName FindExistingSnippetID(
+    const TArray<FName>& NewBeatIds,
+    const TArray<FDinkSnippet>& ExistingSnippets,
     double MinOverlapScore = 0.5)
 {
     // Build a set of new beat IDs for fast lookup
-    TSet<FString> NewSet;
+    TSet<FName> NewSet;
     NewSet.Reserve(NewBeatIds.Num());
-    for (const FString& BeatId : NewBeatIds)
+    for (const FName& BeatId : NewBeatIds)
     {
-        if (!BeatId.IsEmpty())
+        if (!BeatId.IsNone())
         {
             NewSet.Add(BeatId);
         }
@@ -412,22 +412,22 @@ static FString FindExistingSnippetID(
 
     if (NewSet.Num() == 0 || ExistingSnippets.Num() == 0)
     {
-        return FString(); // no basis for comparison
+        return FName(); // no basis for comparison
     }
 
-    FString BestId;
+    FName BestId;
     double BestScore = 0.0;
 
-    for (const FSnippet& Snippet : ExistingSnippets)
+    for (const FDinkSnippet& Snippet : ExistingSnippets)
     {
         // Build a set of existing beat IDs for this snippet
-        TSet<FString> OldSet;
+        TSet<FName> OldSet;
         OldSet.Reserve(Snippet.Beats.Num());
-        for (const FBeat& Beat : Snippet.Beats)
+        for (const FDinkBeat& Beat : Snippet.Beats)
         {
-            if (!Beat.BeatID.IsEmpty())
+            if (!Beat.LineID.IsNone())
             {
-                OldSet.Add(Beat.BeatID);
+                OldSet.Add(Beat.LineID);
             }
         }
 
@@ -438,7 +438,7 @@ static FString FindExistingSnippetID(
 
         // Compute intersection size
         int32 IntersectionCount = 0;
-        for (const FString& BeatId : NewSet)
+        for (const FName& BeatId : NewSet)
         {
             if (OldSet.Contains(BeatId))
             {
@@ -446,7 +446,7 @@ static FString FindExistingSnippetID(
             }
         }
 
-        // Compute union size: |A ∪ B| = |A| + |B| - |A ∩ B|
+        // Compute union size: |A ? B| = |A| + |B| - |A ? B|
         const int32 UnionCount = NewSet.Num() + OldSet.Num() - IntersectionCount;
         if (UnionCount <= 0)
         {
@@ -458,7 +458,7 @@ static FString FindExistingSnippetID(
         if (Score > BestScore)
         {
             BestScore = Score;
-            BestId = Snippet.Id;
+            BestId = Snippet.SnippetID;
         }
     }
 
@@ -468,7 +468,7 @@ static FString FindExistingSnippetID(
         return BestId;
     }
 
-    return FString(); // no suitable match
+    return FName(); // no suitable match
 }
 
 FString UDinkParser::RemoveBlockComments(const FString& Text)
