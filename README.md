@@ -25,6 +25,7 @@ DAVE: Thar she blows!
 ```
 
 ## Summary
+
 * The `DinkCompiler`:
   * Adds IDs to all the lines of Ink to identify them for localization and voice.
   * Compiles the Ink using *inklecate*.
@@ -41,6 +42,7 @@ DAVE: Thar she blows!
   * All these extra features are only for Knots and Stitches tagged as #dink. All your other Ink will work as usual (but you will get the localization for free!).
   
 ### Contents
+
 * [The Basics](#the-basics)
 * [Source Code](#source-code)
 * [Releases](#releases)
@@ -54,9 +56,11 @@ DAVE: Thar she blows!
 * [License](#license)
 
 ## The Basics
+
 The `DinkCompiler` will take in an Ink file (for example, `myproject.ink`) and its includes, process it, and the results are the following:
-* **Updated Source File (`myproject.ink`)**: Any lines of text in the source Ink file that don't have a unique identifier of the form `#id:xxx` tags will have been added. 
-* **Compiled Ink File (`myproject.json`)**: The Ink file compiled to JSON using `inklecate`, as Ink usually does. 
+
+* **Updated Source File (`myproject.ink`)**: Any lines of text in the source Ink file that don't have a unique identifier of the form `#id:xxx` tags will have been added.
+* **Compiled Ink File (`myproject.json`)**: The Ink file compiled to JSON using `inklecate`, as Ink usually does.
 * **Dink Runtime File (`myproject-dink-min.json`)**: A JSON structure containing one entry for each LineID, with the runtime data you'll need for each line that you won't get from Ink e.g. the character speaking etc.
 * **Strings Runtime File (`myproject-strings-min.json`)**: A JSON file containing an entry for every string in Ink, along with the string used in the original script. This is probably your master language file for runtime - you'll want to create copies of it for your localisation. When you display an Ink or Dink line you'll want to use the string data in here rather than in Ink itself.
 * **Dink Structure File (`myproject-dink-structure.json`)**: (Optional) A JSON structure containing all the Dink scenes and their blocks, snippets, and beats, and useful information such as tags, lines, comments and so on. This is most likely to be useful in your edit pipeline for updating items in your editor based on Dink scripts - for example, creating placeholder scene layouts.
@@ -64,16 +68,18 @@ The `DinkCompiler` will take in an Ink file (for example, `myproject.ink`) and i
 * **Voice Script File for Recording (`myproject-voice.xslx`)**: (Optional) An Excel file containing an entry for every line of dialogue that needs to be recorded, along with helpful comments and direction, and if you have provided a `characters.json` file, the Actor associated with the character.
 
 ## Source Code
+
 The source can be found on [Github](https://github.com/wildwinter/dink), and is available under the MIT license.
 
 ## Releases
+
 Releases will be available in the releases area in [Github](https://github.com/wildwinter/dink/releases).
 
 ## Usage
 
 ### The Dink Spec
 
-A Dink **scene** is the equivalent of an Ink **knot**. 
+A Dink **scene** is the equivalent of an Ink **knot**.
 
 Each Dink scene consists of one or more Dink **blocks**. A Dink block is the equivalent of an ink **stitch**.
 
@@ -104,6 +110,7 @@ ACTOR (qualifier): (direction) Dialogue line. #tag1 #tag3 #tag4 #id:xxxxxx
 Comments, *qualifier* and *direction* are optional, as are the tags except *#id:* which must exist and be unique. The Dink compiler will generate these (based on the Ink Localiser tool I made a while back).
 
 Here is a simple scene, with only one (anonymous) block:
+
 ```cpp
 == MyScene
 #dink
@@ -122,6 +129,7 @@ FRED: Hello to you too!
 ```
 
 Here is a scene with an anonymous block to start and then another:
+
 ```cpp
 == MyOtherScene
 #dink
@@ -137,6 +145,7 @@ FRED: Good morning! #id:main_MyOtherScene_Part2_R6Sg
 ```
 
 #### Comments
+
 Comments use `//` to make them meaningful to Dink, but any content in block-style comments
 (e.g. `/* */`) will be skipped, like in normal Ink.
 
@@ -155,6 +164,7 @@ DAVE (V.O.): It was a quiet morning in May... #id:intro_R6Sg // And so will this
 ```
 
 ### Character List
+
 You can supply a `characters.json` file in the same folder as the main Ink file. If, so it should
 be this format:
 
@@ -164,10 +174,13 @@ be this format:
     {"ID":"JIM", "Actor":""},
 ]
 ```
+
 When the Dink scripts are parsed, the character name on a Dink line like:
+
 ```c
 FRED (O.S): (hurriedly) Look out!
 ```
+
 will be checked against that character list, and if it isn't present the process will fail.
 
 The **Actors** column will be copied in to the voice script export, for ease of use with recording.
@@ -181,12 +194,15 @@ This tool assumes that you want to store your audio dialogue files in folders so
 It assumes that you name your audio file after the LineID of the line.
 
 So, if you have this line:
+
 ```cpp
 DAVE: Morning. #id:intro_XC5r
 ```
+
 Then you probablt have a file named `intro_XC5r.wav` or something similar. Any file extension is fine, so long as the filename starts with the line ID. So `intro_XC5r_v1.mp3` is also fine.
 
 By default, the voice export routine will look for something matching that file in the following order:
+
 * `./Audio/Final`
 * `./Audio/Recorded`
 * `./Audio/Scratch`
@@ -199,6 +215,7 @@ And the first one it finds, it will set as the `AudioStatus` of the file in the 
 This list of folders and statuses can be customised in the [Project Config File](#config-file).
 
 ### Command-Line Tool
+
 This is a command-line utility with a few arguments. A few simple examples:
 
 Use the file `main.ink` (and any included ink files) as the source, and output the resulting files in the `somewhere` folder:
@@ -209,13 +226,14 @@ Or instead, grab all the settings from a project file:
 `./DinkCompiler --project dinkproject.jsonc`
 
 #### Arguments
+
 * `--source <sourceInkFile>` (REQUIRED)
-    
+
     Entrypoint to use for the Ink processing.\
     e.g. `--source some/folder/with/main.ink`
 
 * `--destFolder <folder>`
-    
+
     Folder to put all the output files.\
     e.g. `--destFolder gameInkFiles/`\
     Default is the current working dir.
@@ -249,6 +267,7 @@ Or instead, grab all the settings from a project file:
 ### Config File
 
 A JSON or JSONC file (i.e. JSON with comments) having all or some of the required options:
+
 ```jsonc
 {
     // What's the source Ink file?
@@ -292,10 +311,12 @@ A JSON or JSONC file (i.e. JSON with comments) having all or some of the require
 ```
 
 ## Contributors
+
 * [wildwinter](https://github.com/wildwinter) - original author
 
 ## License
-```
+
+```text
 MIT License
 
 Copyright (c) 2025 Ian Thomas
