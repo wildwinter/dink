@@ -1,6 +1,6 @@
 #include "DinkFormat.h"
 
-DEFINE_LOG_CATEGORY_STATIC(LogDink, Warning, All);
+DEFINE_LOG_CATEGORY_STATIC(LogDinkFormat, Log, All);
 
 FString FDinkBeat::ToString() const
 {
@@ -65,7 +65,7 @@ void FDinkBeat::ParseTags(const FString& tagsRaw, FDinkBeat& outDinkBeat) {
     }
 
     if (outDinkBeat.LineID.IsNone()) {
-        UE_LOG(LogDink, Warning, TEXT("Dink beat is missing a LineID! %s"), *outDinkBeat.ToString());
+        UE_LOG(LogDinkFormat, Warning, TEXT("Dink beat is missing a LineID! %s"), *outDinkBeat.ToString());
     }
 }
 
@@ -282,7 +282,7 @@ bool UDinkParser::ParseInkLines(const TArray<FString>& lines, TArray<FDinkScene>
         FString stitch;
         FDinkBeat dinkBeat;
 
-        UE_LOG(LogDink, Log, TEXT("Parsing line: %s"), *trimmedLine);
+        UE_LOG(LogDinkFormat, Log, TEXT("Parsing line: %s"), *trimmedLine);
 
         // Check for comment at end.
         int32 commentIndex = trimmedLine.Find(TEXT("//"), ESearchCase::IgnoreCase, ESearchDir::FromEnd);
@@ -323,7 +323,7 @@ bool UDinkParser::ParseInkLines(const TArray<FString>& lines, TArray<FDinkScene>
             snippet = FDinkSnippet();
             snippet.SnippetID = FName(GenerateShortHash());
             comments.Empty();
-            UE_LOG(LogDink, Log, TEXT("Began scene: %s"), *knot);
+            UE_LOG(LogDinkFormat, Log, TEXT("Began scene: %s"), *knot);
             continue;
         }
         else if (ParseStitch(trimmedLine, stitch))
@@ -340,34 +340,34 @@ bool UDinkParser::ParseInkLines(const TArray<FString>& lines, TArray<FDinkScene>
             snippet = FDinkSnippet();
             snippet.SnippetID = FName(GenerateShortHash());
             comments.Empty();
-            UE_LOG(LogDink, Log, TEXT("Began snippet: %s"), *stitch);
+            UE_LOG(LogDinkFormat, Log, TEXT("Began snippet: %s"), *stitch);
             continue;
         }
         else if (trimmedLine == "#dink")
         {
             parsing = true;
-            UE_LOG(LogDink, Log, TEXT("Parsing dink snippet."));
+            UE_LOG(LogDinkFormat, Log, TEXT("Parsing dink snippet."));
             continue;
         }
         else if (ParseComment(trimmedLine, comment))
         {
             comments.Add(comment);
-            UE_LOG(LogDink, Log, TEXT("Parsed comment: %s"), *comment);
+            UE_LOG(LogDinkFormat, Log, TEXT("Parsed comment: %s"), *comment);
             continue;
         }
         else if (ParseLine(trimmedLine, dinkBeat))
         {
             if (!parsing)
             {
-                UE_LOG(LogDink, Warning, TEXT("Read line that looks like Dink, but it's not in a #dink-tagged part of the Ink. This looks wrong!"));
-                UE_LOG(LogDink, Warning, TEXT("    %s"), *dinkBeat.ToString());
+                UE_LOG(LogDinkFormat, Warning, TEXT("Read line that looks like Dink, but it's not in a #dink-tagged part of the Ink. This looks wrong!"));
+                UE_LOG(LogDinkFormat, Warning, TEXT("    %s"), *dinkBeat.ToString());
                 continue;
             }
             else
             {
                 dinkBeat.Comments.Append(comments);
                 snippet.Beats.Add(dinkBeat);
-                UE_LOG(LogDink, Log, TEXT("Parsed line: %s"), *dinkBeat.ToString());
+                UE_LOG(LogDinkFormat, Log, TEXT("Parsed line: %s"), *dinkBeat.ToString());
                 comments.Empty();
                 continue;
             }
@@ -376,7 +376,7 @@ bool UDinkParser::ParseInkLines(const TArray<FString>& lines, TArray<FDinkScene>
         {
             dinkBeat.Comments.Append(comments);
             snippet.Beats.Add(dinkBeat);
-            UE_LOG(LogDink, Log, TEXT("Parsed action: %s"), *dinkBeat.ToString());
+            UE_LOG(LogDinkFormat, Log, TEXT("Parsed action: %s"), *dinkBeat.ToString());
             comments.Empty();
             continue;
         }
