@@ -69,6 +69,9 @@ public:
     FName SnippetID;
 
     UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
+    TArray<FString> Comments;
+
+    UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
     TArray<FDinkBeat> Beats;
 
     FString ToString() const;

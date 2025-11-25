@@ -171,6 +171,47 @@ FString FDinkScene::ToString() const
     return dump;
 }
 
+bool IsBraceOpeningLine(const FString& Line)
+{
+    int32 OpenCount = 0;
+    int32 CloseCount = 0;
+
+    // Range-based for loop iterates over the TCHAR array inside FString
+    for (const TCHAR Char : Line)
+    {
+        if (Char == TEXT('{'))
+        {
+            OpenCount++;
+        }
+        else if (Char == TEXT('}'))
+        {
+            CloseCount++;
+        }
+    }
+
+    return OpenCount > CloseCount;
+}
+
+bool IsBraceClosingLine(const FString& Line)
+{
+    int32 OpenCount = 0;
+    int32 CloseCount = 0;
+
+    for (const TCHAR Char : Line)
+    {
+        if (Char == TEXT('{'))
+        {
+            OpenCount++;
+        }
+        else if (Char == TEXT('}'))
+        {
+            CloseCount++;
+        }
+    }
+
+    return OpenCount < CloseCount;
+}
+
 bool IsFlowBreakingLine(const FString& InInput)
 {
     FString Input = InInput;
@@ -193,23 +234,35 @@ bool IsFlowBreakingLine(const FString& InInput)
         return true;
     }
 
-    int32 OpenCount = 0;
-    int32 CloseCount = 0;
+    return false;
+}
 
-    for (int32 i = 0; i < Input.Len(); ++i)
+bool ParseExpressionClause(const FString& Line, FString& OutExpression, bool& OutIsError)
+{
+    static const FRegexPattern MainPattern(TEXT("^\\s*-\\s*([^#]+?)\\s*:\\s*(.*)$"));
+    
+    FRegexMatcher Matcher(MainPattern, Line);
+
+    if (!Matcher.FindNext())
     {
-        TCHAR c = Input[i];
-        if (c == TEXT('{'))
-        {
-            ++OpenCount;
-        }
-        else if (c == TEXT('}'))
-        {
-            ++CloseCount;
-        }
+        return false; 
     }
 
-    return OpenCount != CloseCount;
+    FString ExtractedExpr = Matcher.GetCaptureGroup(1);
+    FString Rest = Matcher.GetCaptureGroup(2);
+
+    static const FRegexPattern CharTagPattern(TEXT("^[A-Z][A-Z0-9_]+$"));
+    FRegexMatcher CharMatcher(CharTagPattern, ExtractedExpr);
+
+    if (CharMatcher.FindNext())
+    {
+        return false;
+    }
+
+    OutExpression = ExtractedExpr;
+    OutIsError = !Rest.TrimStartAndEnd().IsEmpty();
+
+    return true;
 }
 
 bool ParseComment(const FString& line, FString& outComment)
@@ -266,13 +319,50 @@ static FString GenerateShortHash()
     return Result;
 }
 
+bool ParseExpressionClause(const FString& Line, FString& OutExpression, bool& OutIsError)
+{
+    // Must start with a dash, then expression, then colon.
+    const FRegexPattern Pattern(TEXT("^\\s*-\\s*(.+?)\\s*:\\s*(.*)$"));
+    FRegexMatcher Matcher(Pattern, Line);
+    if (!Matcher.FindNext())
+    {
+        return false;
+    }
+    OutExpression = Matcher.GetCaptureGroup(1);
+    FString Rest = Matcher.GetCaptureGroup(2);
+    OutIsError = !Rest.IsEmpty();
+    return true;
+}
+
 bool UDinkParser::ParseInkLines(const TArray<FString>& lines, TArray<FDinkScene>& outDinkScenes)
 {
     FDinkScene scene;
     FDinkBlock block;
     FDinkSnippet snippet;
     TArray<FString> comments;
+    TArray<FString> braceComments;
     bool parsing = false;
+
+    auto addSnippet = [&]()
+    {
+        if (snippet.Beats.Num() > 0)
+        {
+            block.Snippets.Add(snippet);
+        }
+        else
+        {
+            snippet.Comments.Empty();
+            snippet.Comments.Append(braceComments);
+            snippet.Comments.Append(comments);
+            return;
+        }
+
+        snippet = FDinkSnippet();
+        snippet.SnippetID = FName(GenerateShortHash());
+        snippet.Comments.Append(braceComments);
+        snippet.Comments.Append(comments);
+        comments.Empty();
+    };
 
     for (const FString line : lines)
     {
@@ -293,17 +383,42 @@ bool UDinkParser::ParseInkLines(const TArray<FString>& lines, TArray<FDinkScene>
             trimmedLine = trimmedLine.Left(commentIndex).TrimEnd();
         }
 
-
-        if (IsFlowBreakingLine(trimmedLine))
+        if (IsBraceOpeningLine(trimmedLine))
         {
-            if (snippet.Beats.Num() > 0)
-                block.Snippets.Add(snippet);
-
-            snippet = FDinkSnippet();
-            snippet.SnippetID = FName(GenerateShortHash());
+            braceComments.Empty();
+            braceComments.Append(comments);
+            comments.Empty();
+            addSnippet();
+        }
+        else if (IsBraceClosingLine(trimmedLine))
+        {
+            braceComments.Empty();
+            addSnippet();
+        }
+        else if (IsFlowBreakingLine(trimmedLine))
+        {
+            addSnippet();
         }
 
-        if (ParseKnot(trimmedLine, knot))
+        FString expr;
+        bool isError;
+        if (ParseExpressionClause(trimmedLine, expr, isError))
+        {
+            if (isError)
+            {
+                if (parsing)
+                {
+                    UE_LOG(LogDinkFormat, Fatal, TEXT("Dink Format Error: Line starts with expression but has content after colon.\n.   %s"), *trimmedLine);
+                    return false;
+                }
+            }
+            else
+            {
+                addSnippet();
+                continue;
+            }
+        }
+        else if (ParseKnot(trimmedLine, knot))
         {
             if (snippet.Beats.Num() > 0) {
                 block.Snippets.Add(snippet);

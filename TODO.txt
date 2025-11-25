@@ -1,3 +1,4 @@
-Branching comments for script
 Line/script status + stats
+Fancy comments generated for VO to deal with shuffles/cycles etc.
+Branch comments for script
 

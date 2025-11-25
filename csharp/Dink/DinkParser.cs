@@ -12,6 +12,38 @@ public class DinkParser
             Console.WriteLine(str);
     }
 
+    public static bool IsBraceOpeningLine(string line)
+    {
+        int openCount = 0;
+        int closeCount = 0;
+
+        foreach (char c in line)
+        {
+            if (c == '{') openCount++;
+            else if (c == '}') closeCount++;
+        }
+
+        if (openCount > closeCount)
+            return true;
+        return false;
+    }
+
+    public static bool IsBraceClosingLine(string line)
+    {
+        int openCount = 0;
+        int closeCount = 0;
+
+        foreach (char c in line)
+        {
+            if (c == '{') openCount++;
+            else if (c == '}') closeCount++;
+        }
+
+        if (openCount < closeCount)
+            return true;
+        return false;
+    }
+    
     public static bool IsFlowBreakingLine(string line)
     {
         line = line.Trim();
@@ -29,18 +61,6 @@ public class DinkParser
         {
             return true;
         }
-
-        int openCount = 0;
-        int closeCount = 0;
-
-        foreach (char c in line)
-        {
-            if (c == '{') openCount++;
-            else if (c == '}') closeCount++;
-        }
-
-        if (openCount != closeCount)
-            return true;
 
         return false;
     }
@@ -183,6 +203,28 @@ public class DinkParser
         return new string(buffer);
     }
 
+    public static (string? Expression, bool IsError) ParseExpressionClause(string line)
+    {
+        // Must start with a dash, then expression, then colon.
+        const string pattern = @"^\s*-\s*(?<Expression>[^#]+?)\s*:\s*(?<Rest>.*)$";
+        Match match = Regex.Match(line, pattern);
+        
+        if (!match.Success) 
+            return (null, false);
+
+        string expression = match.Groups["Expression"].Value;
+        string rest = match.Groups["Rest"].Value;
+
+        bool isCharacterTag = Regex.IsMatch(expression, @"^[A-Z][A-Z0-9_]+$");
+        if (isCharacterTag)
+            return (null, false);
+
+        if (!string.IsNullOrWhiteSpace(rest))
+            return (expression, true);
+
+        return (expression, false);
+    }
+    
     public static List<DinkScene> ParseInkLines(List<string> lines)
     {
         List<DinkScene> parsedScenes = new List<DinkScene>();
@@ -190,7 +232,29 @@ public class DinkParser
         DinkBlock? block = null;
         DinkSnippet? snippet = null;
         List<string> comments = new List<string>();
+        List<string> braceComments = new List<string>();
         bool parsing = false;
+
+        void addSnippet()
+        {
+            if (snippet != null && block != null) 
+            {
+                if (snippet.Beats.Count > 0)
+                    block.Snippets.Add(snippet);
+                else {
+                    snippet.Comments.Clear();
+                    snippet.Comments.AddRange(braceComments);
+                    snippet.Comments.AddRange(comments);
+                    return;
+                }
+            }
+
+            snippet = new DinkSnippet();
+            snippet.SnippetID = GenerateID();
+            snippet.Comments.AddRange(braceComments);
+            snippet.Comments.AddRange(comments);
+            comments.Clear();
+        }
 
         foreach (var line in lines)
         {
@@ -205,16 +269,42 @@ public class DinkParser
                 trimmedLine = trimmedLine.Substring(0, commentIndex).TrimEnd();
             }
 
-            if (IsFlowBreakingLine(trimmedLine))
+            if (IsBraceOpeningLine(trimmedLine))
             {
-                if (snippet != null && block != null && snippet.Beats.Count > 0)
-                    block.Snippets.Add(snippet);
-
-                snippet = new DinkSnippet();
-                snippet.SnippetID = GenerateID();
+                braceComments.Clear();
+                braceComments.AddRange(comments);
+                comments.Clear();
+                addSnippet();
+            }
+            else if (IsBraceClosingLine(trimmedLine))
+            {
+                braceComments.Clear();
+                addSnippet();
+            }
+            else if (IsFlowBreakingLine(trimmedLine))
+            {
+                addSnippet();
             }
 
-            if (ParseKnot(trimmedLine) is string knot)
+            // Check for Expression Clause
+            var (expr, isError) = ParseExpressionClause(trimmedLine);
+            if (expr != null)
+            {
+                if (isError)
+                {
+                    if (parsing)
+                    {
+                        Console.WriteLine("Dink Format Error: Line starts with expression but has content after colon.");
+                        Console.WriteLine($"    {trimmedLine}");
+                    }
+                }
+                else
+                {
+                    addSnippet();
+                    continue;
+                }
+            }
+            else if (ParseKnot(trimmedLine) is string knot)
             {
                 if (snippet != null && block != null && snippet.Beats.Count > 0)
                     block.Snippets.Add(snippet);

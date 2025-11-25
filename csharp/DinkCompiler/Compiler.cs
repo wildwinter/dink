@@ -318,7 +318,7 @@ public class Compiler
             foreach (var block in scene.Blocks)
             {
                 foreach (var snippet in block.Snippets)
-                {
+                { 
                     foreach (var beat in snippet.Beats)
                     {
                         if (beat is DinkLine line)
@@ -330,6 +330,7 @@ public class Compiler
                                 Qualifier = line.Qualifier,
                                 Line = line.Text,
                                 Direction = line.Direction,
+                                GroupComments = snippet.Comments,//GetComments(["VO"]),
                                 Comments = line.GetComments(["VO"]),
                                 Tags = line.GetTags(["a"])
                             };

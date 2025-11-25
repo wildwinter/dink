@@ -33,7 +33,7 @@ class LocStrings
         _ids.Remove(id);
     }
     
-    struct LocEntryExport
+    class LocEntryExport
     {
         public required string ID { get; set; }
         public required string Text { get; set; }

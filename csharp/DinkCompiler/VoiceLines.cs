@@ -8,6 +8,7 @@ public struct VoiceEntry
     public required string Qualifier { get; set; }
     public required string Line { get; set; }
     public required string Direction { get; set; }
+    public required List<string> GroupComments { get; set; }
     public required List<string> Comments { get; set; }
     public required List<string> Tags { get; set; }
 }
@@ -26,19 +27,6 @@ class VoiceLines
         }
 
         _entries[entry.ID] = entry;
-    }
-    
-    struct VoiceEntryExport
-    {
-        public required string ID { get; set; }
-        public required string Character { get; set; }
-        public required string Qualifier { get; set; }
-        public required string Actor { get; set; }
-        public required string Line { get; set; }
-        public required string Direction { get; set; }
-        public required string Comments { get; set; }
-        public required string Tags { get; set; }
-        public required string AudioStatus {get; set;}
     }
 
     public Dictionary<string, string?> GatherAudioFileStatuses(List<AudioFolder> audioFolders)
@@ -75,11 +63,25 @@ class VoiceLines
         return result;
     }
         
+    class VoiceEntryExport
+    {
+        public required string ID { get; set; }
+        public required string Character { get; set; }
+        public required string Qualifier { get; set; }
+        public required string Actor { get; set; }
+        public required string Line { get; set; }
+        public required string Direction { get; set; }
+        public required string GroupComments { get; set; }
+        public required string Comments { get; set; }
+        public required string Tags { get; set; }
+        public required string AudioStatus {get; set;}
+    }
+
     public bool WriteToExcel(string rootName, Characters? characters, 
                             Dictionary<string, string?> audioFileStatuses, 
                             string destVoiceFile)
     {
-        var recordsToExport = OrderedEntries.Select(v => new VoiceEntryExport
+        List<VoiceEntryExport> recordsToExport = OrderedEntries.Select(v => new VoiceEntryExport
         {
             ID = v.ID,
             Character = v.Character,
@@ -87,10 +89,34 @@ class VoiceLines
             Actor = (characters != null) ? characters.Get(v.Character)?.Actor ?? "" : "", 
             Line = v.Line,
             Direction = v.Direction,
+            GroupComments = string.Join(", ", v.GroupComments),
             Comments = string.Join(", ", v.Comments),
             Tags = string.Join(", ", v.Tags),
             AudioStatus = audioFileStatuses[v.ID]??"Unknown"
         }).ToList();
+
+        if (recordsToExport.Count>0) {
+            string lastGroupComments = recordsToExport[0].GroupComments;
+
+            for (int i = 1; i < recordsToExport.Count; i++)
+            {
+                if (recordsToExport[i].GroupComments == "")
+                {
+                    lastGroupComments = "";
+                    continue;
+                }
+                
+                if (recordsToExport[i].GroupComments == lastGroupComments)
+                {
+                    recordsToExport[i].GroupComments = "";
+                    continue;
+                }
+                else
+                {
+                    lastGroupComments = recordsToExport[i].GroupComments;
+                }
+            }
+        }
 
         try
         {

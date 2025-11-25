@@ -59,6 +59,17 @@ public class DinkAction : DinkBeat
 // Equivalent of an Ink flow fragment
 public class DinkSnippet
 {
+    public List<string> Comments { get; set; } = new List<string>();
+
+    // Looks for comments that e.g. start with VO:
+    public List<string> GetComments(params string[] prefixes)
+    {
+        return Comments
+            .Where(comment => prefixes.Any(prefix =>
+                comment.StartsWith(prefix + ":")))
+            .ToList();
+    }
+    
     public string SnippetID { get; set; } = string.Empty;
     public List<DinkBeat> Beats { get; set; } = new List<DinkBeat>();
     public override string ToString() => $"Snippet: '{SnippetID}'";

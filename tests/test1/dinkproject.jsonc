@@ -8,11 +8,11 @@
     // will be localised
     "locActionBeats": false,
     // If true, outputs the structured dink file (json)
-    "outputDinkStructure": false,
+    "outputDinkStructure": true,
     // If true, outputs the strings file (xlsx)
     "outputLocalization": false,
     // If true, outputs the voice file (xlsx)
-    "outputRecordingScript": false,
+    "outputRecordingScript": true,
     // This is the default where the game will look for
     // audio files that start with the ID names of the lines.
     // The folders (and their children) will be searched in this
