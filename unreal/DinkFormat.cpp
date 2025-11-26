@@ -237,34 +237,6 @@ bool IsFlowBreakingLine(const FString& InInput)
     return false;
 }
 
-bool ParseExpressionClause(const FString& Line, FString& OutExpression, bool& OutIsError)
-{
-    static const FRegexPattern MainPattern(TEXT("^\\s*-\\s*([^#]+?)\\s*:\\s*(.*)$"));
-    
-    FRegexMatcher Matcher(MainPattern, Line);
-
-    if (!Matcher.FindNext())
-    {
-        return false; 
-    }
-
-    FString ExtractedExpr = Matcher.GetCaptureGroup(1);
-    FString Rest = Matcher.GetCaptureGroup(2);
-
-    static const FRegexPattern CharTagPattern(TEXT("^[A-Z][A-Z0-9_]+$"));
-    FRegexMatcher CharMatcher(CharTagPattern, ExtractedExpr);
-
-    if (CharMatcher.FindNext())
-    {
-        return false;
-    }
-
-    OutExpression = ExtractedExpr;
-    OutIsError = !Rest.TrimStartAndEnd().IsEmpty();
-
-    return true;
-}
-
 bool ParseComment(const FString& line, FString& outComment)
 {
     if (line.StartsWith("//")) {
@@ -319,18 +291,32 @@ static FString GenerateShortHash()
     return Result;
 }
 
+
 bool ParseExpressionClause(const FString& Line, FString& OutExpression, bool& OutIsError)
 {
-    // Must start with a dash, then expression, then colon.
-    const FRegexPattern Pattern(TEXT("^\\s*-\\s*(.+?)\\s*:\\s*(.*)$"));
-    FRegexMatcher Matcher(Pattern, Line);
+    static const FRegexPattern MainPattern(TEXT("^\\s*-\\s*([^#]+?)\\s*:\\s*(.*)$"));
+
+    FRegexMatcher Matcher(MainPattern, Line);
+
     if (!Matcher.FindNext())
     {
         return false;
     }
-    OutExpression = Matcher.GetCaptureGroup(1);
+
+    FString ExtractedExpr = Matcher.GetCaptureGroup(1);
     FString Rest = Matcher.GetCaptureGroup(2);
-    OutIsError = !Rest.IsEmpty();
+
+    static const FRegexPattern CharTagPattern(TEXT("^[A-Z][A-Z0-9_]+$"));
+    FRegexMatcher CharMatcher(CharTagPattern, ExtractedExpr);
+
+    if (CharMatcher.FindNext())
+    {
+        return false;
+    }
+
+    OutExpression = ExtractedExpr;
+    OutIsError = !Rest.TrimStartAndEnd().IsEmpty();
+
     return true;
 }
 
@@ -344,25 +330,25 @@ bool UDinkParser::ParseInkLines(const TArray<FString>& lines, TArray<FDinkScene>
     bool parsing = false;
 
     auto addSnippet = [&]()
-    {
-        if (snippet.Beats.Num() > 0)
         {
-            block.Snippets.Add(snippet);
-        }
-        else
-        {
-            snippet.Comments.Empty();
+            if (snippet.Beats.Num() > 0)
+            {
+                block.Snippets.Add(snippet);
+            }
+            else
+            {
+                snippet.Comments.Empty();
+                snippet.Comments.Append(braceComments);
+                snippet.Comments.Append(comments);
+                return;
+            }
+
+            snippet = FDinkSnippet();
+            snippet.SnippetID = FName(GenerateShortHash());
             snippet.Comments.Append(braceComments);
             snippet.Comments.Append(comments);
-            return;
-        }
-
-        snippet = FDinkSnippet();
-        snippet.SnippetID = FName(GenerateShortHash());
-        snippet.Comments.Append(braceComments);
-        snippet.Comments.Append(comments);
-        comments.Empty();
-    };
+            comments.Empty();
+        };
 
     for (const FString line : lines)
     {
