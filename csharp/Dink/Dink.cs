@@ -1,9 +1,35 @@
 // This file is part of an MIT-licensed project: see LICENSE file or README.md for details.
 // Copyright (c) 2025 Ian Thomas
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 
 namespace Dink;
 
+class Helper
+{
+    // Looks for comments that e.g. start with VO: OR have no prefix
+    public static List<string> GetCommentsFor(List<string> Comments, string[] prefixes)
+    {
+        var result = new List<string>();
+        foreach (var comment in Comments)
+        {
+            var match = Regex.Match(comment, @"^([a-zA-Z0-9]+):\s*(.*)$");
+            if (match.Success)
+            {
+                if (prefixes.Contains(match.Groups[1].Value))
+                {
+                    result.Add(match.Groups[2].Value.Trim());
+                }
+            }
+            else
+            {
+                result.Add(comment.Trim());
+            }
+        }
+        return result;
+    }
+}
+    
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "BeatType")]
 [JsonDerivedType(typeof(DinkAction), typeDiscriminator: "Action")]
 [JsonDerivedType(typeof(DinkLine), typeDiscriminator: "Line")]
@@ -15,12 +41,9 @@ public class DinkBeat
     public List<string> Tags { get; set; } = new List<string>();
 
     // Looks for comments that e.g. start with VO:
-    public List<string> GetComments(params string[] prefixes)
+    public List<string> GetCommentsFor(string[] prefixes)
     {
-        return Comments
-            .Where(comment => prefixes.Any(prefix =>
-                comment.StartsWith(prefix + ":")))
-            .ToList();
+        return Helper.GetCommentsFor(Comments, prefixes);
     }
     
     public List<string> GetTags(params string[] prefixes) 
@@ -61,13 +84,10 @@ public class DinkSnippet
 {
     public List<string> Comments { get; set; } = new List<string>();
 
-    // Looks for comments that e.g. start with VO:
-    public List<string> GetComments(params string[] prefixes)
+    // Looks for comments that e.g. start with VO: OR have no prefix
+    public List<string> GetCommentsFor(string[] prefixes)
     {
-        return Comments
-            .Where(comment => prefixes.Any(prefix =>
-                comment.StartsWith(prefix + ":")))
-            .ToList();
+        return Helper.GetCommentsFor(Comments, prefixes);
     }
     
     public string SnippetID { get; set; } = string.Empty;

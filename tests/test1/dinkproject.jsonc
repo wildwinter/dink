@@ -10,7 +10,7 @@
     // If true, outputs the structured dink file (json)
     "outputDinkStructure": true,
     // If true, outputs the strings file (xlsx)
-    "outputLocalization": false,
+    "outputLocalization": true,
     // If true, outputs the voice file (xlsx)
     "outputRecordingScript": true,
     // This is the default where the game will look for

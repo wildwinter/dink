@@ -279,7 +279,7 @@ public class Compiler
                                 {
                                     ID = action.LineID,
                                     Text = action.Text,
-                                    Comments = action.GetComments(["LOC", "VO"]),
+                                    Comments = action.GetCommentsFor(["LOC", "VO"]),
                                     Speaker = ""
                                 };
                                 inkStrings.Set(entry);
@@ -296,7 +296,7 @@ public class Compiler
                             {
                                 ID = line.LineID,
                                 Text = line.Text,
-                                Comments = line.GetComments(["LOC", "VO"]),
+                                Comments = line.GetCommentsFor(["LOC", "VO"]),
                                 Speaker = line.CharacterID
                             };
                             inkStrings.Set(entry);
@@ -330,8 +330,9 @@ public class Compiler
                                 Qualifier = line.Qualifier,
                                 Line = line.Text,
                                 Direction = line.Direction,
-                                GroupComments = snippet.Comments,//GetComments(["VO"]),
-                                Comments = line.GetComments(["VO"]),
+                                SnippetID = snippet.SnippetID,
+                                SnippetComments = snippet.GetCommentsFor(["VO"]),
+                                Comments = line.GetCommentsFor(["VO"]),
                                 Tags = line.GetTags(["a"])
                             };
                             voiceLines.Set(entry);

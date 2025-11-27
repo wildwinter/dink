@@ -44,6 +44,18 @@ public class DinkParser
         return false;
     }
     
+    public static bool IsFlowBreakingDinkLine(string line)
+    {
+        line = line.Trim();
+        if (string.IsNullOrEmpty(line))
+            return false;
+
+        if (Regex.IsMatch(line, @"^-\s*[A-Z][A-Z0-9_]*.*:"))
+            return true;
+
+        return false;
+    }
+
     public static bool IsFlowBreakingLine(string line)
     {
         line = line.Trim();
@@ -283,10 +295,19 @@ public class DinkParser
             }
             else if (IsFlowBreakingLine(trimmedLine))
             {
-                addSnippet();
+                if (IsFlowBreakingDinkLine(trimmedLine) && parsing)
+                {
+                    List<string> saveComments = comments.ToList();
+                    comments.Clear();
+                    addSnippet();
+                    comments.AddRange(saveComments);
+                }
+                else
+                {
+                    addSnippet();
+                }
             }
 
-            // Check for Expression Clause
             var (expr, isError) = ParseExpressionClause(trimmedLine);
             if (expr != null)
             {

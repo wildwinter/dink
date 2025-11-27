@@ -38,10 +38,10 @@ FRED: Glad that's over with! #id:main_TestScene_IQIS
 
 === Barks
 #dink
-{shuffle:
-- FRED: Bark1 #id:main_Barks_O037 // This is for the one-legged version.
+{shuffle: // This is for all the barks.
+- FRED: Bark1 #id:main_Barks_O037 // VO:This is for the one-legged version.
 - FRED: Bark2 #id:main_Barks_UWZ2
-- FRED: Bark3 #id:main_Barks_1ZG8 // How about this?
+- FRED: Bark3 #id:main_Barks_1ZG8 // VO:How about this?
 - Testing a normal line. #id:main_Barks_046M
 - 
     FRED: Bark4 #id:main_Barks_JFG1
