@@ -33,13 +33,6 @@ FString FDinkBeat::ToString() const
             dump += FString::Printf(TEXT(" #%s"), *tag);
     }
 
-    if (Comments.Num() > 0)
-    {
-        dump += TEXT(" | Comments:");
-        for (const FString& comment : Comments)
-            dump += FString::Printf(TEXT("'%s' "), *comment);
-    }
-
     return dump;
 }
 
@@ -171,47 +164,6 @@ FString FDinkScene::ToString() const
     return dump;
 }
 
-bool IsBraceOpeningLine(const FString& Line)
-{
-    int32 OpenCount = 0;
-    int32 CloseCount = 0;
-
-    // Range-based for loop iterates over the TCHAR array inside FString
-    for (const TCHAR Char : Line)
-    {
-        if (Char == TEXT('{'))
-        {
-            OpenCount++;
-        }
-        else if (Char == TEXT('}'))
-        {
-            CloseCount++;
-        }
-    }
-
-    return OpenCount > CloseCount;
-}
-
-bool IsBraceClosingLine(const FString& Line)
-{
-    int32 OpenCount = 0;
-    int32 CloseCount = 0;
-
-    for (const TCHAR Char : Line)
-    {
-        if (Char == TEXT('{'))
-        {
-            OpenCount++;
-        }
-        else if (Char == TEXT('}'))
-        {
-            CloseCount++;
-        }
-    }
-
-    return OpenCount < CloseCount;
-}
-
 bool IsFlowBreakingLine(const FString& InInput)
 {
     FString Input = InInput;
@@ -234,16 +186,30 @@ bool IsFlowBreakingLine(const FString& InInput)
         return true;
     }
 
+    int32 OpenCount = 0;
+    int32 CloseCount = 0;
+
+    // Range-based for loop iterates over the TCHAR array inside FString
+    for (const TCHAR Char : Line)
+    {
+        if (Char == TEXT('{'))
+        {
+            OpenCount++;
+        }
+        else if (Char == TEXT('}'))
+        {
+            CloseCount++;
+        }
+    }
+
+    return OpenCount != CloseCount;
+
     return false;
 }
 
-bool ParseComment(const FString& line, FString& outComment)
+bool ParseComment(const FString& line)
 {
-    if (line.StartsWith("//")) {
-        outComment = line.Mid(2).TrimStartAndEnd();
-        return true;
-    }
-    return false;
+    return (line.StartsWith("//"));
 }
 
 bool ParseKnot(const FString& Line, FString& outKnot)
@@ -325,8 +291,6 @@ bool UDinkParser::ParseInkLines(const TArray<FString>& lines, TArray<FDinkScene>
     FDinkScene scene;
     FDinkBlock block;
     FDinkSnippet snippet;
-    TArray<FString> comments;
-    TArray<FString> braceComments;
     bool parsing = false;
 
     auto addSnippet = [&]()
@@ -337,23 +301,16 @@ bool UDinkParser::ParseInkLines(const TArray<FString>& lines, TArray<FDinkScene>
             }
             else
             {
-                snippet.Comments.Empty();
-                snippet.Comments.Append(braceComments);
-                snippet.Comments.Append(comments);
                 return;
             }
 
             snippet = FDinkSnippet();
             snippet.SnippetID = FName(GenerateShortHash());
-            snippet.Comments.Append(braceComments);
-            snippet.Comments.Append(comments);
-            comments.Empty();
         };
 
     for (const FString line : lines)
     {
         FString trimmedLine = line.TrimStartAndEnd();
-        FString comment;
         FString knot;
         FString stitch;
         FDinkBeat dinkBeat;
@@ -364,24 +321,10 @@ bool UDinkParser::ParseInkLines(const TArray<FString>& lines, TArray<FDinkScene>
         int32 commentIndex = trimmedLine.Find(TEXT("//"), ESearchCase::IgnoreCase, ESearchDir::FromEnd);
         if (commentIndex > 0)
         {
-            comment = trimmedLine.Mid(commentIndex + 2).TrimStartAndEnd();
-            comments.Add(comment);
             trimmedLine = trimmedLine.Left(commentIndex).TrimEnd();
         }
 
-        if (IsBraceOpeningLine(trimmedLine))
-        {
-            braceComments.Empty();
-            braceComments.Append(comments);
-            comments.Empty();
-            addSnippet();
-        }
-        else if (IsBraceClosingLine(trimmedLine))
-        {
-            braceComments.Empty();
-            addSnippet();
-        }
-        else if (IsFlowBreakingLine(trimmedLine))
+        if (IsFlowBreakingLine(trimmedLine))
         {
             addSnippet();
         }
@@ -420,10 +363,8 @@ bool UDinkParser::ParseInkLines(const TArray<FString>& lines, TArray<FDinkScene>
             scene.SceneID = FName(knot);
             block = FDinkBlock();
             block.BlockID = "";
-            block.Comments.Append(comments);
             snippet = FDinkSnippet();
             snippet.SnippetID = FName(GenerateShortHash());
-            comments.Empty();
             UE_LOG(LogDinkFormat, Log, TEXT("Began scene: %s"), *knot);
             continue;
         }
@@ -437,10 +378,8 @@ bool UDinkParser::ParseInkLines(const TArray<FString>& lines, TArray<FDinkScene>
             }
             block = FDinkBlock();
             block.BlockID = FName(stitch);
-            block.Comments.Append(comments);
             snippet = FDinkSnippet();
             snippet.SnippetID = FName(GenerateShortHash());
-            comments.Empty();
             UE_LOG(LogDinkFormat, Log, TEXT("Began snippet: %s"), *stitch);
             continue;
         }
@@ -450,10 +389,8 @@ bool UDinkParser::ParseInkLines(const TArray<FString>& lines, TArray<FDinkScene>
             UE_LOG(LogDinkFormat, Log, TEXT("Parsing dink snippet."));
             continue;
         }
-        else if (ParseComment(trimmedLine, comment))
+        else if (ParseComment(trimmedLine))
         {
-            comments.Add(comment);
-            UE_LOG(LogDinkFormat, Log, TEXT("Parsed comment: %s"), *comment);
             continue;
         }
         else if (ParseLine(trimmedLine, dinkBeat))
@@ -466,22 +403,17 @@ bool UDinkParser::ParseInkLines(const TArray<FString>& lines, TArray<FDinkScene>
             }
             else
             {
-                dinkBeat.Comments.Append(comments);
                 snippet.Beats.Add(dinkBeat);
                 UE_LOG(LogDinkFormat, Log, TEXT("Parsed line: %s"), *dinkBeat.ToString());
-                comments.Empty();
                 continue;
             }
         }
         else if (parsing && ParseAction(trimmedLine, dinkBeat))
         {
-            dinkBeat.Comments.Append(comments);
             snippet.Beats.Add(dinkBeat);
             UE_LOG(LogDinkFormat, Log, TEXT("Parsed action: %s"), *dinkBeat.ToString());
-            comments.Empty();
             continue;
         }
-        comments.Empty();
     }
     if (snippet.Beats.Num() > 0) {
         block.Snippets.Add(snippet);

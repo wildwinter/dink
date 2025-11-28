@@ -24,9 +24,6 @@ public:
     FName LineID;
 
     UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
-    TArray<FString> Comments;
-
-    UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
     TArray<FString> Tags;
 
     UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
@@ -69,9 +66,6 @@ public:
     FName SnippetID;
 
     UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
-    TArray<FString> Comments;
-
-    UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
     TArray<FDinkBeat> Beats;
 
     FString ToString() const;
@@ -86,9 +80,6 @@ struct DINK_API FDinkBlock
 public:
     UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
     FName BlockID;
-
-    UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
-    TArray<FString> Comments;
 
     UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
     TArray<FDinkSnippet> Snippets;
