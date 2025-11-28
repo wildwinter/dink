@@ -317,12 +317,56 @@ public class Compiler
         {
             foreach (var block in scene.Blocks)
             {
+                int groupIndex = 0;
+                int groupNum = 0;
+
+                Dictionary<int, int> groupSizes = new Dictionary<int, int>();
                 foreach (var snippet in block.Snippets)
-                { 
+                {
+                    if (snippet.Beats.Count==0)
+                        continue;
+                    
                     foreach (var beat in snippet.Beats)
                     {
                         if (beat is DinkLine line)
                         {
+                            if (beat.Group!=0)
+                            {
+                                if (groupSizes.ContainsKey(beat.Group))
+                                    groupSizes[beat.Group]++;
+                                else
+                                    groupSizes[beat.Group]=1;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                foreach (var snippet in block.Snippets)
+                { 
+                    int lineIndex = 0;
+                    foreach (var beat in snippet.Beats)
+                    {
+                        if (beat is DinkLine line)
+                        {
+                            lineIndex++;
+
+                            if (beat.Group!=0)
+                            {
+                                if (beat.Group!=groupNum)
+                                {
+                                    groupIndex = 0;
+                                    groupNum = beat.Group;
+                                }
+                                if (lineIndex==1) {
+                                    groupIndex++;
+                                }
+                            }
+                            else
+                            {
+                                groupNum = 0;
+                            }
+
                             VoiceEntry entry = new VoiceEntry()
                             {
                                 ID = line.LineID,
@@ -335,6 +379,17 @@ public class Compiler
                                 Comments = line.GetCommentsFor(["VO"]),
                                 Tags = line.GetTags(["a"])
                             };
+                            
+                            if (groupNum>0)
+                            {
+                                if (groupIndex>1)
+                                        entry.SnippetComments.Clear();
+                                if (lineIndex==1)
+                                    entry.SnippetComments.Insert(0, $"({groupIndex}/{groupSizes[beat.Group]})");
+                                else 
+                                    entry.SnippetComments.Insert(0, "(...)");
+                            }
+
                             voiceLines.Set(entry);
                         }
                     }

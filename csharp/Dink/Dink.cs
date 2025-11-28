@@ -36,6 +36,7 @@ class Helper
 public class DinkBeat
 {
     public string LineID { get; set; } = string.Empty;
+    public int Group { get; set; } = 0;
     public List<string> Comments { get; set; } = new List<string>();
 
     public List<string> Tags { get; set; } = new List<string>();

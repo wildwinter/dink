@@ -48,7 +48,7 @@ class LocStrings
             ID = v.ID,
             Speaker = v.Speaker,
             Text = v.Text,
-            Comments = string.Join(", ", v.Comments)
+            Comments = string.Join(" ", v.Comments)
         }).ToList();
 
         try

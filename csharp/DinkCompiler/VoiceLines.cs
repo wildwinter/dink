@@ -67,14 +67,14 @@ class VoiceLines
     class VoiceEntryExport
     {
         public required string ID { get; set; }
-        public required string SectionID { get; set; }
-        public required string SectionComments { get; set; }
         public required string Character { get; set; }
         public required string Qualifier { get; set; }
-        public required string Actor { get; set; }
         public required string Line { get; set; }
         public required string Direction { get; set; }
         public required string Comments { get; set; }
+        public required string SectionComments { get; set; }
+        public required string Actor { get; set; }
+        public required string SectionID { get; set; }
         public required string Tags { get; set; }
         public required string AudioStatus {get; set;}
     }
@@ -87,26 +87,16 @@ class VoiceLines
         {
             ID = v.ID,
             SectionID = v.SnippetID,
-            SectionComments = string.Join(", ", v.SnippetComments),
+            SectionComments = string.Join(" ", v.SnippetComments),
             Character = v.Character,
             Qualifier = v.Qualifier,
             Actor = (characters != null) ? characters.Get(v.Character)?.Actor ?? "" : "", 
             Line = v.Line,
             Direction = v.Direction,
-            Comments = string.Join(", ", v.Comments),
+            Comments = string.Join(" ", v.Comments),
             Tags = string.Join(", ", v.Tags),
             AudioStatus = audioFileStatuses[v.ID]??"Unknown"
         }).ToList();
-
-        if (recordsToExport.Count>0) {
-            for (int i = 1; i < recordsToExport.Count; i++)
-            {   
-                if (recordsToExport[i].SectionID == recordsToExport[i-1].SectionID)
-                {
-                    recordsToExport[i].SectionComments = "";
-                }
-            }
-        }
 
         try
         {

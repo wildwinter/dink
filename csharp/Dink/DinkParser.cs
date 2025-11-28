@@ -215,6 +215,11 @@ public class DinkParser
         return new string(buffer);
     }
 
+    public static bool ContainsInkGroup(string text)
+    {
+        return Regex.IsMatch(text, @"\bshuffle\b|\bcycle\b|\bonce\b|\bstopping\b");
+    }
+
     public static (string? Expression, bool IsError) ParseExpressionClause(string line)
     {
         // Must start with a dash, then expression, then colon.
@@ -246,6 +251,10 @@ public class DinkParser
         List<string> comments = new List<string>();
         List<string> braceComments = new List<string>();
         bool parsing = false;
+
+        int currentBraceLevel = 0;
+        int activeGroup = 0;
+        int activeGroupLevel = 0;
 
         void addSnippet()
         {
@@ -286,10 +295,27 @@ public class DinkParser
                 braceComments.Clear();
                 braceComments.AddRange(comments);
                 comments.Clear();
+                currentBraceLevel++;
+                if (ContainsInkGroup(trimmedLine))
+                {
+                    Console.WriteLine("Contains clause"+trimmedLine);
+                    if (activeGroupLevel==0)
+                    {
+                        activeGroupLevel = currentBraceLevel;
+                        activeGroup++;
+                        Console.WriteLine("New active group:"+activeGroup);
+                    }
+                }
                 addSnippet();
             }
             else if (IsBraceClosingLine(trimmedLine))
             {
+                currentBraceLevel = Math.Max(0, currentBraceLevel - 1);
+                if (currentBraceLevel < activeGroupLevel)
+                {
+                    activeGroupLevel = 0;
+                    Console.WriteLine("Active group stopped:"+activeGroup);
+                }
                 braceComments.Clear();
                 addSnippet();
             }
@@ -387,6 +413,8 @@ public class DinkParser
                 else
                 {
                     dinkLine.Comments.AddRange(comments);
+                    if (activeGroupLevel>0)
+                        dinkLine.Group = activeGroup;
                     snippet?.Beats.Add(dinkLine);
                     comments.Clear();
                     Log(dinkLine.ToString());
@@ -396,6 +424,8 @@ public class DinkParser
             else if (parsing && ParseAction(trimmedLine) is DinkAction dinkAction)
             {
                 dinkAction.Comments.AddRange(comments);
+                if (activeGroupLevel>0)
+                    dinkAction.Group = activeGroup;
                 snippet?.Beats.Add(dinkAction);
                 comments.Clear();
                 Log(dinkAction.ToString());
