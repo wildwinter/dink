@@ -58,7 +58,7 @@ class VoiceLines
                     if (result[id] == null &&
                         nameWithoutExt.StartsWith(id, StringComparison.OrdinalIgnoreCase))
                     {
-                        result[id] = audioFolder.State;
+                        result[id] = audioFolder.Status;
                     }
                 }
             }
@@ -81,44 +81,31 @@ class VoiceLines
         public required string AudioStatus {get; set;}
     }
 
-    private string? FindColumnByHeading(IXLWorksheet worksheet, string headingText)
-    {
-        var firstRow = worksheet.Row(1);
-        int lastColumn = worksheet.LastCellUsed()?.Address.ColumnNumber ?? 1;
-        for (int col = 1; col <= lastColumn; col++)
-        {
-            var cell = firstRow.Cell(col);
-            
-            if (cell.TryGetValue<string>(out string cellValue) && 
-                !string.IsNullOrWhiteSpace(cellValue) &&
-                cellValue==headingText)
-            {
-                return cell.Address.ColumnLetter;
-            }
-        }
-        return null; 
-    }
-
     public bool WriteToExcel(string rootName, Characters? characters, 
+                            WritingStatuses writingStatuses,
                             Dictionary<string, string?> audioFileStatuses, 
                             string destVoiceFile)
     {
-        List<VoiceEntryExport> recordsToExport = OrderedEntries.Select(v => new VoiceEntryExport
-        {
-            ID = v.ID,
-            BlockID = v.BlockID,
-            SectionID = v.SnippetID,
-            Character = v.Character,
-            Actor = (characters != null) ? characters.Get(v.Character)?.Actor ?? "" : "", 
-            Line = v.Line,
-            Direction = v.Direction,
-            Comments = (v.BraceComments.Count>0 ? string.Join("\n", v.BraceComments) + "\n" : "") + 
-                    (v.SnippetComments.Count>0 ? string.Join("\n", v.SnippetComments) + "\n" : "") + 
-                    (v.GroupIndicator != "" ? v.GroupIndicator + " " : "") +
-                    string.Join("\n", v.Comments),
-            Tags = string.Join(", ", v.Tags),
-            AudioStatus = audioFileStatuses[v.ID]??"Unknown"
-        }).ToList();
+        bool useWritingStatus = !writingStatuses.IsEmpty();
+
+        List<VoiceEntryExport> recordsToExport = OrderedEntries
+            .Where(v => !useWritingStatus||writingStatuses.GetDefinition(v.ID).Record)
+            .Select(v => new VoiceEntryExport
+            {
+                ID = v.ID,
+                BlockID = v.BlockID,
+                SectionID = v.SnippetID,
+                Character = v.Character,
+                Actor = (characters != null) ? characters.Get(v.Character)?.Actor ?? "" : "", 
+                Line = v.Line,
+                Direction = v.Direction,
+                Comments = (v.BraceComments.Count>0 ? string.Join("\n", v.BraceComments) + "\n" : "") + 
+                        (v.SnippetComments.Count>0 ? string.Join("\n", v.SnippetComments) + "\n" : "") + 
+                        (v.GroupIndicator != "" ? v.GroupIndicator + " " : "") +
+                        string.Join("\n", v.Comments),
+                Tags = string.Join(", ", v.Tags),
+                AudioStatus = audioFileStatuses[v.ID]??"Unknown"
+            }).ToList();
 
         try
         {
@@ -129,19 +116,12 @@ class VoiceLines
             using (var workbook = new XLWorkbook())
             {
                 var worksheet = workbook.Worksheets.Add("Voice Lines - " + rootName);
-                worksheet.Style.Alignment.Vertical = XLAlignmentVerticalValues.Top;
-                worksheet.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
 
                 var table = worksheet.Cell("A1").InsertTable(recordsToExport);
 
-                worksheet.ColumnsUsed().AdjustToContents();
-                worksheet.RowsUsed().AdjustToContents();
-                worksheet.SheetView.FreezeRows(1);
+                ExcelUtils.FormatCommonTable(worksheet, table);
 
-                table.FirstRow().Style.Fill.BackgroundColor = headerColor;
-                table.FirstRow().Style.Font.Bold = true;
-
-                string sectionHeading = FindColumnByHeading(worksheet, "SectionID") ?? "";
+                string sectionHeading = ExcelUtils.FindColumnByHeading(worksheet, "SectionID") ?? "";
 
                 string lastSection = "";
                 XLColor sectionColor = lineColor2;

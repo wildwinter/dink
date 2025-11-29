@@ -2,7 +2,20 @@ namespace Dink;
 
 using System.Text.RegularExpressions;
 using System.Linq;
-using System.Runtime.InteropServices;
+
+public class NonDinkLine
+{
+    public string ID = "";
+    public List<string> Tags = new List<string>();  
+
+    public List<string> GetTags(params string[] prefixes) 
+    {
+        return Tags
+            .Where(tag => prefixes.Any(prefix => 
+                tag.StartsWith(prefix + ":"))) 
+            .ToList();
+    }
+}
 
 public class DinkParser
 {
@@ -113,6 +126,63 @@ public class DinkParser
         string idValue = foundTag.Substring(prefix.Length);
         tags.Remove(foundTag); 
         return idValue;
+    }
+
+    public static List<string>? ParseTagLine(string line)
+    {
+        // Matches a line that *only* consists of optional leading/trailing space 
+        // and one or more tag structures (e.g., " #tag1 #tag2 ").
+        const string pattern =
+            @"^\s*(?:\#(?<TagValue>\S+)(\s+\#(?<TagValue>\S+))*)\s*$";
+
+        Match match = Regex.Match(line, pattern, RegexOptions.Singleline);
+
+        if (!match.Success)
+            return null;
+
+        List<string> tags = match.Groups["TagValue"].Captures
+            .Select(c => c.Value.Trim())
+            .ToList();
+            
+        return tags;
+    }
+
+    public static bool ParseNonDinkLine(string line, out NonDinkLine ndLine)
+    {
+        line = line.Trim();
+
+        ndLine = new NonDinkLine();
+ 
+        int firstHashIndex = line.IndexOf('#');
+        if (firstHashIndex == -1 || firstHashIndex == line.Length - 1)
+            return false;
+    
+        int endBoundaryIndex = line.IndexOf(']', firstHashIndex);
+        if (endBoundaryIndex == -1)
+            endBoundaryIndex = line.Length;
+    
+        string tagBlock = line.Substring(firstHashIndex, endBoundaryIndex - firstHashIndex);
+        string[] rawTags = tagBlock.Split(new char[] { ' ', '\t' }, System.StringSplitOptions.RemoveEmptyEntries);
+        if (rawTags.Length == 0)
+            return false;
+
+        List<string> tagValues = rawTags
+            .Where(t => t.StartsWith("#"))
+            .Select(t => t.TrimStart('#'))
+            .Where(t => !string.IsNullOrWhiteSpace(t))
+            .ToList();
+
+        if (tagValues.Count == 0) 
+            return false;
+
+        string? id = ExtractID(tagValues);
+        if (id==null)
+            return false;
+
+        ndLine.Tags = tagValues;
+        ndLine.ID = id;
+
+        return true;
     }
     
     public static DinkAction? ParseAction(string line)
@@ -254,6 +324,13 @@ public class DinkParser
         return Regex.IsMatch(text, @"^\s*\{\s*(\w+)\s*:\s*$");
     }
 
+    public static bool ContainsCode(string text)
+    {
+        return text.StartsWith("INCLUDE")
+                ||text.StartsWith("VAR")
+                ||text.StartsWith("~");
+    }
+
     public static (string? Expression, bool IsError) ParseExpressionClause(string line)
     {
         // Must start with a dash, then expression, then colon.
@@ -276,7 +353,7 @@ public class DinkParser
         return (expression, false);
     }
     
-    public static List<DinkScene> ParseInkLines(List<string> lines)
+    public static List<DinkScene> ParseInkLines(List<string> lines, Dictionary<string, NonDinkLine> outNonDinkLines)
     {
         List<DinkScene> parsedScenes = new List<DinkScene>();
         DinkScene? scene = null;
@@ -290,6 +367,13 @@ public class DinkParser
         int currentBraceLevel = 0;
         int activeGroup = 0;
         int activeGroupLevel = 0;
+
+        bool hitFirstFileContent = false;
+        bool hitFirstKnotContent = false;
+        bool hitFirstStitchContent = false;
+        List<string> fileTags = new List<string>();
+        List<string> knotTags = new List<string>();
+        List<string> stitchTags = new List<string>();
 
         void addSnippet()
         {
@@ -309,6 +393,20 @@ public class DinkParser
             comments.Clear();
         }
 
+        void hitContent()
+        {
+            hitFirstFileContent = true;
+            hitFirstKnotContent = true;
+            hitFirstStitchContent = true;
+        }
+
+        void addTags(DinkBeat beat)
+        {
+            beat.Tags.AddRange(stitchTags);
+            beat.Tags.AddRange(knotTags);
+            beat.Tags.AddRange(fileTags);
+        }
+
         foreach (var line in lines)
         {
             var trimmedLine = line.Trim();
@@ -321,6 +419,36 @@ public class DinkParser
                 comments.Add(comment);
                 trimmedLine = trimmedLine.Substring(0, commentIndex).TrimEnd();
             }
+
+            if (string.IsNullOrEmpty(trimmedLine))
+                continue;
+
+            if (ParseTagLine(trimmedLine) is List<string> tags)
+            {
+                if (tags.Contains("dink"))
+                {
+                    parsing = true;
+                    tags.Remove("dink");
+                }
+                if (!hitFirstFileContent)
+                {
+                    fileTags.AddRange(tags);
+                }
+                else if (!hitFirstKnotContent)
+                {
+                    knotTags.AddRange(tags);
+                }
+                else if (!hitFirstStitchContent)
+                {
+                    stitchTags.AddRange(tags);
+                }
+                continue;
+            }
+            
+            if (ContainsCode(trimmedLine))
+                continue;
+
+            hitContent();
 
             if (IsBraceOpeningLine(trimmedLine))
             {
@@ -402,6 +530,9 @@ public class DinkParser
             }
             else if (ParseKnot(trimmedLine) is string knot)
             {
+                hitFirstKnotContent = false;
+                knotTags.Clear();
+
                 if (snippet != null && block != null && snippet.Beats.Count > 0)
                     block.Snippets.Add(snippet);
                 if (block != null && scene != null && block.Snippets.Count > 0)
@@ -426,6 +557,9 @@ public class DinkParser
             }
             else if (ParseStitch(trimmedLine) is string stitch)
             {
+                hitFirstStitchContent = false;
+                stitchTags.Clear();
+
                 if (snippet != null && block != null && snippet.Beats.Count > 0)
                     block.Snippets.Add(snippet);
                 if (block != null && scene != null && block.Snippets.Count > 0)
@@ -440,11 +574,6 @@ public class DinkParser
                 
                 comments.Clear();
                 Log($"Snippet: {snippet}");
-                continue;
-            }
-            else if (trimmedLine == "#dink")
-            {
-                parsing = true;
                 continue;
             }
             else if (ParseComment(trimmedLine) is string comment)
@@ -466,6 +595,7 @@ public class DinkParser
                         dinkLine.Group = activeGroup;
                     snippet?.Beats.Add(dinkLine);
                     comments.Clear();
+                    addTags(dinkLine);
                     Log(dinkLine.ToString());
                     continue;
                 }
@@ -477,8 +607,20 @@ public class DinkParser
                     dinkAction.Group = activeGroup;
                 snippet?.Beats.Add(dinkAction);
                 comments.Clear();
+                addTags(dinkAction);
                 Log(dinkAction.ToString());
                 continue;
+            }
+            
+            if (ParseNonDinkLine(trimmedLine, out NonDinkLine ndLine))
+            {
+                if (ndLine.ID!=null)
+                {
+                    ndLine.Tags.AddRange(stitchTags);
+                    ndLine.Tags.AddRange(knotTags);
+                    ndLine.Tags.AddRange(fileTags);
+                    outNonDinkLines[ndLine.ID] = ndLine;
+                }
             }
             comments.Clear();
         }
@@ -548,10 +690,10 @@ public class DinkParser
         return linesArray.ToList();
     }
     
-    public static List<DinkScene> ParseInk(string text)
+    public static List<DinkScene> ParseInk(string text, Dictionary<string, NonDinkLine> outNonDinkLines)
     {
         string textWithoutComments = RemoveBlockComments(text);
         List<string> lines = SplitTextIntoLines(textWithoutComments);
-        return ParseInkLines(lines);
+        return ParseInkLines(lines, outNonDinkLines);
     }
 }

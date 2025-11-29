@@ -4,8 +4,17 @@ using System.Text.Json;
 
 public class AudioFolder
 {
-    public required string State { get; set; }
+    public required string Status { get; set; }
     public required string Folder { get; set; }
+}
+
+public class WritingStatusDefinition
+{
+    public string Status { get; set; } = "Unknown";
+    public string WsTag { get; set; } = "";
+    public bool Record { get; set; } = false;
+    public bool Loc { get; set; } = false;
+    public string Color {get; set;} = "";
 }
 
 public class CompilerOptions
@@ -36,19 +45,37 @@ public class CompilerOptions
     // If true, outputs the voice file (xlsx)
     public bool OutputRecordingScript = false;
 
+    // If true, outputs the writing status file (xlsx)
+    public bool OutputWritingStatus = false;
+
     // This is the default where the game will look for
     // audio files that start with the ID names of the lines.
     // The folders (and their children) will be searched in this
     // order, so if a line is found in (say) the Audio/Recorded folder first, 
     // its status in the voice script will be set to Recorded.
-    // If not found, the status will be set to Missing.
+    // If not found, the status will be set to Unknown.
     public List<AudioFolder> AudioFolders { get; set; } = new()
     {
-        new AudioFolder { State = "Final",    Folder = "Audio/Final" },
-        new AudioFolder { State = "Recorded", Folder = "Audio/Recorded" },
-        new AudioFolder { State = "Scratch",  Folder = "Audio/Scratch" },
-        new AudioFolder { State = "TTS",      Folder = "Audio/TTS" }
+        new AudioFolder { Status = "Final",    Folder = "Audio/Final" },
+        new AudioFolder { Status = "Recorded", Folder = "Audio/Recorded" },
+        new AudioFolder { Status = "Scratch",  Folder = "Audio/Scratch" },
+        new AudioFolder { Status = "TTS",      Folder = "Audio/TTS" }
     };
+
+    // Writing status tags - can be written on an Ink line as #ws:someStatus
+    // e.g. #ws:final or #ws:draft1
+    // If defined here, the following rules kick in:
+    // - If a file has a tag, everything in it defaults to that tag.
+    // - If a knot has a writing tag that overrides the file tag.
+    // - If a stitch has a writing tag that overrides the knot or file tag.
+    // - If a line has a writing tag that overrides the stitch, knot or file tag.
+    // - Only statuses with a record value of true will get sent to the recording script.
+    // - Only statuses with a localise value of true will get sent to the localisation strings.
+    // - The writing status file will show all statuses.
+    // If this section is not defined, no writing status tags are used and everything will be
+    // sent to recording script and localisation.
+    // If a line has no status it will be treated as "Unknown".
+    public List<WritingStatusDefinition> WritingStatus { get; set; } = new();
 
     public static CompilerOptions? LoadFromProjectFile(string projectFile)
     {
@@ -100,8 +127,10 @@ public class CompilerEnvironment
     public bool OutputDinkStructure {get{return _options.OutputDinkStructure;}}
     public bool OutputLocalization {get{return _options.OutputLocalization;}}
     public bool OutputRecordingScript {get{return _options.OutputRecordingScript;}}
+    public bool OutputWritingStatus {get{return _options.OutputWritingStatus;}}
     public string RootFilename {get{return Path.GetFileNameWithoutExtension(SourceInkFile);}}
     public List<AudioFolder> AudioFolders {get; private set;}
+    public Dictionary<string, WritingStatusDefinition> WritingStatusOptions {get; private set;}
     
     public CompilerEnvironment(CompilerOptions options)
     {
@@ -110,6 +139,7 @@ public class CompilerEnvironment
         ProjectFile = "";
         DestFolder = "";
         AudioFolders = new List<AudioFolder>();
+        WritingStatusOptions = new Dictionary<string, WritingStatusDefinition>();
     }
 
     public bool Init()
@@ -174,9 +204,15 @@ public class CompilerEnvironment
             }
             else
             {
-                AudioFolders.Add(new AudioFolder { State = audioFolder.State, Folder = expandedFolder });
+                AudioFolders.Add(new AudioFolder { Status = audioFolder.Status, Folder = expandedFolder });
             }
         }
+
+        foreach (var status in _options.WritingStatus)
+        {
+            WritingStatusOptions[status.WsTag] = status;
+        }
+
         return true;
     }
 

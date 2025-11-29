@@ -1,6 +1,5 @@
 using DinkCompiler;
 using System.CommandLine;
-using System.Text.Json;
 
 RootCommand command = new("Compiler chain for Dink");
 
@@ -46,6 +45,12 @@ Option<bool> voiceOption = new("--recordingScript")
 };
 command.Options.Add(voiceOption);
 
+Option<bool> writingStatusOption = new("--writingStatus")
+{
+    Description = "Output the status of the written lines as an Excel file."
+};
+command.Options.Add(writingStatusOption);
+
 command.Validators.Add(result =>
 {
     // Is a project file specified?
@@ -79,6 +84,8 @@ command.SetAction(parseResult =>
         options.OutputLocalization = true;
     if (parseResult.GetValue<bool>(voiceOption))
         options.OutputRecordingScript = true;
+    if (parseResult.GetValue<bool>(writingStatusOption))
+        options.OutputWritingStatus = true;
 
 //    Console.WriteLine(JsonSerializer.Serialize(options, new JsonSerializerOptions{IncludeFields = true}));
 //    return 0;

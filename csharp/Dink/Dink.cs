@@ -1,14 +1,24 @@
 // This file is part of an MIT-licensed project: see LICENSE file or README.md for details.
 // Copyright (c) 2025 Ian Thomas
+
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
 namespace Dink;
 
-class Helper
+public abstract class DinkBase
 {
+    public List<string> Comments { get; set; } = new List<string>();
+
+    public List<string> Tags { get; set; } = new List<string>();
+
     // Looks for comments that e.g. start with VO: OR have no prefix
-    public static List<string> GetCommentsFor(List<string> Comments, string[] prefixes)
+    public List<string> GetCommentsFor(string[] prefixes)
+    {
+        return GetCommentsFor(Comments, prefixes);
+    }
+
+    protected static List<string> GetCommentsFor(List<string> Comments, string[] prefixes)
     {
         var result = new List<string>();
         foreach (var comment in Comments)
@@ -28,24 +38,6 @@ class Helper
         }
         return result;
     }
-}
-    
-[JsonPolymorphic(TypeDiscriminatorPropertyName = "BeatType")]
-[JsonDerivedType(typeof(DinkAction), typeDiscriminator: "Action")]
-[JsonDerivedType(typeof(DinkLine), typeDiscriminator: "Line")]
-public class DinkBeat
-{
-    public string LineID { get; set; } = string.Empty;
-    public int Group { get; set; } = 0;
-    public List<string> Comments { get; set; } = new List<string>();
-
-    public List<string> Tags { get; set; } = new List<string>();
-
-    // Looks for comments that e.g. start with VO:
-    public List<string> GetCommentsFor(string[] prefixes)
-    {
-        return Helper.GetCommentsFor(Comments, prefixes);
-    }
     
     public List<string> GetTags(params string[] prefixes) 
     {
@@ -54,6 +46,16 @@ public class DinkBeat
                 tag.StartsWith(prefix + ":"))) 
             .ToList();
     }
+}
+    
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "BeatType")]
+[JsonDerivedType(typeof(DinkAction), typeDiscriminator: "Action")]
+[JsonDerivedType(typeof(DinkLine), typeDiscriminator: "Line")]
+public class DinkBeat : DinkBase
+{
+    public string LineID { get; set; } = string.Empty;
+    public int Group { get; set; } = 0;
+
 
     public override string ToString() =>
         $", Tags: [{string.Join(", ", Tags)}], LineID: {LineID}, Comments: [{string.Join(",", Comments)}]";
@@ -81,20 +83,13 @@ public class DinkAction : DinkBeat
 }
 
 // Equivalent of an Ink flow fragment
-public class DinkSnippet
+public class DinkSnippet : DinkBase
 {
-    public List<string> Comments { get; set; } = new List<string>();
-    // Looks for comments that e.g. start with VO: OR have no prefix
-    public List<string> GetCommentsFor(string[] prefixes)
-    {
-        return Helper.GetCommentsFor(Comments, prefixes);
-    }
-
     // Comments collected from braces { } that enclose this snippet
     public List<string> BraceComments { get; set; } = new List<string>();
     public List<string> GetBraceCommentsFor(string[] prefixes)
     {
-        return Helper.GetCommentsFor(BraceComments, prefixes);
+        return GetCommentsFor(BraceComments, prefixes);
     }
     
     public string SnippetID { get; set; } = string.Empty;
@@ -102,10 +97,9 @@ public class DinkSnippet
     public override string ToString() => $"Snippet: '{SnippetID}'";
 }
 
-public class DinkBlock
+public class DinkBlock : DinkBase
 {
     public string BlockID { get; set; } = string.Empty;
-    public List<string> Comments { get; set; } = new List<string>();
     public List<DinkSnippet> Snippets { get; set; } = new List<DinkSnippet>();
     public override string ToString() => $"Block: '{BlockID}'";
 }

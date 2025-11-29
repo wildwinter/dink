@@ -37,22 +37,24 @@ public class Compiler
             return false;
 
         // ----- Parse ink files, extract Dink beats -----
-        if (!ParseDinkScenes(usedInkFiles, characters, out List<DinkScene> parsedDinkScenes))
+        if (!ParseDinkScenes(usedInkFiles, characters, out List<DinkScene> parsedDinkScenes, out Dictionary<string, NonDinkLine> nonDinkLines))
             return false;
 
         // ---- Remove any action and character references from the localisation -----
         if (!FixLoc(parsedDinkScenes, inkStrings))
             return false;
 
-        // ---- Pull out anything that should go to the recording booth -----
-        if (!BuildVoiceLines(parsedDinkScenes, out VoiceLines voiceLines))
+        // ---- Build writing statuses for lines. This might affect localisation and recording -----
+        if (!BuildWritingStatuses(parsedDinkScenes, nonDinkLines, inkStrings, out WritingStatuses writingStatuses))
             return false;
 
         // ----- Output Voice Lines -----
         if (_env.OutputRecordingScript)
         {
-            var audioFileStatuses = voiceLines.GatherAudioFileStatuses(_env.AudioFolders);
-            if (!voiceLines.WriteToExcel(_env.RootFilename, characters, audioFileStatuses, _env.MakeDestFile("-voice.xlsx")))
+            if (!BuildVoiceLines(parsedDinkScenes, out VoiceLines voiceLines))
+                return false;
+
+            if (!WriteVoiceScript(voiceLines, writingStatuses, characters, _env.MakeDestFile("-voice.xlsx")))
                 return false;
         }
 
@@ -74,7 +76,14 @@ public class Compiler
         // ----- Output lines for localisation (Excel) -----
         if (_env.OutputLocalization)
         {
-            if (!inkStrings.WriteToExcel(_env.RootFilename, _env.MakeDestFile("-strings.xlsx")))
+            if (!WriteLocalizationFile(inkStrings, writingStatuses, _env.MakeDestFile("-strings.xlsx")))
+                return false;
+        }
+
+        // ----- Output lines for writing status (Excel) -----
+        if (_env.OutputWritingStatus)
+        {
+            if (!WriteWritingStatusFile(writingStatuses, _env.MakeDestFile("-writing-status.xlsx")))
                 return false;
         }
 
@@ -151,7 +160,7 @@ public class Compiler
         }
     }
 
-    void OnCompileError(string message, ErrorType errorType)
+    private void OnCompileError(string message, ErrorType errorType)
     {
         switch (errorType)
         {
@@ -216,8 +225,9 @@ public class Compiler
         return success;
     }
 
-    bool ParseDinkScenes(List<string> usedInkFiles, Characters? characters, out List<DinkScene> parsedDinkScenes)
+    private bool ParseDinkScenes(List<string> usedInkFiles, Characters? characters, out List<DinkScene> parsedDinkScenes, out Dictionary<string, NonDinkLine> ndLines)
     {
+        ndLines = new Dictionary<string, NonDinkLine>();
         parsedDinkScenes = new List<DinkScene>();
 
         Console.WriteLine("Parsing Dink scenes...");
@@ -225,7 +235,7 @@ public class Compiler
         {
             Console.WriteLine($"Using Ink file '{inkFile}'");
             var text = File.ReadAllText(inkFile);
-            var scenes = DinkParser.ParseInk(text);
+            var scenes = DinkParser.ParseInk(text, ndLines);
 
             if (characters!=null)
             {
@@ -259,7 +269,7 @@ public class Compiler
         return true;
     }
 
-    bool FixLoc(List<DinkScene> parsedDinkScenes, LocStrings inkStrings)
+    private bool FixLoc(List<DinkScene> parsedDinkScenes, LocStrings inkStrings)
     {
         Console.WriteLine("Fixing localisation entries...");
 
@@ -308,7 +318,7 @@ public class Compiler
         return true;
     }
 
-    bool BuildVoiceLines(List<DinkScene> dinkScenes, out VoiceLines voiceLines)
+    private bool BuildVoiceLines(List<DinkScene> dinkScenes, out VoiceLines voiceLines)
     {
         voiceLines = new VoiceLines();
         Console.WriteLine("Extracting voice lines...");
@@ -411,7 +421,7 @@ public class Compiler
         return true;
     }
 
-    bool WriteStructuredDink(List<DinkScene> dinkScenes, string destDinkFile)
+    private bool WriteStructuredDink(List<DinkScene> dinkScenes, string destDinkFile)
     {
         Console.WriteLine("Writing structured dink file: " + destDinkFile);
 
@@ -428,7 +438,7 @@ public class Compiler
         return true;
     }
 
-    bool WriteMinimalDink(List<DinkScene> dinkScenes, string destDinkFile)
+    private bool WriteMinimalDink(List<DinkScene> dinkScenes, string destDinkFile)
     {
         Console.WriteLine("Writing minimal dink file: " + destDinkFile);
 
@@ -445,7 +455,7 @@ public class Compiler
         return true;
     }
 
-    bool WriteMinimalStrings(LocStrings inkStrings, string destStringsFile)
+    private bool WriteMinimalStrings(LocStrings inkStrings, string destStringsFile)
     {
         Console.WriteLine("Writing strings file: " + destStringsFile);
 
@@ -459,6 +469,98 @@ public class Compiler
             Console.Error.WriteLine($"Error writing out JSON file {destStringsFile}: " + ex.Message);
             return false;
         }
+        return true;
+    }
+
+    private bool BuildWritingStatuses(List<DinkScene> dinkScenes, Dictionary<string, NonDinkLine> nonDinkLines, LocStrings locStrings, out WritingStatuses writingStatuses)
+    {
+        if (_env.WritingStatusOptions.Count == 0)
+        {
+            writingStatuses = new WritingStatuses();
+            return true;
+        }
+        
+        writingStatuses = new WritingStatuses();
+        Console.WriteLine("Extracting writing statuses...");
+
+        foreach (var scene in dinkScenes)
+        {
+            foreach (var block in scene.Blocks)
+            {
+                foreach (var snippet in block.Snippets)
+                { 
+                    foreach (var beat in snippet.Beats)
+                    {
+                        if (beat is DinkLine line)
+                        {
+                            string statusTag = line.GetTags(["ws"]).FirstOrDefault() ?? 
+                                "Unknown";
+                            if (statusTag.StartsWith("ws:"))
+                                statusTag = statusTag.Substring(3);
+
+                            WritingStatusEntry entry = new WritingStatusEntry()
+                            {
+                                ID = line.LineID,
+                                Text = line.Text,
+                                WritingStatus = _env.WritingStatusOptions.GetValueOrDefault(statusTag, new WritingStatusDefinition())
+                            };
+
+                            writingStatuses.Set(entry);
+                        }
+                    }
+                }
+            }
+        }
+
+        foreach(var id in nonDinkLines.Keys)
+        {
+            NonDinkLine ndLine = nonDinkLines[id];
+            string statusTag = ndLine.GetTags(["ws"]).FirstOrDefault() ?? 
+                "Unknown";
+            if (statusTag.StartsWith("ws:"))
+                statusTag = statusTag.Substring(3);
+
+            WritingStatusEntry entry = new WritingStatusEntry()
+            {
+                ID = ndLine.ID,
+                Text = locStrings.GetText(ndLine.ID)??"",
+                WritingStatus = _env.WritingStatusOptions.GetValueOrDefault(statusTag, new WritingStatusDefinition())
+            };
+
+            writingStatuses.Set(entry);
+        }
+
+        return true;
+    }
+
+    private bool WriteVoiceScript(VoiceLines voiceLines, WritingStatuses writingStatuses, Characters? characters, string destVoiceFile)
+    {       
+        Console.WriteLine("Writing voice lines file: " + destVoiceFile);
+        
+        var audioFileStatuses = voiceLines.GatherAudioFileStatuses(_env.AudioFolders);
+        if (!voiceLines.WriteToExcel(_env.RootFilename, characters, writingStatuses, audioFileStatuses, destVoiceFile))
+            return false;
+        return true;
+    }
+
+    private bool WriteLocalizationFile(LocStrings inkStrings, WritingStatuses writingStatuses, string destLocFile)
+    {
+        if (!inkStrings.WriteToExcel(_env.RootFilename, writingStatuses, destLocFile))
+            return false;
+        return true;
+    }
+
+    private bool WriteWritingStatusFile(WritingStatuses writingStatuses, string destStatusFile)
+{
+        if (_env.WritingStatusOptions.Count == 0)
+        {
+            Console.Error.WriteLine($"Requested to write out writing statuses but no writing status options are defined.");
+            return false;
+        }
+
+        if (!writingStatuses.WriteToExcel(_env.RootFilename, _env.WritingStatusOptions, destStatusFile))
+            return false;
+
         return true;
     }
 }

@@ -1,15 +1,18 @@
 INCLUDE scene1.ink
 INCLUDE branches.ink
 
+#ws:stub
 
 -> Barks
 
 // This comment shouldn't appear
 === Intro
-This is a test file. #id:main_Intro_FDAP
+#ws:draft1
+This is a test file. #id:main_Intro_FDAP #ws:draft2
 -> DONE
 
 === Intro2
+#ws:final
 // This is here to see if Dink will notice there's no #dink tag
 LAURA: This is an earlier line I am saying. #id:main_Intro2_PCBU
 -> DONE
@@ -23,6 +26,7 @@ This scene is commented out and should be ignored.
 // This comment should apply to Test Scene.
 // And so should this.
 === TestScene
+#ws:final
 #dink
 // Comment for a line.
 // Another comment for the same line.
@@ -33,8 +37,8 @@ LAURA: This is a line I am saying. #id:main_TestScene_16U4 #tag1 #tag2
 LAURA (O.S.): This is another line. #id:main_TestScene_FF1T
 // Fred is angry.
 FRED: (loudly) This is a loud line! #id:main_TestScene_BQ1E
-Now bounce around the place! #id:main_TestScene_79PN
-(SFX) Make a bang noise! #id:main_TestScene_96IR
+Now bounce around the place! #id:main_TestScene_79PN #ws:draft1
+(SFX) Make a bang noise! #id:main_TestScene_96IR #ws:draft2
 FRED: Glad that's over with! #id:main_TestScene_IQIS
 -> DONE
 
@@ -55,11 +59,12 @@ FRED: Glad that's over with! #id:main_TestScene_IQIS
 -> DONE
 
 === Recording
-#dink
+#dink #ws:draft1
 FRED: This is a recording line. #id:main_Recording_7ZMT
 -> PartA
 
 = PartA
+#ws:draft2
 // A: This comment should apply to the snippet.
 {false: // this comment should apply to this snippet
 // A: This comment should apply to Jim's line.

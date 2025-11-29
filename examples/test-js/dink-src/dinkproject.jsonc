@@ -15,11 +15,11 @@
     // The folders (and their children) will be searched in this
     // order, so if a line is found in (say) the Audio/Recorded folder first, 
     // its status in the voice script will be set to Recorded.
-    // If not found, the status will be set to Missing.
+    // If not found, the status will be set to Unknown.
     "audioFolders":[
-        {"state":"Final", "folder":"Audio/Final"},
-        {"state":"Recorded", "folder":"Audio/Recorded"},
-        {"state":"Scratch", "folder":"Audio/Scratch"},
-        {"state":"TTS", "folder":"Audio/TTS"}
+        {"status":"Final", "folder":"Audio/Final"},
+        {"status":"Recorded", "folder":"Audio/Recorded"},
+        {"status":"Scratch", "folder":"Audio/Scratch"},
+        {"status":"TTS", "folder":"Audio/TTS"}
     ]
 }

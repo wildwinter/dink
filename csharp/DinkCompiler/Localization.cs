@@ -2,7 +2,6 @@ namespace DinkCompiler;
 
 using System.Text.Json;
 using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Spreadsheet;
 
 public struct LocEntry
 {
@@ -29,6 +28,13 @@ class LocStrings
         _entries[entry.ID] = entry;
     }
 
+    public string? GetText(string id)
+    {
+        if (_entries.TryGetValue(id, out LocEntry entry))
+            return entry.Text;
+        return null;
+    }
+
     public void Remove(string id)
     {
         _entries.Remove(id);
@@ -43,15 +49,21 @@ class LocStrings
         public required string Comments { get; set; }
     }
 
-    public bool WriteToExcel(string rootName, string destLocFile)
+    public bool WriteToExcel(string rootName, WritingStatuses writingStatuses, string destLocFile)
     {
-        var recordsToExport = OrderedEntries.Select(v => new LocEntryExport
-        {
-            ID = v.ID,
-            Speaker = v.Speaker,
-            Text = v.Text,
-            Comments = string.Join(" ", v.Comments)
-        }).ToList();
+        Console.WriteLine("Writing localisation file: " + destLocFile);
+        
+        bool useWritingStatus = !writingStatuses.IsEmpty();
+
+        var recordsToExport = OrderedEntries
+            .Where(v => !useWritingStatus||writingStatuses.GetDefinition(v.ID).Loc)
+            .Select(v => new LocEntryExport
+            {
+                ID = v.ID,
+                Speaker = v.Speaker,
+                Text = v.Text,
+                Comments = string.Join(" ", v.Comments)
+            }).ToList();
 
         try
         {
@@ -60,17 +72,10 @@ class LocStrings
             using (var workbook = new XLWorkbook())
             {
                 var worksheet = workbook.Worksheets.Add("Text Lines - " + rootName);
-                worksheet.Style.Alignment.Vertical = XLAlignmentVerticalValues.Top;
-                worksheet.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
 
                 var table = worksheet.Cell("A1").InsertTable(recordsToExport);
 
-                worksheet.ColumnsUsed().AdjustToContents();
-                worksheet.RowsUsed().AdjustToContents();
-                worksheet.SheetView.FreezeRows(1);
-
-                table.FirstRow().Style.Fill.BackgroundColor = headerColor;
-                table.FirstRow().Style.Font.Bold = true;
+                ExcelUtils.FormatCommonTable(worksheet, table);
 
                 workbook.SaveAs(destLocFile);
             }
