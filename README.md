@@ -32,7 +32,7 @@ DAVE: Thar she blows!
   * If a list of character names is supplied, checks that all the Dink scenes use valid characters.
   * Produces a minimal JSON file giving metadata for each line that Ink won't provide (such as the speaker, directions etc.)
   * Produces a JSON file with all the strings used in Ink and Dink needed for runtime.
-  * Optionally produces a JSON file detailing the Dink structure (e.g. who is the speaker for each line? What are the directions?).
+  * Optionally produces a JSON file detailing a more detailed Dink structure (scenes, blocks, snippets, showing runs of dialogue).
   * Optionally produces an Excel file with all the strings in for localization.
   * Optionally produces an Excel file for voice recording, including mapping to actors if supplied. Checks the **status of existing audio files** to figure out what has actually been recorded.
   * Optionally lets you track the writing status of each file and line, and produces an Excel file with all those statuses. You can also restrict what gets exported for recording or
