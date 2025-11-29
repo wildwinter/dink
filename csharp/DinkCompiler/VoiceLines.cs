@@ -10,6 +10,8 @@ public struct VoiceEntry
     public required string Direction { get; set; }
     public required string SnippetID { get; set; }
     public required List<string> SnippetComments { get; set; }
+    public required List<string> BraceComments { get; set; }
+    public required string GroupIndicator { get; set; }
     public required List<string> Comments { get; set; }
     public required List<string> Tags { get; set; }
 }
@@ -72,7 +74,6 @@ class VoiceLines
         public required string Line { get; set; }
         public required string Direction { get; set; }
         public required string Comments { get; set; }
-        public required string SectionComments { get; set; }
         public required string Actor { get; set; }
         public required string SectionID { get; set; }
         public required string Tags { get; set; }
@@ -87,13 +88,15 @@ class VoiceLines
         {
             ID = v.ID,
             SectionID = v.SnippetID,
-            SectionComments = string.Join(" ", v.SnippetComments),
             Character = v.Character,
             Qualifier = v.Qualifier,
             Actor = (characters != null) ? characters.Get(v.Character)?.Actor ?? "" : "", 
             Line = v.Line,
             Direction = v.Direction,
-            Comments = string.Join(" ", v.Comments),
+            Comments = (v.BraceComments.Count>0 ? string.Join("\n", v.BraceComments) + "\n" : "") + 
+                    (v.SnippetComments.Count>0 ? string.Join("\n", v.SnippetComments) + "\n" : "") + 
+                    (v.GroupIndicator != "" ? v.GroupIndicator + " " : "") +
+                    string.Join("\n", v.Comments),
             Tags = string.Join(", ", v.Tags),
             AudioStatus = audioFileStatuses[v.ID]??"Unknown"
         }).ToList();

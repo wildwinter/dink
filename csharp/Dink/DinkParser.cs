@@ -5,6 +5,21 @@ using System.Linq;
 
 public class DinkParser
 {
+    class BraceContainer
+    {
+        public BraceContainer? Parent;
+        public List<string> Comments = new List<string>();  
+        public List<string> GetComments()
+        {
+            var output = new List<string>(Comments);
+            if (Parent != null)
+            {
+                output.AddRange(Parent.GetComments());
+            }
+            return output;
+        }  
+    }
+
     public static bool Verbose = false;
     public static void Log(string str)
     {
@@ -249,8 +264,8 @@ public class DinkParser
         DinkBlock? block = null;
         DinkSnippet? snippet = null;
         List<string> comments = new List<string>();
-        List<string> braceComments = new List<string>();
         bool parsing = false;
+        BraceContainer? currentBraceContainer = null;
 
         int currentBraceLevel = 0;
         int activeGroup = 0;
@@ -262,17 +277,14 @@ public class DinkParser
             {
                 if (snippet.Beats.Count > 0)
                     block.Snippets.Add(snippet);
-                else {
-                    snippet.Comments.Clear();
-                    snippet.Comments.AddRange(braceComments);
-                    snippet.Comments.AddRange(comments);
-                    return;
-                }
             }
 
             snippet = new DinkSnippet();
             snippet.SnippetID = GenerateID();
-            snippet.Comments.AddRange(braceComments);
+            if (currentBraceContainer != null)
+            {
+                snippet.BraceComments.AddRange(currentBraceContainer.GetComments());
+            }
             snippet.Comments.AddRange(comments);
             comments.Clear();
         }
@@ -292,18 +304,19 @@ public class DinkParser
 
             if (IsBraceOpeningLine(trimmedLine))
             {
-                braceComments.Clear();
-                braceComments.AddRange(comments);
+                currentBraceContainer = new BraceContainer
+                {
+                    Parent = currentBraceContainer,
+                };
+                currentBraceContainer.Comments.AddRange(comments);
                 comments.Clear();
                 currentBraceLevel++;
                 if (ContainsInkGroup(trimmedLine))
                 {
-                    Console.WriteLine("Contains clause"+trimmedLine);
                     if (activeGroupLevel==0)
                     {
                         activeGroupLevel = currentBraceLevel;
                         activeGroup++;
-                        Console.WriteLine("New active group:"+activeGroup);
                     }
                 }
                 addSnippet();
@@ -316,7 +329,8 @@ public class DinkParser
                     activeGroupLevel = 0;
                     Console.WriteLine("Active group stopped:"+activeGroup);
                 }
-                braceComments.Clear();
+                if (currentBraceContainer!=null)
+                    currentBraceContainer = currentBraceContainer?.Parent;
                 addSnippet();
             }
             else if (IsFlowBreakingLine(trimmedLine))

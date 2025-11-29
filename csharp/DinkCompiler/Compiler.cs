@@ -375,19 +375,24 @@ public class Compiler
                                 Line = line.Text,
                                 Direction = line.Direction,
                                 SnippetID = snippet.SnippetID,
+                                GroupIndicator = "",
+                                BraceComments = new List<string>(),
                                 SnippetComments = snippet.GetCommentsFor(["VO"]),
                                 Comments = line.GetCommentsFor(["VO"]),
                                 Tags = line.GetTags(["a"])
                             };
                             
+                            if (groupIndex==1)
+                            {
+                                entry.BraceComments = snippet.GetBraceCommentsFor(["VO"]);
+                            }
+
                             if (groupNum>0)
                             {
-                                if (groupIndex>1)
-                                        entry.SnippetComments.Clear();
                                 if (lineIndex==1)
-                                    entry.SnippetComments.Insert(0, $"({groupIndex}/{groupSizes[beat.Group]})");
+                                    entry.GroupIndicator = $"({groupIndex}/{groupSizes[beat.Group]})";
                                 else 
-                                    entry.SnippetComments.Insert(0, "(...)");
+                                    entry.GroupIndicator = "(...)";
                             }
 
                             voiceLines.Set(entry);

@@ -84,11 +84,17 @@ public class DinkAction : DinkBeat
 public class DinkSnippet
 {
     public List<string> Comments { get; set; } = new List<string>();
-
     // Looks for comments that e.g. start with VO: OR have no prefix
     public List<string> GetCommentsFor(string[] prefixes)
     {
         return Helper.GetCommentsFor(Comments, prefixes);
+    }
+
+    // Comments collected from braces { } that enclose this snippet
+    public List<string> BraceComments { get; set; } = new List<string>();
+    public List<string> GetBraceCommentsFor(string[] prefixes)
+    {
+        return Helper.GetCommentsFor(BraceComments, prefixes);
     }
     
     public string SnippetID { get; set; } = string.Empty;
