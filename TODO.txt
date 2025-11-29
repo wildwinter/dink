@@ -1,9 +1,10 @@
 TODO:
+-----
 Line/script status + stats
-Branch comments for script
 TTS?
 
 DONE:
+-----
 Add comment type.
 Expand localization.
 Add comment to whole scene.
@@ -19,3 +20,4 @@ Minimal runtime use explanation
 Make non-runtime optional
 Fancy comments generated for VO to deal with shuffles/cycles etc.
 Coloured VO script in sections
+Branch comments for script

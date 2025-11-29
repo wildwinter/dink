@@ -1,4 +1,4 @@
-﻿=== Scene1
+=== Scene1
 #dink
 -> Part1
 

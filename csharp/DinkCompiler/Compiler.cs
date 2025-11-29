@@ -382,6 +382,11 @@ public class Compiler
                                 Comments = line.GetCommentsFor(["VO"]),
                                 Tags = line.GetTags(["a"])
                             };
+
+                            if (lineIndex>1)
+                            {
+                                entry.SnippetComments.Clear();
+                            }
                             
                             if (groupIndex==1)
                             {

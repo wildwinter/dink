@@ -2,6 +2,7 @@ namespace Dink;
 
 using System.Text.RegularExpressions;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 public class DinkParser
 {
@@ -187,6 +188,24 @@ public class DinkParser
         return dinkLine;
     }
 
+    public static string? ParseOption(string line)
+    {
+        string pattern = @"^\s*[*+]\s*\[\s*([^#\]]+?)\s*(?:#.*?)*\s*\]\s*$";
+        
+        Match match = Regex.Match(line, pattern);
+        if (match.Success)
+        {
+            string content = match.Groups[1].Value.Trim();
+            return content;
+        }
+        return null;
+    }
+
+    public static bool ParseGather(string line)
+    {
+        return line.Trim()=="-";
+    }
+
     public static string? ParseKnot(string line)
     {
         // Pattern to extract the identifier
@@ -232,7 +251,7 @@ public class DinkParser
 
     public static bool ContainsInkGroup(string text)
     {
-        return Regex.IsMatch(text, @"\bshuffle\b|\bcycle\b|\bonce\b|\bstopping\b");
+        return Regex.IsMatch(text, @"^\s*\{\s*(\w+)\s*:\s*$");
     }
 
     public static (string? Expression, bool IsError) ParseExpressionClause(string line)
@@ -266,6 +285,7 @@ public class DinkParser
         List<string> comments = new List<string>();
         bool parsing = false;
         BraceContainer? currentBraceContainer = null;
+        bool inOptions = false;
 
         int currentBraceLevel = 0;
         int activeGroup = 0;
@@ -327,7 +347,8 @@ public class DinkParser
                 if (currentBraceLevel < activeGroupLevel)
                 {
                     activeGroupLevel = 0;
-                    Console.WriteLine("Active group stopped:"+activeGroup);
+                    inOptions = true;
+                    comments.Add("MERGE");
                 }
                 if (currentBraceContainer!=null)
                     currentBraceContainer = currentBraceContainer?.Parent;
@@ -344,6 +365,20 @@ public class DinkParser
                 }
                 else
                 {
+                    if (ParseOption(trimmedLine) is string option)
+                    {
+                        comments.Add($"OPTION \"{option}\"");
+                        inOptions = true;
+                    }
+                    else if (ParseGather(trimmedLine) && inOptions)
+                    {
+                        comments.Add("MERGE");
+                        inOptions = false;
+                    }
+                    else
+                    {
+                        inOptions = false;
+                    }
                     addSnippet();
                 }
             }
