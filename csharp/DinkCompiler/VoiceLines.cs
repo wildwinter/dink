@@ -4,6 +4,7 @@ using ClosedXML.Excel;
 public struct VoiceEntry
 {
     public required string ID { get; set; }
+    public required string BlockID { get; set; }
     public required string Character { get; set; }
     public required string Qualifier { get; set; }
     public required string Line { get; set; }
@@ -69,8 +70,8 @@ class VoiceLines
     class VoiceEntryExport
     {
         public required string ID { get; set; }
+        public required string BlockID { get; set; }
         public required string Character { get; set; }
-        public required string Qualifier { get; set; }
         public required string Line { get; set; }
         public required string Direction { get; set; }
         public required string Comments { get; set; }
@@ -80,6 +81,24 @@ class VoiceLines
         public required string AudioStatus {get; set;}
     }
 
+    private string? FindColumnByHeading(IXLWorksheet worksheet, string headingText)
+    {
+        var firstRow = worksheet.Row(1);
+        int lastColumn = worksheet.LastCellUsed()?.Address.ColumnNumber ?? 1;
+        for (int col = 1; col <= lastColumn; col++)
+        {
+            var cell = firstRow.Cell(col);
+            
+            if (cell.TryGetValue<string>(out string cellValue) && 
+                !string.IsNullOrWhiteSpace(cellValue) &&
+                cellValue==headingText)
+            {
+                return cell.Address.ColumnLetter;
+            }
+        }
+        return null; 
+    }
+
     public bool WriteToExcel(string rootName, Characters? characters, 
                             Dictionary<string, string?> audioFileStatuses, 
                             string destVoiceFile)
@@ -87,9 +106,9 @@ class VoiceLines
         List<VoiceEntryExport> recordsToExport = OrderedEntries.Select(v => new VoiceEntryExport
         {
             ID = v.ID,
+            BlockID = v.BlockID,
             SectionID = v.SnippetID,
             Character = v.Character,
-            Qualifier = v.Qualifier,
             Actor = (characters != null) ? characters.Get(v.Character)?.Actor ?? "" : "", 
             Line = v.Line,
             Direction = v.Direction,
@@ -103,16 +122,42 @@ class VoiceLines
 
         try
         {
+            XLColor headerColor = XLColor.LightGreen;
+            XLColor lineColor1 = XLColor.White;
+            XLColor lineColor2 = XLColor.LightBlue;
+
             using (var workbook = new XLWorkbook())
             {
                 var worksheet = workbook.Worksheets.Add("Voice Lines - " + rootName);
+                worksheet.Style.Alignment.Vertical = XLAlignmentVerticalValues.Top;
+                worksheet.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
 
                 var table = worksheet.Cell("A1").InsertTable(recordsToExport);
 
                 worksheet.ColumnsUsed().AdjustToContents();
+                worksheet.RowsUsed().AdjustToContents();
+                worksheet.SheetView.FreezeRows(1);
 
-                table.FirstRow().Style.Fill.BackgroundColor = XLColor.LightBlue;
+                table.FirstRow().Style.Fill.BackgroundColor = headerColor;
                 table.FirstRow().Style.Font.Bold = true;
+
+                string sectionHeading = FindColumnByHeading(worksheet, "SectionID") ?? "";
+
+                string lastSection = "";
+                XLColor sectionColor = lineColor2;
+                foreach (var row in worksheet.RowsUsed().Skip(1))
+                {
+                    var section = row.Cell(sectionHeading); // SectionID column
+                    if (section.GetString() != lastSection)
+                    {   
+                        lastSection = section.GetString();
+                        if (sectionColor == lineColor2)
+                            sectionColor = lineColor1;
+                        else
+                            sectionColor = lineColor2;
+                    }
+                    row.Style.Fill.BackgroundColor = sectionColor;
+                }   
 
                 workbook.SaveAs(destVoiceFile);
             }

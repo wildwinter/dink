@@ -1,7 +1,9 @@
 namespace DinkCompiler;
 
 using System.Text.Json;
-using ClosedXML.Excel; 
+using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Spreadsheet;
+
 public struct LocEntry
 {
     public required string ID { get; set; }
@@ -53,15 +55,21 @@ class LocStrings
 
         try
         {
+            XLColor headerColor = XLColor.LightGreen;
+            
             using (var workbook = new XLWorkbook())
             {
                 var worksheet = workbook.Worksheets.Add("Text Lines - " + rootName);
+                worksheet.Style.Alignment.Vertical = XLAlignmentVerticalValues.Top;
+                worksheet.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
 
                 var table = worksheet.Cell("A1").InsertTable(recordsToExport);
 
                 worksheet.ColumnsUsed().AdjustToContents();
+                worksheet.RowsUsed().AdjustToContents();
+                worksheet.SheetView.FreezeRows(1);
 
-                table.FirstRow().Style.Fill.BackgroundColor = XLColor.LightBlue;
+                table.FirstRow().Style.Fill.BackgroundColor = headerColor;
                 table.FirstRow().Style.Font.Bold = true;
 
                 workbook.SaveAs(destLocFile);

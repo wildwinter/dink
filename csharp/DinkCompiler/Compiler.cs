@@ -370,6 +370,7 @@ public class Compiler
                             VoiceEntry entry = new VoiceEntry()
                             {
                                 ID = line.LineID,
+                                BlockID = scene.SceneID+(block.BlockID!="" ? "_"+block.BlockID : ""),
                                 Character = line.CharacterID,
                                 Qualifier = line.Qualifier,
                                 Line = line.Text,

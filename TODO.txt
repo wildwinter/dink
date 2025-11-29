@@ -1,4 +1,21 @@
+TODO:
 Line/script status + stats
 Branch comments for script
-Coloured VO script in sections
 TTS?
+
+DONE:
+Add comment type.
+Expand localization.
+Add comment to whole scene.
+Audio tags.
+Excel localisation.
+Include actions locale? option.
+Branching comments for script.
+Test JS example.
+Validate non-Dink lines?
+Get rid of Dink comments.
+Validate recorded WAVs
+Minimal runtime use explanation
+Make non-runtime optional
+Fancy comments generated for VO to deal with shuffles/cycles etc.
+Coloured VO script in sections
