@@ -2,6 +2,8 @@ TODO:
 -----
 Line stats
 TTS?
+Document simple usage
+Explain web demo
 
 DONE:
 -----
