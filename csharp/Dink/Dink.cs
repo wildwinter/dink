@@ -13,12 +13,12 @@ public abstract class DinkBase
     public List<string> Tags { get; set; } = new List<string>();
 
     // Looks for comments that e.g. start with VO: OR have no prefix
-    public List<string> GetCommentsFor(string[] prefixes)
+    public List<string> GetCommentsFor(List<string> prefixes)
     {
         return GetCommentsFor(Comments, prefixes);
     }
 
-    protected static List<string> GetCommentsFor(List<string> Comments, string[] prefixes)
+    protected static List<string> GetCommentsFor(List<string> Comments, List<string> prefixes)
     {
         var result = new List<string>();
         foreach (var comment in Comments)
@@ -26,12 +26,13 @@ public abstract class DinkBase
             var match = Regex.Match(comment, @"^([a-zA-Z0-9]+):\s*(.*)$");
             if (match.Success)
             {
-                if (prefixes.Contains(match.Groups[1].Value))
+                if (prefixes.Contains(match.Groups[1].Value)||prefixes.Contains("*"))
                 {
                     result.Add(match.Groups[2].Value.Trim());
                 }
             }
-            else
+            // No prefix, send it if "?" is in the list.
+            else if (prefixes.Contains("?")||prefixes.Contains("*"))
             {
                 result.Add(comment.Trim());
             }
@@ -87,7 +88,7 @@ public class DinkSnippet : DinkBase
 {
     // Comments collected from braces { } that enclose this snippet
     public List<string> BraceComments { get; set; } = new List<string>();
-    public List<string> GetBraceCommentsFor(string[] prefixes)
+    public List<string> GetBraceCommentsFor(List<string> prefixes)
     {
         return GetCommentsFor(BraceComments, prefixes);
     }

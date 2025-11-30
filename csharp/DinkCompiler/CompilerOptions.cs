@@ -42,7 +42,7 @@ public class CompilerOptions
     // If true, outputs the strings file (xlsx)
     public bool OutputLocalization = false;
 
-    // If true, outputs the voice file (xlsx)
+    // If true, outputs the recording script file (xlsx)
     public bool OutputRecordingScript = false;
 
     // If true, outputs the writing status file (xlsx)
@@ -76,6 +76,8 @@ public class CompilerOptions
     // sent to recording script and localisation.
     // If a line has no status it will be treated as "Unknown".
     public List<WritingStatusDefinition> WritingStatus { get; set; } = new();
+
+    public Dictionary<string, List<string>> CommentFilters { get; set; } = new();
 
     public static CompilerOptions? LoadFromProjectFile(string projectFile)
     {
@@ -131,7 +133,7 @@ public class CompilerEnvironment
     public string RootFilename {get{return Path.GetFileNameWithoutExtension(SourceInkFile);}}
     public List<AudioFolder> AudioFolders {get; private set;}
     public Dictionary<string, WritingStatusDefinition> WritingStatusOptions {get; private set;}
-    
+    public Dictionary<string, List<string>> CommentFilters {get {return _options.CommentFilters;}}
     public CompilerEnvironment(CompilerOptions options)
     {
         _options = options;    
@@ -154,26 +156,52 @@ public class CompilerEnvironment
         }
 
         SourceInkFile = _options.Source;
+        bool foundInkFile = false;
         if (string.IsNullOrEmpty(SourceInkFile))
         {
             Console.Error.WriteLine("No Ink file specified.");
             return false;
         }
-        if (!Path.IsPathFullyQualified(SourceInkFile))
+        if (Path.IsPathFullyQualified(SourceInkFile))
         {
-            Console.WriteLine($"{ProjectFolder}:{SourceInkFile}");
-            if (File.Exists(Path.Combine(ProjectFolder, SourceInkFile)))
+            foundInkFile = File.Exists(SourceInkFile);
+            if (!foundInkFile)
             {
-                SourceInkFile = Path.Combine(ProjectFolder, SourceInkFile);
-            }
-            else if (File.Exists(Path.Combine(SourceInkFile)))
-            {
-                SourceInkFile = Path.Combine(SourceInkFile);
+                Console.WriteLine($"Tried to find ink file: '{SourceInkFile}'");
             }
         }
-        if (!File.Exists(SourceInkFile))
+        else
         {
-            Console.Error.WriteLine($"Source Ink file doesn't exist:'{SourceInkFile}'");
+            if (!string.IsNullOrEmpty(ProjectFolder))
+            {
+                var lookForFile = Path.GetFullPath(Path.Combine(ProjectFolder, SourceInkFile));
+                if (File.Exists(lookForFile))
+                {
+                    SourceInkFile = lookForFile;
+                    foundInkFile = true;
+                }
+                else
+                {
+                    Console.WriteLine($"Tried to find ink file: '{lookForFile}'");
+                }
+            }
+            if (!foundInkFile)
+            {
+                var lookForFile = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, SourceInkFile));
+                if (File.Exists(lookForFile))
+                {
+                    SourceInkFile = lookForFile;
+                    foundInkFile = true;
+                }
+                else
+                {
+                    Console.WriteLine($"Tried to find ink file: '{lookForFile}'");
+                }
+            }
+        }
+        if (!foundInkFile)
+        {
+            Console.WriteLine($"Source Ink file doesn't exist:'{SourceInkFile}'");
             return false;
         }
         Console.WriteLine($"Using source ink file: '{SourceInkFile}'");
@@ -182,7 +210,7 @@ public class CompilerEnvironment
         if (String.IsNullOrWhiteSpace(DestFolder))
             DestFolder = Environment.CurrentDirectory;
         if (!Path.IsPathFullyQualified(DestFolder))
-            DestFolder = Path.Combine(ProjectFolder, DestFolder);
+            DestFolder = Path.GetFullPath(Path.Combine(ProjectFolder, DestFolder));
         if (!Directory.Exists(DestFolder))
             Directory.CreateDirectory(DestFolder);
         Console.WriteLine($"Using destination folder: '{DestFolder}'");
@@ -223,11 +251,11 @@ public class CompilerEnvironment
     {
         if (Path.IsPathFullyQualified(fileName))
             return fileName;
-        string filePath = Path.Combine(SourceInkFolder, fileName);
+        string filePath = Path.GetFullPath(Path.Combine(SourceInkFolder, fileName));
         if (File.Exists(filePath))
             return filePath;
         if (!string.IsNullOrEmpty(ProjectFile)) {
-            filePath = Path.Combine(ProjectFolder, fileName);
+            filePath = Path.GetFullPath(Path.Combine(ProjectFolder, fileName));
             if (File.Exists(filePath))
                 return filePath;
         }
@@ -239,6 +267,15 @@ public class CompilerEnvironment
 
     public string MakeDestFile(string suffix)
     {
-        return Path.Combine(DestFolder, RootFilename + suffix);
+        return Path.GetFullPath(Path.Combine(DestFolder, RootFilename + suffix));
+    }
+
+    public List<string> GetCommentFilters(string commentType)
+    {
+        if (CommentFilters.TryGetValue(commentType, out List<string>? filters))
+        {
+            return filters;
+        }
+        return new List<string>(){"*"};
     }
 }

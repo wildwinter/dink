@@ -8,7 +8,7 @@ Ink is a system of writing for text flow, so it's a bit of an odd idea to restri
 
 So this presents a markup for specifying dialogue lines and scene actions in an easy to write/read form, and tools to help integrate that into a project.
 
-```cpp
+```c
 === MyScene
 #dink
 FRED (O.S.): It was a cold day in November...
@@ -53,6 +53,7 @@ DAVE: Thar she blows!
   * [Character List](#character-list)
   * [Writing Status](#writing-status)
   * [Audio File Status](#audio-file-status)
+  * [Comment Filtering](#comment-filtering)
   * [Command-Line Tool](#command-line-tool)
   * [Config File](#config-file)
 * [Contributors](#contributors)
@@ -69,7 +70,7 @@ The `DinkCompiler` will take in an Ink file (for example, `myproject.ink`) and i
 * **Dink Structure File (`myproject-dink-structure.json`)**: (Optional) A JSON structure containing all the Dink scenes and their blocks, snippets, and beats, and useful information such as tags, lines, comments and so on. This is most likely to be useful in your edit pipeline for updating items in your editor based on Dink scripts - for example, creating placeholder scene layouts.
 * **Writing Status File (`myproject-writing-status.xslx`)**: (Optional) An Excel file containing an entry for every line of text including dialogue, listing the writing status of that line, from a set of statuses you have defined and can apply on a file, knot, stitch, or line basis.
 * **Strings File for Localisation (`myproject-strings.xslx`)**: (Optional) An Excel file containing an entry for every string in Ink that needs localisation. When they are Dink lines, will include helpful data such as comments, the character speaking.
-* **Voice Script File for Recording (`myproject-voice.xslx`)**: (Optional) An Excel file containing an entry for every line of dialogue that needs to be recorded, along with helpful comments and direction, and if you have provided a `characters.json` file, the Actor associated with the character.
+* **Recording Script File (`myproject-recording.xslx`)**: (Optional) An Excel file containing an entry for every line of dialogue that needs to be recorded, along with helpful comments and direction, and if you have provided a `characters.json` file, the Actor associated with the character.
 
 ## Source Code
 
@@ -97,7 +98,7 @@ Each beat can either be a **line of dialogue**, or a **line of action**.
 
 At a very simplistic level this can be interpreted as "X happens, then X happens".
 
-```cpp
+```c
 == MyScene
 #dink
 
@@ -115,7 +116,7 @@ Comments, *qualifier* and *direction* are optional, as are the tags except *#id:
 
 Here is a simple scene, with only one (anonymous) block:
 
-```cpp
+```c
 == MyScene
 #dink
 // VO: This comment will go to the voice actors
@@ -134,7 +135,7 @@ FRED: Hello to you too!
 
 Here is a scene with an anonymous block to start and then another:
 
-```cpp
+```c
 == MyOtherScene
 #dink
 // This is the anon block
@@ -157,7 +158,7 @@ Comments *above* a block (i.e. above the knot or the stitch) will appear in the 
 
 Comments above a beat will appear in the comments for that beat, and so will comments on the end of a beat.
 
-```cpp
+```c
 // This comment will appear in the comments for MyScene's main block
 // And so will this comment.
 == MyScene
@@ -166,6 +167,8 @@ Comments above a beat will appear in the comments for that beat, and so will com
 DAVE (V.O.): It was a quiet morning in May... #id:intro_R6Sg // And so will this comment.
 -> DONE
 ```
+
+See also [Comment Filtering](#comment-filtering) to find out how you can control which comment gets output where!
 
 ### Character List
 
@@ -187,7 +190,7 @@ FRED (O.S): (hurriedly) Look out!
 
 will be checked against that character list, and if it isn't present the process will fail.
 
-The **Actors** column will be copied in to the voice script export, for ease of use with recording.
+The **Actors** column will be copied in to the recording script export, for ease of use with recording.
 
 ### Writing Status
 
@@ -257,7 +260,7 @@ FRED: Hello folks! #id:main_Script1_HG5x #ws:draft1
 
 But it would be really annoying to have to do that on every line. So you can also apply a status at the top of a stitch, then it'll apply to every line in that stitch (unless you override it on an individual line). Similarly you can apply it to the knot containing the stitch or to the file itself!
 
-```text 
+```c 
 //Myfile.ink
 #ws:stub
 
@@ -298,24 +301,57 @@ It assumes that you name your audio file after the LineID of the line.
 
 So, if you have this line:
 
-```cpp
+```c
 DAVE: Morning. #id:intro_XC5r
 ```
 
 Then you probably have a file named `intro_XC5r.wav` or something similar. Any file extension is fine, so long as the filename starts with the line ID. So `intro_XC5r_v1.mp3` is also fine.
 
-By default, the voice export routine will look for something matching that file in the following order:
+By default, the recording export routine will look for something matching that file in the following order:
 
 * `./Audio/Final`
 * `./Audio/Recorded`
 * `./Audio/Scratch`
 * `./Audio/TTS`
 
-And the first one it finds, it will set as the `AudioStatus` of the file in the output `-voice.xlsx` Excel voice recording file. Or `Unknown` if it can't find it at all.
+And the first one it finds, it will set as the `AudioStatus` of the file in the output `-recording.xlsx` Excel voice recording file. Or `Unknown` if it can't find it at all.
 
 (All these folders are searched for under your project folder if you have one, or your main Ink file folder otherwise.)
 
 This list of folders and statuses can be customised in the [Project Config File](#config-file).
+
+### Comment Filtering
+
+*You don't need to use this, but it might be handy!*
+
+When creating the voice recording script and the localization document, by default Dink
+includes all comments. But you can tweak that in settings so that only specific comments get
+into those particular scripts.
+
+e.g. if you script has something like:
+```c
+// This is the line about the blue mushroom.
+// SFX: Make sure there's a blue mushroom sound here.
+// VO: Remember this is at a distance from the enemy.
+// LOC: This is a toadstool, genus todus stoolus.
+FRED: It's big, and it's blue!
+```
+That's an awful lot of comments to end up everywhere.
+You can set up your comment filter to use whatever prefixes suit your project.
+The '?' option means "If a line as no prefix, include it."
+By default, everything is included.
+
+```jsonc
+// Control which comments are seen on which script
+"commentFilters": {
+    // For localisation, include comments with no prefix, but also prefix LOC: and VO:
+    "loc": ["?","LOC", "VO"],
+    // For recording script, includes comments with no prefix, but also prefix VO:
+    "record": ["?","VO"]
+}
+```
+
+Comment filters can be customised in the [Project Config File](#config-file).
 
 ### Command-Line Tool
 
@@ -358,7 +394,7 @@ Or instead, grab all the settings from a project file:
 
 * `--recordingScript`
 
-    If present, outputs the voice lines Excel file (`*-voice.xlsx`).
+    If present, outputs the recording script Excel file (`*-recording.xlsx`).
 
 * `--writingStatus`
 
@@ -399,7 +435,7 @@ A JSON or JSONC file (i.e. JSON with comments) having all or some of the require
     // If true, outputs the strings file (xlsx)
     "outputLocalization": false,
     
-    // If true, outputs the voice file (xlsx)
+    // If true, outputs the recording script file (xlsx)
     "outputRecordingScript": false,
 
     // If true, outputs the writing status file (xlsx)
@@ -409,7 +445,7 @@ A JSON or JSONC file (i.e. JSON with comments) having all or some of the require
     // audio files that start with the ID names of the lines.
     // The folders (and their children) will be searched in this
     // order, so if a line is found in (say) the Audio/Recorded folder first, 
-    // its status in the voice script will be set to Recorded.
+    // its status in the recording script will be set to Recorded.
     // If not found, the status will be set to Unknown.
     "audioFolders":[
         {"state":"Final", "folder":"Audio/Final"},
@@ -455,7 +491,15 @@ A JSON or JSONC file (i.e. JSON with comments) having all or some of the require
             "wstag": "stub",
             "color": "FF3333"
         }
-    ]
+    ],
+
+    // Control which comments are seen on which script
+    "commentFilters": {
+        // For localisation, include comments with no prefix, but also prefix LOC:
+        "loc": ["?","LOC"],
+        // For recording script, includes comments with no prefix, but also prefix VO:
+        "record": ["?","VO"]
+    }
 }
 ```
 

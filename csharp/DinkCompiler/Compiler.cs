@@ -54,7 +54,7 @@ public class Compiler
             if (!BuildVoiceLines(parsedDinkScenes, out VoiceLines voiceLines))
                 return false;
 
-            if (!WriteVoiceScript(voiceLines, writingStatuses, characters, _env.MakeDestFile("-voice.xlsx")))
+            if (!WriteRecordingScript(voiceLines, writingStatuses, characters, _env.MakeDestFile("-recording.xlsx")))
                 return false;
         }
 
@@ -289,7 +289,7 @@ public class Compiler
                                 {
                                     ID = action.LineID,
                                     Text = action.Text,
-                                    Comments = action.GetCommentsFor(["LOC", "VO"]),
+                                    Comments = action.GetCommentsFor(_env.GetCommentFilters("loc")),
                                     Speaker = ""
                                 };
                                 inkStrings.Set(entry);
@@ -306,7 +306,7 @@ public class Compiler
                             {
                                 ID = line.LineID,
                                 Text = line.Text,
-                                Comments = line.GetCommentsFor(["LOC", "VO"]),
+                                Comments = line.GetCommentsFor(_env.GetCommentFilters("loc")),
                                 Speaker = line.CharacterID
                             };
                             inkStrings.Set(entry);
@@ -388,8 +388,8 @@ public class Compiler
                                 SnippetID = snippet.SnippetID,
                                 GroupIndicator = "",
                                 BraceComments = new List<string>(),
-                                SnippetComments = snippet.GetCommentsFor(["VO"]),
-                                Comments = line.GetCommentsFor(["VO"]),
+                                SnippetComments = snippet.GetCommentsFor(_env.GetCommentFilters("record")),
+                                Comments = line.GetCommentsFor(_env.GetCommentFilters("record")),
                                 Tags = line.GetTags(["a"])
                             };
 
@@ -400,7 +400,7 @@ public class Compiler
                             
                             if (groupIndex==1)
                             {
-                                entry.BraceComments = snippet.GetBraceCommentsFor(["VO"]);
+                                entry.BraceComments = snippet.GetBraceCommentsFor(_env.GetCommentFilters("record"));
                             }
 
                             if (groupNum>0)
@@ -533,12 +533,12 @@ public class Compiler
         return true;
     }
 
-    private bool WriteVoiceScript(VoiceLines voiceLines, WritingStatuses writingStatuses, Characters? characters, string destVoiceFile)
+    private bool WriteRecordingScript(VoiceLines voiceLines, WritingStatuses writingStatuses, Characters? characters, string destRecordingFile)
     {       
-        Console.WriteLine("Writing voice lines file: " + destVoiceFile);
+        Console.WriteLine("Writing recording script file: " + destRecordingFile);
         
         var audioFileStatuses = voiceLines.GatherAudioFileStatuses(_env.AudioFolders);
-        if (!voiceLines.WriteToExcel(_env.RootFilename, characters, writingStatuses, audioFileStatuses, destVoiceFile))
+        if (!voiceLines.WriteToExcel(_env.RootFilename, characters, writingStatuses, audioFileStatuses, destRecordingFile))
             return false;
         return true;
     }

@@ -77,5 +77,13 @@
             "wstag": "stub",
             "color": "FF3333"
         }
-    ]
+    ],
+
+    // Control which comments are seen on which script
+    "commentFilters": {
+        // For localisation, include comments with no prefix, but also prefix LOC:
+        "loc": ["?","LOC"],
+        // For recording script, includes comments with no prefix, but also prefix VO:
+        "record": ["?","VO"]
+    }
 }
