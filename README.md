@@ -53,7 +53,7 @@ DAVE: Thar she blows!
   * [Character List](#character-list)
   * [Writing Status](#writing-status)
   * [Audio File Status](#audio-file-status)
-  * [Comment Filtering](#comment-filtering)
+  * [Comment and Tag Filtering](#comment-and-tag-filtering)
   * [Command-Line Tool](#command-line-tool)
   * [Config File](#config-file)
 * [Contributors](#contributors)
@@ -168,7 +168,7 @@ DAVE (V.O.): It was a quiet morning in May... #id:intro_R6Sg // And so will this
 -> DONE
 ```
 
-See also [Comment Filtering](#comment-filtering) to find out how you can control which comment gets output where!
+See also [Comment and Tag Filtering](#comment-and-tag-filtering) to find out how you can control which comment gets output where!
 
 ### Character List
 
@@ -320,15 +320,15 @@ And the first one it finds, it will set as the `AudioStatus` of the file in the 
 
 This list of folders and statuses can be customised in the [Project Config File](#config-file).
 
-### Comment Filtering
+### Comment and Tag Filtering
 
 *You don't need to use this, but it might be handy!*
 
 When creating the voice recording script and the localization document, by default Dink
-includes all comments. But you can tweak that in settings so that only specific comments get
+includes all comments (and all tags for the recording script). But you can tweak that in settings so that only specific comments and tags get
 into those particular scripts.
 
-e.g. if you script has something like:
+e.g. if your script has something like:
 ```c
 // This is the line about the blue mushroom.
 // SFX: Make sure there's a blue mushroom sound here.
@@ -338,11 +338,12 @@ FRED: It's big, and it's blue!
 ```
 That's an awful lot of comments to end up everywhere.
 You can set up your comment filter to use whatever prefixes suit your project.
-The '?' option means "If a line as no prefix, include it."
+The '?' option means "If a line has no prefix, include it."
 By default, everything is included.
 
 ```jsonc
 // Control which comments are seen on which script
+// By default everything is passed.
 "commentFilters": {
     // For localisation, include comments with no prefix, but also prefix LOC: and VO:
     "loc": ["?","LOC", "VO"],
@@ -351,7 +352,26 @@ By default, everything is included.
 }
 ```
 
-Comment filters can be customised in the [Project Config File](#config-file).
+Similarly, if your script includes tags for the VO processing team:
+
+```c
+FRED: It's big, and it's blue! #vo:loud #vo:radio
+```
+
+Then this would make sure those tags are passed through. By default, NO tags are
+passed to the recording script (or you'd be overwhelmed!)
+
+```jsonc
+// Control which tags are seen on which script
+// By default nothing is passed.
+"tagFilters": {
+    // Currently only the recording script exports tags. Same rules as comment filters!
+    // This passes tags such as #vo:loud or #vo:soft
+    "record": ["vo"]
+}
+```
+
+Comment and tag filters can be customised in the [Project Config File](#config-file).
 
 ### Command-Line Tool
 
@@ -400,6 +420,11 @@ Or instead, grab all the settings from a project file:
 
     If present, outputs the status of the written lines as an Excel file (`*-writing-status.xlsx`).
 
+* `--ignoreWritingStatus`
+
+    If present, ignores the writing status when deciding what to include in the recording script
+    or localization script. Useful for a full dump of lines.
+
 * `--project project/config.jsonc`
 
     If supplied, configuration will be read from the given JSON file, instead
@@ -440,6 +465,10 @@ A JSON or JSONC file (i.e. JSON with comments) having all or some of the require
 
     // If true, outputs the writing status file (xlsx)
     "outputWritingStatus": false,
+
+    // Sometimes you want to output every single line in a recording or loc script
+    // to see what you've got.
+    "ignoreWritingStatus": false,
 
     // This is the default where the game will look for
     // audio files that start with the ID names of the lines.
@@ -499,6 +528,14 @@ A JSON or JSONC file (i.e. JSON with comments) having all or some of the require
         "loc": ["?","LOC"],
         // For recording script, includes comments with no prefix, but also prefix VO:
         "record": ["?","VO"]
+    },
+
+    // Control which tags are seen on which script
+    // By default nothing is passed.
+    "tagFilters": {
+        // Currently only the recording script exports tags. Same rules as comment filters!
+        // This passes tags such as #vo:loud or #vo:soft
+        "record": ["vo"]
     }
 }
 ```

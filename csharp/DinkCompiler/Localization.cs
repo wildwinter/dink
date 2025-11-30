@@ -49,11 +49,11 @@ class LocStrings
         public required string Comments { get; set; }
     }
 
-    public bool WriteToExcel(string rootName, WritingStatuses writingStatuses, string destLocFile)
+    public bool WriteToExcel(string rootName, WritingStatuses writingStatuses, bool ignoreWritingStatus, string destLocFile)
     {
         Console.WriteLine("Writing localisation file: " + destLocFile);
         
-        bool useWritingStatus = !writingStatuses.IsEmpty();
+        bool useWritingStatus = !writingStatuses.IsEmpty()&&!ignoreWritingStatus;
 
         var recordsToExport = OrderedEntries
             .Where(v => !useWritingStatus||writingStatuses.GetDefinition(v.ID).Loc)

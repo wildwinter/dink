@@ -38,8 +38,8 @@ LAURA (O.S.): This is another line. #id:main_TestScene_FF1T
 // Fred is angry.
 FRED: (loudly) This is a loud line! #id:main_TestScene_BQ1E
 Now bounce around the place! #id:main_TestScene_79PN #ws:draft1
-(SFX) Make a bang noise! #id:main_TestScene_96IR #ws:draft2
-FRED: Glad that's over with! #id:main_TestScene_IQIS
+(SFX) Make a bang noise! #id:main_TestScene_96IR #ws:draft2 
+FRED: Glad that's over with! #id:main_TestScene_IQIS #vo:loud
 -> DONE
 
 === Barks
@@ -47,7 +47,7 @@ FRED: Glad that's over with! #id:main_TestScene_IQIS
 {shuffle: // This is for all the barks.
 - FRED: Bark1 #id:main_Barks_O037 // VO:This is for the one-legged version.
 - FRED: Bark2 #id:main_Barks_UWZ2
-- FRED: Bark3 #id:main_Barks_1ZG8 // VO:How about this?
+- FRED: Bark3 #id:main_Barks_1ZG8 #vo:soft #vo:radio // VO:How about this?
 - Testing a normal line. #id:main_Barks_046M
 - 
     FRED: Bark4 #id:main_Barks_JFG1

@@ -2,7 +2,6 @@ TODO:
 -----
 Stats doc
 Line stats
-Tag routing?
 TTS?
 Document simple usage
 Explain web demo
@@ -28,3 +27,5 @@ Coloured VO script in sections
 Branch comments for script
 Line/script status
 Comment routing
+Tag routing
+Add ignore recording status

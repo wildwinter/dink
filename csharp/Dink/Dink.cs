@@ -15,37 +15,43 @@ public abstract class DinkBase
     // Looks for comments that e.g. start with VO: OR have no prefix
     public List<string> GetCommentsFor(List<string> prefixes)
     {
-        return GetCommentsFor(Comments, prefixes);
+        return GetEntriesWithPrefixes(Comments, prefixes);
     }
 
-    protected static List<string> GetCommentsFor(List<string> Comments, List<string> prefixes)
+    private static bool IsPrefixed(List<string> prefixes, string text)
+    {
+        return prefixes.Any(prefix => 
+            text.StartsWith(prefix, StringComparison.InvariantCultureIgnoreCase)
+        );
+    }
+    protected static List<string> GetEntriesWithPrefixes(List<string> entries, List<string> prefixes, bool trim = true)
     {
         var result = new List<string>();
-        foreach (var comment in Comments)
+        foreach (var entry in entries)
         {
-            var match = Regex.Match(comment, @"^([a-zA-Z0-9]+):\s*(.*)$");
+            var match = Regex.Match(entry, @"^([a-zA-Z0-9]+):\s*(.*)$");
             if (match.Success)
             {
-                if (prefixes.Contains(match.Groups[1].Value)||prefixes.Contains("*"))
+                if (prefixes.Contains("*")||IsPrefixed(prefixes, match.Groups[1].Value))
                 {
-                    result.Add(match.Groups[2].Value.Trim());
+                    if (trim)
+                        result.Add(match.Groups[2].Value.Trim());
+                    else
+                        result.Add(entry);
                 }
             }
             // No prefix, send it if "?" is in the list.
             else if (prefixes.Contains("?")||prefixes.Contains("*"))
             {
-                result.Add(comment.Trim());
+                result.Add(entry.Trim());
             }
         }
         return result;
     }
     
-    public List<string> GetTags(params string[] prefixes) 
+    public List<string> GetTagsFor(List<string> prefixes) 
     {
-        return Tags
-            .Where(tag => prefixes.Any(prefix => 
-                tag.StartsWith(prefix + ":"))) 
-            .ToList();
+        return GetEntriesWithPrefixes(Tags, prefixes, false);
     }
 }
     
@@ -90,7 +96,7 @@ public class DinkSnippet : DinkBase
     public List<string> BraceComments { get; set; } = new List<string>();
     public List<string> GetBraceCommentsFor(List<string> prefixes)
     {
-        return GetCommentsFor(BraceComments, prefixes);
+        return GetEntriesWithPrefixes(BraceComments, prefixes);
     }
     
     public string SnippetID { get; set; } = string.Empty;

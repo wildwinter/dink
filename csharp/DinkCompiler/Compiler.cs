@@ -390,7 +390,7 @@ public class Compiler
                                 BraceComments = new List<string>(),
                                 SnippetComments = snippet.GetCommentsFor(_env.GetCommentFilters("record")),
                                 Comments = line.GetCommentsFor(_env.GetCommentFilters("record")),
-                                Tags = line.GetTags(["a"])
+                                Tags = line.GetTagsFor(_env.GetTagFilters("record"))
                             };
 
                             if (lineIndex>1)
@@ -493,7 +493,7 @@ public class Compiler
                     {
                         if (beat is DinkLine line)
                         {
-                            string statusTag = line.GetTags(["ws"]).FirstOrDefault() ?? 
+                            string statusTag = line.GetTagsFor(["ws"]).FirstOrDefault() ?? 
                                 "Unknown";
                             if (statusTag.StartsWith("ws:"))
                                 statusTag = statusTag.Substring(3);
@@ -536,16 +536,16 @@ public class Compiler
     private bool WriteRecordingScript(VoiceLines voiceLines, WritingStatuses writingStatuses, Characters? characters, string destRecordingFile)
     {       
         Console.WriteLine("Writing recording script file: " + destRecordingFile);
-        
+
         var audioFileStatuses = voiceLines.GatherAudioFileStatuses(_env.AudioFolders);
-        if (!voiceLines.WriteToExcel(_env.RootFilename, characters, writingStatuses, audioFileStatuses, destRecordingFile))
+        if (!voiceLines.WriteToExcel(_env.RootFilename, characters, writingStatuses, _env.IgnoreWritingStatus, audioFileStatuses, destRecordingFile))
             return false;
         return true;
     }
 
     private bool WriteLocalizationFile(LocStrings inkStrings, WritingStatuses writingStatuses, string destLocFile)
     {
-        if (!inkStrings.WriteToExcel(_env.RootFilename, writingStatuses, destLocFile))
+        if (!inkStrings.WriteToExcel(_env.RootFilename, writingStatuses, _env.IgnoreWritingStatus, destLocFile))
             return false;
         return true;
     }

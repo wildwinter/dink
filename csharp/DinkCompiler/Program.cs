@@ -51,6 +51,12 @@ Option<bool> writingStatusOption = new("--writingStatus")
 };
 command.Options.Add(writingStatusOption);
 
+Option<bool> ignoreWritingStatusOption = new("--ignoreWritingStatus")
+{
+    Description = "Ignore the writing status and output everything in the loc and recording files."
+};
+command.Options.Add(ignoreWritingStatusOption);
+
 command.Validators.Add(result =>
 {
     // Is a project file specified?
@@ -86,6 +92,8 @@ command.SetAction(parseResult =>
         options.OutputRecordingScript = true;
     if (parseResult.GetValue<bool>(writingStatusOption))
         options.OutputWritingStatus = true;
+    if (parseResult.GetValue<bool>(ignoreWritingStatusOption))
+        options.IgnoreWritingStatus = true;
 
 //    Console.WriteLine(JsonSerializer.Serialize(options, new JsonSerializerOptions{IncludeFields = true}));
 //    return 0;

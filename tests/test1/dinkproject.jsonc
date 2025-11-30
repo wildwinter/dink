@@ -15,6 +15,9 @@
     "outputRecordingScript": true,
     // If true, outputs the writing status file (xlsx)
     "outputWritingStatus": true,
+    // Sometimes you want to output every single line in a record or loc script
+    // to see what you've got.
+    "ignoreWritingStatus": false,
     // This is the default where the game will look for
     // audio files that start with the ID names of the lines.
     // The folders (and their children) will be searched in this
@@ -85,5 +88,12 @@
         "loc": ["?","LOC"],
         // For recording script, includes comments with no prefix, but also prefix VO:
         "record": ["?","VO"]
+    },
+
+    // Control which tags are seen on which script
+   "tagFilters": {
+        // Currently only the recording script exports tags. Same rules as comment filters!
+        // This passes tags such as #vo:loud or #vo:soft
+        "record": ["vo"]
     }
 }

@@ -82,11 +82,11 @@ class VoiceLines
     }
 
     public bool WriteToExcel(string rootName, Characters? characters, 
-                            WritingStatuses writingStatuses,
+                            WritingStatuses writingStatuses, bool ignoreWritingStatus,
                             Dictionary<string, string?> audioFileStatuses, 
                             string destVoiceFile)
     {
-        bool useWritingStatus = !writingStatuses.IsEmpty();
+        bool useWritingStatus = !writingStatuses.IsEmpty()&&!ignoreWritingStatus;
 
         List<VoiceEntryExport> recordsToExport = OrderedEntries
             .Where(v => !useWritingStatus||writingStatuses.GetDefinition(v.ID).Record)

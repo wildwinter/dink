@@ -48,6 +48,10 @@ public class CompilerOptions
     // If true, outputs the writing status file (xlsx)
     public bool OutputWritingStatus = false;
 
+    // Sometimes you want to output every single line in a record or loc script
+    // to see what you've got.
+    public bool IgnoreWritingStatus = false;
+
     // This is the default where the game will look for
     // audio files that start with the ID names of the lines.
     // The folders (and their children) will be searched in this
@@ -77,7 +81,11 @@ public class CompilerOptions
     // If a line has no status it will be treated as "Unknown".
     public List<WritingStatusDefinition> WritingStatus { get; set; } = new();
 
+    // Control which comments are seen on which script
     public Dictionary<string, List<string>> CommentFilters { get; set; } = new();
+    
+    // Control which tags are seen on which script
+    public Dictionary<string, List<string>> TagFilters { get; set; } = new();
 
     public static CompilerOptions? LoadFromProjectFile(string projectFile)
     {
@@ -130,10 +138,13 @@ public class CompilerEnvironment
     public bool OutputLocalization {get{return _options.OutputLocalization;}}
     public bool OutputRecordingScript {get{return _options.OutputRecordingScript;}}
     public bool OutputWritingStatus {get{return _options.OutputWritingStatus;}}
+    public bool IgnoreWritingStatus {get {return _options.IgnoreWritingStatus;}}
     public string RootFilename {get{return Path.GetFileNameWithoutExtension(SourceInkFile);}}
     public List<AudioFolder> AudioFolders {get; private set;}
     public Dictionary<string, WritingStatusDefinition> WritingStatusOptions {get; private set;}
     public Dictionary<string, List<string>> CommentFilters {get {return _options.CommentFilters;}}
+    public Dictionary<string, List<string>> TagFilters {get {return _options.TagFilters;}}
+
     public CompilerEnvironment(CompilerOptions options)
     {
         _options = options;    
@@ -276,6 +287,17 @@ public class CompilerEnvironment
         {
             return filters;
         }
+        // By default everything gets through
         return new List<string>(){"*"};
+    }
+
+    public List<string> GetTagFilters(string tagType)
+    {
+        if (TagFilters.TryGetValue(tagType, out List<string>? filters))
+        {
+            return filters;
+        }
+        // By default nothing gets through
+        return new List<string>();
     }
 }
