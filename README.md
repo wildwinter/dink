@@ -37,6 +37,7 @@ DAVE: Thar she blows!
   * Optionally produces an Excel file for voice recording, including mapping to actors if supplied. Checks the **status of existing audio files** to figure out what has actually been recorded.
   * Optionally lets you track the writing status of each file and line, and produces an Excel file with all those statuses. You can also restrict what gets exported for recording or
   localization based on the status.
+  * Allows you to control which comments end up in the localization and recording files.
 * At runtime:
   * Load the compiled Ink story, as normal. (Remember, Dink compiled it for you!)
   * Load the Dink runtime data, which will give you extra information about each line of dialogue or action - the speaker, the direction etc.
