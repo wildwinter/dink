@@ -236,7 +236,7 @@ public class CompilerEnvironment
         {
             var expandedFolder = audioFolder.Folder;
             if (!Path.IsPathFullyQualified(expandedFolder))
-                expandedFolder = Path.Join(audioFolderRoot,expandedFolder);
+                expandedFolder = Path.GetFullPath(Path.Combine(audioFolderRoot,expandedFolder));
             if (!Directory.Exists(expandedFolder))
             {
                 Console.WriteLine($"Warning: Audio folder '{expandedFolder}' doesn't exist.");

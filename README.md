@@ -319,7 +319,23 @@ And the first one it finds, it will set as the `AudioStatus` of the file in the 
 
 (All these folders are searched for under your project folder if you have one, or your main Ink file folder otherwise.)
 
-This list of folders and statuses can be customised in the [Project Config File](#config-file).
+This list of folders and statuses can be customised in the [Project Config File](#config-file), like so:
+
+```jsonc
+    // This is the default where the game will look for
+    // audio files that start with the ID names of the lines.
+    // The folders (and their children) will be searched in this
+    // order, so if a line is found in (say) the Audio/Recorded folder first, 
+    // its status in the recording script will be set to Recorded.
+    // If not found, the status will be set to Unknown.
+    // Folders will be relative to the project file.
+    "audioFolders":[
+        {"state":"Final", "folder":"Audio/Final"},
+        {"state":"Recorded", "folder":"Audio/Recorded"},
+        {"state":"Scratch", "folder":"Audio/Scratch"},
+        {"state":"TTS", "folder":"Audio/TTS"}
+    ]
+```
 
 ### Comment and Tag Filtering
 
