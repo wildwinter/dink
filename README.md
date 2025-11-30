@@ -208,7 +208,7 @@ Each status type has:
 * An optional colour which will end up in the status Excel documen (to easily see those unfinished lines!)
 * Flags to say whether a line of this status should be included in recording or in localization.
 
-If you don't specify any statuses, the system won't be use, and all your lines will be included in recording and localization.
+If you don't specify any statuses in the project file, the system won't be used, and all your lines will be included in recording and localization.
 
 #### The Status Tag
 In Ink, you'll use a tag starting with `#ws:` - for example, `#ws:final`, `#ws:draft1` etc.
