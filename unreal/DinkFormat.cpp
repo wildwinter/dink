@@ -190,7 +190,7 @@ bool IsFlowBreakingLine(const FString& InInput)
     int32 CloseCount = 0;
 
     // Range-based for loop iterates over the TCHAR array inside FString
-    for (const TCHAR Char : Line)
+    for (const TCHAR Char : Input)
     {
         if (Char == TEXT('{'))
         {
