@@ -18,7 +18,7 @@ Cut to a shot of a boat.
 FRED (O.S.): (guilty) It wasn't me who sank the boat.
 FRED (O.S.): It was Dave.
 
-// Art: Remember Dave has a red hat.
+// ART: Remember Dave has a red hat.
 Zoom in on Dave standing on deck.
 DAVE: Thar she blows! 
 -> DONE
