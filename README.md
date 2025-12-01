@@ -8,7 +8,7 @@ Ink is a system of writing for text flow, so it's a bit of an odd idea to restri
 
 So this presents a markup for specifying dialogue lines and scene actions in an easy to write/read form, and tools to help integrate that into a project.
 
-```c
+```text
 === MyScene
 #dink
 FRED (O.S.): It was a cold day in November...
@@ -99,7 +99,7 @@ Each beat can either be a **line of dialogue**, or a **line of action**.
 
 At a very simplistic level this can be interpreted as "X happens, then X happens".
 
-```c
+```text
 == MyScene
 #dink
 
@@ -117,7 +117,7 @@ Comments, *qualifier* and *direction* are optional, as are the tags except *#id:
 
 Here is a simple scene, with only one (anonymous) block:
 
-```c
+```text
 == MyScene
 #dink
 // VO: This comment will go to the voice actors
@@ -136,7 +136,7 @@ FRED: Hello to you too!
 
 Here is a scene with an anonymous block to start and then another:
 
-```c
+```text
 == MyOtherScene
 #dink
 // This is the anon block
@@ -159,7 +159,7 @@ Comments *above* a block (i.e. above the knot or the stitch) will appear in the 
 
 Comments above a beat will appear in the comments for that beat, and so will comments on the end of a beat.
 
-```c
+```text
 // This comment will appear in the comments for MyScene's main block
 // And so will this comment.
 == MyScene
@@ -185,7 +185,7 @@ be this format:
 
 When the Dink scripts are parsed, the character name on a Dink line like:
 
-```c
+```text
 FRED (O.S): (hurriedly) Look out!
 ```
 
@@ -255,13 +255,13 @@ Here's an example set of statuses. These enable you to use
 
 #### Applying Tags
 You can put a tag on a line, as you might expect:
-```cpp
+```textpp
 FRED: Hello folks! #id:main_Script1_HG5x #ws:draft1
 ```
 
 But it would be really annoying to have to do that on every line. So you can also apply a status at the top of a stitch, then it'll apply to every line in that stitch (unless you override it on an individual line). Similarly you can apply it to the knot containing the stitch or to the file itself!
 
-```c 
+```text 
 //Myfile.ink
 #ws:stub
 
@@ -302,7 +302,7 @@ It assumes that you name your audio file after the LineID of the line.
 
 So, if you have this line:
 
-```c
+```text
 DAVE: Morning. #id:intro_XC5r
 ```
 
@@ -346,7 +346,7 @@ includes all comments (and all tags for the recording script). But you can tweak
 into those particular scripts.
 
 e.g. if your script has something like:
-```c
+```text
 // This is the line about the blue mushroom.
 // SFX: Make sure there's a blue mushroom sound here.
 // VO: Remember this is at a distance from the enemy.
@@ -371,7 +371,7 @@ By default, everything is included.
 
 Similarly, if your script includes tags for the VO processing team:
 
-```c
+```text
 FRED: It's big, and it's blue! #vo:loud #vo:radio
 ```
 
