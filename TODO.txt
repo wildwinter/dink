@@ -1,10 +1,32 @@
 TODO:
 -----
-Stats doc
-Line stats
+Stats doc:
+
+Writing:
+- Number of scenes (and writing stages?)
+- Number of lines per character
+- Number of lines per actor
+- Different stages of writing
+- Guesstimates?
+
+Recording:
+- Lines / Stages
+- Number of lines per character
+- Number of lines per actor
+
 TTS?
 Document simple usage
 Explain web demo
+Revisit action type
+Track line numbers and file names for error reporting
+Remove multiple WS entries?
+
+Utils:
+* Gather audio files matching X (character, scene, tag)
+* Export all lines with specific character, scene, tags.
+* Export all lines with a specific comment.
+
+TCR:
 Revisit action type
 
 DONE:
@@ -20,7 +42,6 @@ Test JS example.
 Validate non-Dink lines?
 Get rid of Dink comments.
 Validate recorded WAVs
-Minimal runtime use explanation
 Make non-runtime optional
 Fancy comments generated for VO to deal with shuffles/cycles etc.
 Coloured VO script in sections

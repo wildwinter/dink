@@ -48,12 +48,13 @@ public class Compiler
         if (!BuildWritingStatuses(parsedDinkScenes, nonDinkLines, inkStrings, out WritingStatuses writingStatuses))
             return false;
 
+        // ----- Build voice lines -----
+        if (!BuildVoiceLines(parsedDinkScenes, out VoiceLines voiceLines))
+                return false;
+
         // ----- Output Voice Lines -----
         if (_env.OutputRecordingScript)
         {
-            if (!BuildVoiceLines(parsedDinkScenes, out VoiceLines voiceLines))
-                return false;
-
             if (!WriteRecordingScript(voiceLines, writingStatuses, characters, _env.MakeDestFile("-recording.xlsx")))
                 return false;
         }
@@ -83,7 +84,14 @@ public class Compiler
         // ----- Output lines for writing status (Excel) -----
         if (_env.OutputWritingStatus)
         {
-            if (!WriteWritingStatusFile(writingStatuses, _env.MakeDestFile("-writing-status.xlsx")))
+            if (!WriteWritingStatusFile(writingStatuses, inkStrings, _env.MakeDestFile("-writing-status.xlsx")))
+                return false;
+        }
+
+        // ----- Output general stats (Excel) -----
+        if (_env.OutputStats)
+        {
+            if (!Stats.WriteExcelFile(parsedDinkScenes, nonDinkLines, inkStrings, voiceLines, writingStatuses, _env.MakeDestFile("-stats.xlsx")))
                 return false;
         }
 
@@ -498,14 +506,7 @@ public class Compiler
                             if (statusTag.StartsWith("ws:"))
                                 statusTag = statusTag.Substring(3);
 
-                            WritingStatusEntry entry = new WritingStatusEntry()
-                            {
-                                ID = line.LineID,
-                                Text = line.Text,
-                                WritingStatus = _env.WritingStatusOptions.GetValueOrDefault(statusTag, new WritingStatusDefinition())
-                            };
-
-                            writingStatuses.Set(entry);
+                            writingStatuses.Set(line.LineID, _env.GetWritingStatus(statusTag));
                         }
                     }
                 }
@@ -515,19 +516,11 @@ public class Compiler
         foreach(var id in nonDinkLines.Keys)
         {
             NonDinkLine ndLine = nonDinkLines[id];
-            string statusTag = ndLine.GetTags(["ws"]).FirstOrDefault() ?? 
-                "Unknown";
+            string statusTag = ndLine.GetTags(["ws"]).FirstOrDefault()??"";
             if (statusTag.StartsWith("ws:"))
                 statusTag = statusTag.Substring(3);
 
-            WritingStatusEntry entry = new WritingStatusEntry()
-            {
-                ID = ndLine.ID,
-                Text = locStrings.GetText(ndLine.ID)??"",
-                WritingStatus = _env.WritingStatusOptions.GetValueOrDefault(statusTag, new WritingStatusDefinition())
-            };
-
-            writingStatuses.Set(entry);
+            writingStatuses.Set(ndLine.ID,  _env.GetWritingStatus(statusTag));
         }
 
         return true;
@@ -537,7 +530,7 @@ public class Compiler
     {       
         Console.WriteLine("Writing recording script file: " + destRecordingFile);
 
-        var audioFileStatuses = voiceLines.GatherAudioFileStatuses(_env.AudioFolders);
+        var audioFileStatuses = voiceLines.GatherAudioFileStatuses(_env.AudioStatusOptions);
         if (!voiceLines.WriteToExcel(_env.RootFilename, characters, writingStatuses, _env.IgnoreWritingStatus, audioFileStatuses, destRecordingFile))
             return false;
         return true;
@@ -550,7 +543,7 @@ public class Compiler
         return true;
     }
 
-    private bool WriteWritingStatusFile(WritingStatuses writingStatuses, string destStatusFile)
+    private bool WriteWritingStatusFile(WritingStatuses writingStatuses, LocStrings locStrings, string destStatusFile)
 {
         if (_env.WritingStatusOptions.Count == 0)
         {
@@ -558,7 +551,7 @@ public class Compiler
             return false;
         }
 
-        if (!writingStatuses.WriteToExcel(_env.RootFilename, _env.WritingStatusOptions, destStatusFile))
+        if (!writingStatuses.WriteToExcel(_env.RootFilename, locStrings, _env.WritingStatusOptions, destStatusFile))
             return false;
 
         return true;

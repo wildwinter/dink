@@ -2,10 +2,10 @@ namespace DinkCompiler;
 
 using System.Text.Json;
 
-public class AudioFolder
+public class AudioStatusDefinition
 {
-    public required string Status { get; set; }
-    public required string Folder { get; set; }
+    public string Status { get; set; } = "Unknown";
+    public string Folder { get; set; } = "";
 }
 
 public class WritingStatusDefinition
@@ -48,9 +48,12 @@ public class CompilerOptions
     // If true, outputs the writing status file (xlsx)
     public bool OutputWritingStatus = false;
 
-    // Sometimes you want to output every single line in a record or loc script
+    // Sometimes you want to output every single line in a recording or loc script
     // to see what you've got.
     public bool IgnoreWritingStatus = false;
+
+    // Output a statistics document
+    public bool OutputStats = false;
 
     // This is the default where the game will look for
     // audio files that start with the ID names of the lines.
@@ -58,13 +61,7 @@ public class CompilerOptions
     // order, so if a line is found in (say) the Audio/Recorded folder first, 
     // its status in the voice script will be set to Recorded.
     // If not found, the status will be set to Unknown.
-    public List<AudioFolder> AudioFolders { get; set; } = new()
-    {
-        new AudioFolder { Status = "Final",    Folder = "Audio/Final" },
-        new AudioFolder { Status = "Recorded", Folder = "Audio/Recorded" },
-        new AudioFolder { Status = "Scratch",  Folder = "Audio/Scratch" },
-        new AudioFolder { Status = "TTS",      Folder = "Audio/TTS" }
-    };
+    public List<AudioStatusDefinition> AudioStatus { get; set; } = new();
 
     // Writing status tags - can be written on an Ink line as #ws:someStatus
     // e.g. #ws:final or #ws:draft1
@@ -139,9 +136,10 @@ public class CompilerEnvironment
     public bool OutputRecordingScript {get{return _options.OutputRecordingScript;}}
     public bool OutputWritingStatus {get{return _options.OutputWritingStatus;}}
     public bool IgnoreWritingStatus {get {return _options.IgnoreWritingStatus;}}
+    public bool OutputStats{ get {return _options.OutputStats;}}
     public string RootFilename {get{return Path.GetFileNameWithoutExtension(SourceInkFile);}}
-    public List<AudioFolder> AudioFolders {get; private set;}
-    public Dictionary<string, WritingStatusDefinition> WritingStatusOptions {get; private set;}
+    public List<AudioStatusDefinition> AudioStatusOptions {get; private set;}
+    public List<WritingStatusDefinition> WritingStatusOptions {get {return _options.WritingStatus;}}
     public Dictionary<string, List<string>> CommentFilters {get {return _options.CommentFilters;}}
     public Dictionary<string, List<string>> TagFilters {get {return _options.TagFilters;}}
 
@@ -151,8 +149,7 @@ public class CompilerEnvironment
         SourceInkFile = "";
         ProjectFile = "";
         DestFolder = "";
-        AudioFolders = new List<AudioFolder>();
-        WritingStatusOptions = new Dictionary<string, WritingStatusDefinition>();
+        AudioStatusOptions = new List<AudioStatusDefinition>();
     }
 
     public bool Init()
@@ -232,7 +229,7 @@ public class CompilerEnvironment
         string audioFolderRoot = ProjectFolder;
         if (string.IsNullOrEmpty(audioFolderRoot))
             audioFolderRoot = SourceInkFolder;
-        foreach (var audioFolder in _options.AudioFolders)
+        foreach (var audioFolder in _options.AudioStatus)
         {
             var expandedFolder = audioFolder.Folder;
             if (!Path.IsPathFullyQualified(expandedFolder))
@@ -243,13 +240,8 @@ public class CompilerEnvironment
             }
             else
             {
-                AudioFolders.Add(new AudioFolder { Status = audioFolder.Status, Folder = expandedFolder });
+                AudioStatusOptions.Add(new AudioStatusDefinition { Status = audioFolder.Status, Folder = expandedFolder });
             }
-        }
-
-        foreach (var status in _options.WritingStatus)
-        {
-            WritingStatusOptions[status.WsTag] = status;
         }
 
         return true;
@@ -299,5 +291,13 @@ public class CompilerEnvironment
         }
         // By default nothing gets through
         return new List<string>();
+    }
+
+    public WritingStatusDefinition GetWritingStatus(string wsTag)
+    {
+        var result = WritingStatusOptions.FirstOrDefault(x => x.WsTag == wsTag);
+        if (result!=null)
+            return result;
+        return new WritingStatusDefinition();
     }
 }

@@ -16,7 +16,7 @@
     // order, so if a line is found in (say) the Audio/Recorded folder first, 
     // its status in the voice script will be set to Recorded.
     // If not found, the status will be set to Unknown.
-    "audioFolders":[
+    "audioStatus":[
         {"status":"Final", "folder":"Audio/Final"},
         {"status":"Recorded", "folder":"Audio/Recorded"},
         {"status":"Scratch", "folder":"Audio/Scratch"},

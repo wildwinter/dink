@@ -329,7 +329,7 @@ This list of folders and statuses can be customised in the [Project Config File]
     // its status in the recording script will be set to Recorded.
     // If not found, the status will be set to Unknown.
     // Folders will be relative to the project file.
-    "audioFolders":[
+    "audioStatus":[
         {"state":"Final", "folder":"Audio/Final"},
         {"state":"Recorded", "folder":"Audio/Recorded"},
         {"state":"Scratch", "folder":"Audio/Scratch"},
@@ -493,7 +493,7 @@ A JSON or JSONC file (i.e. JSON with comments) having all or some of the require
     // order, so if a line is found in (say) the Audio/Recorded folder first, 
     // its status in the recording script will be set to Recorded.
     // If not found, the status will be set to Unknown.
-    "audioFolders":[
+    "audioStatus":[
         {"state":"Final", "folder":"Audio/Final"},
         {"state":"Recorded", "folder":"Audio/Recorded"},
         {"state":"Scratch", "folder":"Audio/Scratch"},

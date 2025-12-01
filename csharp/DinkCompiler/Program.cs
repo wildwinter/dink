@@ -57,6 +57,12 @@ Option<bool> ignoreWritingStatusOption = new("--ignoreWritingStatus")
 };
 command.Options.Add(ignoreWritingStatusOption);
 
+Option<bool> outputStatsOption = new("--stats")
+{
+    Description = "Output the stats - line counts, to be recorded etc. etc. as an Excel document."
+};
+command.Options.Add(outputStatsOption);
+
 command.Validators.Add(result =>
 {
     // Is a project file specified?
@@ -94,9 +100,8 @@ command.SetAction(parseResult =>
         options.OutputWritingStatus = true;
     if (parseResult.GetValue<bool>(ignoreWritingStatusOption))
         options.IgnoreWritingStatus = true;
-
-//    Console.WriteLine(JsonSerializer.Serialize(options, new JsonSerializerOptions{IncludeFields = true}));
-//    return 0;
+    if (parseResult.GetValue<bool>(outputStatsOption))
+        options.OutputStats = true;
 
     var compiler = new Compiler(options);
     if (!compiler.Run()) {

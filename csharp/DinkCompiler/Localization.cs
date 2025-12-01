@@ -11,7 +11,7 @@ public struct LocEntry
     public required string Speaker { get; set; }
 }
 
-class LocStrings
+public class LocStrings
 {
     private Dictionary<string, LocEntry> _entries = new Dictionary<string, LocEntry>();
     private List<string> _ids = new List<string>();

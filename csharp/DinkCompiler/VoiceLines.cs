@@ -33,17 +33,17 @@ class VoiceLines
         _entries[entry.ID] = entry;
     }
 
-    public Dictionary<string, string?> GatherAudioFileStatuses(List<AudioFolder> audioFolders)
+    public Dictionary<string, AudioStatusDefinition> GatherAudioFileStatuses(List<AudioStatusDefinition> audioStatusDefs)
     {
         var idArray = OrderedEntries.Select(v => v.ID).ToArray();
         var result = idArray.ToDictionary(
             id => id,
-            id => (string?)null,
+            id => new AudioStatusDefinition(),
             StringComparer.OrdinalIgnoreCase);
 
-        foreach (var audioFolder in audioFolders)
+        foreach (var audioStatusDef in audioStatusDefs)
         {
-            string audioFolderRoot = audioFolder.Folder;
+            string audioFolderRoot = audioStatusDef.Folder;
 
             if (string.IsNullOrWhiteSpace(audioFolderRoot) || !Directory.Exists(audioFolderRoot))
                 continue;
@@ -58,7 +58,7 @@ class VoiceLines
                     if (result[id] == null &&
                         nameWithoutExt.StartsWith(id, StringComparison.OrdinalIgnoreCase))
                     {
-                        result[id] = audioFolder.Status;
+                        result[id] = audioStatusDef;
                     }
                 }
             }
@@ -83,7 +83,7 @@ class VoiceLines
 
     public bool WriteToExcel(string rootName, Characters? characters, 
                             WritingStatuses writingStatuses, bool ignoreWritingStatus,
-                            Dictionary<string, string?> audioFileStatuses, 
+                            Dictionary<string, AudioStatusDefinition> audioFileStatuses, 
                             string destVoiceFile)
     {
         bool useWritingStatus = !writingStatuses.IsEmpty()&&!ignoreWritingStatus;
@@ -104,7 +104,7 @@ class VoiceLines
                         (v.GroupIndicator != "" ? v.GroupIndicator + " " : "") +
                         string.Join("\n", v.Comments),
                 Tags = string.Join(", ", v.Tags),
-                AudioStatus = audioFileStatuses[v.ID]??"Unknown"
+                AudioStatus = audioFileStatuses[v.ID].Status
             }).ToList();
 
         try

@@ -15,7 +15,7 @@
     "outputRecordingScript": true,
     // If true, outputs the writing status file (xlsx)
     "outputWritingStatus": true,
-    // Sometimes you want to output every single line in a record or loc script
+    // Sometimes you want to output every single line in a recording or loc script
     // to see what you've got.
     "ignoreWritingStatus": false,
     // This is the default where the game will look for
@@ -24,7 +24,7 @@
     // order, so if a line is found in (say) the Audio/Recorded folder first, 
     // its status in the voice script will be set to Recorded.
     // If not found, the status will be set to Unknown.
-    "audioFolders": [
+    "audioStatus": [
         {
             "status": "Final",
             "folder": "Audio/Final"
