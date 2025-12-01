@@ -1,34 +1,86 @@
 namespace DinkCompiler;
-using ClosedXML.Excel; 
+using Dink;
 
-public struct WritingStatusEntry
-{
-    public required string ID { get; set; }
-    public WritingStatusDefinition WritingStatus { get; set; }
-}
+using ClosedXML.Excel; 
 
 public class WritingStatuses
 {
-    private Dictionary<string, WritingStatusDefinition> _entries = new Dictionary<string, WritingStatusDefinition>();
+    // id, wsTag
+    private Dictionary<string, string> _entries = new Dictionary<string, string>();
     private List<string> _ids = new List<string>();
+
+    private CompilerEnvironment _env;
+
+    public WritingStatuses(CompilerEnvironment env)
+    {
+        _env = env;
+    }
 
     public bool IsEmpty() {return _ids.Count==0;}
 
-    public void Set(string id, WritingStatusDefinition statusDefinition)
+    private void Set(string id, string wsTag)
     {
         if (!_ids.Contains(id))
         {
             _ids.Add(id);
         }
-
-        _entries[id] = statusDefinition;
+        _entries[id] = wsTag;
     }
 
-    public WritingStatusDefinition GetDefinition(string id)
+    public WritingStatusDefinition GetStatus(string id)
     {
-        if (_entries.TryGetValue(id, out WritingStatusDefinition? def))
-            return def;
+        if (_entries.TryGetValue(id, out string? wsTag))
+            return GetDefinitionByTag(wsTag);
         return new WritingStatusDefinition();
+    }
+
+    public WritingStatusDefinition GetDefinitionByTag(string wsTag)
+    {
+        var result = _env.WritingStatusOptions.FirstOrDefault(x => x.WsTag == wsTag);
+        if (result!=null)
+            return result;
+        return new WritingStatusDefinition();
+    }
+
+    public bool Build(List<DinkScene> dinkScenes, Dictionary<string, NonDinkLine> nonDinkLines, LocStrings locStrings)
+    {
+        if (_env.WritingStatusOptions.Count == 0)
+            return true;
+
+        Console.WriteLine("Extracting writing statuses...");
+
+        foreach (var scene in dinkScenes)
+        {
+            foreach (var block in scene.Blocks)
+            {
+                foreach (var snippet in block.Snippets)
+                { 
+                    foreach (var beat in snippet.Beats)
+                    {
+                        if (beat is DinkLine line)
+                        {
+                            string statusTag = line.GetTagsFor(["ws"]).FirstOrDefault() ?? "";
+                            if (statusTag.StartsWith("ws:"))
+                                statusTag = statusTag.Substring(3);
+
+                            Set(line.LineID, statusTag);
+                        }
+                    }
+                }
+            }
+        }
+
+        foreach(var id in nonDinkLines.Keys)
+        {
+            NonDinkLine ndLine = nonDinkLines[id];
+            string statusTag = ndLine.GetTags(["ws"]).FirstOrDefault() ?? "";
+            if (statusTag.StartsWith("ws:"))
+                statusTag = statusTag.Substring(3);
+
+            Set(ndLine.ID, statusTag);
+        }
+
+        return true;
     }
 
     class WritingStatusEntryExport
@@ -52,7 +104,7 @@ public class WritingStatuses
         {
             ID = id,
             Text = locStrings.GetText(id)??"",
-            Status = _entries[id].Status
+            Status = GetStatus(id).Status
         }).ToList();
 
         try

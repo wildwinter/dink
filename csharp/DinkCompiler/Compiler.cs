@@ -45,17 +45,23 @@ public class Compiler
             return false;
 
         // ---- Build writing statuses for lines. This might affect localisation and recording -----
-        if (!BuildWritingStatuses(parsedDinkScenes, nonDinkLines, inkStrings, out WritingStatuses writingStatuses))
+        var writingStatuses = new WritingStatuses(_env);
+        if (!writingStatuses.Build(parsedDinkScenes, nonDinkLines, inkStrings))
             return false;
 
         // ----- Build voice lines -----
         if (!BuildVoiceLines(parsedDinkScenes, out VoiceLines voiceLines))
-                return false;
+            return false;
+
+        // ----- Gather voice line statuses -----
+        var audioStatuses = new AudioStatuses(_env);
+        if (!audioStatuses.Build(voiceLines))
+            return false;
 
         // ----- Output Voice Lines -----
         if (_env.OutputRecordingScript)
         {
-            if (!WriteRecordingScript(voiceLines, writingStatuses, characters, _env.MakeDestFile("-recording.xlsx")))
+            if (!WriteRecordingScript(voiceLines, writingStatuses, audioStatuses, characters, _env.MakeDestFile("-recording.xlsx")))
                 return false;
         }
 
@@ -480,58 +486,10 @@ public class Compiler
         return true;
     }
 
-    private bool BuildWritingStatuses(List<DinkScene> dinkScenes, Dictionary<string, NonDinkLine> nonDinkLines, LocStrings locStrings, out WritingStatuses writingStatuses)
-    {
-        if (_env.WritingStatusOptions.Count == 0)
-        {
-            writingStatuses = new WritingStatuses();
-            return true;
-        }
-        
-        writingStatuses = new WritingStatuses();
-        Console.WriteLine("Extracting writing statuses...");
-
-        foreach (var scene in dinkScenes)
-        {
-            foreach (var block in scene.Blocks)
-            {
-                foreach (var snippet in block.Snippets)
-                { 
-                    foreach (var beat in snippet.Beats)
-                    {
-                        if (beat is DinkLine line)
-                        {
-                            string statusTag = line.GetTagsFor(["ws"]).FirstOrDefault() ?? 
-                                "Unknown";
-                            if (statusTag.StartsWith("ws:"))
-                                statusTag = statusTag.Substring(3);
-
-                            writingStatuses.Set(line.LineID, _env.GetWritingStatus(statusTag));
-                        }
-                    }
-                }
-            }
-        }
-
-        foreach(var id in nonDinkLines.Keys)
-        {
-            NonDinkLine ndLine = nonDinkLines[id];
-            string statusTag = ndLine.GetTags(["ws"]).FirstOrDefault()??"";
-            if (statusTag.StartsWith("ws:"))
-                statusTag = statusTag.Substring(3);
-
-            writingStatuses.Set(ndLine.ID,  _env.GetWritingStatus(statusTag));
-        }
-
-        return true;
-    }
-
-    private bool WriteRecordingScript(VoiceLines voiceLines, WritingStatuses writingStatuses, Characters? characters, string destRecordingFile)
+    private bool WriteRecordingScript(VoiceLines voiceLines, WritingStatuses writingStatuses, AudioStatuses audioStatuses, Characters? characters, string destRecordingFile)
     {       
         Console.WriteLine("Writing recording script file: " + destRecordingFile);
-
-        var audioFileStatuses = voiceLines.GatherAudioFileStatuses(_env.AudioStatusOptions);
-        if (!voiceLines.WriteToExcel(_env.RootFilename, characters, writingStatuses, _env.IgnoreWritingStatus, audioFileStatuses, destRecordingFile))
+        if (!voiceLines.WriteToExcel(_env.RootFilename, characters, writingStatuses, _env.IgnoreWritingStatus, audioStatuses, destRecordingFile))
             return false;
         return true;
     }

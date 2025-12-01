@@ -9,7 +9,7 @@ public struct Character
     public required string Actor { get; set; }
 }
 
-class Characters
+public class Characters
 {
     private Dictionary<string, Character> _entries = new Dictionary<string, Character>();
     private List<string> _ids = new List<string>();

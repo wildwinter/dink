@@ -56,7 +56,7 @@ public class LocStrings
         bool useWritingStatus = !writingStatuses.IsEmpty()&&!ignoreWritingStatus;
 
         var recordsToExport = OrderedEntries
-            .Where(v => !useWritingStatus||writingStatuses.GetDefinition(v.ID).Loc)
+            .Where(v => !useWritingStatus||writingStatuses.GetStatus(v.ID).Loc)
             .Select(v => new LocEntryExport
             {
                 ID = v.ID,

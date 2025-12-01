@@ -17,7 +17,7 @@ public struct VoiceEntry
     public required List<string> Tags { get; set; }
 }
 
-class VoiceLines
+public class VoiceLines
 {
     private Dictionary<string, VoiceEntry> _entries = new Dictionary<string, VoiceEntry>();
     private List<string> _ids = new List<string>();
@@ -31,40 +31,6 @@ class VoiceLines
         }
 
         _entries[entry.ID] = entry;
-    }
-
-    public Dictionary<string, AudioStatusDefinition> GatherAudioFileStatuses(List<AudioStatusDefinition> audioStatusDefs)
-    {
-        var idArray = OrderedEntries.Select(v => v.ID).ToArray();
-        var result = idArray.ToDictionary(
-            id => id,
-            id => new AudioStatusDefinition(),
-            StringComparer.OrdinalIgnoreCase);
-
-        foreach (var audioStatusDef in audioStatusDefs)
-        {
-            string audioFolderRoot = audioStatusDef.Folder;
-
-            if (string.IsNullOrWhiteSpace(audioFolderRoot) || !Directory.Exists(audioFolderRoot))
-                continue;
-
-            foreach (var filePath in Directory.EnumerateFiles(audioFolderRoot, "*", SearchOption.AllDirectories))
-            {
-                var nameWithoutExt = Path.GetFileNameWithoutExtension(filePath);
-
-                // Only compare IDs to the *filename*, never to folder names
-                foreach (var id in idArray)
-                {
-                    if (result[id] == null &&
-                        nameWithoutExt.StartsWith(id, StringComparison.OrdinalIgnoreCase))
-                    {
-                        result[id] = audioStatusDef;
-                    }
-                }
-            }
-        }
-
-        return result;
     }
         
     class VoiceEntryExport
@@ -83,13 +49,13 @@ class VoiceLines
 
     public bool WriteToExcel(string rootName, Characters? characters, 
                             WritingStatuses writingStatuses, bool ignoreWritingStatus,
-                            Dictionary<string, AudioStatusDefinition> audioFileStatuses, 
+                            AudioStatuses audioStatuses, 
                             string destVoiceFile)
     {
         bool useWritingStatus = !writingStatuses.IsEmpty()&&!ignoreWritingStatus;
 
         List<VoiceEntryExport> recordsToExport = OrderedEntries
-            .Where(v => !useWritingStatus||writingStatuses.GetDefinition(v.ID).Record)
+            .Where(v => !useWritingStatus||writingStatuses.GetStatus(v.ID).Record)
             .Select(v => new VoiceEntryExport
             {
                 ID = v.ID,
@@ -104,7 +70,7 @@ class VoiceLines
                         (v.GroupIndicator != "" ? v.GroupIndicator + " " : "") +
                         string.Join("\n", v.Comments),
                 Tags = string.Join(", ", v.Tags),
-                AudioStatus = audioFileStatuses[v.ID].Status
+                AudioStatus = audioStatuses.GetStatus(v.ID).Status
             }).ToList();
 
         try
