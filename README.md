@@ -117,7 +117,7 @@ Comments, *qualifier* and *direction* are optional, as are the tags except *#id:
 
 Here is a simple scene, with only one (anonymous) block:
 
-```text
+```javascript
 == MyScene
 #dink
 // VO: This comment will go to the voice actors
@@ -136,7 +136,7 @@ FRED: Hello to you too!
 
 Here is a scene with an anonymous block to start and then another:
 
-```text
+```javascript
 == MyOtherScene
 #dink
 // This is the anon block
@@ -330,10 +330,10 @@ This list of folders and statuses can be customised in the [Project Config File]
     // If not found, the status will be set to Unknown.
     // Folders will be relative to the project file.
     "audioStatus":[
-        {"state":"Final", "folder":"Audio/Final"},
-        {"state":"Recorded", "folder":"Audio/Recorded"},
-        {"state":"Scratch", "folder":"Audio/Scratch"},
-        {"state":"TTS", "folder":"Audio/TTS"}
+        {"status":"Final", "folder":"Audio/Final"},
+        {"status":"Recorded", "folder":"Audio/Recorded"},
+        {"status":"Scratch", "folder":"Audio/Scratch"},
+        {"status":"TTS", "folder":"Audio/TTS"}
     ]
 ```
 
@@ -494,10 +494,10 @@ A JSON or JSONC file (i.e. JSON with comments) having all or some of the require
     // its status in the recording script will be set to Recorded.
     // If not found, the status will be set to Unknown.
     "audioStatus":[
-        {"state":"Final", "folder":"Audio/Final"},
-        {"state":"Recorded", "folder":"Audio/Recorded"},
-        {"state":"Scratch", "folder":"Audio/Scratch"},
-        {"state":"TTS", "folder":"Audio/TTS"}
+        {"status":"Final", "folder":"Audio/Final"},
+        {"status":"Recorded", "folder":"Audio/Recorded"},
+        {"status":"Scratch", "folder":"Audio/Scratch"},
+        {"status":"TTS", "folder":"Audio/TTS"}
     ],
 
     // Writing status tags - OPTIONAL - can be written on an Ink line as #ws:someStatus
