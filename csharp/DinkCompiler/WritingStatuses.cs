@@ -42,7 +42,7 @@ public class WritingStatuses
         return new WritingStatusDefinition();
     }
 
-    public bool Build(List<DinkScene> dinkScenes, Dictionary<string, NonDinkLine> nonDinkLines, LocStrings locStrings)
+    public bool Build(List<DinkScene> dinkScenes, List<NonDinkLine> nonDinkLines, LocStrings locStrings)
     {
         if (_env.WritingStatusOptions.Count == 0)
             return true;
@@ -70,9 +70,8 @@ public class WritingStatuses
             }
         }
 
-        foreach(var id in nonDinkLines.Keys)
+        foreach(var ndLine in nonDinkLines)
         {
-            NonDinkLine ndLine = nonDinkLines[id];
             string statusTag = ndLine.GetTags(["ws"]).FirstOrDefault() ?? "";
             if (statusTag.StartsWith("ws:"))
                 statusTag = statusTag.Substring(3);

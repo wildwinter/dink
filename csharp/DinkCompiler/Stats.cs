@@ -3,8 +3,8 @@ using Dink;
 
 class Stats
 {
-    public static bool WriteExcelFile(List<DinkScene> parsedDinkScenes, 
-            Dictionary<string, NonDinkLine> nonDinkLines, 
+    public static bool WriteExcelFile(List<DinkScene> dinkScenes, 
+            List<NonDinkLine> nonDinkLines, 
             LocStrings inkStrings, VoiceLines voiceLines, 
             WritingStatuses writingStatuses, 
             string destStatsFile)

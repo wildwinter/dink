@@ -37,20 +37,20 @@ public class Compiler
             return false;
 
         // ----- Parse ink files, extract Dink beats -----
-        if (!ParseDinkScenes(usedInkFiles, characters, out List<DinkScene> parsedDinkScenes, out Dictionary<string, NonDinkLine> nonDinkLines))
+        if (!ParseDinkScenes(usedInkFiles, characters, out List<DinkScene> dinkScenes, out List<NonDinkLine> nonDinkLines))
             return false;
 
         // ---- Remove any action and character references from the localisation -----
-        if (!FixLoc(parsedDinkScenes, inkStrings))
+        if (!FixLoc(dinkScenes, inkStrings))
             return false;
 
         // ---- Build writing statuses for lines. This might affect localisation and recording -----
         var writingStatuses = new WritingStatuses(_env);
-        if (!writingStatuses.Build(parsedDinkScenes, nonDinkLines, inkStrings))
+        if (!writingStatuses.Build(dinkScenes, nonDinkLines, inkStrings))
             return false;
 
         // ----- Build voice lines -----
-        if (!BuildVoiceLines(parsedDinkScenes, out VoiceLines voiceLines))
+        if (!BuildVoiceLines(dinkScenes, out VoiceLines voiceLines))
             return false;
 
         // ----- Gather voice line statuses -----
@@ -68,12 +68,12 @@ public class Compiler
         // ----- Output Dink Structure -----
         if (_env.OutputDinkStructure)
         {
-            if (!WriteStructuredDink(parsedDinkScenes, _env.MakeDestFile("-dink-structure.json")))
+            if (!WriteStructuredDink(dinkScenes, _env.MakeDestFile("-dink-structure.json")))
                 return false;
         }
 
         // ----- Output Dink Minimal for runtime -----
-        if (!WriteMinimalDink(parsedDinkScenes, _env.MakeDestFile("-dink-min.json")))
+        if (!WriteMinimalDink(dinkScenes, _env.MakeDestFile("-dink-min.json")))
             return false;
 
         // ----- Output lines minimal for runtime -----
@@ -97,7 +97,7 @@ public class Compiler
         // ----- Output general stats (Excel) -----
         if (_env.OutputStats)
         {
-            if (!Stats.WriteExcelFile(parsedDinkScenes, nonDinkLines, inkStrings, voiceLines, writingStatuses, _env.MakeDestFile("-stats.xlsx")))
+            if (!Stats.WriteExcelFile(dinkScenes, nonDinkLines, inkStrings, voiceLines, writingStatuses, _env.MakeDestFile("-stats.xlsx")))
                 return false;
         }
 
@@ -239,10 +239,10 @@ public class Compiler
         return success;
     }
 
-    private bool ParseDinkScenes(List<string> usedInkFiles, Characters? characters, out List<DinkScene> parsedDinkScenes, out Dictionary<string, NonDinkLine> ndLines)
+    private bool ParseDinkScenes(List<string> usedInkFiles, Characters? characters, out List<DinkScene> dinkScenes, out List<NonDinkLine> ndLines)
     {
-        ndLines = new Dictionary<string, NonDinkLine>();
-        parsedDinkScenes = new List<DinkScene>();
+        ndLines = new List<NonDinkLine>();
+        dinkScenes = new List<DinkScene>();
 
         Console.WriteLine("Parsing Dink scenes...");
         foreach (var inkFile in usedInkFiles)
@@ -278,16 +278,16 @@ public class Compiler
                 }
             }
             
-            parsedDinkScenes.AddRange(scenes);
+            dinkScenes.AddRange(scenes);
         }
         return true;
     }
 
-    private bool FixLoc(List<DinkScene> parsedDinkScenes, LocStrings inkStrings)
+    private bool FixLoc(List<DinkScene> dinkScenes, LocStrings inkStrings)
     {
         Console.WriteLine("Fixing localisation entries...");
 
-        foreach (var scene in parsedDinkScenes)
+        foreach (var scene in dinkScenes)
         {
             foreach( var block in scene.Blocks)
             {

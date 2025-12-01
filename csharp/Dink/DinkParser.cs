@@ -353,7 +353,7 @@ public class DinkParser
         return (expression, false);
     }
     
-    public static List<DinkScene> ParseInkLines(List<string> lines, Dictionary<string, NonDinkLine> outNonDinkLines)
+    public static List<DinkScene> ParseInkLines(List<string> lines, List<NonDinkLine> outNonDinkLines)
     {
         List<DinkScene> parsedScenes = new List<DinkScene>();
         DinkScene? scene = null;
@@ -619,7 +619,7 @@ public class DinkParser
                     ndLine.Tags.AddRange(stitchTags);
                     ndLine.Tags.AddRange(knotTags);
                     ndLine.Tags.AddRange(fileTags);
-                    outNonDinkLines[ndLine.ID] = ndLine;
+                    outNonDinkLines.Add(ndLine);
                 }
             }
             comments.Clear();
@@ -690,7 +690,7 @@ public class DinkParser
         return linesArray.ToList();
     }
     
-    public static List<DinkScene> ParseInk(string text, Dictionary<string, NonDinkLine> outNonDinkLines)
+    public static List<DinkScene> ParseInk(string text, List<NonDinkLine> outNonDinkLines)
     {
         string textWithoutComments = RemoveBlockComments(text);
         List<string> lines = SplitTextIntoLines(textWithoutComments);
