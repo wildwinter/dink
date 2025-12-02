@@ -35,7 +35,7 @@ DAVE: Thar she blows!
   * Optionally produces a JSON file detailing a more detailed Dink structure (scenes, blocks, snippets, showing runs of dialogue).
   * Optionally produces an Excel file with all the strings in for localization.
   * Optionally produces an Excel file for voice recording, including mapping to actors if supplied. Checks the **status of existing audio files** to figure out what has actually been recorded.
-  * Optionally lets you track the writing status and recording status of each file and line, and produces an Excel file with all those stats. 
+  * Optionally lets you track the writing status and recording status of each file and line, and figures out what needs to be recorded for each character and actor, and produces an Excel file with all those stats. 
   * Allows you to control which comments end up in the localization and recording files.
 * At runtime:
   * Load the compiled Ink story, as normal. (Remember, Dink compiled it for you!)
@@ -172,8 +172,7 @@ See also [Comment and Tag Filtering](#comment-and-tag-filtering) to find out how
 
 ### Character List
 
-You can supply a `characters.json` file in the same folder as the main Ink file. If, so it should
-be this format:
+You can optionally supply a `characters.json` file in the same folder as the main Ink file. If, so it should be this format:
 
 ```jsonc
 [
@@ -191,6 +190,11 @@ FRED (O.S): (hurriedly) Look out!
 will be checked against that character list, and if it isn't present the process will fail.
 
 The **Actors** column will be copied in to the recording script export, for ease of use with recording.
+
+#### Cast Recording Stats
+If you supply a Characters list list this you will also get a Cast page in the .xslx stats file.
+This will list all the characters, how many lines exist for them, how many are ready to record
+and how many are already recorded.
 
 ### Writing Status
 
