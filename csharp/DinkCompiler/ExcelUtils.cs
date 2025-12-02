@@ -22,18 +22,49 @@ public class ExcelUtils
         return null; 
     }
 
-    public static void FormatCommonTable(IXLWorksheet worksheet, IXLTable table)
+    public static void FormatSheet(IXLWorksheet worksheet, bool text=true)
     {
         worksheet.Style.Alignment.Vertical = XLAlignmentVerticalValues.Top;
-        worksheet.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
+        if (text)
+            worksheet.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
+        else
+            worksheet.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+    }
+
+    public static void AdjustSheet(IXLWorksheet worksheet)
+    {
         worksheet.ColumnsUsed().AdjustToContents();
         worksheet.RowsUsed().AdjustToContents();
-        worksheet.SheetView.FreezeRows(1);
+    }
 
+    public static void FormatTableSheet(IXLWorksheet worksheet, IXLTable table, int freeze=1, bool text=true)
+    {
+        FormatSheet(worksheet, text);
+        worksheet.SheetView.FreezeRows(freeze);
         table.ShowAutoFilter = true;
+        FormatHeaderLine(table.FirstRow().AsRange());
+    }
 
-        table.FirstRow().Style.Fill.BackgroundColor = XLColor.DarkGreen;
-        table.FirstRow().Style.Font.Bold = true;
-        table.FirstRow().Style.Font.FontColor = XLColor.White;
+    public static void FormatStatBlock(IXLRange range)
+    {
+        FormatStatLine(range.FirstColumn().AsRange());
+        FormatHeaderLine(range.FirstRow().AsRange());
+        range.LastRow().Style.Font.Bold = true;
+    }
+
+    public static void FormatStatLine(IXLRange range)
+    {
+        range.Style.Fill.BackgroundColor = XLColor.LightGreen;
+        range.Style.Font.Bold = false;
+        range.Style.Font.FontColor = XLColor.Black;
+        range.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+    }
+
+    public static void FormatHeaderLine(IXLRange range)
+    {
+        range.Style.Fill.BackgroundColor = XLColor.DarkGreen;
+        range.Style.Font.Bold = true;
+        range.Style.Font.FontColor = XLColor.White;
+        range.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
     }
 }

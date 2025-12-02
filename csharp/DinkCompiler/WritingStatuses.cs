@@ -54,6 +54,50 @@ public class WritingStatuses
         return _entries.Values.Count(v => v == wsTag);
     }
 
+    public int GetCount()
+    {
+        return _ids.Count;
+    }
+
+    public int GetSceneTagCount(DinkScene scene, string? wsTag=null)
+    {
+        int count = 0;
+
+        foreach(var block in scene.Blocks)
+        {
+            foreach(var snippet in block.Snippets)
+            {
+                foreach (var beat in snippet.Beats)
+                {
+                    if (beat is DinkLine line)
+                    {
+                        if (wsTag==null || GetStatus(beat.LineID).WsTag == wsTag)
+                            count++;
+                    } 
+                    else if (_env.LocActionBeats && beat is DinkAction action)
+                    {
+                        if (wsTag==null || GetStatus(beat.LineID).WsTag == wsTag)
+                            count++;
+                    }
+                }
+            }
+        }
+        return count;
+    }
+
+    public int GetNonDinkTagCount(List<NonDinkLine> ndLines, string? wsTag=null)
+    {
+        int count = 0;
+
+        foreach (var ndLine in ndLines)
+        {
+            if (wsTag==null || GetStatus(ndLine.ID).WsTag == wsTag)
+                count++;
+        }
+ 
+        return count;
+    }
+
     public bool Build(List<DinkScene> dinkScenes, List<NonDinkLine> nonDinkLines, LocStrings locStrings)
     {
         if (_env.WritingStatusOptions.Count == 0)
@@ -76,6 +120,14 @@ public class WritingStatuses
                                 statusTag = statusTag.Substring(3);
 
                             Set(line.LineID, statusTag);
+                        } 
+                        else if (_env.LocActionBeats && beat is DinkAction action)
+                        {
+                            string statusTag = action.GetTagsFor(["ws"]).FirstOrDefault() ?? "";
+                            if (statusTag.StartsWith("ws:"))
+                                statusTag = statusTag.Substring(3);
+
+                            Set(action.LineID, statusTag);
                         }
                     }
                 }
@@ -126,7 +178,7 @@ public class WritingStatuses
 
                 var table = worksheet.Cell("A1").InsertTable(recordsToExport);
 
-                ExcelUtils.FormatCommonTable(worksheet, table);
+                ExcelUtils.FormatTableSheet(worksheet, table);
 
                 string statusHeading = ExcelUtils.FindColumnByHeading(worksheet, "Status") ?? "";
 
@@ -143,6 +195,7 @@ public class WritingStatuses
                     }
                 }   
 
+                ExcelUtils.AdjustSheet(worksheet);
                 workbook.SaveAs(destStatusFile);
             }
         }

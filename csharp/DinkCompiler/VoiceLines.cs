@@ -83,10 +83,9 @@ public class VoiceLines
             using (var workbook = new XLWorkbook())
             {
                 var worksheet = workbook.Worksheets.Add("Voice Lines - " + rootName);
-
                 var table = worksheet.Cell("A1").InsertTable(recordsToExport);
 
-                ExcelUtils.FormatCommonTable(worksheet, table);
+                ExcelUtils.FormatTableSheet(worksheet, table);
 
                 string sectionHeading = ExcelUtils.FindColumnByHeading(worksheet, "SectionID") ?? "";
 
@@ -106,6 +105,7 @@ public class VoiceLines
                     row.Style.Fill.BackgroundColor = sectionColor;
                 }   
 
+                ExcelUtils.AdjustSheet(worksheet);
                 workbook.SaveAs(destVoiceFile);
             }
         }

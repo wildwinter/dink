@@ -27,19 +27,23 @@
     "audioStatus": [
         {
             "status": "Final",
-            "folder": "Audio/Final"
+            "folder": "Audio/Final",
+            "color": "33FF33"
         },
         {
             "status": "Recorded",
-            "folder": "Audio/Recorded"
+            "folder": "Audio/Recorded",
+            "color": "FFFF33"
         },
         {
             "status": "Scratch",
-            "folder": "Audio/Scratch"
+            "folder": "Audio/Scratch",
+            "color": "FF8833"
         },
         {
             "status": "TTS",
-            "folder": "Audio/TTS"
+            "folder": "Audio/TTS",
+            "color": "FF3333"
         }
     ],
 

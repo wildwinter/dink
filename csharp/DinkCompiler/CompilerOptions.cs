@@ -6,6 +6,7 @@ public class AudioStatusDefinition
 {
     public string Status { get; set; } = "Unknown";
     public string Folder { get; set; } = "";
+    public string Color {get; set;} = "";
 }
 
 public class WritingStatusDefinition
@@ -244,7 +245,8 @@ public class CompilerEnvironment
             }
             else
             {
-                AudioStatusOptions.Add(new AudioStatusDefinition { Status = audioStatusDef.Status, Folder = expandedFolder });
+                audioStatusDef.Folder = expandedFolder;
+                AudioStatusOptions.Add(audioStatusDef);
             }
         }
         if (!hasUnknown)

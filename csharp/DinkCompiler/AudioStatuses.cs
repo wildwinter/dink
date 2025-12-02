@@ -1,4 +1,5 @@
 namespace DinkCompiler;
+using Dink;
 
 public class AudioStatuses
 {
@@ -41,6 +42,11 @@ public class AudioStatuses
         return _entries.Values.Count(v => v == status);
     }
 
+    public int GetCount()
+    {
+        return _ids.Count;
+    }
+
     public AudioStatusDefinition GetDefinitionByLabel(string status)
     {
         var result = _env.AudioStatusOptions.FirstOrDefault(x => x.Status == status);
@@ -49,6 +55,27 @@ public class AudioStatuses
         return new AudioStatusDefinition();
     }
 
+    public int GetSceneTagCount(DinkScene scene, string? status=null)
+    {
+        int count = 0;
+
+        foreach(var block in scene.Blocks)
+        {
+            foreach(var snippet in block.Snippets)
+            {
+                foreach (var beat in snippet.Beats)
+                {
+                    if (beat is DinkLine line)
+                    {
+                        if (status==null || GetStatus(beat.LineID).Status == status)
+                            count++;
+                    }
+                }
+            }
+        }
+        return count;
+    }
+    
     public bool Build(VoiceLines voiceLines)
     {
         var idArray = voiceLines.OrderedEntries.Select(v => v.ID).ToArray();

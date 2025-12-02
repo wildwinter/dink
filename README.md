@@ -330,10 +330,29 @@ This list of folders and statuses can be customised in the [Project Config File]
     // If not found, the status will be set to Unknown.
     // Folders will be relative to the project file.
     "audioStatus":[
-        {"status":"Final", "folder":"Audio/Final"},
-        {"status":"Recorded", "folder":"Audio/Recorded"},
-        {"status":"Scratch", "folder":"Audio/Scratch"},
-        {"status":"TTS", "folder":"Audio/TTS"}
+        {
+            // Label to put in the Excel file
+            "status": "Final",
+            // If a file is in this folder, it gets treated as Final
+            "folder": "Audio/Final",
+            // A color to make the Excel file pretty!
+            "color": "33FF33"
+        },
+        {
+            "status": "Recorded",
+            "folder": "Audio/Recorded",
+            "color": "FFFF33"
+        },
+        {
+            "status": "Scratch",
+            "folder": "Audio/Scratch",
+            "color": "FF8833"
+        },
+        {
+            "status": "TTS",
+            "folder": "Audio/TTS",
+            "color": "FF3333"
+        }
     ]
 ```
 

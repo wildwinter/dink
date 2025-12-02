@@ -77,8 +77,9 @@ public class LocStrings
 
                 var table = worksheet.Cell("A1").InsertTable(recordsToExport);
 
-                ExcelUtils.FormatCommonTable(worksheet, table);
-
+                ExcelUtils.FormatTableSheet(worksheet, table);
+                ExcelUtils.AdjustSheet(worksheet);
+                
                 workbook.SaveAs(destLocFile);
             }
         }
