@@ -139,7 +139,7 @@ public class CompilerEnvironment
     public bool OutputStats{ get {return _options.OutputStats;}}
     public string RootFilename {get{return Path.GetFileNameWithoutExtension(SourceInkFile);}}
     public List<AudioStatusDefinition> AudioStatusOptions {get; private set;}
-    public List<WritingStatusDefinition> WritingStatusOptions {get {return _options.WritingStatus;}}
+    public List<WritingStatusDefinition> WritingStatusOptions {get; private set;}
     public Dictionary<string, List<string>> CommentFilters {get {return _options.CommentFilters;}}
     public Dictionary<string, List<string>> TagFilters {get {return _options.TagFilters;}}
 
@@ -150,6 +150,7 @@ public class CompilerEnvironment
         ProjectFile = "";
         DestFolder = "";
         AudioStatusOptions = new List<AudioStatusDefinition>();
+        WritingStatusOptions = new List<WritingStatusDefinition>();
     }
 
     public bool Init()
@@ -229,9 +230,12 @@ public class CompilerEnvironment
         string audioFolderRoot = ProjectFolder;
         if (string.IsNullOrEmpty(audioFolderRoot))
             audioFolderRoot = SourceInkFolder;
-        foreach (var audioFolder in _options.AudioStatus)
+        bool hasUnknown = false;
+        foreach (var audioStatusDef in _options.AudioStatus)
         {
-            var expandedFolder = audioFolder.Folder;
+            var expandedFolder = audioStatusDef.Folder;
+            if (audioStatusDef.Status=="Unknown")
+                hasUnknown = true;
             if (!Path.IsPathFullyQualified(expandedFolder))
                 expandedFolder = Path.GetFullPath(Path.Combine(audioFolderRoot,expandedFolder));
             if (!Directory.Exists(expandedFolder))
@@ -240,10 +244,16 @@ public class CompilerEnvironment
             }
             else
             {
-                AudioStatusOptions.Add(new AudioStatusDefinition { Status = audioFolder.Status, Folder = expandedFolder });
+                AudioStatusOptions.Add(new AudioStatusDefinition { Status = audioStatusDef.Status, Folder = expandedFolder });
             }
         }
+        if (!hasUnknown)
+            AudioStatusOptions.Add(new AudioStatusDefinition());
 
+        WritingStatusOptions.AddRange(_options.WritingStatus);
+        var unknown = WritingStatusOptions.FirstOrDefault(x => x.Status == "Unknown");
+        if (unknown==null)
+            WritingStatusOptions.Add(new WritingStatusDefinition());
         return true;
     }
 
@@ -291,13 +301,5 @@ public class CompilerEnvironment
         }
         // By default nothing gets through
         return new List<string>();
-    }
-
-    public WritingStatusDefinition GetWritingStatus(string wsTag)
-    {
-        var result = WritingStatusOptions.FirstOrDefault(x => x.WsTag == wsTag);
-        if (result!=null)
-            return result;
-        return new WritingStatusDefinition();
     }
 }

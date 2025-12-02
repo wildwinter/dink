@@ -13,13 +13,20 @@ public class AudioStatuses
         _env = env;
     }
 
-    private void SetIfNew(string id, string status)
+    private void Set(string id, string status)
     {
         if (!_ids.Contains(id))
         {
             _ids.Add(id);
-            _entries[id] = status;
         }
+        _entries[id] = status;
+    }
+
+    public bool HasDefinitions() {return GetDefinitions().Count>1;}
+
+    public List<AudioStatusDefinition> GetDefinitions()
+    {
+        return _env.AudioStatusOptions;
     }
 
     public AudioStatusDefinition GetStatus(string id)
@@ -27,6 +34,11 @@ public class AudioStatuses
         if (_entries.TryGetValue(id, out string? status))
             return GetDefinitionByLabel(status);
         return new AudioStatusDefinition();
+    }
+
+    public int GetStatusCount(string status)
+    {
+        return _entries.Values.Count(v => v == status);
     }
 
     public AudioStatusDefinition GetDefinitionByLabel(string status)
@@ -40,6 +52,10 @@ public class AudioStatuses
     public bool Build(VoiceLines voiceLines)
     {
         var idArray = voiceLines.OrderedEntries.Select(v => v.ID).ToArray();
+        foreach (var id in idArray)
+        {
+            Set(id, "Unknown");
+        }
 
         foreach (var audioStatusDef in _env.AudioStatusOptions)
         {
@@ -57,7 +73,8 @@ public class AudioStatuses
                 {
                     if (nameWithoutExt.StartsWith(id, StringComparison.OrdinalIgnoreCase))
                     {
-                        SetIfNew(id, audioStatusDef.Status);
+                        if (_entries[id]=="Unknown")
+                            _entries[id]=audioStatusDef.Status;
                     }
                 }
             }

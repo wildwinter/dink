@@ -97,7 +97,9 @@ public class Compiler
         // ----- Output general stats (Excel) -----
         if (_env.OutputStats)
         {
-            if (!Stats.WriteExcelFile(dinkScenes, nonDinkLines, inkStrings, voiceLines, writingStatuses, _env.MakeDestFile("-stats.xlsx")))
+            if (!Stats.WriteExcelFile(_env.RootFilename, dinkScenes, nonDinkLines, 
+                        inkStrings, voiceLines, writingStatuses, audioStatuses,
+                        _env.MakeDestFile("-stats.xlsx")))
                 return false;
         }
 
@@ -502,8 +504,8 @@ public class Compiler
     }
 
     private bool WriteWritingStatusFile(WritingStatuses writingStatuses, LocStrings locStrings, string destStatusFile)
-{
-        if (_env.WritingStatusOptions.Count == 0)
+    {
+        if (!writingStatuses.HasDefinitions())
         {
             Console.Error.WriteLine($"Requested to write out writing statuses but no writing status options are defined.");
             return false;

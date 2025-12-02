@@ -28,6 +28,8 @@ public class LocStrings
         _entries[entry.ID] = entry;
     }
 
+    public int Count {get{return _ids.Count;}}
+
     public string? GetText(string id)
     {
         if (_entries.TryGetValue(id, out LocEntry entry))

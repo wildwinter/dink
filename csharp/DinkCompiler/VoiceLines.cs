@@ -33,6 +33,8 @@ public class VoiceLines
         _entries[entry.ID] = entry;
     }
         
+    public int Count {get{return _ids.Count;}}
+
     class VoiceEntryExport
     {
         public required string ID { get; set; }
@@ -75,7 +77,6 @@ public class VoiceLines
 
         try
         {
-            XLColor headerColor = XLColor.LightGreen;
             XLColor lineColor1 = XLColor.White;
             XLColor lineColor2 = XLColor.LightBlue;
 

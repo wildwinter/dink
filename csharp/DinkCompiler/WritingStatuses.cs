@@ -18,6 +18,8 @@ public class WritingStatuses
 
     public bool IsEmpty() {return _ids.Count==0;}
 
+    public bool HasDefinitions() {return GetDefinitions().Count>1;}
+
     private void Set(string id, string wsTag)
     {
         if (!_ids.Contains(id))
@@ -34,12 +36,22 @@ public class WritingStatuses
         return new WritingStatusDefinition();
     }
 
+    public List<WritingStatusDefinition> GetDefinitions()
+    {
+        return _env.WritingStatusOptions;
+    }
+
     public WritingStatusDefinition GetDefinitionByTag(string wsTag)
     {
         var result = _env.WritingStatusOptions.FirstOrDefault(x => x.WsTag == wsTag);
         if (result!=null)
             return result;
         return new WritingStatusDefinition();
+    }
+
+    public int GetTagCount(string wsTag)
+    {
+        return _entries.Values.Count(v => v == wsTag);
     }
 
     public bool Build(List<DinkScene> dinkScenes, List<NonDinkLine> nonDinkLines, LocStrings locStrings)
@@ -118,7 +130,6 @@ public class WritingStatuses
 
                 string statusHeading = ExcelUtils.FindColumnByHeading(worksheet, "Status") ?? "";
 
-                XLColor lineColor = XLColor.AirForceBlue;
                 foreach (var row in worksheet.RowsUsed().Skip(1))
                 {
                     var status = row.Cell(statusHeading).GetString(); // Status column
