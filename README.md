@@ -35,8 +35,7 @@ DAVE: Thar she blows!
   * Optionally produces a JSON file detailing a more detailed Dink structure (scenes, blocks, snippets, showing runs of dialogue).
   * Optionally produces an Excel file with all the strings in for localization.
   * Optionally produces an Excel file for voice recording, including mapping to actors if supplied. Checks the **status of existing audio files** to figure out what has actually been recorded.
-  * Optionally lets you track the writing status of each file and line, and produces an Excel file with all those statuses. You can also restrict what gets exported for recording or
-  localization based on the status.
+  * Optionally lets you track the writing status and recording status of each file and line, and produces an Excel file with all those stats. 
   * Allows you to control which comments end up in the localization and recording files.
 * At runtime:
   * Load the compiled Ink story, as normal. (Remember, Dink compiled it for you!)
@@ -69,7 +68,7 @@ The `DinkCompiler` will take in an Ink file (for example, `myproject.ink`) and i
 * **Dink Runtime File (`myproject-dink-min.json`)**: A JSON structure containing one entry for each LineID, with the runtime data you'll need for each line that you won't get from Ink e.g. the character speaking etc.
 * **Strings Runtime File (`myproject-strings-min.json`)**: A JSON file containing an entry for every string in Ink, along with the string used in the original script. This is probably your master language file for runtime - you'll want to create copies of it for your localisation. When you display an Ink or Dink line you'll want to use the string data in here rather than in Ink itself.
 * **Dink Structure File (`myproject-dink-structure.json`)**: (Optional) A JSON structure containing all the Dink scenes and their blocks, snippets, and beats, and useful information such as tags, lines, comments and so on. This is most likely to be useful in your edit pipeline for updating items in your editor based on Dink scripts - for example, creating placeholder scene layouts.
-* **Writing Status File (`myproject-writing-status.xslx`)**: (Optional) An Excel file containing an entry for every line of text including dialogue, listing the writing status of that line, from a set of statuses you have defined and can apply on a file, knot, stitch, or line basis.
+* **Stats File (`myproject-stats.xslx`)**: (Optional) An Excel file giving details of the status of every line in the game, both writing and recording.
 * **Strings File for Localisation (`myproject-strings.xslx`)**: (Optional) An Excel file containing an entry for every string in Ink that needs localisation. When they are Dink lines, will include helpful data such as comments, the character speaking.
 * **Recording Script File (`myproject-recording.xslx`)**: (Optional) An Excel file containing an entry for every line of dialogue that needs to be recorded, along with helpful comments and direction, and if you have provided a `characters.json` file, the Actor associated with the character.
 
@@ -452,9 +451,9 @@ Or instead, grab all the settings from a project file:
 
     If present, outputs the recording script Excel file (`*-recording.xlsx`).
 
-* `--writingStatus`
+* `--stats`
 
-    If present, outputs the status of the written lines as an Excel file (`*-writing-status.xlsx`).
+    If present, outputs a file of the status of all the lines as an Excel file (`*-stats.xlsx`).
 
 * `--ignoreWritingStatus`
 
@@ -499,12 +498,12 @@ A JSON or JSONC file (i.e. JSON with comments) having all or some of the require
     // If true, outputs the recording script file (xlsx)
     "outputRecordingScript": false,
 
-    // If true, outputs the writing status file (xlsx)
-    "outputWritingStatus": false,
-
     // Sometimes you want to output every single line in a recording or loc script
     // to see what you've got.
     "ignoreWritingStatus": false,
+
+    // If true, outputs the stats file (xlsx)
+    "outputStats": true,
 
     // This is the default where the game will look for
     // audio files that start with the ID names of the lines.
@@ -513,11 +512,27 @@ A JSON or JSONC file (i.e. JSON with comments) having all or some of the require
     // its status in the recording script will be set to Recorded.
     // If not found, the status will be set to Unknown.
     "audioStatus":[
-        {"status":"Final", "folder":"Audio/Final"},
-        {"status":"Recorded", "folder":"Audio/Recorded"},
-        {"status":"Scratch", "folder":"Audio/Scratch"},
-        {"status":"TTS", "folder":"Audio/TTS"}
-    ],
+        {
+            "status": "Final",
+            "folder": "Audio/Final",
+            "color": "33FF33"
+        },
+        {
+            "status": "Recorded",
+            "folder": "Audio/Recorded",
+            "color": "FFFF33"
+        },
+        {
+            "status": "Scratch",
+            "folder": "Audio/Scratch",
+            "color": "FF8833"
+        },
+        {
+            "status": "TTS",
+            "folder": "Audio/TTS",
+            "color": "FF3333"
+        }
+    ]
 
     // Writing status tags - OPTIONAL - can be written on an Ink line as #ws:someStatus
     // e.g. #ws:final or #ws:draft1

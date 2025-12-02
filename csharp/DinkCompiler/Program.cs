@@ -45,12 +45,6 @@ Option<bool> voiceOption = new("--recordingScript")
 };
 command.Options.Add(voiceOption);
 
-Option<bool> writingStatusOption = new("--writingStatus")
-{
-    Description = "Output the status of the written lines as an Excel file."
-};
-command.Options.Add(writingStatusOption);
-
 Option<bool> ignoreWritingStatusOption = new("--ignoreWritingStatus")
 {
     Description = "Ignore the writing status and output everything in the loc and recording files."
@@ -96,8 +90,6 @@ command.SetAction(parseResult =>
         options.OutputLocalization = true;
     if (parseResult.GetValue<bool>(voiceOption))
         options.OutputRecordingScript = true;
-    if (parseResult.GetValue<bool>(writingStatusOption))
-        options.OutputWritingStatus = true;
     if (parseResult.GetValue<bool>(ignoreWritingStatusOption))
         options.IgnoreWritingStatus = true;
     if (parseResult.GetValue<bool>(outputStatsOption))

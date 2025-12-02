@@ -87,13 +87,6 @@ public class Compiler
                 return false;
         }
 
-        // ----- Output lines for writing status (Excel) -----
-        if (_env.OutputWritingStatus)
-        {
-            if (!WriteWritingStatusFile(writingStatuses, inkStrings, _env.MakeDestFile("-writing-status.xlsx")))
-                return false;
-        }
-
         // ----- Output general stats (Excel) -----
         if (_env.OutputStats)
         {
@@ -500,20 +493,6 @@ public class Compiler
     {
         if (!inkStrings.WriteToExcel(_env.RootFilename, writingStatuses, _env.IgnoreWritingStatus, destLocFile))
             return false;
-        return true;
-    }
-
-    private bool WriteWritingStatusFile(WritingStatuses writingStatuses, LocStrings locStrings, string destStatusFile)
-    {
-        if (!writingStatuses.HasDefinitions())
-        {
-            Console.Error.WriteLine($"Requested to write out writing statuses but no writing status options are defined.");
-            return false;
-        }
-
-        if (!writingStatuses.WriteToExcel(_env.RootFilename, locStrings, _env.WritingStatusOptions, destStatusFile))
-            return false;
-
         return true;
     }
 }

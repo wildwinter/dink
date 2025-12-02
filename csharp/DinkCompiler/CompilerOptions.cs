@@ -46,9 +46,6 @@ public class CompilerOptions
     // If true, outputs the recording script file (xlsx)
     public bool OutputRecordingScript = false;
 
-    // If true, outputs the writing status file (xlsx)
-    public bool OutputWritingStatus = false;
-
     // Sometimes you want to output every single line in a recording or loc script
     // to see what you've got.
     public bool IgnoreWritingStatus = false;
@@ -135,7 +132,6 @@ public class CompilerEnvironment
     public bool OutputDinkStructure {get{return _options.OutputDinkStructure;}}
     public bool OutputLocalization {get{return _options.OutputLocalization;}}
     public bool OutputRecordingScript {get{return _options.OutputRecordingScript;}}
-    public bool OutputWritingStatus {get{return _options.OutputWritingStatus;}}
     public bool IgnoreWritingStatus {get {return _options.IgnoreWritingStatus;}}
     public bool OutputStats{ get {return _options.OutputStats;}}
     public string RootFilename {get{return Path.GetFileNameWithoutExtension(SourceInkFile);}}
