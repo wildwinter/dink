@@ -28,12 +28,14 @@
         {
             "status": "Final",
             "folder": "Audio/Final",
-            "color": "33FF33"
+            "color": "33FF33",
+            "recorded": true
         },
         {
             "status": "Recorded",
             "folder": "Audio/Recorded",
-            "color": "FFFF33"
+            "color": "FFFF33",
+            "recorded": true
         },
         {
             "status": "Scratch",

@@ -47,6 +47,21 @@ public class AudioStatuses
         return _ids.Count;
     }
 
+    public int CountRecorded(List<string> idList)
+    {
+        return idList.Count(id => GetStatus(id).Recorded);
+    }
+
+    public int CountReadyToRecord(WritingStatuses writingStatuses, List<string> idList)
+    {
+        return idList.Count(id => !GetStatus(id).Recorded && writingStatuses.GetStatus(id).Record);
+    }
+
+    public int CountInDraft(WritingStatuses writingStatuses, List<string> idList)
+    {
+        return idList.Count(id => !GetStatus(id).Recorded && !writingStatuses.GetStatus(id).Record);
+    }
+
     public AudioStatusDefinition GetDefinitionByLabel(string status)
     {
         var result = _env.AudioStatusOptions.FirstOrDefault(x => x.Status == status);

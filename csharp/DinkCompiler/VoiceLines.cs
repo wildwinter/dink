@@ -35,6 +35,11 @@ public class VoiceLines
         
     public int Count {get{return _ids.Count;}}
 
+    public List<string> GetByCharacter(string charID)
+    {
+        return _ids.Where(id => _entries[id].Character==charID).ToList();
+    }
+
     class VoiceEntryExport
     {
         public required string ID { get; set; }

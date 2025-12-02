@@ -335,12 +335,16 @@ This list of folders and statuses can be customised in the [Project Config File]
             // If a file is in this folder, it gets treated as Final
             "folder": "Audio/Final",
             // A color to make the Excel file pretty!
-            "color": "33FF33"
+            "color": "33FF33",
+            // Means this status counts as recorded for figuring out actor requirements.
+            "recorded": true
         },
         {
             "status": "Recorded",
             "folder": "Audio/Recorded",
-            "color": "FFFF33"
+            "color": "FFFF33",
+            // Means this status counts as recorded for figuring out actor requirements.
+            "recorded": true
         },
         {
             "status": "Scratch",
@@ -515,12 +519,16 @@ A JSON or JSONC file (i.e. JSON with comments) having all or some of the require
         {
             "status": "Final",
             "folder": "Audio/Final",
-            "color": "33FF33"
+            "color": "33FF33",
+            // Means this status counts as recorded for figuring out actor requirements.
+            "recorded": true
         },
         {
             "status": "Recorded",
             "folder": "Audio/Recorded",
-            "color": "FFFF33"
+            "color": "FFFF33",
+            // Means this status counts as recorded for figuring out actor requirements.
+            "recorded": true
         },
         {
             "status": "Scratch",

@@ -1,18 +1,7 @@
 TODO:
 -----
 Stats doc:
-
-Writing:
-- Number of scenes (and writing stages?)
-- Number of lines per character
-- Number of lines per actor
-- Different stages of writing
 - Guesstimates?
-
-Recording:
-- Lines / Stages
-- Number of lines per character
-- Number of lines per actor
 
 TTS?
 Document simple usage

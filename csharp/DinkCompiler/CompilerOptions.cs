@@ -6,6 +6,7 @@ public class AudioStatusDefinition
 {
     public string Status { get; set; } = "Unknown";
     public string Folder { get; set; } = "";
+    public bool Recorded { get; set; } = false;
     public string Color {get; set;} = "";
 }
 

@@ -92,6 +92,7 @@ public class Compiler
         {
             if (!Stats.WriteExcelFile(_env.RootFilename, dinkScenes, nonDinkLines, 
                         inkStrings, voiceLines, writingStatuses, audioStatuses,
+                        characters,
                         _env.MakeDestFile("-stats.xlsx")))
                 return false;
         }
