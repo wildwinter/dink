@@ -3,7 +3,6 @@ TODO:
 Stats doc:
 - Guesstimates?
 
-TTS?
 Document simple usage
 Explain web demo
 Revisit action type
@@ -39,3 +38,4 @@ Line/script status
 Comment routing
 Tag routing
 Add ignore recording status
+TTS

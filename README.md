@@ -613,7 +613,7 @@ A JSON or JSONC file (i.e. JSON with comments) having all or some of the require
 
 ### Google TTS
 
-*This is NOT for production. The production quality is deliberately dialled down. This is to create crappy simple audio files for testing out your playback systems.*
+*This is NOT for production. The production quality is awful. This is to create crappy simple audio files for testing out your playback systems.*
 
 You can get the compiler to use Google's Text to Speech system to create terrible placeholder WAV
 files for your production.
