@@ -107,7 +107,6 @@
     "googleTTS": {
         "generate":true,
         "authentication":"../google-tts-key.json",
-        "outputFolder":"Audio/TTS",
-        "replaceExisting":true
+        "outputFolder":"Audio/TTS"
     }
 }
