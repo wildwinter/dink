@@ -176,8 +176,14 @@ You can optionally supply a `characters.json` file in the same folder as the mai
 
 ```jsonc
 [
-    {"ID":"FRED", "Actor":"Dave"},
-    {"ID":"JIM", "Actor":""},
+    {
+        "ID":"FRED", 
+        "Actor":"Dave"
+    },
+    {
+        "ID":"JIM", 
+        "Actor":""
+    },
 ]
 ```
 
@@ -601,6 +607,44 @@ A JSON or JSONC file (i.e. JSON with comments) having all or some of the require
         "record": ["vo"]
     }
 }
+```
+
+## Extras
+
+### Google TTS
+
+*This is NOT for production. The production quality is deliberately dialled down. This is to create crappy simple audio files for testing out your playback systems.*
+
+You can get the compiler to use Google's Text to Speech system to create terrible placeholder WAV
+files for your production.
+
+*You will need a Google Text to Speech API account and a JSON authentication file.*
+
+To do that, provide Google TTS config settings in the project file.
+```jsonc
+    // GoogleTTS parameters
+    "googleTTS": {
+        "generate":true,
+        "authentication":"google-tts-key.json",
+        "outputFolder":"Audio/TTS"
+    }
+```
+If you make sure your `outputFolder` matches a folder in your [Audio Status](#audio-file-status) config then the generated TTS will appear in your audio status results.
+
+To specify the voice to use for each character, specify the Google Voice ID in the [Character List](#character-list) like so:
+
+```jsonc
+[
+    {
+        "ID":"FRED", 
+        "Actor":"David",
+        "TTSVoice":"en-GB-Standard-B"
+    },
+    {
+        "ID":"LAURA",
+        "TTSVoice":"en-GB-Standard-A"
+    }
+]
 ```
 
 ## Contributors

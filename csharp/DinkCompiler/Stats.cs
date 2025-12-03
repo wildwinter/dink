@@ -80,13 +80,7 @@ class Stats
 
                     // Scene Writing State
                     // Scene Recording State
-                    var scenes = dinkScenes.ToList();
-                    scenes.Sort((a, b) => 
-                    {
-                        return a.SceneID.CompareTo(b.SceneID);
-                    });
-
-                    foreach(var scene in scenes)
+                    foreach(var scene in dinkScenes)
                     {
                         worksheet.Cell(row,1).Value = scene.SceneID;
                         ExcelUtils.FormatStatLine(worksheet.Cell(row,1).AsRange());

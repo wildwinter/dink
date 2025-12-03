@@ -19,6 +19,14 @@ public class WritingStatusDefinition
     public string Color {get; set;} = "";
 }
 
+public class GoogleTTSOptions 
+{
+    public bool Generate {get;set;} = true;
+    public string Authentication {get;set;} = "";
+    public string OutputFolder {get;set;} = "";
+    public bool ReplaceExisting {get;set;} = false;
+}
+
 public class CompilerOptions
 {
     // Project file
@@ -83,6 +91,8 @@ public class CompilerOptions
     // Control which tags are seen on which script
     public Dictionary<string, List<string>> TagFilters { get; set; } = new();
 
+    public GoogleTTSOptions GoogleTTS {get; set; } = new();
+
     public static CompilerOptions? LoadFromProjectFile(string projectFile)
     {
         if (!File.Exists(projectFile))
@@ -140,6 +150,7 @@ public class CompilerEnvironment
     public List<WritingStatusDefinition> WritingStatusOptions {get; private set;}
     public Dictionary<string, List<string>> CommentFilters {get {return _options.CommentFilters;}}
     public Dictionary<string, List<string>> TagFilters {get {return _options.TagFilters;}}
+    public GoogleTTSOptions GoogleTTS {get; private set;}
 
     public CompilerEnvironment(CompilerOptions options)
     {
@@ -149,6 +160,7 @@ public class CompilerEnvironment
         DestFolder = "";
         AudioStatusOptions = new List<AudioStatusDefinition>();
         WritingStatusOptions = new List<WritingStatusDefinition>();
+        GoogleTTS = new GoogleTTSOptions();
     }
 
     public bool Init()
@@ -214,7 +226,7 @@ public class CompilerEnvironment
         Console.WriteLine($"Using source ink file: '{SourceInkFile}'");
 
         DestFolder = _options.DestFolder;
-        if (String.IsNullOrWhiteSpace(DestFolder))
+        if (string.IsNullOrWhiteSpace(DestFolder))
             DestFolder = Environment.CurrentDirectory;
         if (!Path.IsPathFullyQualified(DestFolder))
             DestFolder = Path.GetFullPath(Path.Combine(ProjectFolder, DestFolder));
@@ -253,6 +265,30 @@ public class CompilerEnvironment
         var unknown = WritingStatusOptions.FirstOrDefault(x => x.Status == "Unknown");
         if (unknown==null)
             WritingStatusOptions.Add(new WritingStatusDefinition());
+
+        GoogleTTS = _options.GoogleTTS;
+        string ttsAuthFile = GoogleTTS.Authentication;
+        if (!string.IsNullOrEmpty(ttsAuthFile))
+        {
+            var lookForFile = ttsAuthFile;
+            if (!Path.IsPathFullyQualified(lookForFile))
+            {
+                lookForFile = Path.GetFullPath(Path.Combine(ProjectFolder, ttsAuthFile));
+                if (!File.Exists(lookForFile))
+                {
+                    lookForFile = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, ttsAuthFile));
+                }
+            }
+            if (!File.Exists(lookForFile))
+            {
+                Console.Error.WriteLine("Can't find GoogleTTS authentication file:"+lookForFile);
+                return false;
+            }
+            GoogleTTS.Authentication = lookForFile;
+        }
+        if (!Path.IsPathFullyQualified(GoogleTTS.OutputFolder))
+            GoogleTTS.OutputFolder = Path.GetFullPath(Path.Combine(audioFolderRoot,GoogleTTS.OutputFolder));
+        
         return true;
     }
 

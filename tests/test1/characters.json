@@ -1,7 +1,24 @@
 [
-    {"ID":"FRED", "Actor":"David"},
-    {"ID":"LAURA", "Actor":""},
-    {"ID":"DAVE", "Actor":"David"},
-    {"ID":"GEORGE", "Actor":""},
-    {"ID":"JIM", "Actor":""}
+    {
+        "ID":"FRED", 
+        "Actor":"David",
+        "TTSVoice":"en-GB-Standard-B"
+    },
+    {
+        "ID":"LAURA",
+        "TTSVoice":"en-GB-Standard-A"
+    },
+    {
+        "ID":"DAVE", 
+        "Actor":"David",
+        "TTSVoice":"en-GB-Standard-D"
+    },
+    {
+        "ID":"GEORGE",
+        "TTSVoice":"en-GB-Standard-O"
+    },
+    {
+        "ID":"JIM",
+        "TTSVoice":"en-GB-Standard-B"
+    }
 ]

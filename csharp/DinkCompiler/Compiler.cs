@@ -53,6 +53,19 @@ public class Compiler
         if (!BuildVoiceLines(dinkScenes, out VoiceLines voiceLines))
             return false;
 
+        // ----- Create TTS audio if desired -----
+        if (_env.GoogleTTS.Generate)
+        {
+            if (characters==null)
+            {
+                Console.Error.WriteLine("Request to generate Google TTS but character file doesn't exist.");
+                return false;
+            }
+            GoogleTTS tts = new GoogleTTS(characters, _env.GoogleTTS);
+            if (!tts.Generate(voiceLines))
+                return false;
+        }
+
         // ----- Gather voice line statuses -----
         var audioStatuses = new AudioStatuses(_env);
         if (!audioStatuses.Build(voiceLines))

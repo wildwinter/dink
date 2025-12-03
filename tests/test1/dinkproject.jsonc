@@ -101,5 +101,13 @@
         // Currently only the recording script exports tags. Same rules as comment filters!
         // This passes tags such as #vo:loud or #vo:soft
         "record": ["vo"]
+    },
+
+    // GoogleTTS parameters
+    "googleTTS": {
+        "generate":true,
+        "authentication":"../google-tts-key.json",
+        "outputFolder":"Audio/TTS",
+        "replaceExisting":true
     }
 }

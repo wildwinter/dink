@@ -11,3 +11,5 @@ build
 *.egg-info
 pip-dist
 tmp
+google-tts-key.json
+tests/**/Audio/*

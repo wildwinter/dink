@@ -1,12 +1,12 @@
 namespace DinkCompiler;
 
 using System.Text.Json;
-using DocumentFormat.OpenXml.Office.Drawing;
 
 public struct Character
 {
     public required string ID { get; set; }
-    public required string Actor { get; set; }
+    public string Actor { get; set; }
+    public string TTSVoice { get; set; }
 }
 
 public class Characters
