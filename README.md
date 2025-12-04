@@ -119,9 +119,9 @@ LAURA: There, awake, okay?
 7. **Load the Dink strings file** and any other versions you've made in other languages into your game.
 8. **Step through Ink at Runtime** using standard Ink calls such as `story.Continue()`.
     * Each Ink line will have an `#id` tag.
-    * You can use that ID to grab extra line data from the Dink runtime file (like who is speaking the line).
+    * You can use that ID to grab extra line data from the Dink runtime file (like who is speaking).
     * Instead of using the text that Ink gives you, instead you can use the ID to grab the string from whichever strings file you are using for localisation.
-    * You can use the ID as the filename for the audio file to play.
+    * The ID should be the filename of the audio file to play, depending how you've set things up.
 
 Don't forget to use all the useful extra Dink features such as stats, writing status, audio status and so on.
 
