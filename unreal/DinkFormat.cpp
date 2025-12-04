@@ -113,9 +113,6 @@ bool UDinkParser::ParseAction(const FString& line, FDinkBeat& outBeat)
     $                   - End of line
     */
     
-    // CHANGED:
-    // 1. Removed the '?' at the very end (Tags are now mandatory).
-    // 2. Changed inner group quantifier from '+' to '*' (Allows single tag).
     const FRegexPattern pattern(TEXT(
         R"(^\s*[-]?\s*([^\r\n#]*?)\s*((?:#[^\s#]+)(?:\s*#[^\s#]+)*)\s*$)"
     ));
