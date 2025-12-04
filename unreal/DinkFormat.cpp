@@ -102,17 +102,22 @@ bool UDinkParser::ParseLine(const FString& line, FDinkBeat& outBeat)
 bool UDinkParser::ParseAction(const FString& line, FDinkBeat& outBeat)
 {
     /*
-
-    ^\s*                Matches any leading whitespace at the beginning of the line.
-    [-]?              Optionally matches a single character from the set -, +, or *.
-    \s*                 Optional whitespace.
-    ([^\r\n#]*?)        Capture Group 2: Dialogue Line - Matches the main text, stopping at a #, carriage return, or newline. Non-greedy.
-    \s*                 Optional whitespace.
-    (#[^\s#]+(?:\s*#[^\s#]+)*)? Capture Group 3 (optional): Tags (e.g. #fred #bucketid:5) - Matches one or more tags, each starting with # and separated by optional whitespace.
-    $                   End of line.
+    ^\s*[-]?\s* - Start, optional dash, optional whitespace
+    ([^\r\n#]*?)        - Group 1: Text (Non-greedy, stops before the first #)
+    \s* - Whitespace between text and tags
+    (                   - Group 2: All Tags (Combined string)
+       (?:#[^\s#]+)     - Match the first tag (Must exist)
+       (?:\s*#[^\s#]+)* - Match zero or more subsequent tags
+    )
+    \s* - Trailing whitespace
+    $                   - End of line
     */
+    
+    // CHANGED:
+    // 1. Removed the '?' at the very end (Tags are now mandatory).
+    // 2. Changed inner group quantifier from '+' to '*' (Allows single tag).
     const FRegexPattern pattern(TEXT(
-        R"(^\s*[-]?\s*([^\r\n#]*?)\s*(#[^\s#]+(?:\s*#[^\s#]+)*)?$)"
+        R"(^\s*[-]?\s*([^\r\n#]*?)\s*((?:#[^\s#]+)(?:\s*#[^\s#]+)*)\s*$)"
     ));
     FRegexMatcher matcher(pattern, line);
 
@@ -122,7 +127,7 @@ bool UDinkParser::ParseAction(const FString& line, FDinkBeat& outBeat)
     outBeat.BeatType = EDinkBeatType::Action;
     outBeat.Text = matcher.GetCaptureGroup(1).TrimEnd();
 
-    FString tagsRaw = matcher.GetCaptureGroup(3);
+    FString tagsRaw = matcher.GetCaptureGroup(2);
     FDinkBeat::ParseTags(tagsRaw, outBeat);
 
     return true;
