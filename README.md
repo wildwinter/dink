@@ -49,6 +49,7 @@ DAVE: Thar she blows!
 * [Source Code](#source-code)
 * [Releases](#releases)
 * [Usage](#usage)
+  * [Overview](#overview)
   * [The Dink Spec](#the-dink-spec)
   * [Command-Line Tool](#command-line-tool)
   * [Character List](#character-list)
@@ -85,6 +86,46 @@ The source can be found on [Github](https://github.com/wildwinter/dink), and is 
 Releases will be available in the releases area in [Github](https://github.com/wildwinter/dink/releases).
 
 ## Usage
+
+### Overview
+Here's a quick how-you-might-use...
+
+1. **Set up a [Project Config File](#config-file)** so you don't have to keep typing everything on the command line.
+2. **Create a [Character List File](#character-list)** so you can check that the script you're writing doesn't have any mistakes in character names.
+3. **Write your script in [Dink Format](#the-dink-spec)**, which is just **Ink** with some very simple rules on top. \
+e.g.
+```
+== MyScene
+DAVE: (angrily) Are you awake?
+LAURA: (sleepily) Yes!
+DAVE: Not sure I believe you. // VO: Dave could be convinced
+
+Laura turns the light on.
+
+LAURA: There, awake, okay?
+
+{DaveDrunk: // This is pure Ink
+    DAVE: Yeah. Ow my head. // VO: He's still drunk.
+    -> HangoverScene
+- else:
+    DAVE: Yep. Let's go for a run!
+    -> RunningScene
+}
+
+```
+4. **Run the [Dink Compiler](#command-line-tool)** which will take your ink file and anything it includes, decorate it with `#id:` tags so each line has a unique identifier, compile it to JSON like Inky normally does, and then produce a whole pile of other useful things - runtime files you can use in your game, and lots of production files like a [recording script](#recording-script) for use in the booth, a [stats overview file](#stats-file), a localisation file and so on.
+5. **Load the Ink JSON file** into your game.
+6. **Load the extra Dink runtime file** into your game.
+7. **Load the Dink strings file** and any other versions you've made in other languages into your game.
+8. **Step through Ink at Runtime** using standard Ink calls such as `story.Continue()`.
+    * Each Ink line will have an `#id` tag.
+    * You can use that ID to grab extra line data from the Dink runtime file (like who is speaking the line).
+    * Instead of using the text that Ink gives you, instead you can use the ID to grab the string from whichever strings file you are using for localisation.
+    * You can use the ID as the filename for the audio file to play.
+
+Don't forget to use all the useful extra Dink features such as stats, writing status, audio status and so on.
+
+That's it, you have a working dialogue system!
 
 ### The Dink Spec
 
