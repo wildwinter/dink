@@ -94,8 +94,13 @@ Here's a quick how-you-might-use...
 2. **Create a [Character List File](#character-list)** so you can check that the script you're writing doesn't have any mistakes in character names.
 3. **Write your script in [Dink Format](#the-dink-spec)**, which is just **Ink** with some very simple rules on top. \
 e.g.
-```
+```c
+VAR DaveDrunk = true // Pure Ink
+-> MyScene
+
 == MyScene
+#dink
+
 DAVE: (angrily) Are you awake?
 LAURA: (sleepily) Yes!
 DAVE: Not sure I believe you. // VO: Dave could be convinced
