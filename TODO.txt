@@ -6,7 +6,6 @@ Stats doc:
 Document simple usage
 Explain web demo
 Track line numbers and file names for error reporting
-Remove multiple WS entries?
 
 Utils:
 * Gather audio files matching X (character, scene, tag)
@@ -40,3 +39,4 @@ Tag routing
 Add ignore recording status
 TTS
 Revisit action type
+Remove multiple WS entries

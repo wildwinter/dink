@@ -397,11 +397,37 @@ public class DinkParser
             hitFirstStitchContent = true;
         }
 
+        string? getTagPrefix(string tag)
+        {
+            int index = tag.IndexOf(':');
+            if (index > 0)
+            {
+                string candidate = tag.Substring(0, index + 1);
+                return tag.Substring(0,index+1);
+            }
+            return null;
+        }
+
+        void addOnlyNewTags(DinkBeat beat, List<string> tags)
+        {
+            foreach(var tag in tags)
+            {
+                string? prefix = getTagPrefix(tag);
+                if (prefix!=null)
+                {
+                    if (!beat.Tags.Any(s => s.StartsWith(prefix)))
+                        beat.Tags.Add(tag);
+                }
+                else
+                    beat.Tags.Add(tag);
+            }
+        }
+        
         void addTags(DinkBeat beat)
         {
-            beat.Tags.AddRange(stitchTags);
-            beat.Tags.AddRange(knotTags);
-            beat.Tags.AddRange(fileTags);
+            addOnlyNewTags(beat, stitchTags);
+            addOnlyNewTags(beat, knotTags);
+            addOnlyNewTags(beat, fileTags);
         }
 
         foreach (var line in lines)

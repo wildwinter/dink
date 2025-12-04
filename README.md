@@ -56,6 +56,8 @@ DAVE: Thar she blows!
   * [Comment and Tag Filtering](#comment-and-tag-filtering)
   * [Command-Line Tool](#command-line-tool)
   * [Config File](#config-file)
+* [Extras](#extras)
+  * [Google TTS](#google-tts)
 * [Contributors](#contributors)
 * [License](#license)
 
