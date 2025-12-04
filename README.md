@@ -110,11 +110,18 @@ Laura turns the light on.
 LAURA: There, awake, okay?
 
 {DaveDrunk: // This is pure Ink
+
     DAVE: Yeah. Ow my head. // VO: He's still drunk.
     -> HangoverScene
+
 - else:
+
     DAVE: Yep. Let's go for a run!
+
+    Laura looks freaked out by this.
+    
     -> RunningScene
+
 }
 
 ```
