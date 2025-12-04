@@ -34,8 +34,8 @@ DAVE: Thar she blows!
   * Produces a JSON file with all the strings used in Ink and Dink needed for runtime.
   * Optionally produces a JSON file detailing a more detailed Dink structure (scenes, blocks, snippets, showing runs of dialogue).
   * Optionally produces an Excel file with all the strings in for localization.
-  * Optionally produces an Excel file for voice recording, including mapping to actors if supplied. Checks the **status of existing audio files** to figure out what has actually been recorded.
-  * Optionally lets you track the writing status and recording status of each file and line, and figures out what needs to be recorded for each character and actor, and produces an Excel file with all those stats. 
+  * Optionally [produces an Excel file for voice recording](#recording-script), including mapping to actors if supplied. Checks the **status of existing audio files** to figure out what has actually been recorded.
+  * Optionally lets you track the writing status and recording status of each file and line, and figures out what needs to be recorded for each character and actor, and produces [an Excel file with all those stats](#stats-file). 
   * Allows you to control which comments end up in the localization and recording files.
 * At runtime:
   * Load the compiled Ink story, as normal. (Remember, Dink compiled it for you!)
@@ -50,11 +50,13 @@ DAVE: Thar she blows!
 * [Releases](#releases)
 * [Usage](#usage)
   * [The Dink Spec](#the-dink-spec)
+  * [Command-Line Tool](#command-line-tool)
   * [Character List](#character-list)
   * [Writing Status](#writing-status)
   * [Audio File Status](#audio-file-status)
   * [Comment and Tag Filtering](#comment-and-tag-filtering)
-  * [Command-Line Tool](#command-line-tool)
+  * [Recording Script](#recording-script)
+  * [Stats File](#stats-file)
   * [Config File](#config-file)
 * [Extras](#extras)
   * [Google TTS](#google-tts)
@@ -66,7 +68,7 @@ DAVE: Thar she blows!
 The `DinkCompiler` will take in an Ink file (for example, `myproject.ink`) and its includes, process it, and the results are the following:
 
 * **Updated Source File (`myproject.ink`)**: Any lines of text in the source Ink file that don't have a unique identifier of the form `#id:xxx` tags will have been added.
-* **Compiled Ink File (`myproject.json`)**: The Ink file compiled to JSON using `inklecate`, as Ink usually does.
+* **Compiled Ink File (`myproject.json`)**: The Ink file compiled to JSON using `inklecate`, as Inky usually does.
 * **Dink Runtime File (`myproject-dink-min.json`)**: A JSON structure containing one entry for each LineID, with the runtime data you'll need for each line that you won't get from Ink e.g. the character speaking etc.
 * **Strings Runtime File (`myproject-strings-min.json`)**: A JSON file containing an entry for every string in Ink, along with the string used in the original script. This is probably your master language file for runtime - you'll want to create copies of it for your localisation. When you display an Ink or Dink line you'll want to use the string data in here rather than in Ink itself.
 * **Dink Structure File (`myproject-dink-structure.json`)**: (Optional) A JSON structure containing all the Dink scenes and their blocks, snippets, and beats, and useful information such as tags, lines, comments and so on. This is most likely to be useful in your edit pipeline for updating items in your editor based on Dink scripts - for example, creating placeholder scene layouts.
@@ -172,6 +174,67 @@ DAVE (V.O.): It was a quiet morning in May... #id:intro_R6Sg // And so will this
 
 See also [Comment and Tag Filtering](#comment-and-tag-filtering) to find out how you can control which comment gets output where!
 
+### Command-Line Tool
+
+This is a command-line utility with a few arguments. A few simple examples:
+
+Use the file `main.ink` (and any included ink files) as the source, and output the resulting files in the `somewhere` folder:
+
+`./DinkCompiler --source ../../tests/test1/main.ink --destFolder ../somewhere`
+
+Or instead, grab all the settings from a project file:
+`./DinkCompiler --project dinkproject.jsonc`
+
+#### Arguments
+
+* `--source <sourceInkFile>` (REQUIRED)
+
+    Entrypoint to use for the Ink processing.\
+    e.g. `--source some/folder/with/main.ink`
+
+* `--destFolder <folder>`
+
+    Folder to put all the output files.\
+    e.g. `--destFolder gameInkFiles/`\
+    Default is the current working dir.
+
+* `--locActionBeats`
+
+    If present, includes the text of action beats as something that
+    needs to be localised by including it in `-strings` files.\
+    If false, skips that text, but does include it in `-dink-min`.\
+    Default is false.
+
+* `--dinkStructure`
+
+    If present, outputs the structured Dink JSON file (`*-dink-structure.json`).
+
+* `--localization`
+
+    If present, outputs the strings Excel file (`*-strings.xlsx`).
+
+* `--recordingScript`
+
+    If present, outputs the recording script Excel file (`*-recording.xlsx`).
+
+* `--stats`
+
+    If present, outputs a file of the status of all the lines as an Excel file (`*-stats.xlsx`).
+
+* `--ignoreWritingStatus`
+
+    If present, ignores the writing status when deciding what to include in the recording script
+    or localization script. Useful for a full dump of lines.
+
+* `--project project/config.jsonc`
+
+    If supplied, configuration will be read from the given JSON file, instead
+    of just given as command-line options. This also means that the folder that the
+    supplied file is in will be treated as a potential source file for the Ink
+    and for the characters.json if those aren't fully qualified paths. 
+    See [Config File](#config-file) for details. You can do more with it than
+    you do with the command-line options.
+
 ### Character List
 
 You can optionally supply a `characters.json` file in the same folder as the main Ink file. If, so it should be this format:
@@ -183,8 +246,7 @@ You can optionally supply a `characters.json` file in the same folder as the mai
         "Actor":"Dave"
     },
     {
-        "ID":"JIM", 
-        "Actor":""
+        "ID":"JIM"
     },
 ]
 ```
@@ -424,64 +486,56 @@ passed to the recording script (or you'd be overwhelmed!)
 
 Comment and tag filters can be customised in the [Project Config File](#config-file).
 
-### Command-Line Tool
+### Recording Script
+![Recording Script](doc/Recording.png)
+*A section of the spreadsheet. It's quite wide.*
 
-This is a command-line utility with a few arguments. A few simple examples:
+This lists all the recordable voice lines in the game. (If you've set up your [Writing Statuses](#writing-status) only lines that count as `record` will be included.)
 
-Use the file `main.ink` (and any included ink files) as the source, and output the resulting files in the `somewhere` folder:
+There are a whole bunch of different columns here which may
+or may not be useful to your recording setup, but amongst other things it shows:
+* **Line ID** - This will stay the same throughout the project. You can see it at the end of each Ink line.
+* **Block ID** - Knot in the Ink script that contains the line.
+* **Character** - e.g. `FRED: Hello!` will have `FRED` in this line.
+* **Actor** - From the [Character List](#character-list)
+ file.
+* **Text** - The actual text to record!
+* **Direction** e.g. `MARK: (angrily) Hello!`
+* **Comments**, which can be inherited from the Knot or the Stitch or the line itself, and also include autogenerated things to be helpful in the booth like:
+  * Information about groups of alternative lines like `(1/3)`,`(2/3)` if the line is part of an Ink shuffle or cycle or a set of alternatives with tests. 
+  * Information on whether the line follows an Ink option in a choice, and what the text of that option is.
+  * `MERGE` if the line is a gather after a set of alternatives.
+* **Tags** from Ink which are useful to call out specific classes of line that are useful for whoever is processing the audio. e.g. `#vo:loud` or `#vo:radio`
+* **Snippet ID** - Lines which have the same snippet ID are a *run* of lines that don't have any branching or alternatives in it. That's useful for the actor and director to know. It's also highlighted by the file colouring.
+* **Audio Status** - Which tracks the [Audio Status](#audio-file-status) so that you know if a line still needs to be recorded or not!
 
-`./DinkCompiler --source ../../tests/test1/main.ink --destFolder ../somewhere`
 
-Or instead, grab all the settings from a project file:
-`./DinkCompiler --project dinkproject.jsonc`
+### Stats File
+The **Stats File** is output as Excel format, and gives you a bunch of hopefully useful information about the project!
 
-#### Arguments
+For this to work, make sure you've set up your [Writing Status](#writing-status) and [Audio Status](#audio-file-status) in the [Project Config File](#config-file).
 
-* `--source <sourceInkFile>` (REQUIRED)
+#### Status Summary
+![Status Summary](doc/StatSummary.png)
 
-    Entrypoint to use for the Ink processing.\
-    e.g. `--source some/folder/with/main.ink`
+An overview of the state of each scene.
 
-* `--destFolder <folder>`
+Note that it has ones entry called *Non-Dink*, which includes
+any written text in Ink that isn't part of a #dink knot. It's included so you can still track status and localisation of that text.
 
-    Folder to put all the output files.\
-    e.g. `--destFolder gameInkFiles/`\
-    Default is the current working dir.
+#### Cast Summary
+![Cast Summary](doc/StatCast.png)
 
-* `--locActionBeats`
+If you've set up your [Character List](#character-list), then this page will show you an overview of your characters, the actors connected to them, and the states of any lines that are for them. 
 
-    If present, includes the text of action beats as something that
-    needs to be localised by including it in `-strings` files.\
-    If false, skips that text, but does include it in `-dink-min`.\
-    Default is false.
+#### Line Statuses
+![Line Statuses](doc/StatLines.png)
 
-* `--dinkStructure`
+This gives you the state of every single line in the game,
+and follows the recordable Dink lines with the non-Dink Ink text lines (which won't have any Audio Status).
 
-    If present, outputs the structured Dink JSON file (`*-dink-structure.json`).
-
-* `--localization`
-
-    If present, outputs the strings Excel file (`*-strings.xlsx`).
-
-* `--recordingScript`
-
-    If present, outputs the recording script Excel file (`*-recording.xlsx`).
-
-* `--stats`
-
-    If present, outputs a file of the status of all the lines as an Excel file (`*-stats.xlsx`).
-
-* `--ignoreWritingStatus`
-
-    If present, ignores the writing status when deciding what to include in the recording script
-    or localization script. Useful for a full dump of lines.
-
-* `--project project/config.jsonc`
-
-    If supplied, configuration will be read from the given JSON file, instead
-    of given as command-line switches. This also means that the folder that the
-    supplied file is in will be treated as a potential source file for the Ink
-    and for the characters.json if those aren't fully qualified paths.
+This is less useful for reading and more useful to do filtering and sorting in Excel so you can look at what's
+still to do.
 
 ### Config File
 
@@ -563,7 +617,7 @@ A JSON or JSONC file (i.e. JSON with comments) having all or some of the require
     // - If a line has a writing tag that overrides the stitch, knot or file tag.
     // - Only statuses with a record value of true will get sent to the recording script.
     // - Only statuses with a loc value of true will get sent to the localization strings.
-    // - The writing status file will show all statuses.
+    // - The stats file will show all statuses.
     // If this section is not defined, no writing status tags are used and everything will be
     // sent to recording script and localization.
     // If a line has no status it will be treated as "Unknown".

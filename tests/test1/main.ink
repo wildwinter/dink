@@ -87,11 +87,11 @@ JIM: This is a line hidden by a false clause. #id:main_Recording_PartA_U9ZN
 -> PartC
 = PartC
 // C: This comment should apply to the snippet below.
-{shuffle: // VO: 10 lines about monkeys
-- FRED: This is a line. #id:main_Recording_PartC_JITN
-- FRED: This is also a line 2. #id:main_Recording_PartC_GUS9
-- FRED: This is also a line 3. #id:main_Recording_PartC_3VZB
-- FRED: This is also a line 4. #id:main_Recording_PartC_A18G
+{shuffle: // VO: A set of lines about monkeys
+- FRED: This is a line about monkeys. #id:main_Recording_PartC_JITN
+- FRED: This is also about monkeys line 2. #id:main_Recording_PartC_GUS9
+- FRED: This is also about monkeys line 3. #id:main_Recording_PartC_3VZB
+- FRED: This is also about monkeys line 4. #id:main_Recording_PartC_A18G
 }
 -> PartD
 = PartD
@@ -104,7 +104,7 @@ JIM: This is a line hidden by a false clause. #id:main_Recording_PartA_U9ZN
 }
 -> PartE
 = PartE
-{shuffle: //VO: 3 alts
+{shuffle:
 - FRED: Goodbye! #id:main_Recording_PartE_81AO
 - FRED: Seeya! #id:main_Recording_PartE_JY1W
 - FRED: Whoops! #id:main_Recording_PartE_QEM8

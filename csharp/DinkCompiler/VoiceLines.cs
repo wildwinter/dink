@@ -49,7 +49,7 @@ public class VoiceLines
         public required string Direction { get; set; }
         public required string Comments { get; set; }
         public required string Actor { get; set; }
-        public required string SectionID { get; set; }
+        public required string SnippetID { get; set; }
         public required string Tags { get; set; }
         public required string AudioStatus {get; set;}
     }
@@ -67,7 +67,7 @@ public class VoiceLines
             {
                 ID = v.ID,
                 BlockID = v.BlockID,
-                SectionID = v.SnippetID,
+                SnippetID = v.SnippetID,
                 Character = v.Character,
                 Actor = (characters != null) ? characters.Get(v.Character)?.Actor ?? "" : "", 
                 Line = v.Line,
@@ -91,23 +91,24 @@ public class VoiceLines
                 var table = worksheet.Cell("A1").InsertTable(recordsToExport);
 
                 ExcelUtils.FormatTableSheet(worksheet, table);
+                table.FirstRow().Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
 
-                string sectionHeading = ExcelUtils.FindColumnByHeading(worksheet, "SectionID") ?? "";
+                string snippetHeading = ExcelUtils.FindColumnByHeading(worksheet, "SnippetID") ?? "";
 
-                string lastSection = "";
-                XLColor sectionColor = lineColor2;
+                string lastSnippet = "";
+                XLColor snippetCcolor = lineColor2;
                 foreach (var row in worksheet.RowsUsed().Skip(1))
                 {
-                    var section = row.Cell(sectionHeading); // SectionID column
-                    if (section.GetString() != lastSection)
+                    var snippet = row.Cell(snippetHeading); // SnippetID column
+                    if (snippet.GetString() != lastSnippet)
                     {   
-                        lastSection = section.GetString();
-                        if (sectionColor == lineColor2)
-                            sectionColor = lineColor1;
+                        lastSnippet = snippet.GetString();
+                        if (snippetCcolor == lineColor2)
+                            snippetCcolor = lineColor1;
                         else
-                            sectionColor = lineColor2;
+                            snippetCcolor = lineColor2;
                     }
-                    row.Style.Fill.BackgroundColor = sectionColor;
+                    row.Style.Fill.BackgroundColor = snippetCcolor;
                 }   
 
                 ExcelUtils.AdjustSheet(worksheet);

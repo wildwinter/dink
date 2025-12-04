@@ -40,3 +40,4 @@ Add ignore recording status
 TTS
 Revisit action type
 Remove multiple WS entries
+Info on Excel outputs.
