@@ -108,7 +108,7 @@ ACTOR (qualifier): (direction) Dialogue line. #tag1 #tag3 #tag4 #id:xxxxxx
 
 // Comment will get carried over.
 // LOC: This comment will go to the localisers
-(Type) Line of action #tag1 #tag2 #id:xxxxxx // This comment too.
+Line of action #tag1 #tag2 #id:xxxxxx // This comment too.
 -> DONE
 ```
 

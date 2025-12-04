@@ -82,11 +82,9 @@ public class DinkLine : DinkBeat
 
 public class DinkAction : DinkBeat
 {
-    // optional e.g. SFX, AUDIO
-    public string Type { get; set; } = string.Empty;
     public string Text { get; set; } = string.Empty;
     public override string ToString() =>
-        $"Type: '{Type}', Content: '{Text}'" + base.ToString();
+        $"Content: '{Text}'" + base.ToString();
 }
 
 // Equivalent of an Ink flow fragment

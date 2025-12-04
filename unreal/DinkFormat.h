@@ -46,9 +46,6 @@ public:
     // These apply only to Action type
     // BEGIN ACTION TYPE
 
-    UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
-    FString Type;
-
     // END ACTION TYPE
 
     FString ToString() const;

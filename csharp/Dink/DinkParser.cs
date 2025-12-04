@@ -190,8 +190,6 @@ public class DinkParser
         // ^\s* - Optional leading whitespace
         // [-] - Optional minus symbol (for shuffles etc.)
         // \s* - Optional whitespace
-        // (?:\(\s*(?<Type>[\w].*?)\s*\))?    - Optional Type group: ( optional space, Capture 'Qualifier' (non-greedy), optional space )
-        // \s* - Optional whitespace
         // (?<Text>[\w].*?)                      - Capture Text non-greedily (everything until the tags start)
         // (?:\s+\#(?<TagValue>\S+))* - Non-capturing group for zero or more tags:
         //                                      - \s+\# - Must have 1+ whitespace, then '#' (per spec)
@@ -199,7 +197,7 @@ public class DinkParser
         // $   
         //                                    - End of the string
         const string pattern =
-            @"^\s*[-]?\s*(?:\(\s*(?<Type>[\w].*?)\s*\))?\s*(?<Text>[\w].*?)(?:\s+\#(?<TagValue>\S+))*$";
+            @"^\s*[-]?\s*(?<Text>.*?)(?:\s+\#(?<TagValue>\S+))*$";
 
         Match match = Regex.Match(line, pattern, RegexOptions.Singleline);
 
@@ -207,7 +205,6 @@ public class DinkParser
             return null;
 
         var action = new DinkAction();
-        action.Type = match.Groups["Type"].Value;
         List<string> tags = match.Groups["TagValue"].Captures
             .Select(c => c.Value)
             .ToList();

@@ -19,9 +19,6 @@ FString FDinkBeat::ToString() const
     else if (BeatType == EDinkBeatType::Action)
     {
         dump += FString::Printf(TEXT("Action"), *LineID.ToString());
-
-        if (!Type.IsEmpty())
-            dump += FString::Printf(TEXT(" | Type: %s"), *Type);
     }
 
     dump += FString::Printf(TEXT(" | Text: \"%s\""), *Text);
@@ -107,17 +104,15 @@ bool UDinkParser::ParseAction(const FString& line, FDinkBeat& outBeat)
     /*
 
     ^\s*                Matches any leading whitespace at the beginning of the line.
-    [-+*]?              Optionally matches a single character from the set -, +, or *.
-    \s*                 Matches optional whitespace after the symbol.
-    (?:\(([\w][^)]*)\))?    Capture Group 1 (optional): Type (e.g. SFX, ANIM.) - Matches an identifier inside parentheses.
+    [-]?              Optionally matches a single character from the set -, +, or *.
     \s*                 Optional whitespace.
-    ([\w][^\r\n#]*?)        Capture Group 2: Dialogue Line - Matches the main text, stopping at a #, carriage return, or newline. Non-greedy.
+    ([^\r\n#]*?)        Capture Group 2: Dialogue Line - Matches the main text, stopping at a #, carriage return, or newline. Non-greedy.
     \s*                 Optional whitespace.
     (#[^\s#]+(?:\s*#[^\s#]+)*)? Capture Group 3 (optional): Tags (e.g. #fred #bucketid:5) - Matches one or more tags, each starting with # and separated by optional whitespace.
     $                   End of line.
     */
     const FRegexPattern pattern(TEXT(
-        R"(^\s*[-+*]?\s*(?:\(([\w][^)]*)\))?\s*([\w][^\r\n#]*?)\s*(#[^\s#]+(?:\s*#[^\s#]+)*)?$)"
+        R"(^\s*[-]?\s*([^\r\n#]*?)\s*(#[^\s#]+(?:\s*#[^\s#]+)*)?$)"
     ));
     FRegexMatcher matcher(pattern, line);
 
@@ -125,8 +120,7 @@ bool UDinkParser::ParseAction(const FString& line, FDinkBeat& outBeat)
         return false; // Line doesn't match expected format
 
     outBeat.BeatType = EDinkBeatType::Action;
-    outBeat.Type = matcher.GetCaptureGroup(1);
-    outBeat.Text = matcher.GetCaptureGroup(2).TrimEnd();
+    outBeat.Text = matcher.GetCaptureGroup(1).TrimEnd();
 
     FString tagsRaw = matcher.GetCaptureGroup(3);
     FDinkBeat::ParseTags(tagsRaw, outBeat);

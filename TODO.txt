@@ -5,7 +5,6 @@ Stats doc:
 
 Document simple usage
 Explain web demo
-Revisit action type
 Track line numbers and file names for error reporting
 Remove multiple WS entries?
 
@@ -16,6 +15,7 @@ Utils:
 
 TCR:
 Revisit action type
+Switch a:x to vo:x
 
 DONE:
 -----
@@ -39,3 +39,4 @@ Comment routing
 Tag routing
 Add ignore recording status
 TTS
+Revisit action type
