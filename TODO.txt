@@ -3,7 +3,6 @@ TODO:
 Stats doc:
 - Guesstimates?
 
-Document simple usage
 Explain web demo
 Track line numbers and file names for error reporting
 
@@ -41,3 +40,4 @@ TTS
 Revisit action type
 Remove multiple WS entries
 Info on Excel outputs.
+Document simple usage
