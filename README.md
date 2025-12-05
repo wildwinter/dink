@@ -27,21 +27,21 @@ DAVE: Thar she blows!
 ## Summary
 
 * The `DinkCompiler`:
-  * Adds IDs to all the lines of Ink to identify them for localization and voice.
+  * Adds IDs to all the lines of Ink to identify them for localisation and voice.
   * Compiles the Ink using *inklecate*.
   * If a list of character names is supplied, checks that all the Dink scenes use valid characters.
   * Produces a minimal JSON file giving metadata for each line that Ink won't provide (such as the speaker, directions etc.)
   * Produces a JSON file with all the strings used in Ink and Dink needed for runtime.
   * Optionally produces a JSON file detailing a more detailed Dink structure (scenes, blocks, snippets, showing runs of dialogue).
-  * Optionally produces an Excel file with all the strings in for localization.
+  * Optionally produces an Excel file with all the strings in for localisation.
   * Optionally [produces an Excel file for voice recording](#recording-script), including mapping to actors if supplied. Checks the **status of existing audio files** to figure out what has actually been recorded.
   * Optionally lets you track the writing status and recording status of each file and line, and figures out what needs to be recorded for each character and actor, and produces [an Excel file with all those stats](#stats-file). 
-  * Allows you to control which comments end up in the localization and recording files.
+  * Allows you to control which comments end up in the localisation and recording files.
 * At runtime:
   * Load the compiled Ink story, as normal. (Remember, Dink compiled it for you!)
   * Load the Dink runtime data, which will give you extra information about each line of dialogue or action - the speaker, the direction etc.
   * Load the strings file that Dink generated, and use it to display the strings at runtime. (Because if you want you can swap it out for translations, instead of using the strings embedded in the Ink.)
-* All these extra features are only for Knots and Stitches tagged as #dink. All your other Ink will work as usual (but you will get the localization and statuses for free!).
+* All these extra features are only for Knots and Stitches tagged as #dink. All your other Ink will work as usual (but you will get the localisation and statuses for free!).
   
 ### Contents
 
@@ -119,7 +119,7 @@ LAURA: There, awake, okay?
     DAVE: Yep. Let's go for a run!
 
     Laura looks freaked out by this.
-    
+
     -> RunningScene
 
 }
@@ -277,7 +277,7 @@ Or instead, grab all the settings from a project file:
 * `--ignoreWritingStatus`
 
     If present, ignores the writing status when deciding what to include in the recording script
-    or localization script. Useful for a full dump of lines.
+    or localisation script. Useful for a full dump of lines.
 
 * `--project project/config.jsonc`
 
@@ -315,9 +315,8 @@ will be checked against that character list, and if it isn't present the process
 The **Actors** column will be copied in to the recording script export, for ease of use with recording.
 
 #### Cast Recording Stats
-If you supply a Characters list list this you will also get a Cast page in the .xslx stats file.
-This will list all the characters, how many lines exist for them, how many are ready to record
-and how many are already recorded.
+If you supply a Characters list list this you will also get a Cast page in the Excel [stats file](#stats-file).
+This will list all the characters, how many lines exist for them, how many are ready to record and how many are already recorded.
 
 ### Writing Status
 
@@ -327,17 +326,18 @@ This tool lets you mark each line of text, whether Dink or not, with a tag that
 gives its writing status. And then lets you export an Excel file showing the status
 of all the lines in the project.
 
-You can define a list of statuses in your project file, whatever your project needs.
+You can define a list of statuses in your project file, to suit whatever your project needs.
 Each status type has:
 * A tag which you'll put in your Ink file.
 * A status label which will end up in the status Excel document.
 * An optional colour which will end up in the status Excel documen (to easily see those unfinished lines!)
-* Flags to say whether a line of this status should be included in recording or in localization.
+* Flags to say whether a line of this status should be included in recording or in localisation.
 
-If you don't specify any statuses in the project file, the system won't be used, and all your lines will be included in recording and localization.
+If you don't specify any statuses in the project file, the system won't be used, and all your lines will be included in recording and localisation.
 
 #### The Status Tag
 In Ink, you'll use a tag starting with `#ws:` - for example, `#ws:final`, `#ws:draft1` etc.
+
 You can define these.
 
 #### Defining Statuses
@@ -356,7 +356,7 @@ Here's an example set of statuses. These enable you to use
         "wstag": "final", 
         // If true, export lines of this status to the recording script
         "record": true, 
-        // If true, export lines of this status to the localization script
+        // If true, export lines of this status to the localisation script
         "loc": true, 
         // A color to make the Excel file pretty!
         "color": "33FF33" 
@@ -381,7 +381,7 @@ Here's an example set of statuses. These enable you to use
 
 #### Applying Tags
 You can put a tag on a line, as you might expect:
-```textpp
+```text
 FRED: Hello folks! #id:main_Script1_HG5x #ws:draft1
 ```
 
@@ -490,7 +490,7 @@ This list of folders and statuses can be customised in the [Project Config File]
 
 *You don't need to use this, but it might be handy!*
 
-When creating the voice recording script and the localization document, by default Dink
+When creating the voice recording script and the localisation document, by default Dink
 includes all comments (and all tags for the recording script). But you can tweak that in settings so that only specific comments and tags get
 into those particular scripts.
 
@@ -573,7 +573,7 @@ For this to work, make sure you've set up your [Writing Status](#writing-status)
 
 An overview of the state of each scene.
 
-Note that it has ones entry called *Non-Dink*, which includes
+Note that it has one entry called *Non-Dink*, which includes
 any written text in Ink that isn't part of a #dink knot. It's included so you can still track status and localisation of that text.
 
 #### Cast Summary
@@ -669,10 +669,10 @@ A JSON or JSONC file (i.e. JSON with comments) having all or some of the require
     // - If a stitch has a writing tag that overrides the knot or file tag.
     // - If a line has a writing tag that overrides the stitch, knot or file tag.
     // - Only statuses with a record value of true will get sent to the recording script.
-    // - Only statuses with a loc value of true will get sent to the localization strings.
+    // - Only statuses with a loc value of true will get sent to the localisation strings.
     // - The stats file will show all statuses.
     // If this section is not defined, no writing status tags are used and everything will be
-    // sent to recording script and localization.
+    // sent to recording script and localisation.
     // If a line has no status it will be treated as "Unknown".
     // The color is what ends up in the Excel file for a line of this status - it's optional.
     "writingStatus": [
