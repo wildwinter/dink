@@ -5,6 +5,8 @@ using System.Linq;
 
 public class NonDinkLine
 {
+    public DinkOrigin Origin = new DinkOrigin();
+    
     public string ID = "";
     public List<string> Tags = new List<string>();  
 
@@ -19,6 +21,12 @@ public class NonDinkLine
 
 public class DinkParser
 {
+    class ParsingLine
+    {
+        public string Text="";
+        public DinkOrigin Origin = new DinkOrigin();
+    }
+
     class BraceContainer
     {
         public BraceContainer? Parent;
@@ -350,7 +358,7 @@ public class DinkParser
         return (expression, false);
     }
     
-    public static List<DinkScene> ParseInkLines(List<string> lines, List<NonDinkLine> outNonDinkLines)
+    private static List<DinkScene> ParseInkLines(List<ParsingLine> lines, List<NonDinkLine> outNonDinkLines)
     {
         List<DinkScene> parsedScenes = new List<DinkScene>();
         DinkScene? scene = null;
@@ -376,8 +384,10 @@ public class DinkParser
         {
             if (snippet != null && block != null) 
             {
-                if (snippet.Beats.Count > 0)
+                if (snippet.Beats.Count > 0) {
+                    snippet.Origin = snippet.Beats[0].Origin;
                     block.Snippets.Add(snippet);
+                }
             }
 
             snippet = new DinkSnippet();
@@ -432,7 +442,7 @@ public class DinkParser
 
         foreach (var line in lines)
         {
-            var trimmedLine = line.Trim();
+            var trimmedLine = line.Text.Trim();
 
             // Check for comment at end.
             int commentIndex = trimmedLine.LastIndexOf("//");
@@ -566,9 +576,11 @@ public class DinkParser
 
                 scene = new DinkScene();
                 scene.SceneID = knot;
+                scene.Origin = line.Origin;
 
                 block = new DinkBlock();
                 block.BlockID = "";
+                block.Origin = scene.Origin;
                 block.Comments.AddRange(comments);
 
                 snippet = new DinkSnippet();
@@ -590,6 +602,7 @@ public class DinkParser
 
                 block = new DinkBlock();
                 block.BlockID = stitch;
+                block.Origin = line.Origin;
                 block.Comments.AddRange(comments);
 
                 snippet = new DinkSnippet();
@@ -613,6 +626,7 @@ public class DinkParser
                 }
                 else
                 {
+                    dinkLine.Origin = line.Origin;
                     dinkLine.Comments.AddRange(comments);
                     if (activeGroupLevel>0)
                         dinkLine.Group = activeGroup;
@@ -625,6 +639,7 @@ public class DinkParser
             }
             else if (parsing && ParseAction(trimmedLine) is DinkAction dinkAction)
             {
+                dinkAction.Origin = line.Origin;
                 dinkAction.Comments.AddRange(comments);
                 if (activeGroupLevel>0)
                     dinkAction.Group = activeGroup;
@@ -642,6 +657,7 @@ public class DinkParser
                     ndLine.Tags.AddRange(stitchTags);
                     ndLine.Tags.AddRange(knotTags);
                     ndLine.Tags.AddRange(fileTags);
+                    ndLine.Origin = line.Origin;
                     outNonDinkLines.Add(ndLine);
                 }
             }
@@ -660,8 +676,25 @@ public class DinkParser
 
     private static string RemoveBlockComments(string text)
     {
-        const string pattern = @"/\*[\s\S]*?\*/";
-        return Regex.Replace(text, pattern, string.Empty, RegexOptions.Singleline);
+        if (string.IsNullOrEmpty(text))
+            return "";
+
+        string pattern = @"/\*.*?\*/";
+
+        string processedText = Regex.Replace(text, pattern, match =>
+        {
+            // Filter the matched comment string to keep ONLY newline characters (\r or \n).
+            // This effectively deletes the text content of the comment but 
+            // preserves the vertical spacing.
+            char[] newlinesOnly = match.Value
+                                    .Where(c => c == '\r' || c == '\n')
+                                    .ToArray();
+
+            // If it's an inline comment (no newlines), this returns an empty string.
+            // If it's a multi-line comment, this returns the exact blank lines needed to preserve numbering.
+            return new string(newlinesOnly);
+        }, RegexOptions.Singleline);
+        return processedText;
     }
 
     // Figures out what existing snippet ID contains the updated set of Line IDs.
@@ -708,15 +741,24 @@ public class DinkParser
         string[] separators = new string[] { "\r\n", "\n", "\r" };
         string[] linesArray = text.Split(
             separator: separators, 
-            options: StringSplitOptions.RemoveEmptyEntries
+            options: StringSplitOptions.None
         );
         return linesArray.ToList();
     }
-    
-    public static List<DinkScene> ParseInk(string text, List<NonDinkLine> outNonDinkLines)
+
+    public static List<DinkScene> ParseInk(string text, string sourceFilePath, List<NonDinkLine> outNonDinkLines)
     {
         string textWithoutComments = RemoveBlockComments(text);
         List<string> lines = SplitTextIntoLines(textWithoutComments);
-        return ParseInkLines(lines, outNonDinkLines);
+        List<ParsingLine> parsingLines = new List<ParsingLine>();
+        for (int i=0;i<lines.Count;i++)
+        {
+            var parsingLine = new ParsingLine();
+            parsingLine.Text = lines[i];
+            parsingLine.Origin.SourceFilePath = sourceFilePath;
+            parsingLine.Origin.LineNum = i+1;
+            parsingLines.Add(parsingLine);
+        }
+        return ParseInkLines(parsingLines, outNonDinkLines);
     }
 }

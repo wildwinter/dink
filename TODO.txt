@@ -4,7 +4,10 @@ Stats doc:
 - Guesstimates?
 
 Explain web demo
-Track line numbers and file names for error reporting
+
+Script flow doc
+Dink editor
+Add line numbers and files for Stats file
 
 Utils:
 * Gather audio files matching X (character, scene, tag)
@@ -41,3 +44,4 @@ Revisit action type
 Remove multiple WS entries
 Info on Excel outputs.
 Document simple usage
+Track line numbers and file names for error reporting

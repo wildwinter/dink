@@ -6,8 +6,16 @@ using System.Text.RegularExpressions;
 
 namespace Dink;
 
+public struct DinkOrigin
+{
+    public string SourceFilePath {get;set;}
+    public int LineNum {get;set;}
+}
+
 public abstract class DinkBase
 {
+    public DinkOrigin Origin {get;set;}= new DinkOrigin();
+
     public List<string> Comments { get; set; } = new List<string>();
 
     public List<string> Tags { get; set; } = new List<string>();
@@ -109,7 +117,7 @@ public class DinkBlock : DinkBase
     public override string ToString() => $"Block: '{BlockID}'";
 }
 
-public class DinkScene
+public class DinkScene : DinkBase
 {
     public string SceneID { get; set; } = string.Empty;
     public List<DinkBlock> Blocks { get; set; } = new List<DinkBlock>();

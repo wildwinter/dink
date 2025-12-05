@@ -32,7 +32,7 @@ DAVE: Thar she blows!
   * If a list of character names is supplied, checks that all the Dink scenes use valid characters.
   * Produces a minimal JSON file giving metadata for each line that Ink won't provide (such as the speaker, directions etc.)
   * Produces a JSON file with all the strings used in Ink and Dink needed for runtime.
-  * Optionally produces a JSON file detailing a more detailed Dink structure (scenes, blocks, snippets, showing runs of dialogue).
+  * Optionally produces a JSON file detailing a more detailed Dink structure (scenes, blocks, snippets, showing runs of dialogue, source files and line numbers).
   * Optionally produces an Excel file with all the strings in for localisation.
   * Optionally [produces an Excel file for voice recording](#recording-script), including mapping to actors if supplied. Checks the **status of existing audio files** to figure out what has actually been recorded.
   * Optionally lets you track the writing status and recording status of each file and line, and figures out what needs to be recorded for each character and actor, and produces [an Excel file with all those stats](#stats-file). 
@@ -72,7 +72,7 @@ The `DinkCompiler` will take in an Ink file (for example, `myproject.ink`) and i
 * **Compiled Ink File (`myproject.json`)**: The Ink file compiled to JSON using `inklecate`, as Inky usually does.
 * **Dink Runtime File (`myproject-dink-min.json`)**: A JSON structure containing one entry for each LineID, with the runtime data you'll need for each line that you won't get from Ink e.g. the character speaking etc.
 * **Strings Runtime File (`myproject-strings-min.json`)**: A JSON file containing an entry for every string in Ink, along with the string used in the original script. This is probably your master language file for runtime - you'll want to create copies of it for your localisation. When you display an Ink or Dink line you'll want to use the string data in here rather than in Ink itself.
-* **Dink Structure File (`myproject-dink-structure.json`)**: (Optional) A JSON structure containing all the Dink scenes and their blocks, snippets, and beats, and useful information such as tags, lines, comments and so on. This is most likely to be useful in your edit pipeline for updating items in your editor based on Dink scripts - for example, creating placeholder scene layouts.
+* **Dink Structure File (`myproject-dink-structure.json`)**: (Optional) A JSON structure containing all the Dink scenes and their blocks, snippets, and beats, and useful information such as tags, lines, comments, source origins and so on. This is most likely to be useful in your edit pipeline for updating items in your editor based on Dink scripts - for example, creating placeholder scene layouts.
 * **Stats File (`myproject-stats.xslx`)**: (Optional) An Excel file giving details of the status of every line in the game, both writing and recording.
 * **Strings File for Localisation (`myproject-strings.xslx`)**: (Optional) An Excel file containing an entry for every string in Ink that needs localisation. When they are Dink lines, will include helpful data such as comments, the character speaking.
 * **Recording Script File (`myproject-recording.xslx`)**: (Optional) An Excel file containing an entry for every line of dialogue that needs to be recorded, along with helpful comments and direction, and if you have provided a `characters.json` file, the Actor associated with the character.

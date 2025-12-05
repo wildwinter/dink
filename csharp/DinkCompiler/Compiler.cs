@@ -258,7 +258,8 @@ public class Compiler
         {
             Console.WriteLine($"Using Ink file '{inkFile}'");
             var text = File.ReadAllText(inkFile);
-            var scenes = DinkParser.ParseInk(text, ndLines);
+            var inkFileRelativeToProject = Path.GetRelativePath(_env.ProjectFolder, inkFile);
+            var scenes = DinkParser.ParseInk(text, inkFileRelativeToProject, ndLines);
 
             if (characters!=null)
             {

@@ -133,11 +133,7 @@ public class CompilerEnvironment
         }
     }
     public string ProjectFile {get; private set;}
-    public string ProjectFolder {
-        get {
-            return Path.GetDirectoryName(ProjectFile)??"";
-        }
-    }
+    public string ProjectFolder {get;private set;}
     public string DestFolder {get; private set;}
     public bool LocActionBeats {get{return _options.LocActionBeats;}}
     public bool OutputDinkStructure {get{return _options.OutputDinkStructure;}}
@@ -158,6 +154,7 @@ public class CompilerEnvironment
         SourceInkFile = "";
         ProjectFile = "";
         DestFolder = "";
+        ProjectFolder = "";
         AudioStatusOptions = new List<AudioStatusDefinition>();
         WritingStatusOptions = new List<WritingStatusDefinition>();
         GoogleTTS = new GoogleTTSOptions();
@@ -172,6 +169,7 @@ public class CompilerEnvironment
             {
                 ProjectFile = Path.GetFullPath(ProjectFile);
             }
+            ProjectFolder = Path.GetDirectoryName(ProjectFile)??"";
         }
 
         SourceInkFile = _options.Source;
@@ -224,6 +222,11 @@ public class CompilerEnvironment
             return false;
         }
         Console.WriteLine($"Using source ink file: '{SourceInkFile}'");
+
+        if (string.IsNullOrWhiteSpace(ProjectFolder))
+        {
+            ProjectFolder = Path.GetDirectoryName(SourceInkFile)??"";
+        }
 
         DestFolder = _options.DestFolder;
         if (string.IsNullOrWhiteSpace(DestFolder))
