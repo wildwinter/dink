@@ -3,13 +3,15 @@
     "source": "main.ink",
     // Where's the folder to output everything?
     "destFolder": "../tmp",
+    // What code should be used for the strings file name?
+    "defaultLocaleCode":"en-GB",
     // Localise actions?
     // Default is false, which means no text in Action beats
     // will be localised
     "locActionBeats": false,
     // If true, outputs the structured dink file (json)
     "outputDinkStructure": true,
-    // If true, outputs the strings file (xlsx)
+    // If true, outputs the loc file (xlsx)
     "outputLocalization": true,
     // If true, outputs the voice file (xlsx)
     "outputRecordingScript": true,

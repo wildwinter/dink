@@ -5,9 +5,9 @@ var storyContent = await loadJson('../dink-content/main.json');
 var story = new inkjs.Story(storyContent);
 
 // Load the Dink metadata
-var dinkStory = await loadJson('../dink-content/main-dink-min.json');
+var dinkStory = await loadJson('../dink-content/main-dink.json');
 // Load the localised strings
-var locStrings = await loadJson('../dink-content/main-strings-min.json');
+var locStrings = await loadJson('../dink-content/main-strings-en-GB.json');
 
 runInk();
 
@@ -56,10 +56,12 @@ function runInk() {
 
         // Get ink to generate the next paragraph
         var nextLine = story.Continue();
+        if (nextLine.trim()=="")
+            continue;
 
         // By default, we could use the Ink string. But
         // we'll try to get Dink to replace it with something better.
-        var outText = nextLine; 
+        var outText = `[Raw Ink] '${nextLine}'`; 
 
         var lineID = findID(story.currentTags);
 
@@ -77,19 +79,19 @@ function runInk() {
                 if (dinkBeat.Type=="Line") {
                     outText = "<b>"+dinkBeat.CharacterID;
                     if (dinkBeat.Qualifier!="")
-                        outText+=" <i>("+dinkBeat.Qualifier+")</i>";
+                        outText+=` <i>(${dinkBeat.Qualifier}</i>`;
                     outText+=":</b> ";
                     outText += locString;
                 }
                 else if (dinkBeat.Type=="Action") {
-                    outText = "<i>(" + dinkBeat.Text + ")</i>";
+                    outText = `<i>${dinkBeat.Text}</i>`;
                 }
             }
             // It doesn't contain a Dink beat but we still want to take 
             // advantage of that localisation
             else if (locString!=null)
             {
-                outText = locString;
+                outText = `[Not Dink] '${locString}'`; 
             }
         }
 

@@ -86,17 +86,17 @@ public class Compiler
         }
 
         // ----- Output Dink Minimal for runtime -----
-        if (!WriteMinimalDink(dinkScenes, _env.MakeDestFile("-dink-min.json")))
+        if (!WriteMinimalDink(dinkScenes, _env.MakeDestFile("-dink.json")))
             return false;
 
         // ----- Output lines minimal for runtime -----
-        if (!WriteMinimalStrings(inkStrings, _env.MakeDestFile("-strings-min.json")))
+        if (!WriteMinimalStrings(inkStrings, _env.MakeDestFile($"-strings-{_env.DefaultLocaleCode}.json")))
             return false;
 
         // ----- Output lines for localisation (Excel) -----
         if (_env.OutputLocalization)
         {
-            if (!WriteLocalizationFile(inkStrings, writingStatuses, _env.MakeDestFile("-strings.xlsx")))
+            if (!WriteLocalizationFile(inkStrings, writingStatuses, _env.MakeDestFile($"-loc.xlsx")))
                 return false;
         }
 

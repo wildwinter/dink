@@ -70,15 +70,15 @@ The `DinkCompiler` will take in an Ink file (for example, `myproject.ink`) and i
 Any lines of text in the source Ink file that don't have a unique identifier of the form `#id:xxx` tags will have been added.
 * **Compiled Ink File (`myproject.json`)**:\
 The Ink file compiled to JSON using `inklecate`, as Inky usually does.
-* **Dink Runtime File (`myproject-dink-min.json`)**:\
+* **Dink Runtime File (`myproject-dink.json`)**:\
 A JSON structure containing one entry for each LineID, with the runtime data you'll need for each line that you won't get from Ink e.g. the character speaking etc.
-* **Strings Runtime File (`myproject-strings-min.json`)**:\
-A JSON file containing an entry for every string in Ink, along with the string used in the original script. This is probably your master language file for runtime - you'll want to create copies of it for your localisation. When you display an Ink or Dink line you'll want to use the string data in here rather than in Ink itself.
+* **Strings Runtime File (`myproject-strings-en-GB.json`)**:\
+A JSON file containing an entry for every string in Ink, along with the string used in the original script. This is probably your master language file for runtime - you'll want to create copies of it for your localisation. When you display an Ink or Dink line you'll want to use the string data in here rather than in Ink itself. (You can change that default ISO code to `en-US` if you must!)
 * **Dink Structure File (`myproject-dink-structure.json`)**:\
 *(Optional)* A JSON structure containing all the Dink scenes and their blocks, snippets, and beats, and useful information such as tags, lines, comments, source origins and so on. This is most likely to be useful in your edit pipeline for updating items in your editor based on Dink scripts - for example, creating placeholder scene layouts.
 * **Stats File (`myproject-stats.xslx`)**:\
 *(Optional)* An Excel file giving details of the status of every line in the game, both writing and recording.
-* **Strings File for Localisation (`myproject-strings.xslx`)**:\
+* **Strings File for Localisation (`myproject-loc.xslx`)**:\
 *(Optional)* An Excel file containing an entry for every string in Ink that needs localisation. When they are Dink lines, will include helpful data such as comments, the character speaking.
 * **Recording Script File (`myproject-recording.xslx`)**:\
 *(Optional)* An Excel file containing an entry for every line of dialogue that needs to be recorded, along with helpful comments and direction, and if you have provided a `characters.json` file, the Actor associated with the character.
@@ -271,8 +271,8 @@ Or instead, grab all the settings from a project file:
 * `--locActionBeats`
 
     If present, includes the text of action beats as something that
-    needs to be localised by including it in `-strings` files.\
-    If false, skips that text, but does include it in `-dink-min`.\
+    needs to be localised by including it in `-strings` and `-loc` files.\
+    If false, skips that text, but does include it in `-dink`.\
     Default is false.
 
 * `--dinkStructure`
@@ -281,7 +281,7 @@ Or instead, grab all the settings from a project file:
 
 * `--localization`
 
-    If present, outputs the strings Excel file (`*-strings.xlsx`).
+    If present, outputs the strings in an Excel file for localisation (`*-loc.xlsx`).
 
 * `--recordingScript`
 
@@ -651,20 +651,18 @@ A JSON or JSONC file (i.e. JSON with comments) having all or some of the require
     // Where's the folder to output everything?
     "destFolder":"../examples",
 
+    // What code should be used for the strings file name?
+    "defaultLocaleCode":"en-GB",
+    
     // Localise actions?
     // Default is false, which means no text in Action beats
     // will be localised
     "locActionBeats":false,
-
-    // Localise actions?
-    // Default is false, which means no text in Action beats
-    // will be localised
-    "locActionBeats": false,
     
     // If true, outputs the structured dink file (json)
     "outputDinkStructure": false,
     
-    // If true, outputs the strings file (xlsx)
+    // If true, outputs the loc file (xlsx)
     "outputLocalization": false,
     
     // If true, outputs the recording script file (xlsx)

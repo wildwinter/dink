@@ -39,6 +39,9 @@ public class CompilerOptions
     // Folder to output compiled assets to.
     public string DestFolder = "";
 
+    // Default locale code - just gets used in filenames
+    public string DefaultLocaleCode = "en-GB";
+
     // If false (default), assumes that ACTION Beats shouldn't
     // get their text localised, and so will not be in the string tables
     // but will be in the Dink minimal. 
@@ -135,6 +138,7 @@ public class CompilerEnvironment
     public string ProjectFile {get; private set;}
     public string ProjectFolder {get;private set;}
     public string DestFolder {get; private set;}
+    public string DefaultLocaleCode {get {return _options.DefaultLocaleCode;}}
     public bool LocActionBeats {get{return _options.LocActionBeats;}}
     public bool OutputDinkStructure {get{return _options.OutputDinkStructure;}}
     public bool OutputLocalization {get{return _options.OutputLocalization;}}

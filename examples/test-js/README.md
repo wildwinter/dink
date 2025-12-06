@@ -20,7 +20,7 @@ At runtime, `index.html` loads the Ink runtime (`ink.js`) and `main.js`, which i
 
 `main.js` loads the compiled Ink story (`main.json`) which is what you'd normally expect from an Ink game.
 
-`main.js` also loads the Dink runtime files `main-dink-min.json` (Dink metada) and `main-strings-min.json` (the English strings for the game).
+`main.js` also loads the Dink runtime files `main-dink.json` (Dink metadata) and `main-strings-en-GB.json` (the English strings for the game).
 
 Then like in a normal Ink project, `main.js` repeatedly calls Ink's `story.Continue()` to get the next line of content.
 
@@ -49,10 +49,10 @@ Now you have the ID, you get the Dink info from the loaded Dink metadata, and th
 
 ```javascript
 // Assume this happened when the game initialised
-var dinkStory = await loadJson('../dink-content/main-dink-min.json');
+var dinkStory = await loadJson('../dink-content/main-dink.json');
 // Load the strings. The whole point here is that
 // you could replace them with a different language.
-var locStrings = await loadJson('../dink-content/main-strings-min.json');
+var locStrings = await loadJson('../dink-content/main-strings-en-GB.json');
 :
 :
 // During the Ink processing
