@@ -17,6 +17,7 @@ public class WritingStatusDefinition
     public bool Record { get; set; } = false;
     public bool Loc { get; set; } = false;
     public string Color {get; set;} = "";
+    public bool Estimate {get; set;} = false;
 }
 
 public class GoogleTTSSettings 
@@ -25,6 +26,12 @@ public class GoogleTTSSettings
     public string Authentication {get;set;} = "";
     public string OutputFolder {get;set;} = "";
     public bool ReplaceExisting {get;set;} = false;
+}
+
+public class Estimate
+{
+    public string Tag {get;set;} = "";
+    public int Lines {get;set;} = 0;
 }
 
 public class ProjectSettings
@@ -96,6 +103,8 @@ public class ProjectSettings
 
     public GoogleTTSSettings GoogleTTS {get; set; } = new();
 
+    public List<Estimate> Estimates {get;set;} = new();
+
     public static ProjectSettings? LoadFromProjectFile(string projectFile)
     {
         if (!Path.IsPathFullyQualified(projectFile))
@@ -155,6 +164,7 @@ public class ProjectEnvironment
     public Dictionary<string, List<string>> CommentFilters {get {return _settings.CommentFilters;}}
     public Dictionary<string, List<string>> TagFilters {get {return _settings.TagFilters;}}
     public GoogleTTSSettings GoogleTTS {get; private set;}
+    public List<Estimate> Estimates {get {return _settings.Estimates;}}
 
     public ProjectEnvironment(ProjectSettings settings)
     {
@@ -271,11 +281,13 @@ public class ProjectEnvironment
         }
         if (!hasUnknown)
             AudioStatusSettings.Add(new AudioStatusDefinition());
+        AudioStatusSettings.Reverse();
 
         WritingStatusSettings.AddRange(_settings.WritingStatus);
         var unknown = WritingStatusSettings.FirstOrDefault(x => x.Status == "Unknown");
         if (unknown==null)
             WritingStatusSettings.Add(new WritingStatusDefinition());
+        WritingStatusSettings.Reverse();
 
         GoogleTTS = _settings.GoogleTTS;
         string ttsAuthFile = GoogleTTS.Authentication;

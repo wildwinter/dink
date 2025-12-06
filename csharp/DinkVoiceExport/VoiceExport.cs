@@ -135,7 +135,7 @@ public class VoiceExport
                                     }
                                     else
                                     {
-                                        foundTag = dinkLine.Tags.Any(s => s==tag);
+                                        foundTag = dinkLine.Tags.Contains(tag);
                                     }
                                     if (foundTag)
                                         break;

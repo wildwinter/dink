@@ -617,6 +617,44 @@ An overview of the state of each scene.
 Note that it has one entry called *Non-Dink*, which includes
 any written text in Ink that isn't part of a #dink knot. It's included so you can still track status and localisation of that text.
 
+##### Estimates
+
+If you set up estimates in the project file, like so:
+```jsonc
+    // Estimates
+    "estimates":[
+        {"tag":"conversation", "lines":50},
+        {"tag":"barks", "lines":20},   
+        {"tag":"ambients", "lines":2},   
+        {"tag":"cutscene", "lines":10}        
+    ]
+```
+And set any of the Writing Status settings to `estimate:true`:
+```jsonc
+    [
+        {
+            "status": "First Draft",
+            "wstag": "draft1",
+            "color": "FF8833"
+        },
+        {
+            "status": "Stub",
+            "wstag": "stub",
+            "color": "FF3333",
+            "estimate": true
+        }
+    ],
+```
+Then any scene with a relevant tag that only has lines of that status or less will use the estimate listed in the stats table.
+
+This is a way of rapidly guessing the size of the game. You
+might sketch out all the conversations and cutscenes as
+`#ws:stub` status (giving them tags of `#conversation` or `#cutscene`) and Dink's stats will use the estimates rather than the real stub line count.
+
+Estimates will have a `?` in the relevant column e.g. `50?`
+
+![Estimates](doc/Estimates.png)
+
 #### Cast Summary
 ![Cast Summary](doc/StatCast.png)
 
@@ -771,7 +809,8 @@ A JSON or JSONC file (i.e. JSON with comments) having all or some of the require
         {
             "status": "Stub",
             "wstag": "stub",
-            "color": "FF3333"
+            "color": "FF3333",
+            "estimate": true
         }
     ],
 
@@ -796,7 +835,15 @@ A JSON or JSONC file (i.e. JSON with comments) having all or some of the require
         "generate":true, // If false, you'll need to use --tts on the command-line
         "authentication":"google-tts-key.json",
         "outputFolder":"Audio/TTS"
-    }
+    },
+
+    // Estimates
+    "estimates":[
+        {"tag":"type:conversation", "lines":50},
+        {"tag":"type:barks", "lines":20},   
+        {"tag":"type:ambients", "lines":2},   
+        {"tag":"type:cutscene", "lines":10}        
+    ]
 }
 ```
 

@@ -563,16 +563,24 @@ public class DinkParser
             }
             else if (ParseKnot(trimmedLine) is string knot)
             {
-                hitFirstKnotContent = false;
-                knotTags.Clear();
-
                 if (snippet != null && block != null && snippet.Beats.Count > 0)
                     block.Snippets.Add(snippet);
-                if (block != null && scene != null && block.Snippets.Count > 0)
+                if (block != null && scene != null && block.Snippets.Count > 0) 
+                {
+                    block.Tags.AddRange(stitchTags);
+                    stitchTags.Clear();
                     scene.Blocks.Add(block);
+                }
                 if (scene != null && scene.Blocks.Count > 0)
+                {
+                    scene.Tags.AddRange(knotTags);
+                    knotTags.Clear();
                     parsedScenes.Add(scene);
+                }
+                
                 parsing = false;
+                hitFirstKnotContent = false;
+                knotTags.Clear();
 
                 scene = new DinkScene();
                 scene.SceneID = knot;
@@ -592,13 +600,19 @@ public class DinkParser
             }
             else if (ParseStitch(trimmedLine) is string stitch)
             {
+                if (snippet != null && block != null && snippet.Beats.Count > 0) 
+                {
+                    block.Snippets.Add(snippet);
+                }
+                if (block != null && scene != null && block.Snippets.Count > 0)
+                {
+                    scene.Tags.AddRange(stitchTags);
+                    stitchTags.Clear();
+                    scene.Blocks.Add(block);
+                }
+
                 hitFirstStitchContent = false;
                 stitchTags.Clear();
-
-                if (snippet != null && block != null && snippet.Beats.Count > 0)
-                    block.Snippets.Add(snippet);
-                if (block != null && scene != null && block.Snippets.Count > 0)
-                    scene.Blocks.Add(block);
 
                 block = new DinkBlock();
                 block.BlockID = stitch;
@@ -667,9 +681,15 @@ public class DinkParser
         if (snippet != null && block != null && snippet.Beats.Count > 0)
             block.Snippets.Add(snippet);
         if (block != null && scene != null && block.Snippets.Count > 0)
+        {
+            block.Tags.AddRange(stitchTags);
             scene.Blocks.Add(block);
+        }
         if (scene != null && scene.Blocks.Count > 0)
+        {
+            scene.Tags.AddRange(knotTags);
             parsedScenes.Add(scene);
+        }
 
         return parsedScenes;
     }

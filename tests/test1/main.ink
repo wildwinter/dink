@@ -26,7 +26,7 @@ This scene is commented out and should be ignored.
 // This comment should apply to Test Scene.
 // And so should this.
 === TestScene
-#ws:final
+#ws:stub #type:conversation
 #dink
 // Comment for a line.
 // Another comment for the same line.

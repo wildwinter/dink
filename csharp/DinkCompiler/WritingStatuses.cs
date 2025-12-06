@@ -43,7 +43,7 @@ public class WritingStatuses
 
     public WritingStatusDefinition GetDefinitionByTag(string wsTag)
     {
-        var result = _env.WritingStatusSettings.FirstOrDefault(x => x.WsTag == wsTag);
+        var result = _env.WritingStatusSettings.LastOrDefault(x => x.WsTag == wsTag);
         if (result!=null)
             return result;
         return new WritingStatusDefinition();
@@ -59,10 +59,21 @@ public class WritingStatuses
         return _ids.Count;
     }
 
+    public int GetSceneEstimate(DinkScene scene)
+    {
+        foreach(var estimate in _env.Estimates)
+        {
+            if (scene.Tags.Contains(estimate.Tag))
+            {
+                return estimate.Lines;
+            }
+        }
+        return 0;
+    }
+
     public int GetSceneTagCount(DinkScene scene, string? wsTag=null)
     {
         int count = 0;
-
         foreach(var block in scene.Blocks)
         {
             foreach(var snippet in block.Snippets)

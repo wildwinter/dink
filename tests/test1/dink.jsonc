@@ -87,7 +87,8 @@
         {
             "status": "Stub",
             "wstag": "stub",
-            "color": "FF3333"
+            "color": "FF3333",
+            "estimate": true
         }
     ],
 
@@ -111,5 +112,13 @@
         "generate":true,
         "authentication":"../google-tts-key.json",
         "outputFolder":"Audio/TTS"
-    }
+    },
+
+    // Estimates
+    "estimates":[
+        {"tag":"type:conversation", "lines":50},
+        {"tag":"type:barks", "lines":20},   
+        {"tag":"type:ambients", "lines":2},   
+        {"tag":"type:cutscene", "lines":10}        
+    ]
 }

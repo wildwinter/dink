@@ -96,8 +96,9 @@ public class AudioStatuses
             Set(id, "Unknown");
         }
 
-        foreach (var audioStatusDef in _env.AudioStatusSettings)
+        for (var i=_env.AudioStatusSettings.Count-1;i>=0;i--)
         {
+            var audioStatusDef=_env.AudioStatusSettings[i];
             string audioFolderRoot = audioStatusDef.Folder;
 
             if (string.IsNullOrWhiteSpace(audioFolderRoot) || !Directory.Exists(audioFolderRoot))

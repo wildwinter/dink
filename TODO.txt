@@ -1,8 +1,5 @@
 TODO:
 -----
-Stats doc:
-- Guesstimates?
-
 Better example scripts
 Add speaker to stats file.
 Script flow doc
@@ -45,3 +42,4 @@ Clean up summary
 Explain web demo
 Add line numbers and files for Stats file
 DinkVoiceExport: Export all lines with specific character, scene, tags.
+Stats doc: Estimates
