@@ -18,7 +18,8 @@
     "ignoreWritingStatus": false,
     // If true, outputs the stats file (xlsx)
     "outputStats": true,
-    // This is the default where the game will look for
+
+    // This where the game will look for
     // audio files that start with the ID names of the lines.
     // The folders (and their children) will be searched in this
     // order, so if a line is found in (say) the Audio/Recorded folder first, 

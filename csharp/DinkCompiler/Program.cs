@@ -1,5 +1,6 @@
 using DinkCompiler;
 using System.CommandLine;
+using System.Text.Encodings.Web;
 
 RootCommand command = new("Compiler chain for Dink");
 
@@ -57,6 +58,12 @@ Option<bool> outputStatsOption = new("--stats")
 };
 command.Options.Add(outputStatsOption);
 
+Option<bool> googleTTSOption = new("--tts")
+{
+    Description = "Generate text-to-speech."
+};
+command.Options.Add(googleTTSOption);
+
 command.Validators.Add(result =>
 {
     // Is a project file specified?
@@ -94,6 +101,8 @@ command.SetAction(parseResult =>
         options.IgnoreWritingStatus = true;
     if (parseResult.GetValue<bool>(outputStatsOption))
         options.OutputStats = true;
+    if (parseResult.GetValue<bool>(googleTTSOption))
+        options.GoogleTTS.Generate = true;
 
     var compiler = new Compiler(options);
     if (!compiler.Run()) {

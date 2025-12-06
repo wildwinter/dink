@@ -18,7 +18,7 @@ struct DINK_API FDinkBeat
 
 public:
     UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
-    EDinkBeatType BeatType;
+    EDinkBeatType Type;
 
     UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
     FName LineID;

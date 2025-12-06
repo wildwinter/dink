@@ -1,9 +1,12 @@
 var storyRoot = document.querySelector('#story');
 
+// Load the normal compiled Ink story
 var storyContent = await loadJson('../dink-content/main.json');
 var story = new inkjs.Story(storyContent);
 
+// Load the Dink metadata
 var dinkStory = await loadJson('../dink-content/main-dink-min.json');
+// Load the localised strings
 var locStrings = await loadJson('../dink-content/main-strings-min.json');
 
 runInk();
@@ -54,24 +57,39 @@ function runInk() {
         // Get ink to generate the next paragraph
         var nextLine = story.Continue();
 
-        var outText = nextLine;
+        // By default, we could use the Ink string. But
+        // we'll try to get Dink to replace it with something better.
+        var outText = nextLine; 
 
         var lineID = findID(story.currentTags);
+
+        // If the line contains a Dink ID
+        // then it's either a Dink beat or at least
+        // has localisation
         if (lineID!=null) {
+
             var dinkBeat = getDinkBeat(lineID);
             var locString = getLocString(lineID);
+
+            // Does it contain a Dink beat?
             if (dinkBeat!=null) {
-                console.log(dinkBeat);
-                if (dinkBeat.BeatType=="Line") {
+
+                if (dinkBeat.Type=="Line") {
                     outText = "<b>"+dinkBeat.CharacterID;
                     if (dinkBeat.Qualifier!="")
                         outText+=" <i>("+dinkBeat.Qualifier+")</i>";
                     outText+=":</b> ";
                     outText += locString;
                 }
-                else if (dinkBeat.BeatType=="Action") {
+                else if (dinkBeat.Type=="Action") {
                     outText = "<i>(" + dinkBeat.Text + ")</i>";
                 }
+            }
+            // It doesn't contain a Dink beat but we still want to take 
+            // advantage of that localisation
+            else if (locString!=null)
+            {
+                outText = locString;
             }
         }
 

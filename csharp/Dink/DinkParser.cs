@@ -205,7 +205,7 @@ public class DinkParser
         // $   
         //                                    - End of the string
         const string pattern =
-            @"^\s*[-]?\s*(?<Text>.*?)(?:\s+\#(?<TagValue>\S+))+$";
+            @"^\s*[-]?\s*(?<Text>[^\*\+].*?)(?:\s+\#(?<TagValue>\S+))+$";
 
         Match match = Regex.Match(line, pattern, RegexOptions.Singleline);
 

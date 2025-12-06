@@ -3,11 +3,12 @@ TODO:
 Stats doc:
 - Guesstimates?
 
-Explain web demo
-
+Better example scripts
 Script flow doc
 Dink editor
 Add line numbers and files for Stats file
+Live build
+TTS web demo
 
 Utils:
 * Gather audio files matching X (character, scene, tag)
@@ -45,3 +46,5 @@ Remove multiple WS entries
 Info on Excel outputs.
 Document simple usage
 Track line numbers and file names for error reporting
+Clean up summary
+Explain web demo

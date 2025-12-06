@@ -49,7 +49,7 @@ public static class DinkJson
                             {
                                 obj = new
                                 {
-                                    BeatType = "Action",
+                                    Type = "Action",
                                     Text = action.Text
                                 };
                             }
@@ -57,7 +57,7 @@ public static class DinkJson
                             {
                                 obj = new
                                 {
-                                    BeatType = "Action"
+                                    Type = "Action"
                                 };
                             }
                             lines.Add($"\t\"{beat.LineID}\": {JsonSerializer.Serialize(obj, options)}");
@@ -66,7 +66,7 @@ public static class DinkJson
                         {
                             obj = new
                             {
-                                BeatType = "Line",
+                                Type = "Line",
                                 CharacterID = line.CharacterID,
                                 Qualifier = line.Qualifier
                             };

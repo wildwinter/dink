@@ -1,0 +1,9 @@
+// This file is very minimal - it'll just produce the runtime
+// data, nothing production-side.
+{
+    // What's the source Ink file?
+   "source":"main.ink",
+
+    // Where's the folder to output everything?
+    "destFolder":"../dink-content"
+}

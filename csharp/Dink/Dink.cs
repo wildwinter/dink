@@ -63,14 +63,13 @@ public abstract class DinkBase
     }
 }
     
-[JsonPolymorphic(TypeDiscriminatorPropertyName = "BeatType")]
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "Type")]
 [JsonDerivedType(typeof(DinkAction), typeDiscriminator: "Action")]
 [JsonDerivedType(typeof(DinkLine), typeDiscriminator: "Line")]
 public class DinkBeat : DinkBase
 {
     public string LineID { get; set; } = string.Empty;
     public int Group { get; set; } = 0;
-
 
     public override string ToString() =>
         $", Tags: [{string.Join(", ", Tags)}], LineID: {LineID}, Comments: [{string.Join(",", Comments)}]";

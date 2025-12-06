@@ -1,12 +1,17 @@
 # dink
 
-**Very much work in progress!**
+**Work in progress!**
 
-*Dink*, a contraction of *dialogue ink*, is a way of formatting dialogue lines while using/writing in Ink, and a set of tools for parsing and supporting that content.
+**Dink**, a contraction of **dialogue ink**, is a way of formatting dialogue lines while using and writing in [Ink](https://www.inklestudios.com/ink/), and a set of tools for parsing and supporting that content.
 
-Ink is a system of writing for text flow, so it's a bit of an odd idea to restrict it, really, using Ink for only a part of its potential. But there are a lot of us now using Ink for controlling the flow of spoken dialogue lines and scenes.
+Inkle's [Ink](https://www.inklestudios.com/ink/) is a system of writing for text flow, piecing fragments of text together.
 
-So this presents a markup for specifying dialogue lines and scene actions in an easy to write/read form, and tools to help integrate that into a project.
+It was never designed for lines of dialogue, so it's a bit of an odd idea to use it for a subset
+of its real potential. But that hasn't stopped a number of us using it that way anyway, 
+really appreciating the way Ink makes it easy to flow sections of story together depending
+on the game state and choices that the player has made. It's great for conversations, and for sets of barks that depend on the current conditions. 
+
+So Dink presents some extensions for Ink; a markup for specifying dialogue lines and scene actions in an easy to write/read form. It also provides tools to help integrate the extensions into a project and ease the production process. Because turning text into audio and managing all that is not trivial. 
 
 ```text
 === MyScene
@@ -26,23 +31,17 @@ DAVE: Thar she blows!
 
 ## Summary
 
+**Dialogue Lines**, **Action Lines**, **Localisation**, **Recording Scripts**, **Statistics**
+
+Your Ink will work in your runtime as normal, but Dink adds extra info specifically
+for lines of dialogue and helps you manage the production.
+
 * The `DinkCompiler`:
-  * Adds IDs to all the lines of Ink to identify them for localisation and voice.
-  * Compiles the Ink using *inklecate*.
-  * If a list of character names is supplied, checks that all the Dink scenes use valid characters.
-  * Produces a minimal JSON file giving metadata for each line that Ink won't provide (such as the speaker, directions etc.)
-  * Produces a JSON file with all the strings used in Ink and Dink needed for runtime.
-  * Optionally produces a JSON file detailing a more detailed Dink structure (scenes, blocks, snippets, showing runs of dialogue, source files and line numbers).
-  * Optionally produces an Excel file with all the strings in for localisation.
-  * Optionally [produces an Excel file for voice recording](#recording-script), including mapping to actors if supplied. Checks the **status of existing audio files** to figure out what has actually been recorded.
-  * Optionally lets you track the writing status and recording status of each file and line, and figures out what needs to be recorded for each character and actor, and produces [an Excel file with all those stats](#stats-file). 
-  * Allows you to control which comments end up in the localisation and recording files.
-* At runtime:
-  * Load the compiled Ink story, as normal. (Remember, Dink compiled it for you!)
-  * Load the Dink runtime data, which will give you extra information about each line of dialogue or action - the speaker, the direction etc.
-  * Load the strings file that Dink generated, and use it to display the strings at runtime. (Because if you want you can swap it out for translations, instead of using the strings embedded in the Ink.)
-* All these extra features are only for Knots and Stitches tagged as #dink. All your other Ink will work as usual (but you will get the localisation and statuses for free!).
-  
+    * Compiles your Ink as normal, but also extracts text lines for localisation, and parses out extra information such as who is saying which line and bundles it all up for your runtime.
+    * Optionally exports recording scripts and localisation files.
+    * Helps you manage the status of each individual line - is it first draft? Has it been recorded? And produces overview statistics - how many lines are still to be completed? How many lines still need to be recorded by a particular actor?
+    * Can generate a placeholder audio file for each line for testing.
+
 ### Contents
 
 * [The Basics](#the-basics)
@@ -58,9 +57,8 @@ DAVE: Thar she blows!
   * [Comment and Tag Filtering](#comment-and-tag-filtering)
   * [Recording Script](#recording-script)
   * [Stats File](#stats-file)
-  * [Config File](#config-file)
-* [Extras](#extras)
   * [Google TTS](#google-tts)
+  * [Config File](#config-file)
 * [Contributors](#contributors)
 * [License](#license)
 
@@ -68,14 +66,24 @@ DAVE: Thar she blows!
 
 The `DinkCompiler` will take in an Ink file (for example, `myproject.ink`) and its includes, process it, and the results are the following:
 
-* **Updated Source File (`myproject.ink`)**: Any lines of text in the source Ink file that don't have a unique identifier of the form `#id:xxx` tags will have been added.
-* **Compiled Ink File (`myproject.json`)**: The Ink file compiled to JSON using `inklecate`, as Inky usually does.
-* **Dink Runtime File (`myproject-dink-min.json`)**: A JSON structure containing one entry for each LineID, with the runtime data you'll need for each line that you won't get from Ink e.g. the character speaking etc.
-* **Strings Runtime File (`myproject-strings-min.json`)**: A JSON file containing an entry for every string in Ink, along with the string used in the original script. This is probably your master language file for runtime - you'll want to create copies of it for your localisation. When you display an Ink or Dink line you'll want to use the string data in here rather than in Ink itself.
-* **Dink Structure File (`myproject-dink-structure.json`)**: (Optional) A JSON structure containing all the Dink scenes and their blocks, snippets, and beats, and useful information such as tags, lines, comments, source origins and so on. This is most likely to be useful in your edit pipeline for updating items in your editor based on Dink scripts - for example, creating placeholder scene layouts.
-* **Stats File (`myproject-stats.xslx`)**: (Optional) An Excel file giving details of the status of every line in the game, both writing and recording.
-* **Strings File for Localisation (`myproject-strings.xslx`)**: (Optional) An Excel file containing an entry for every string in Ink that needs localisation. When they are Dink lines, will include helpful data such as comments, the character speaking.
-* **Recording Script File (`myproject-recording.xslx`)**: (Optional) An Excel file containing an entry for every line of dialogue that needs to be recorded, along with helpful comments and direction, and if you have provided a `characters.json` file, the Actor associated with the character.
+* **Updated Source File (`myproject.ink`)**:\
+Any lines of text in the source Ink file that don't have a unique identifier of the form `#id:xxx` tags will have been added.
+* **Compiled Ink File (`myproject.json`)**:\
+The Ink file compiled to JSON using `inklecate`, as Inky usually does.
+* **Dink Runtime File (`myproject-dink-min.json`)**:\
+A JSON structure containing one entry for each LineID, with the runtime data you'll need for each line that you won't get from Ink e.g. the character speaking etc.
+* **Strings Runtime File (`myproject-strings-min.json`)**:\
+A JSON file containing an entry for every string in Ink, along with the string used in the original script. This is probably your master language file for runtime - you'll want to create copies of it for your localisation. When you display an Ink or Dink line you'll want to use the string data in here rather than in Ink itself.
+* **Dink Structure File (`myproject-dink-structure.json`)**:\
+*(Optional)* A JSON structure containing all the Dink scenes and their blocks, snippets, and beats, and useful information such as tags, lines, comments, source origins and so on. This is most likely to be useful in your edit pipeline for updating items in your editor based on Dink scripts - for example, creating placeholder scene layouts.
+* **Stats File (`myproject-stats.xslx`)**:\
+*(Optional)* An Excel file giving details of the status of every line in the game, both writing and recording.
+* **Strings File for Localisation (`myproject-strings.xslx`)**:\
+*(Optional)* An Excel file containing an entry for every string in Ink that needs localisation. When they are Dink lines, will include helpful data such as comments, the character speaking.
+* **Recording Script File (`myproject-recording.xslx`)**:\
+*(Optional)* An Excel file containing an entry for every line of dialogue that needs to be recorded, along with helpful comments and direction, and if you have provided a `characters.json` file, the Actor associated with the character.
+* **Temp Audio Files** (`id_of_a_line_XXXX.wav`):\
+*(Optional)* Dink can use Google TTS to generate a temp WAV file for each line; and to regenerate them if you change your text.
 
 ## Source Code
 
@@ -236,7 +244,7 @@ Use the file `main.ink` (and any included ink files) as the source, and output t
 `./DinkCompiler --source ../../tests/test1/main.ink --destFolder ../somewhere`
 
 Or instead, grab all the settings from a project file:
-`./DinkCompiler --project dinkproject.jsonc`
+`./DinkCompiler --project dink.jsonc`
 
 #### Arguments
 
@@ -250,6 +258,15 @@ Or instead, grab all the settings from a project file:
     Folder to put all the output files.\
     e.g. `--destFolder gameInkFiles/`\
     Default is the current working dir.
+
+* `--project project/config.jsonc`
+
+    If supplied, configuration will be read from the given JSON file, instead
+    of just given as command-line options. This also means that the folder that the
+    supplied project file is in will be treated as a potential source file for the Ink
+    and for the characters.json if those aren't fully qualified paths. 
+    See [Config File](#config-file) for details. You can do more with it than
+    you do with the command-line options.
 
 * `--locActionBeats`
 
@@ -279,14 +296,10 @@ Or instead, grab all the settings from a project file:
     If present, ignores the writing status when deciding what to include in the recording script
     or localisation script. Useful for a full dump of lines.
 
-* `--project project/config.jsonc`
+* `--tts`
 
-    If supplied, configuration will be read from the given JSON file, instead
-    of just given as command-line options. This also means that the folder that the
-    supplied file is in will be treated as a potential source file for the Ink
-    and for the characters.json if those aren't fully qualified paths. 
-    See [Config File](#config-file) for details. You can do more with it than
-    you do with the command-line options.
+    Use Google TTS to generate temp audio for your spoken lines. 
+    You need to [configure it](#google-tts) first in the config file.
 
 ### Character List
 
@@ -590,6 +603,42 @@ and follows the recordable Dink lines with the non-Dink Ink text lines (which wo
 This is less useful for reading and more useful to do filtering and sorting in Excel so you can look at what's
 still to do.
 
+### Google TTS
+
+*This is NOT for production. The production quality is awful. This is to create crappy simple audio files for testing out your playback systems.*
+
+You can get the compiler to use Google's Text to Speech system to create terrible placeholder WAV
+files for your production.
+
+*You will need a Google Text to Speech API account and a JSON authentication file.*
+
+To do that, provide Google TTS config settings in the project file.
+```jsonc
+    // GoogleTTS parameters
+    "googleTTS": {
+        "generate":true, // If false, you'll need to use --tts on the command-line
+        "authentication":"google-tts-key.json",
+        "outputFolder":"Audio/TTS"
+    }
+```
+If you make sure your `outputFolder` matches a folder in your [Audio Status](#audio-file-status) config then the generated TTS will appear in your audio status results.
+
+To specify the voice to use for each character, specify the Google Voice ID in the [Character List](#character-list) like so:
+
+```jsonc
+[
+    {
+        "ID":"FRED", 
+        "Actor":"David",
+        "TTSVoice":"en-GB-Standard-B"
+    },
+    {
+        "ID":"LAURA",
+        "TTSVoice":"en-GB-Standard-A"
+    }
+]
+```
+
 ### Config File
 
 A JSON or JSONC file (i.e. JSON with comments) having all or some of the required options:
@@ -628,7 +677,7 @@ A JSON or JSONC file (i.e. JSON with comments) having all or some of the require
     // If true, outputs the stats file (xlsx)
     "outputStats": true,
 
-    // This is the default where the game will look for
+    // This is where the game will look for
     // audio files that start with the ID names of the lines.
     // The folders (and their children) will be searched in this
     // order, so if a line is found in (say) the Audio/Recorded folder first, 
@@ -714,46 +763,15 @@ A JSON or JSONC file (i.e. JSON with comments) having all or some of the require
         // Currently only the recording script exports tags. Same rules as comment filters!
         // This passes tags such as #vo:loud or #vo:soft
         "record": ["vo"]
-    }
-}
-```
+    },
 
-## Extras
-
-### Google TTS
-
-*This is NOT for production. The production quality is awful. This is to create crappy simple audio files for testing out your playback systems.*
-
-You can get the compiler to use Google's Text to Speech system to create terrible placeholder WAV
-files for your production.
-
-*You will need a Google Text to Speech API account and a JSON authentication file.*
-
-To do that, provide Google TTS config settings in the project file.
-```jsonc
     // GoogleTTS parameters
     "googleTTS": {
-        "generate":true,
+        "generate":true, // If false, you'll need to use --tts on the command-line
         "authentication":"google-tts-key.json",
         "outputFolder":"Audio/TTS"
     }
-```
-If you make sure your `outputFolder` matches a folder in your [Audio Status](#audio-file-status) config then the generated TTS will appear in your audio status results.
-
-To specify the voice to use for each character, specify the Google Voice ID in the [Character List](#character-list) like so:
-
-```jsonc
-[
-    {
-        "ID":"FRED", 
-        "Actor":"David",
-        "TTSVoice":"en-GB-Standard-B"
-    },
-    {
-        "ID":"LAURA",
-        "TTSVoice":"en-GB-Standard-A"
-    }
-]
+}
 ```
 
 ## Contributors

@@ -21,7 +21,7 @@ public class WritingStatusDefinition
 
 public class GoogleTTSOptions 
 {
-    public bool Generate {get;set;} = true;
+    public bool Generate {get;set;} = false;
     public string Authentication {get;set;} = "";
     public string OutputFolder {get;set;} = "";
     public bool ReplaceExisting {get;set;} = false;
@@ -62,7 +62,7 @@ public class CompilerOptions
     // Output a statistics document
     public bool OutputStats = false;
 
-    // This is the default where the game will look for
+    // This is where the game will look for
     // audio files that start with the ID names of the lines.
     // The folders (and their children) will be searched in this
     // order, so if a line is found in (say) the Audio/Recorded folder first, 

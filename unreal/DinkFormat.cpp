@@ -6,7 +6,7 @@ FString FDinkBeat::ToString() const
 {
     FString dump = FString::Printf(TEXT("[%s] "), *LineID.ToString());
 
-    if (BeatType == EDinkBeatType::Line) {
+    if (Type == EDinkBeatType::Line) {
 
         dump += FString::Printf(TEXT("Line | CharacterID: %s"), *CharacterID.ToString());
 
@@ -16,7 +16,7 @@ FString FDinkBeat::ToString() const
         if (!Direction.IsEmpty())
             dump += FString::Printf(TEXT(" | Direction: %s"), *Direction);
     }
-    else if (BeatType == EDinkBeatType::Action)
+    else if (Type == EDinkBeatType::Action)
     {
         dump += FString::Printf(TEXT("Action"), *LineID.ToString());
     }
@@ -86,7 +86,7 @@ bool UDinkParser::ParseLine(const FString& line, FDinkBeat& outBeat)
     if (!matcher.FindNext())
         return false; // Line doesn't match expected format
 
-    outBeat.BeatType = EDinkBeatType::Line;
+    outBeat.Type = EDinkBeatType::Line;
     outBeat.CharacterID = FName(matcher.GetCaptureGroup(1));
     outBeat.Qualifier = matcher.GetCaptureGroup(2);
     outBeat.Direction = matcher.GetCaptureGroup(3);
@@ -114,14 +114,14 @@ bool UDinkParser::ParseAction(const FString& line, FDinkBeat& outBeat)
     */
     
     const FRegexPattern pattern(TEXT(
-        R"(^\s*[-]?\s*([^\r\n#]*?)\s*((?:#[^\s#]+)(?:\s*#[^\s#]+)*)\s*$)"
+        R"(^\s*[-]?\s*([^\*\+][^\r\n#]*?)\s*((?:#[^\s#]+)(?:\s*#[^\s#]+)*)\s*$)"
     ));
     FRegexMatcher matcher(pattern, line);
 
     if (!matcher.FindNext())
         return false; // Line doesn't match expected format
 
-    outBeat.BeatType = EDinkBeatType::Action;
+    outBeat.Type = EDinkBeatType::Action;
     outBeat.Text = matcher.GetCaptureGroup(1).TrimEnd();
 
     FString tagsRaw = matcher.GetCaptureGroup(2);
