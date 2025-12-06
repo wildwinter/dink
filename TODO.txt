@@ -6,7 +6,6 @@ Stats doc:
 Better example scripts
 Script flow doc
 Dink editor
-Add line numbers and files for Stats file
 Live build
 TTS web demo
 
@@ -48,3 +47,4 @@ Document simple usage
 Track line numbers and file names for error reporting
 Clean up summary
 Explain web demo
+Add line numbers and files for Stats file

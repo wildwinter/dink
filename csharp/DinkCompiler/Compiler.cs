@@ -41,7 +41,7 @@ public class Compiler
             return false;
 
         // ---- Remove any action and character references from the localisation -----
-        if (!FixLoc(dinkScenes, inkStrings))
+        if (!FixLoc(dinkScenes, nonDinkLines, inkStrings))
             return false;
 
         // ---- Build writing statuses for lines. This might affect localisation and recording -----
@@ -149,7 +149,9 @@ public class Compiler
                 ID = key,
                 Text = localiser.GetString(key),
                 Speaker = "",
-                Comments = new List<string>()
+                Comments = new List<string>(),
+                Origin = new DinkOrigin(),
+                IsDink = false
             };
 
             inkStrings.Set(entry);
@@ -293,7 +295,7 @@ public class Compiler
         return true;
     }
 
-    private bool FixLoc(List<DinkScene> dinkScenes, LocStrings inkStrings)
+    private bool FixLoc(List<DinkScene> dinkScenes, List<NonDinkLine> ndLines, LocStrings inkStrings)
     {
         Console.WriteLine("Fixing localisation entries...");
 
@@ -314,7 +316,9 @@ public class Compiler
                                     ID = action.LineID,
                                     Text = action.Text,
                                     Comments = action.GetCommentsFor(_env.GetCommentFilters("loc")),
-                                    Speaker = ""
+                                    Speaker = "",
+                                    Origin = action.Origin,
+                                    IsDink = true
                                 };
                                 inkStrings.Set(entry);
                             }
@@ -331,13 +335,20 @@ public class Compiler
                                 ID = line.LineID,
                                 Text = line.Text,
                                 Comments = line.GetCommentsFor(_env.GetCommentFilters("loc")),
-                                Speaker = line.CharacterID
+                                Speaker = line.CharacterID,
+                                Origin = line.Origin,
+                                IsDink = true
                             };
                             inkStrings.Set(entry);
                         }
                     }
                 }
             }
+        }
+
+        foreach (var ndLine in ndLines)
+        {
+            inkStrings.SetNonDink(ndLine.ID, ndLine.Origin);
         }
         return true;
     }

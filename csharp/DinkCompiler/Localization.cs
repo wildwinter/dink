@@ -2,6 +2,7 @@ namespace DinkCompiler;
 
 using System.Text.Json;
 using ClosedXML.Excel;
+using Dink;
 
 public struct LocEntry
 {
@@ -9,6 +10,8 @@ public struct LocEntry
     public required string Text { get; set; }
     public required List<string> Comments { get; set; }
     public required string Speaker { get; set; }
+    public required DinkOrigin Origin {get;set;}
+    public required bool IsDink {get;set;}
 }
 
 public class LocStrings
@@ -35,6 +38,16 @@ public class LocStrings
         if (_entries.TryGetValue(id, out LocEntry entry))
             return entry.Text;
         return null;
+    }
+
+    public void SetNonDink(string id, DinkOrigin origin)
+    {
+        if (_entries.TryGetValue(id, out LocEntry entry))
+        {
+            entry.Origin = origin;
+            entry.IsDink = false;
+            _entries[id] = entry;
+        }
     }
 
     public void Remove(string id)

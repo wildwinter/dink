@@ -10,6 +10,13 @@ public struct DinkOrigin
 {
     public string SourceFilePath {get;set;}
     public int LineNum {get;set;}
+
+    public override string ToString()
+    {
+        if (string.IsNullOrEmpty(SourceFilePath))
+            return "";
+        return $"{SourceFilePath}:{LineNum}";
+    }
 }
 
 public abstract class DinkBase

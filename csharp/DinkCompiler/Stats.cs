@@ -2,6 +2,7 @@ namespace DinkCompiler;
 using Dink;
 using ClosedXML.Excel;
 using DocumentFormat.OpenXml.ExtendedProperties;
+using DocumentFormat.OpenXml.Vml;
 
 class Stats
 {
@@ -32,46 +33,35 @@ class Stats
                     ExcelUtils.FormatSheet(worksheet);
                     row = 1;
 
-                    worksheet.Cell(1,1).Value=" ";
-
                     int wsColStart = 2;
                     int wsColEnd = wsColStart+writingStatusDefCount;
 
-                    worksheet.Cell(row,wsColStart).Value = "Writing Status";
-                    worksheet.Range(1,wsColStart,1,wsColEnd).Merge();
-
                     int asColStart = wsColEnd+1;
                     int asColEnd = asColStart+audioStatusDefCount;
+                    int originCol = asColEnd+1;
+                    int lineEnd = originCol;
 
-                    worksheet.Cell(row,asColStart).Value = "Audio Status";
-                    worksheet.Range(1,asColStart,1,asColEnd).Merge();
-
-                    row++;
-                    worksheet.Cell(row,1).Value = "Scene";
+                    worksheet.Cell(row,1).Value = "Scene ID";
                     
                     int col=wsColEnd-1;
                     foreach (var def in writingStatuses.GetDefinitions())
                     {
-                        worksheet.Cell(row, col).Value = def.Status;
-                        if (!string.IsNullOrEmpty(def.Color))
-                            worksheet.Cell(row, col).Style.Fill.BackgroundColor = XLColor.FromHtml("#"+def.Color);
+                        worksheet.Cell(row, col).Value = "Writing\n"+def.Status;
                         col--;
                     }
 
-                    worksheet.Cell(row, wsColEnd).Value="Total";
-                    worksheet.Cell(row, wsColEnd).Style.Font.Bold = true;
+                    worksheet.Cell(row, wsColEnd).Value="Writing\nTotal";
 
                     col = asColEnd-1;
                     foreach (var def in audioStatuses.GetDefinitions())
                     {
-                        worksheet.Cell(row, col).Value = def.Status;
-                        if (!string.IsNullOrEmpty(def.Color))
-                            worksheet.Cell(row, col).Style.Fill.BackgroundColor = XLColor.FromHtml("#"+def.Color);
+                        worksheet.Cell(row, col).Value = "Audio\n"+def.Status;
                         col--;
                     }
                     
-                    worksheet.Cell(row, asColEnd).Value="Total";
-                    worksheet.Cell(row, asColEnd).Style.Font.Bold = true;
+                    worksheet.Cell(row, asColEnd).Value="Audio\nTotal";
+                    
+                    worksheet.Cell(row, originCol).Value = "Origin";
 
                     ExcelUtils.FormatHeaderLine(worksheet.Cell(row,1).AsRange());
                     worksheet.Cell(row,1).Style.Alignment.Horizontal=XLAlignmentHorizontalValues.Right;
@@ -89,6 +79,8 @@ class Stats
                         {
                             int count = writingStatuses.GetSceneTagCount(scene, def.WsTag);
                             worksheet.Cell(row, col).Value = count;
+                            if (count>0 && !string.IsNullOrEmpty(def.Color))
+                                worksheet.Cell(row, col).Style.Fill.BackgroundColor = XLColor.FromHtml("#"+def.Color);
                             col--;
                         }
                         worksheet.Cell(row,wsColEnd).Value = writingStatuses.GetSceneTagCount(scene);
@@ -98,10 +90,13 @@ class Stats
                         {
                             int count = audioStatuses.GetSceneTagCount(scene, def.Status);
                             worksheet.Cell(row, col).Value = count;
+                            if (count>0 && !string.IsNullOrEmpty(def.Color))
+                                worksheet.Cell(row, col).Style.Fill.BackgroundColor = XLColor.FromHtml("#"+def.Color);
                             col--;
                         }
                         worksheet.Cell(row,asColEnd).Value = audioStatuses.GetSceneTagCount(scene);
                         worksheet.Cell(row,asColEnd).Style.Font.Bold = true;
+                        worksheet.Cell(row,originCol).Value = scene.Origin.ToString();
                         row++;
                     }
 
@@ -142,13 +137,18 @@ class Stats
                     worksheet.Cell(row,asColEnd).Value = audioStatuses.GetCount();
                     worksheet.Range(row,1,row, asColEnd).Style.Font.Bold = true;
 
-                    var table = worksheet.Range(1,1,row,asColEnd).CreateTable("SceneTable");
+                    var table = worksheet.Range(1,1,row,lineEnd).CreateTable();
                     ExcelUtils.FormatTableSheet(worksheet, table, 2, false);
                     
                     IXLRange range = table.Range(1,wsColStart,row,wsColEnd);
                     range.FirstColumn().Style.Border.LeftBorder = XLBorderStyleValues.Thick;
                     range.LastColumn().Style.Border.RightBorder = XLBorderStyleValues.Thick;
+                    range = table.Range(1,wsColStart,row,asColEnd);
+                    range.LastColumn().Style.Border.RightBorder = XLBorderStyleValues.Thick;
                     worksheet.FirstColumn().Style.Alignment.Horizontal=XLAlignmentHorizontalValues.Right;
+
+                    range = worksheet.Range(1,originCol,row,lineEnd);
+                    range.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
 
                     ExcelUtils.AdjustSheet(worksheet);
                 }
@@ -192,7 +192,7 @@ class Stats
                     }
 
                     row--;
-                    IXLTable table = worksheet.Range(1,1,row,6).CreateTable("CastTable");
+                    IXLTable table = worksheet.Range(1,1,row,6).CreateTable();
                     ExcelUtils.FormatStatLine(table.FirstColumn().AsRange());
 
                     ExcelUtils.FormatTableSheet(worksheet, table);
@@ -210,44 +210,39 @@ class Stats
                     ExcelUtils.FormatSheet(worksheet);
                     int row = 1;
 
-                    worksheet.Cell(1,1).Value=" ";
-
                     int wsColStart = 2;
                     int wsColEnd = wsColStart+writingStatusDefCount-1;
-
-                    worksheet.Cell(row,wsColStart).Value = "Writing Status";
-                    worksheet.Range(1,wsColStart,1,wsColEnd).Merge();
 
                     int asColStart = wsColEnd+1;
                     int asColEnd = asColStart+audioStatusDefCount-1;
 
-                    worksheet.Cell(row,asColStart).Value = "Audio Status";
-                    worksheet.Range(1,asColStart,1,asColEnd).Merge();
+                    int originCol = asColEnd+1;
+                    int textCol = asColEnd+2;
+                    int lineEnd = textCol;
 
-                    row++;
-                    worksheet.Cell(row,1).Value = "Line";
+                    worksheet.Cell(row,1).Value = "Line ID";
                     
                     int col=wsColEnd;
                     foreach (var def in writingStatuses.GetDefinitions())
                     {
-                        worksheet.Cell(row, col).Value = def.Status;
-                        if (!string.IsNullOrEmpty(def.Color))
-                            worksheet.Cell(row, col).Style.Fill.BackgroundColor = XLColor.FromHtml("#"+def.Color);
+                        worksheet.Cell(row, col).Value = "Writing\n"+def.Status;
                         col--;
                     }
 
                     col = asColEnd;
                     foreach (var def in audioStatuses.GetDefinitions())
                     {
-                        worksheet.Cell(row, col).Value = def.Status;
-                        if (!string.IsNullOrEmpty(def.Color))
-                            worksheet.Cell(row, col).Style.Fill.BackgroundColor = XLColor.FromHtml("#"+def.Color);
+                        worksheet.Cell(row, col).Value = "Audio\n"+def.Status;
                         col--;
                     }
 
                     ExcelUtils.FormatHeaderLine(worksheet.Cell(row,1).AsRange());
                     worksheet.Cell(row,1).Style.Alignment.Horizontal=XLAlignmentHorizontalValues.Right;
                     
+                    worksheet.Cell(row, textCol).Value = "Text";
+                    worksheet.Cell(row, originCol).Value = "Origin";
+                    ExcelUtils.FormatHeaderLine(worksheet.Range(row,textCol,row,originCol));
+
                     row++;
 
                     var lines = inkStrings.OrderedEntries.ToList();
@@ -272,6 +267,13 @@ class Stats
                         var audioStatus = audioStatuses.GetStatus(line.ID);
                         foreach (var def in audioStatuses.GetDefinitions())
                         {
+                            if (!line.IsDink)
+                            {
+                                worksheet.Cell(row, col).Value = "-";
+                                worksheet.Cell(row,col).Style.Fill.BackgroundColor = XLColor.DarkGray;
+                                col--;
+                                continue;
+                            }
                             if (audioStatus.Status == def.Status)
                             {
                                 worksheet.Cell(row, col).Value = "X";
@@ -280,20 +282,28 @@ class Stats
                             }
                             col--;
                         }
+                        
+                        worksheet.Cell(row, originCol).Value = line.Origin.ToString();
+                        worksheet.Cell(row, textCol).Value = line.Text;
+
                         row++;
                     }
 
                     row--;
 
-                    IXLTable table = worksheet.Range(1,1,row,asColEnd).CreateTable("LineTable");
+                    IXLTable table = worksheet.Range(1,1,row,lineEnd).CreateTable();
                     ExcelUtils.FormatTableSheet(worksheet, table, 2, false);
                     worksheet.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                    
-                    IXLRange range = table.Range(1,wsColStart,row,wsColEnd);
+
+                    IXLRange range = worksheet.Range(1,wsColStart,row,wsColEnd);
                     range.FirstColumn().Style.Border.LeftBorder = XLBorderStyleValues.Thick;
+                    range.LastColumn().Style.Border.RightBorder = XLBorderStyleValues.Thick;
+                    range = worksheet.Range(1,asColStart,row,asColEnd);
                     range.LastColumn().Style.Border.RightBorder = XLBorderStyleValues.Thick;
                     worksheet.FirstColumn().Style.Alignment.Horizontal=XLAlignmentHorizontalValues.Right;
 
+                    range = worksheet.Range(1,originCol,row,lineEnd);
+                    range.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
                     ExcelUtils.AdjustSheet(worksheet);
                 }
 
