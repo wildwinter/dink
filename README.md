@@ -4,14 +4,20 @@
 
 **Dink**, a contraction of **dialogue ink**, is a way of formatting dialogue lines while using and writing in [Ink](https://www.inklestudios.com/ink/), and a set of tools for parsing and supporting that content.
 
+### Ink + Dialogue
+
 Inkle's [Ink](https://www.inklestudios.com/ink/) is a system of writing for text flow, piecing fragments of text together.
 
-It was never designed for lines of dialogue, so it's a bit of an odd idea to use it for a subset
-of its real potential. But that hasn't stopped a number of us using it that way anyway, 
+It was never designed for lines of dialogue, particularly spoken dialogue, so it's a bit of an odd idea to use it for a subset
+of its real potential. 
+
+But that hasn't stopped a number of us using it that way anyway, 
 really appreciating the way Ink makes it easy to flow sections of story together depending
 on the game state and choices that the player has made. It's great for conversations, and for sets of barks that depend on the current conditions. 
 
-So Dink presents some extensions for Ink; a markup for specifying dialogue lines and scene actions in an easy to write/read form. It also provides tools to help integrate the extensions into a project and ease the production process. Because turning text into audio and managing all that is not trivial. 
+So Dink presents some extensions for Ink; a simple markup for specifying dialogue lines and scene actions in an easy to write/read form. 
+
+More importantly, it provides tools to help integrate the extensions into a project and ease the production process. Because turning text into audio and managing all that is not trivial. 
 
 ```text
 === MyScene
@@ -28,6 +34,24 @@ Zoom in on Dave standing on deck.
 DAVE: Thar she blows! 
 -> DONE
 ```
+
+### But why do I need it?
+This all may seem very simple. Why wouldn't you just do some easy parsing in your runtime game - peel off the chunk "DAVE:" at the start so you know who is speaking?
+
+At runtime, that's true.
+
+But there's a lot to manage behind the scenes when dealing with dialogue:
+* How many lines does Dave's actor have to record?
+* Are the lines ready for record, or only first draft? Does a line need rewriting?
+* Are some of Dave's lines already recorded?
+* How do we distinguish each line, so we have a filename for recording?
+* How do we identify a line to the localisation team?
+* How do I make sure the writers didn't misspell a character name on some of the lines?
+* What if the localisers mistype the markup?
+* Can I pass comments to the localisation team and the voice actors? Where do I put those comments?
+* Production really want to know how much there is left to do!
+
+So with a simple bit of markup, Dink is targeted at helping out with the production pipeline.
 
 ## Summary
 
@@ -775,6 +799,8 @@ A JSON or JSONC file (i.e. JSON with comments) having all or some of the require
 ## Contributors
 
 * [wildwinter](https://github.com/wildwinter) - original author
+
+And thanks to Joseph Humfrey's amazing work on Ink.
 
 ## License
 
