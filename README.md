@@ -868,7 +868,6 @@ the project file.
     `--tags vo:radio,vo:loud` - all loud radio lines\
     `--tags sfx` - all lines tagged `#sfx`
 
-
 ## Contributors
 
 * [wildwinter](https://github.com/wildwinter) - original author

@@ -10,9 +10,6 @@ Dink editor
 Live build
 TTS web demo
 
-Utils:
-* Export all lines with a specific comment.
-
 TCR:
 Revisit action type
 Switch a:x to vo:x
