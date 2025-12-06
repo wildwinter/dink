@@ -2,6 +2,7 @@
 // Copyright (c) 2025 Ian Thomas
 
 namespace Dink.Tests;
+using DinkTool;
 using System.IO;
 using DinkCompiler;
 
@@ -17,12 +18,12 @@ public class ParserTest
         //string source = loadTestFile("Scratch.fountain");
         //string match = loadTestFile("Scratch.txt");
 
-        var options = new CompilerOptions()
+        var settings = new ProjectSettings()
         {
             Source = "../../../../../tests/test1/main.ink",
             DestFolder = "../../../../../tests/tmp"
         };
-        Compiler cp = new Compiler(options);
+        Compiler cp = new Compiler(settings);
         Assert.True(cp.Run());
     }
 }

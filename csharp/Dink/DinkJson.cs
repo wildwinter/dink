@@ -26,6 +26,11 @@ public static class DinkJson
         return JsonSerializer.Serialize(scenes, DefaultOptions);
     }
 
+    public static List<DinkScene> ReadScenes(string json)
+    {
+        return JsonSerializer.Deserialize<List<DinkScene>>(json, DefaultOptions)!;
+    }
+
     // IncludeActionBeatText here is used when the Action beat text should be
     // included in the minimal file e.g. in the Dink toolchain, when Action beats
     // *shouldn't* be localised.

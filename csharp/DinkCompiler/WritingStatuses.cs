@@ -1,5 +1,7 @@
 namespace DinkCompiler;
+
 using Dink;
+using DinkTool;
 
 public class WritingStatuses
 {
@@ -7,9 +9,9 @@ public class WritingStatuses
     private Dictionary<string, string> _entries = new Dictionary<string, string>();
     private List<string> _ids = new List<string>();
 
-    private CompilerEnvironment _env;
+    private ProjectEnvironment _env;
 
-    public WritingStatuses(CompilerEnvironment env)
+    public WritingStatuses(ProjectEnvironment env)
     {
         _env = env;
     }
@@ -36,12 +38,12 @@ public class WritingStatuses
 
     public List<WritingStatusDefinition> GetDefinitions()
     {
-        return _env.WritingStatusOptions;
+        return _env.WritingStatusSettings;
     }
 
     public WritingStatusDefinition GetDefinitionByTag(string wsTag)
     {
-        var result = _env.WritingStatusOptions.FirstOrDefault(x => x.WsTag == wsTag);
+        var result = _env.WritingStatusSettings.FirstOrDefault(x => x.WsTag == wsTag);
         if (result!=null)
             return result;
         return new WritingStatusDefinition();
@@ -98,7 +100,7 @@ public class WritingStatuses
 
     public bool Build(List<DinkScene> dinkScenes, List<NonDinkLine> nonDinkLines, LocStrings locStrings)
     {
-        if (_env.WritingStatusOptions.Count == 0)
+        if (_env.WritingStatusSettings.Count == 0)
             return true;
 
         Console.WriteLine("Extracting writing statuses...");

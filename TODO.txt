@@ -4,14 +4,13 @@ Stats doc:
 - Guesstimates?
 
 Better example scripts
+Add speaker to stats file.
 Script flow doc
 Dink editor
 Live build
 TTS web demo
 
 Utils:
-* Gather audio files matching X (character, scene, tag)
-* Export all lines with specific character, scene, tags.
 * Export all lines with a specific comment.
 
 TCR:
@@ -48,3 +47,4 @@ Track line numbers and file names for error reporting
 Clean up summary
 Explain web demo
 Add line numbers and files for Stats file
+DinkVoiceExport: Export all lines with specific character, scene, tags.

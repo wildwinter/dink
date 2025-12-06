@@ -1,4 +1,4 @@
-namespace DinkCompiler;
+namespace DinkTool;
 
 using System.Text.Json;
 
@@ -19,7 +19,7 @@ public class WritingStatusDefinition
     public string Color {get; set;} = "";
 }
 
-public class GoogleTTSOptions 
+public class GoogleTTSSettings 
 {
     public bool Generate {get;set;} = false;
     public string Authentication {get;set;} = "";
@@ -27,7 +27,7 @@ public class GoogleTTSOptions
     public bool ReplaceExisting {get;set;} = false;
 }
 
-public class CompilerOptions
+public class ProjectSettings
 {
     // Project file
     // Can be omitted
@@ -94,10 +94,14 @@ public class CompilerOptions
     // Control which tags are seen on which script
     public Dictionary<string, List<string>> TagFilters { get; set; } = new();
 
-    public GoogleTTSOptions GoogleTTS {get; set; } = new();
+    public GoogleTTSSettings GoogleTTS {get; set; } = new();
 
-    public static CompilerOptions? LoadFromProjectFile(string projectFile)
+    public static ProjectSettings? LoadFromProjectFile(string projectFile)
     {
+        if (!Path.IsPathFullyQualified(projectFile))
+        {
+            projectFile = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, projectFile));
+        }
         if (!File.Exists(projectFile))
         {
             Console.Error.WriteLine($"Project file '{projectFile}' not found.");
@@ -113,7 +117,7 @@ public class CompilerOptions
             UnknownTypeHandling = System.Text.Json.Serialization.JsonUnknownTypeHandling.JsonElement
         };
 
-        CompilerOptions? result = JsonSerializer.Deserialize<CompilerOptions>(json, jsonOptions);
+        ProjectSettings? result = JsonSerializer.Deserialize<ProjectSettings>(json, jsonOptions);
         if (result==null)
         {
             Console.Error.WriteLine($"Couldn't load project file '{projectFile}'.");
@@ -126,9 +130,9 @@ public class CompilerOptions
 
 }
 
-public class CompilerEnvironment
+public class ProjectEnvironment
 {
-    private CompilerOptions _options;
+    private ProjectSettings _settings;
     public string SourceInkFile {get; private set;}
     public string SourceInkFolder {
         get {
@@ -138,45 +142,45 @@ public class CompilerEnvironment
     public string ProjectFile {get; private set;}
     public string ProjectFolder {get;private set;}
     public string DestFolder {get; private set;}
-    public string DefaultLocaleCode {get {return _options.DefaultLocaleCode;}}
-    public bool LocActionBeats {get{return _options.LocActionBeats;}}
-    public bool OutputDinkStructure {get{return _options.OutputDinkStructure;}}
-    public bool OutputLocalization {get{return _options.OutputLocalization;}}
-    public bool OutputRecordingScript {get{return _options.OutputRecordingScript;}}
-    public bool IgnoreWritingStatus {get {return _options.IgnoreWritingStatus;}}
-    public bool OutputStats{ get {return _options.OutputStats;}}
+    public string DefaultLocaleCode {get {return _settings.DefaultLocaleCode;}}
+    public bool LocActionBeats {get{return _settings.LocActionBeats;}}
+    public bool OutputDinkStructure {get{return _settings.OutputDinkStructure;}}
+    public bool OutputLocalization {get{return _settings.OutputLocalization;}}
+    public bool OutputRecordingScript {get{return _settings.OutputRecordingScript;}}
+    public bool IgnoreWritingStatus {get {return _settings.IgnoreWritingStatus;}}
+    public bool OutputStats{ get {return _settings.OutputStats;}}
     public string RootFilename {get{return Path.GetFileNameWithoutExtension(SourceInkFile);}}
-    public List<AudioStatusDefinition> AudioStatusOptions {get; private set;}
-    public List<WritingStatusDefinition> WritingStatusOptions {get; private set;}
-    public Dictionary<string, List<string>> CommentFilters {get {return _options.CommentFilters;}}
-    public Dictionary<string, List<string>> TagFilters {get {return _options.TagFilters;}}
-    public GoogleTTSOptions GoogleTTS {get; private set;}
+    public List<AudioStatusDefinition> AudioStatusSettings {get; private set;}
+    public List<WritingStatusDefinition> WritingStatusSettings {get; private set;}
+    public Dictionary<string, List<string>> CommentFilters {get {return _settings.CommentFilters;}}
+    public Dictionary<string, List<string>> TagFilters {get {return _settings.TagFilters;}}
+    public GoogleTTSSettings GoogleTTS {get; private set;}
 
-    public CompilerEnvironment(CompilerOptions options)
+    public ProjectEnvironment(ProjectSettings settings)
     {
-        _options = options;    
+        _settings = settings;    
         SourceInkFile = "";
         ProjectFile = "";
         DestFolder = "";
         ProjectFolder = "";
-        AudioStatusOptions = new List<AudioStatusDefinition>();
-        WritingStatusOptions = new List<WritingStatusDefinition>();
-        GoogleTTS = new GoogleTTSOptions();
+        AudioStatusSettings = new List<AudioStatusDefinition>();
+        WritingStatusSettings = new List<WritingStatusDefinition>();
+        GoogleTTS = new GoogleTTSSettings();
     }
 
     public bool Init()
     {
-        ProjectFile = _options.ProjectFile;
+        ProjectFile = _settings.ProjectFile;
         if (!string.IsNullOrWhiteSpace(ProjectFile))
         {
             if (!Path.IsPathFullyQualified(ProjectFile))
             {
-                ProjectFile = Path.GetFullPath(ProjectFile);
+                ProjectFile = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, ProjectFile));
             }
             ProjectFolder = Path.GetDirectoryName(ProjectFile)??"";
         }
 
-        SourceInkFile = _options.Source;
+        SourceInkFile = _settings.Source;
         bool foundInkFile = false;
         if (string.IsNullOrEmpty(SourceInkFile))
         {
@@ -232,7 +236,7 @@ public class CompilerEnvironment
             ProjectFolder = Path.GetDirectoryName(SourceInkFile)??"";
         }
 
-        DestFolder = _options.DestFolder;
+        DestFolder = _settings.DestFolder;
         if (string.IsNullOrWhiteSpace(DestFolder))
             DestFolder = Environment.CurrentDirectory;
         if (!Path.IsPathFullyQualified(DestFolder))
@@ -248,7 +252,7 @@ public class CompilerEnvironment
         if (string.IsNullOrEmpty(audioFolderRoot))
             audioFolderRoot = SourceInkFolder;
         bool hasUnknown = false;
-        foreach (var audioStatusDef in _options.AudioStatus)
+        foreach (var audioStatusDef in _settings.AudioStatus)
         {
             var expandedFolder = audioStatusDef.Folder;
             if (audioStatusDef.Status=="Unknown")
@@ -262,18 +266,18 @@ public class CompilerEnvironment
             else
             {
                 audioStatusDef.Folder = expandedFolder;
-                AudioStatusOptions.Add(audioStatusDef);
+                AudioStatusSettings.Add(audioStatusDef);
             }
         }
         if (!hasUnknown)
-            AudioStatusOptions.Add(new AudioStatusDefinition());
+            AudioStatusSettings.Add(new AudioStatusDefinition());
 
-        WritingStatusOptions.AddRange(_options.WritingStatus);
-        var unknown = WritingStatusOptions.FirstOrDefault(x => x.Status == "Unknown");
+        WritingStatusSettings.AddRange(_settings.WritingStatus);
+        var unknown = WritingStatusSettings.FirstOrDefault(x => x.Status == "Unknown");
         if (unknown==null)
-            WritingStatusOptions.Add(new WritingStatusDefinition());
+            WritingStatusSettings.Add(new WritingStatusDefinition());
 
-        GoogleTTS = _options.GoogleTTS;
+        GoogleTTS = _settings.GoogleTTS;
         string ttsAuthFile = GoogleTTS.Authentication;
         if (!string.IsNullOrEmpty(ttsAuthFile))
         {
@@ -325,6 +329,13 @@ public class CompilerEnvironment
         return Path.GetFullPath(Path.Combine(DestFolder, RootFilename + suffix));
     }
 
+    public string DestDinkFile {get{return MakeDestFile("-dink.json");}}
+    public string DestCompiledInkFile {get{return MakeDestFile(".json");}}
+    public string DestDinkStructureFile {get{return MakeDestFile("-dink-structure.json");}}
+    public string DestRecordingScriptFile {get{return MakeDestFile("-recording.xlsx");}}
+    public string DestRuntimeStringsFile {get{return MakeDestFile($"-strings-{DefaultLocaleCode}.json");}}
+    public string DestLocFile {get{return MakeDestFile("-loc.xlsx");}}
+    public string DestStatsFile {get{return MakeDestFile("-stats.xlsx");}}
     public List<string> GetCommentFilters(string commentType)
     {
         if (CommentFilters.TryGetValue(commentType, out List<string>? filters))
@@ -343,5 +354,17 @@ public class CompilerEnvironment
         }
         // By default nothing gets through
         return new List<string>();
+    }
+
+    public bool GetAudioStatusByLabel(string status, out AudioStatusDefinition audioStatusDef)
+    {
+        audioStatusDef = new AudioStatusDefinition();
+        var result = AudioStatusSettings.FirstOrDefault(x => x.Status == status);
+        if (result!=null)
+        {
+            audioStatusDef = result;
+            return true;
+        }
+        return false;
     }
 }

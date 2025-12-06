@@ -1,12 +1,12 @@
 using DinkCompiler;
+using DinkTool;
 using System.CommandLine;
-using System.Text.Encodings.Web;
 
 RootCommand command = new("Compiler chain for Dink");
 
 Option<string> projectOption = new("--project")
 {
-    Description = "A project setting json file to read the options from e.g. dinkproject.jsonc.",
+    Description = "A project setting json file to read the options from e.g. dink.jsonc.",
 };
 command.Options.Add(projectOption);
 
@@ -81,30 +81,30 @@ command.Validators.Add(result =>
 
 command.SetAction(parseResult =>
 {
-    CompilerOptions options = new CompilerOptions();
+    ProjectSettings settings = new ProjectSettings();
     
     string? projectFile = parseResult.GetValue<string>(projectOption);
     if (projectFile!=null)
-        options = CompilerOptions.LoadFromProjectFile(projectFile)??options;
+        settings = ProjectSettings.LoadFromProjectFile(projectFile)??settings;
 
-    options.Source = parseResult.GetValue<string>(sourceOption)??options.Source;
-    options.DestFolder = parseResult.GetValue<string>(destFolderOption)??options.DestFolder;
+    settings.Source = parseResult.GetValue<string>(sourceOption)??settings.Source;
+    settings.DestFolder = parseResult.GetValue<string>(destFolderOption)??settings.DestFolder;
     if (parseResult.GetValue<bool>(locActionBeatsOption))
-        options.LocActionBeats = true;
+        settings.LocActionBeats = true;
     if (parseResult.GetValue<bool>(dinkStructureOption))
-        options.OutputDinkStructure = true;
+        settings.OutputDinkStructure = true;
     if (parseResult.GetValue<bool>(stringsOption))
-        options.OutputLocalization = true;
+        settings.OutputLocalization = true;
     if (parseResult.GetValue<bool>(voiceOption))
-        options.OutputRecordingScript = true;
+        settings.OutputRecordingScript = true;
     if (parseResult.GetValue<bool>(ignoreWritingStatusOption))
-        options.IgnoreWritingStatus = true;
+        settings.IgnoreWritingStatus = true;
     if (parseResult.GetValue<bool>(outputStatsOption))
-        options.OutputStats = true;
+        settings.OutputStats = true;
     if (parseResult.GetValue<bool>(googleTTSOption))
-        options.GoogleTTS.Generate = true;
+        settings.GoogleTTS.Generate = true;
 
-    var compiler = new Compiler(options);
+    var compiler = new Compiler(settings);
     if (!compiler.Run()) {
         Console.Error.WriteLine("Not compiled.");
         return -1;

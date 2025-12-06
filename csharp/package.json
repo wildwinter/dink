@@ -3,10 +3,12 @@
     "scripts": {
         "clean:di": "cd Dink && dotnet clean",
         "clean:dc": "cd DinkCompiler && dotnet clean",
-        "clean": "npm run clean:di && npm run clean:dc",
+        "clean:dv": "cd DinkVoiceExport && dotnet clean",
+        "clean": "npm run clean:di && npm run clean:dc && npm run clean:dv",
         "build:di": "cd Dink && dotnet build",
         "build:dc": "cd DinkCompiler && dotnet build",
-        "build": "npm run build:di && npm run build:dc",
+        "build:dv": "cd DinkVoiceExport && dotnet build",
+        "build": "npm run build:di && npm run build:dc && npm run build:dv",
         "test": "npm run build && cd Dink.Tests && dotnet test",
         "pack": "./build.sh"
     }

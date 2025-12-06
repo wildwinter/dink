@@ -1,5 +1,7 @@
 namespace DinkCompiler;
+
 using Dink;
+using DinkTool;
 
 public class AudioStatuses
 {
@@ -7,9 +9,9 @@ public class AudioStatuses
     private Dictionary<string, string> _entries = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
     private List<string> _ids = new List<string>();
 
-    private CompilerEnvironment _env;
+    private ProjectEnvironment _env;
 
-    public AudioStatuses(CompilerEnvironment env)
+    public AudioStatuses(ProjectEnvironment env)
     {
         _env = env;
     }
@@ -27,14 +29,17 @@ public class AudioStatuses
 
     public List<AudioStatusDefinition> GetDefinitions()
     {
-        return _env.AudioStatusOptions;
+        return _env.AudioStatusSettings;
     }
 
     public AudioStatusDefinition GetStatus(string id)
     {
+        var audioStatusDef = new AudioStatusDefinition();
         if (_entries.TryGetValue(id, out string? status))
-            return GetDefinitionByLabel(status);
-        return new AudioStatusDefinition();
+        {
+            _env.GetAudioStatusByLabel(status, out audioStatusDef);
+        }
+        return audioStatusDef;
     }
 
     public int GetStatusCount(string status)
@@ -60,14 +65,6 @@ public class AudioStatuses
     public int CountInDraft(WritingStatuses writingStatuses, List<string> idList)
     {
         return idList.Count(id => !GetStatus(id).Recorded && !writingStatuses.GetStatus(id).Record);
-    }
-
-    public AudioStatusDefinition GetDefinitionByLabel(string status)
-    {
-        var result = _env.AudioStatusOptions.FirstOrDefault(x => x.Status == status);
-        if (result!=null)
-            return result;
-        return new AudioStatusDefinition();
     }
 
     public int GetSceneTagCount(DinkScene scene, string? status=null)
@@ -99,7 +96,7 @@ public class AudioStatuses
             Set(id, "Unknown");
         }
 
-        foreach (var audioStatusDef in _env.AudioStatusOptions)
+        foreach (var audioStatusDef in _env.AudioStatusSettings)
         {
             string audioFolderRoot = audioStatusDef.Folder;
 
@@ -109,8 +106,6 @@ public class AudioStatuses
             foreach (var filePath in Directory.EnumerateFiles(audioFolderRoot, "*", SearchOption.AllDirectories))
             {
                 var nameWithoutExt = Path.GetFileNameWithoutExtension(filePath);
-
-                // Only compare IDs to the *filename*, never to folder names
                 foreach (var id in idArray)
                 {
                     if (nameWithoutExt.StartsWith(id, StringComparison.OrdinalIgnoreCase))

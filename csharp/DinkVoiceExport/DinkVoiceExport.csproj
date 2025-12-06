@@ -19,20 +19,9 @@
 
   <ItemGroup>
     <ProjectReference Include="../Dink/Dink.csproj" />
-    <Reference Include="InkLocaliser">
-      <HintPath>../lib/LocaliserLib.dll</HintPath>
-    </Reference>
-    <Reference Include="ink_compiler">
-      <HintPath>../lib/Inklecate/ink_compiler.dll</HintPath>
-    </Reference>
-    <Reference Include="ink-engine-runtime">
-      <HintPath>../lib/Inklecate/ink-engine-runtime.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ClosedXML" Version="0.105.0" />
-    <PackageReference Include="Google.Cloud.TextToSpeech.V1" Version="3.17.0" />
     <PackageReference Include="System.CommandLine" Version="2.0.0" />
   </ItemGroup>
 

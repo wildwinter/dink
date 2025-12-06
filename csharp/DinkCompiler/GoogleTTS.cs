@@ -4,15 +4,16 @@ using System;
 using System.IO;
 using Google.Cloud.TextToSpeech.V1;
 using System.Text;
+using DinkTool;
 
 // Quite pleased with this - I store a hash of the line's text inside the WAV file, and so
 // only regenerate the file if the line's text has changed.
 public class GoogleTTS
 {
     private Characters _characters;
-    private GoogleTTSOptions _config;
+    private GoogleTTSSettings _config;
 
-    public GoogleTTS(Characters characters, GoogleTTSOptions config)
+    public GoogleTTS(Characters characters, GoogleTTSSettings config)
     {
         _config = config;
         _characters = characters;

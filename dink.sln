@@ -1,4 +1,4 @@
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -9,6 +9,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DinkCompiler", "csharp\DinkCompiler\DinkCompiler.csproj", "{31766958-78F8-CE7A-AEF0-2B1A06B19813}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DinkTests", "csharp\Dink.Tests\DinkTests.csproj", "{EBD654EE-A8DF-D35F-984C-D6064E0F927B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DinkVoiceExport", "csharp\DinkVoiceExport\DinkVoiceExport.csproj", "{B05BE596-A7A8-4CB0-91B7-9FDE53B81184}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,6 +30,10 @@ Global
 		{EBD654EE-A8DF-D35F-984C-D6064E0F927B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBD654EE-A8DF-D35F-984C-D6064E0F927B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBD654EE-A8DF-D35F-984C-D6064E0F927B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B05BE596-A7A8-4CB0-91B7-9FDE53B81184}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B05BE596-A7A8-4CB0-91B7-9FDE53B81184}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B05BE596-A7A8-4CB0-91B7-9FDE53B81184}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B05BE596-A7A8-4CB0-91B7-9FDE53B81184}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -36,6 +42,7 @@ Global
 		{3E9C960D-B84E-2715-DB43-6DC172819341} = {B41BF331-FCCB-2ADF-CDB6-767964B34647}
 		{31766958-78F8-CE7A-AEF0-2B1A06B19813} = {B41BF331-FCCB-2ADF-CDB6-767964B34647}
 		{EBD654EE-A8DF-D35F-984C-D6064E0F927B} = {B41BF331-FCCB-2ADF-CDB6-767964B34647}
+		{B05BE596-A7A8-4CB0-91B7-9FDE53B81184} = {B41BF331-FCCB-2ADF-CDB6-767964B34647}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {88169278-ED9A-490F-9E74-9B928E03C840}

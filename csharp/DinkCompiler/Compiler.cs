@@ -7,14 +7,15 @@ using System.Text;
 using Dink;
 using Ink;
 using InkLocaliser;
+using DinkTool;
 
 public class Compiler
 {
-    private CompilerEnvironment _env;
+    private ProjectEnvironment _env;
 
-    public Compiler(CompilerOptions? options = null)
+    public Compiler(ProjectSettings? settings = null)
     {
-        _env = new CompilerEnvironment(options ?? new CompilerOptions());
+        _env = new ProjectEnvironment(settings ?? new ProjectSettings());
     }
     public bool Run()
     {
@@ -33,7 +34,7 @@ public class Compiler
             return false;
 
         // ----- Compile to json -----
-        if (!CompileToJson(_env.SourceInkFile, _env.MakeDestFile(".json"), out List<String> usedInkFiles))
+        if (!CompileToJson(_env.SourceInkFile, _env.DestCompiledInkFile, out List<String> usedInkFiles))
             return false;
 
         // ----- Parse ink files, extract Dink beats -----
@@ -74,29 +75,29 @@ public class Compiler
         // ----- Output Voice Lines -----
         if (_env.OutputRecordingScript)
         {
-            if (!WriteRecordingScript(voiceLines, writingStatuses, audioStatuses, characters, _env.MakeDestFile("-recording.xlsx")))
+            if (!WriteRecordingScript(voiceLines, writingStatuses, audioStatuses, characters, _env.DestRecordingScriptFile))
                 return false;
         }
 
         // ----- Output Dink Structure -----
         if (_env.OutputDinkStructure)
         {
-            if (!WriteStructuredDink(dinkScenes, _env.MakeDestFile("-dink-structure.json")))
+            if (!WriteStructuredDink(dinkScenes, _env.DestDinkStructureFile))
                 return false;
         }
 
         // ----- Output Dink Minimal for runtime -----
-        if (!WriteMinimalDink(dinkScenes, _env.MakeDestFile("-dink.json")))
+        if (!WriteMinimalDink(dinkScenes, _env.DestDinkFile))
             return false;
 
         // ----- Output lines minimal for runtime -----
-        if (!WriteMinimalStrings(inkStrings, _env.MakeDestFile($"-strings-{_env.DefaultLocaleCode}.json")))
+        if (!WriteMinimalStrings(inkStrings, _env.DestRuntimeStringsFile))
             return false;
 
         // ----- Output lines for localisation (Excel) -----
         if (_env.OutputLocalization)
         {
-            if (!WriteLocalizationFile(inkStrings, writingStatuses, _env.MakeDestFile($"-loc.xlsx")))
+            if (!WriteLocalizationFile(inkStrings, writingStatuses, _env.DestLocFile))
                 return false;
         }
 
@@ -106,7 +107,7 @@ public class Compiler
             if (!Stats.WriteExcelFile(_env.RootFilename, dinkScenes, nonDinkLines, 
                         inkStrings, voiceLines, writingStatuses, audioStatuses,
                         characters,
-                        _env.MakeDestFile("-stats.xlsx")))
+                        _env.DestStatsFile))
                 return false;
         }
 

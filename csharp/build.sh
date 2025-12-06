@@ -14,13 +14,17 @@ for target in "${targets[@]}"; do
     dotnet publish -c Release -r ${target} -o ../dist/${target}
     cd ..
 
+    cd DinkVoiceExport
+    dotnet publish -c Release -r ${target} -o ../dist/${target}
+    cd ..
+
     rm ./dist/${target}/*.pdb
     cp ./dist/dll/Dink.dll ./dist/${target}
     cp ../LICENSE ./dist/${target}
     cp ../README.md ./dist/${target}
 
     cd ./dist/${target}
-    zip -r "../DinkCompiler-${target}-${version}".zip .
+    zip -r "../Dink-${target}-${version}".zip .
     cd ../..
 
 done
