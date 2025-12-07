@@ -90,7 +90,11 @@ command.SetAction(parseResult =>
     exportSettings.AudioFolder = parseResult.GetValue<string>(audioFolderOption)??"";
     exportSettings.AudioStatus = parseResult.GetValue<string>(audioStatusOption)??"";
 
-    var exporter = new VoiceExport(projectSettings, exportSettings);
+    ProjectEnvironment env = new ProjectEnvironment(projectSettings);
+    if (!env.Init()||!exportSettings.Init())
+        return -1;
+
+    var exporter = new VoiceExport(env, exportSettings);
     if (!exporter.Run()) {
         Console.Error.WriteLine("Not exported.");
         return -1;

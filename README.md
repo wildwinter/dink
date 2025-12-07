@@ -65,6 +65,7 @@ for lines of dialogue and helps you manage the production.
     * Optionally exports recording scripts and localisation files.
     * Helps you manage the status of each individual line - is it first draft? Has it been recorded? And produces overview statistics - how many lines are still to be completed? How many lines still need to be recorded by a particular actor?
     * Can generate a placeholder audio file for each line for testing.
+    * Can run in [live mode](#live-mode) which means it'll keep re-exporting your data every time you edit the Ink files.
 * Utilities:
     * `DinkVoiceExport` - collects together source WAV files with certain criteria, to make them easier for audio processing.
 
@@ -296,6 +297,12 @@ Or instead, grab all the settings from a project file:
     See [Config File](#config-file) for details. You can do more with it than
     you do with the command-line options.
 
+* `--live`
+
+   [Live Mode](#live-mode) - Starts the compiler on a loop - when you edit Ink files, the compiler will automatically
+   run to regenerate the output files based on your changes.\
+   Type q then ENTER on the command line to stop it.
+
 * `--locActionBeats`
 
     If present, includes the text of action beats as something that
@@ -328,6 +335,12 @@ Or instead, grab all the settings from a project file:
 
     Use Google TTS to generate temp audio for your spoken lines. 
     You need to [configure it](#google-tts) first in the config file.
+
+### Live Mode
+
+If you call the compiler on the command line with `--live` it will start waiting for changes to your Ink files. Any changes will cause the compiler to rebuild and reexport everything (according to the [project config](#config-file)). This means your scripts and stats will always be up to date!
+
+Once you're done, type q then ENTER on the command-line and the compiler will stop.
 
 ### Character List
 

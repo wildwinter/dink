@@ -31,18 +31,15 @@ public class VoiceExport
     private ProjectEnvironment _env;
     private ExportSettings _exportSettings;
 
-    public VoiceExport(ProjectSettings projectSettings, ExportSettings exportSettings)
+    public VoiceExport(ProjectEnvironment env, ExportSettings exportSettings)
     {
-        _env = new ProjectEnvironment(projectSettings);
+        _env = env;
         _exportSettings = exportSettings;
 
     }
 
     public bool Run()
     {
-        if (!_env.Init()||!_exportSettings.Init())
-            return false;
-
         string sourceFolder = "";
         if (!string.IsNullOrEmpty(_exportSettings.AudioStatus))
         {

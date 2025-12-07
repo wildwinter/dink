@@ -63,6 +63,11 @@ Option<bool> googleTTSOption = new("--tts")
     Description = "Generate text-to-speech."
 };
 command.Options.Add(googleTTSOption);
+Option<bool> liveOption = new("--live")
+{
+    Description = "Live mode: stay running, watch for changes in Ink files, and automatically recompile."
+};
+command.Options.Add(liveOption);
 
 command.Validators.Add(result =>
 {
@@ -104,7 +109,17 @@ command.SetAction(parseResult =>
     if (parseResult.GetValue<bool>(googleTTSOption))
         settings.GoogleTTS.Generate = true;
 
-    var compiler = new Compiler(settings);
+    ProjectEnvironment env = new ProjectEnvironment(settings);
+    if (!env.Init())
+        return -1;
+    var compiler = new Compiler(env);
+
+    if (parseResult.GetValue<bool>(liveOption))
+    {
+        LiveBuilder liveBuilder = new LiveBuilder(compiler);
+        return liveBuilder.Run();
+    }
+
     if (!compiler.Run()) {
         Console.Error.WriteLine("Not compiled.");
         return -1;

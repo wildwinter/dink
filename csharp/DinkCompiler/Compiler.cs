@@ -13,15 +13,14 @@ public class Compiler
 {
     private ProjectEnvironment _env;
 
-    public Compiler(ProjectSettings? settings = null)
+    public List<string> UsedInkFiles { get; private set; } = new List<string>();
+
+    public Compiler(ProjectEnvironment env)
     {
-        _env = new ProjectEnvironment(settings ?? new ProjectSettings());
+        _env = env;
     }
     public bool Run()
     {
-        if (!_env.Init())
-            return false;
-
         // Steps:
 
         // ----- Read characters -----
@@ -30,11 +29,14 @@ public class Compiler
         ReadCharacters(charFile, out Characters? characters);
 
         // ----- Process Ink files for string data and IDs -----
+        UsedInkFiles = new List<string>(){_env.SourceInkFile};
         if (!ProcessInkStrings(_env.SourceInkFolder, out LocStrings inkStrings))
             return false;
 
         // ----- Compile to json -----
-        if (!CompileToJson(_env.SourceInkFile, _env.DestCompiledInkFile, out List<String> usedInkFiles))
+        bool compileSuccess = CompileToJson(_env.SourceInkFile, _env.DestCompiledInkFile, out List<String> usedInkFiles);
+        UsedInkFiles = usedInkFiles;
+        if (!compileSuccess)
             return false;
 
         // ----- Parse ink files, extract Dink beats -----

@@ -41,7 +41,7 @@ JIM: Any more questions? #id:branches_Branches_Hub_4ZNX
     DAVE: What colour is the sky? Green or grey? #id:branches_Branches_Hub_UYYD
     JIM: It's pink, obviously. #id:branches_Branches_Hub_A048
 * [Why are monkeys green? #id:branches_Branches_Hub_SHPR]
-    DAVE: Why are monkeys green? #id:branches_Branches_Hub_L1BZ
+    DAVE: Why are monkeys green? It's a bit weird? #id:branches_Branches_Hub_L1BZ
     JIM: Grass-stains. #id:branches_Branches_Hub_Z1BD
     -> Hub
 * [Something bigger? #id:branches_Branches_Hub_M9X8]

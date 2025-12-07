@@ -4,7 +4,6 @@ Better example scripts
 Actor estimates?
 Script flow doc
 Dink editor
-Live build
 TTS web demo
 
 TCR:
@@ -44,3 +43,4 @@ Add line numbers and files for Stats file
 DinkVoiceExport: Export all lines with specific character, scene, tags.
 Stats doc: Estimates
 Add speaker to stats file.
+Live builder

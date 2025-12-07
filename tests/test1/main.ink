@@ -2,7 +2,6 @@ INCLUDE scene1.ink
 INCLUDE branches.ink
 
 #ws:stub
-
 -> Barks
 
 // This comment shouldn't appear
@@ -85,15 +84,17 @@ JIM: This is a line hidden by a false clause. #id:main_Recording_PartA_U9ZN
     FRED: This is also a line. #id:main_Recording_PartB_1RQS
 }
 -> PartC
+
 = PartC
 // C: This comment should apply to the snippet below.
 {shuffle: // VO: A set of lines about monkeys
-- FRED: This is a line about monkeys. #id:main_Recording_PartC_JITN
-- FRED: This is also about monkeys line 2. #id:main_Recording_PartC_GUS9
+- FRED: This is a first line about monkeys. #id:main_Recording_PartC_JITN
+- FRED: This is a second line about monkeys. #id:main_Recording_PartC_GUS9
 - FRED: This is also about monkeys line 3. #id:main_Recording_PartC_3VZB
 - FRED: This is also about monkeys line 4. #id:main_Recording_PartC_A18G
 }
 -> PartD
+
 = PartD
 ~temp local = 10
 {
