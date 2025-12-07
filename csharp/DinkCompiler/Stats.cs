@@ -29,7 +29,7 @@ class Stats
                     WriteCastSummary(rootName, voiceLines, writingStatuses, audioStatuses, characters, workbook);
                 }
 
-                WriteLineStats(rootName, inkStrings, writingStatuses, audioStatuses, workbook);
+                WriteLineStats(rootName, inkStrings, voiceLines, writingStatuses, audioStatuses, workbook);
 
                 // ===================================
                 workbook.SaveAs(destStatsFile);
@@ -297,7 +297,8 @@ class Stats
     }
 
     private static void WriteLineStats(string rootName, LocStrings inkStrings, 
-        WritingStatuses writingStatuses, AudioStatuses audioStatuses, XLWorkbook workbook)
+        VoiceLines voiceLines, WritingStatuses writingStatuses, 
+        AudioStatuses audioStatuses, XLWorkbook workbook)
     {
         int writingStatusDefCount = writingStatuses.GetDefinitions().Count;
         int audioStatusDefCount = audioStatuses.GetDefinitions().Count;
@@ -316,7 +317,8 @@ class Stats
         int asColEnd = asColStart + audioStatusDefCount - 1;
 
         int originCol = asColEnd + 1;
-        int textCol = asColEnd + 2;
+        int charCol = asColEnd + 2;
+        int textCol = asColEnd + 3;
         int lineEnd = textCol;
 
         worksheet.Cell(row, 1).Value = "Line ID";
@@ -338,9 +340,11 @@ class Stats
         ExcelUtils.FormatHeaderLine(worksheet.Cell(row, 1).AsRange());
         worksheet.Cell(row, 1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
 
-        worksheet.Cell(row, textCol).Value = "Text";
         worksheet.Cell(row, originCol).Value = "Origin";
-        ExcelUtils.FormatHeaderLine(worksheet.Range(row, textCol, row, originCol));
+        worksheet.Cell(row, charCol).Value = "Character";
+        worksheet.Cell(row, textCol).Value = "Text";
+
+        ExcelUtils.FormatHeaderLine(worksheet.Range(row, originCol, row, textCol));
 
         row++;
 
@@ -383,6 +387,21 @@ class Stats
             }
 
             worksheet.Cell(row, originCol).Value = line.Origin.ToString();
+            bool hasCharacter = false;
+            if (line.IsDink)
+            {
+                VoiceEntry? entry = voiceLines.GetEntry(line.ID);
+                if (entry!=null)
+                {
+                    worksheet.Cell(row, charCol).Value = entry?.Character;
+                    hasCharacter = true;
+                }
+            }
+            if (!hasCharacter)
+            {
+                worksheet.Cell(row, charCol).Value = "-";
+                worksheet.Cell(row, charCol).Style.Fill.BackgroundColor = XLColor.DarkGray;
+            }
             worksheet.Cell(row, textCol).Value = line.Text;
 
             row++;

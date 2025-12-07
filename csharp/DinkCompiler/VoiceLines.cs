@@ -40,6 +40,13 @@ public class VoiceLines
         return _ids.Where(id => _entries[id].Character==charID).ToList();
     }
 
+    public VoiceEntry? GetEntry(string id)
+    {
+        if (_entries.TryGetValue(id, out VoiceEntry entry))
+            return entry;
+        return null;
+    }
+
     class VoiceEntryExport
     {
         public required string ID { get; set; }
