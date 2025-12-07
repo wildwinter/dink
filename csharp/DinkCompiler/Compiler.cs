@@ -268,24 +268,12 @@ public class Compiler
             {
                 foreach(var scene in scenes)
                 {
-                    foreach (var block in scene.Blocks) 
+                    foreach (var line in scene.IterateLines()) 
                     {
-                        foreach (var snippet in block.Snippets)
+                        if (!characters.Has(line.CharacterID))
                         {
-                            foreach(var beat in snippet.Beats)
-                            {
-                                if (beat is DinkLine line)
-                                {
-                                    if (!characters.Has(line.CharacterID))
-                                    {
-                                        if (snippet.SnippetID.Length == 0)
-                                            Console.Error.WriteLine($"Error in file {inkFile}, scene {scene.SceneID}, line {line.LineID} - character '{line.CharacterID}' not in the characters file.:");
-                                        else
-                                            Console.Error.WriteLine($"Error in file {inkFile}, scene {scene.SceneID}, snippet {snippet.SnippetID}, line {line.LineID} - character '{line.CharacterID}' not in the characters file.:");
-                                        return false;
-                                    }
-                                }
-                            }
+                            Console.Error.WriteLine($"Error in file {line.Origin.ToString()}, line {line.LineID} - character '{line.CharacterID}' not in the characters file.:");
+                            return false;
                         }
                     }
                 }

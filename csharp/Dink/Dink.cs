@@ -127,5 +127,37 @@ public class DinkScene : DinkBase
 {
     public string SceneID { get; set; } = string.Empty;
     public List<DinkBlock> Blocks { get; set; } = new List<DinkBlock>();
+
+    public IEnumerable<DinkBeat> IterateBeats()
+    {
+        foreach (var block in Blocks)
+        {
+            foreach (var snippet in block.Snippets)
+            {
+                foreach (var beat in snippet.Beats)
+                {
+                    yield return beat;
+                }
+            }
+        }
+    }
+
+    public IEnumerable<DinkLine> IterateLines()
+    {
+        foreach (var block in Blocks)
+        {
+            foreach (var snippet in block.Snippets)
+            {
+                foreach (var beat in snippet.Beats)
+                {
+                    if (beat is DinkLine line)
+                    {
+                        yield return line;
+                    }
+                }
+            }
+        }
+    }
+
     public override string ToString() => $"Scene: '{SceneID}'";
 }

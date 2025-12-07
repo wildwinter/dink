@@ -46,8 +46,7 @@ public class VoiceExport
         string sourceFolder = "";
         if (!string.IsNullOrEmpty(_exportSettings.AudioStatus))
         {
-            AudioStatusDefinition audioStatusDefinition = new AudioStatusDefinition();
-            if (_env.GetAudioStatusByLabel(_exportSettings.AudioStatus, out audioStatusDefinition))
+            if (_env.GetAudioStatusByLabel(_exportSettings.AudioStatus, out AudioStatusDefinition audioStatusDefinition))
             {
                 sourceFolder = audioStatusDefinition.Folder;
             }
@@ -111,42 +110,33 @@ public class VoiceExport
             if (!string.IsNullOrEmpty(_exportSettings.Scene) && scene.SceneID!=_exportSettings.Scene)
                 continue;
 
-            foreach (var block in scene.Blocks)
+            foreach (var line in scene.IterateLines())
             {
-                foreach (var snippet in block.Snippets)
+                if (!string.IsNullOrEmpty(_exportSettings.Character))
                 {
-                    foreach (var beat in snippet.Beats)
-                    {
-                        if (beat is DinkLine dinkLine)
-                        {
-                            if (!string.IsNullOrEmpty(_exportSettings.Character))
-                            {
-                                if (dinkLine.CharacterID!=_exportSettings.Character)
-                                    continue;
-                            }
-                            if (_exportSettings.Tags.Count>0)
-                            {
-                                bool foundTag = false;
-                                foreach (string tag in _exportSettings.Tags)
-                                {
-                                    if (tag.EndsWith(":"))
-                                    {
-                                        foundTag = dinkLine.Tags.Any(s => s.StartsWith(tag));
-                                    }
-                                    else
-                                    {
-                                        foundTag = dinkLine.Tags.Contains(tag);
-                                    }
-                                    if (foundTag)
-                                        break;
-                                }
-                                if (!foundTag)
-                                    continue;
-                            }
-                            lines.Add(dinkLine);
-                        }
-                    }
+                    if (line.CharacterID!=_exportSettings.Character)
+                        continue;
                 }
+                if (_exportSettings.Tags.Count>0)
+                {
+                    bool foundTag = false;
+                    foreach (string tag in _exportSettings.Tags)
+                    {
+                        if (tag.EndsWith(":"))
+                        {
+                            foundTag = line.Tags.Any(s => s.StartsWith(tag));
+                        }
+                        else
+                        {
+                            foundTag = line.Tags.Contains(tag);
+                        }
+                        if (foundTag)
+                            break;
+                    }
+                    if (!foundTag)
+                        continue;
+                }
+                lines.Add(line);
             }
         }
         return true;

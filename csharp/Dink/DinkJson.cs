@@ -41,47 +41,41 @@ public static class DinkJson
 
         foreach (var scene in scenes)
         {
-            foreach (var block in scene.Blocks)
+            foreach (var beat in scene.IterateBeats())
             {
-                foreach (var snippet in block.Snippets)
+                object obj;
+                if (beat is DinkAction action)
                 {
-                    foreach (var beat in snippet.Beats)
+                    if (includeActionBeatText)
                     {
-                        object obj;
-                        if (beat is DinkAction action)
+                        obj = new
                         {
-                            if (includeActionBeatText)
-                            {
-                                obj = new
-                                {
-                                    Type = "Action",
-                                    Text = action.Text
-                                };
-                            }
-                            else 
-                            {
-                                obj = new
-                                {
-                                    Type = "Action"
-                                };
-                            }
-                            lines.Add($"\t\"{beat.LineID}\": {JsonSerializer.Serialize(obj, options)}");
-                        }
-                        else if (beat is DinkLine line)
-                        {
-                            obj = new
-                            {
-                                Type = "Line",
-                                CharacterID = line.CharacterID,
-                                Qualifier = line.Qualifier
-                            };
-                            lines.Add($"\t\"{beat.LineID}\": {JsonSerializer.Serialize(obj, options)}");
-                        }
+                            Type = "Action",
+                            Text = action.Text
+                        };
                     }
+                    else 
+                    {
+                        obj = new
+                        {
+                            Type = "Action"
+                        };
+                    }
+                    lines.Add($"\t\"{beat.LineID}\": {JsonSerializer.Serialize(obj, options)}");
+                }
+                else if (beat is DinkLine line)
+                {
+                    obj = new
+                    {
+                        Type = "Line",
+                        CharacterID = line.CharacterID,
+                        Qualifier = line.Qualifier
+                    };
+                    lines.Add($"\t\"{beat.LineID}\": {JsonSerializer.Serialize(obj, options)}");
                 }
             }
         }
-
+    
         return "{\n"+string.Join(",\n", lines)+"\n}";
     }
 }

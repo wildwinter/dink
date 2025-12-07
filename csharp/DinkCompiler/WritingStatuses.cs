@@ -118,29 +118,23 @@ public class WritingStatuses
 
         foreach (var scene in dinkScenes)
         {
-            foreach (var block in scene.Blocks)
+            foreach (var beat in scene.IterateBeats())
             {
-                foreach (var snippet in block.Snippets)
-                { 
-                    foreach (var beat in snippet.Beats)
-                    {
-                        if (beat is DinkLine line)
-                        {
-                            string statusTag = line.GetTagsFor(["ws"]).FirstOrDefault() ?? "";
-                            if (statusTag.StartsWith("ws:"))
-                                statusTag = statusTag.Substring(3);
+                if (beat is DinkLine line)
+                {
+                    string statusTag = line.GetTagsFor(["ws"]).FirstOrDefault() ?? "";
+                    if (statusTag.StartsWith("ws:"))
+                        statusTag = statusTag.Substring(3);
 
-                            Set(line.LineID, statusTag);
-                        } 
-                        else if (_env.LocActionBeats && beat is DinkAction action)
-                        {
-                            string statusTag = action.GetTagsFor(["ws"]).FirstOrDefault() ?? "";
-                            if (statusTag.StartsWith("ws:"))
-                                statusTag = statusTag.Substring(3);
+                    Set(line.LineID, statusTag);
+                } 
+                else if (_env.LocActionBeats && beat is DinkAction action)
+                {
+                    string statusTag = action.GetTagsFor(["ws"]).FirstOrDefault() ?? "";
+                    if (statusTag.StartsWith("ws:"))
+                        statusTag = statusTag.Substring(3);
 
-                            Set(action.LineID, statusTag);
-                        }
-                    }
+                    Set(action.LineID, statusTag);
                 }
             }
         }
