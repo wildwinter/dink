@@ -23,21 +23,20 @@ public class Compiler
     {
         // Steps:
 
+        // ----- Process Ink files for string data and IDs -----
+        bool success = ProcessInkStrings(_env.SourceInkFolder, out LocStrings inkStrings, out List<string> usedInkFiles);
+        UsedInkFiles = usedInkFiles;
+        if (!success)
+            return false;
+
+        // ----- Compile to json -----
+        if (!CompileToJson(_env.SourceInkFile, _env.DestCompiledInkFile))
+            return false;
+
         // ----- Read characters -----
         string? charFile = _env.FindFileInSource("characters.json");
         // Character list is optional.
         ReadCharacters(charFile, out Characters? characters);
-
-        // ----- Process Ink files for string data and IDs -----
-        UsedInkFiles = new List<string>(){_env.SourceInkFile};
-        if (!ProcessInkStrings(_env.SourceInkFolder, out LocStrings inkStrings))
-            return false;
-
-        // ----- Compile to json -----
-        bool compileSuccess = CompileToJson(_env.SourceInkFile, _env.DestCompiledInkFile, out List<String> usedInkFiles);
-        UsedInkFiles = usedInkFiles;
-        if (!compileSuccess)
-            return false;
 
         // ----- Parse ink files, extract Dink beats -----
         if (!ParseDinkScenes(usedInkFiles, characters, out List<DinkScene> dinkScenes, out List<NonDinkLine> nonDinkLines))
@@ -131,9 +130,10 @@ public class Compiler
         return false;
     }
 
-    private bool ProcessInkStrings(string inkFolder, out LocStrings inkStrings)
+    private bool ProcessInkStrings(string inkFolder, out LocStrings inkStrings, out List<string> usedInkFiles)
     {
         inkStrings = new LocStrings();
+        usedInkFiles = new();
 
         Console.WriteLine("Processing Ink for IDs and string content... " + inkFolder);
         var localiser = new Localiser(new Localiser.Options()
@@ -142,9 +142,11 @@ public class Compiler
         });
         if (!localiser.Run())
         {
+            usedInkFiles = localiser.UsedInkFiles;
             Console.Error.WriteLine("Failed to update Ink IDs.");
             return false;
         }
+        usedInkFiles = localiser.UsedInkFiles;
         foreach (var key in localiser.GetStringKeys())
         {
             LocEntry entry = new LocEntry
@@ -164,30 +166,6 @@ public class Compiler
 
     List<string> _compileErrors = new List<string>();
 
-    public class InkFileHandler : Ink.IFileHandler
-    {
-
-        private List<string> _outUsedInkFiles;
-
-        public InkFileHandler(List<string> outUsedInkFiles)
-        {
-            _outUsedInkFiles = outUsedInkFiles;
-        }
-
-        public string ResolveInkFilename(string includeName)
-        {
-            var workingDir = Directory.GetCurrentDirectory();
-            var fullRootInkPath = Path.Combine(workingDir, includeName);
-            return fullRootInkPath;
-        }
-
-        public string LoadInkFileContents(string fullFilename)
-        {
-            _outUsedInkFiles.Add(fullFilename);
-            return File.ReadAllText(fullFilename);
-        }
-    }
-
     private void OnCompileError(string message, ErrorType errorType)
     {
         switch (errorType)
@@ -206,10 +184,8 @@ public class Compiler
         }
     }
 
-    private bool CompileToJson(string sourceInkFile, string destFile, out List<string> usedInkFiles)
+    private bool CompileToJson(string sourceInkFile, string destFile)
     {
-        usedInkFiles = new List<string>();
-                
         bool success = true;
         _compileErrors.Clear();
         Console.WriteLine("Compiling Ink to JSON... " + sourceInkFile);
@@ -218,14 +194,12 @@ public class Compiler
         Directory.SetCurrentDirectory(Path.GetDirectoryName(sourceInkFile) ?? Directory.GetCurrentDirectory());
 
         string inputString = File.ReadAllText(sourceInkFile);
-        usedInkFiles.Add(sourceInkFile);
-        InkFileHandler fileHandler = new InkFileHandler(usedInkFiles);
 
         Ink.Compiler compiler = new Ink.Compiler(inputString, new Ink.Compiler.Options
         {
             sourceFilename = sourceInkFile,
             errorHandler = OnCompileError,
-            fileHandler = fileHandler
+            fileHandler = new DefaultFileHandler()
         });
         Ink.Runtime.Story story = compiler.Compile();
         success = !(story == null || _compileErrors.Count > 0);
