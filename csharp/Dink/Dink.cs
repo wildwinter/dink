@@ -39,12 +39,17 @@ public abstract class DinkBase
             text.StartsWith(prefix, StringComparison.InvariantCultureIgnoreCase)
         );
     }
+
+    private static readonly Regex _rxPrefixEntries = new Regex(
+        @"^([a-zA-Z0-9]+):\s*(.*)$", 
+        RegexOptions.Compiled);
+
     protected static List<string> GetEntriesWithPrefixes(List<string> entries, List<string> prefixes, bool trim = true)
     {
         var result = new List<string>();
         foreach (var entry in entries)
         {
-            var match = Regex.Match(entry, @"^([a-zA-Z0-9]+):\s*(.*)$");
+            var match = _rxPrefixEntries.Match(entry);
             if (match.Success)
             {
                 if (prefixes.Contains("*")||IsPrefixed(prefixes, match.Groups[1].Value))

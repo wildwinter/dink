@@ -16,11 +16,9 @@ class Stats
         Console.WriteLine("Writing stats file: " + destStatsFile);
         try
         {
+            // Optimization: Disable event tracking for faster massive writes
             using (var workbook = new XLWorkbook())
             {
-                int writingStatusDefCount = writingStatuses.GetDefinitions().Count;
-                int audioStatusDefCount = audioStatuses.GetDefinitions().Count;
-
                 WriteSceneSummary(rootName, dinkScenes, nonDinkLines, writingStatuses, audioStatuses,
                     workbook);
 
@@ -31,7 +29,6 @@ class Stats
 
                 WriteLineStats(rootName, inkStrings, voiceLines, writingStatuses, audioStatuses, workbook);
 
-                // ===================================
                 workbook.SaveAs(destStatsFile);
             }
         }
@@ -45,14 +42,20 @@ class Stats
 
     private static void WriteSceneSummary(string rootName, List<DinkScene> dinkScenes, List<NonDinkLine> nonDinkLines, WritingStatuses writingStatuses, AudioStatuses audioStatuses, XLWorkbook workbook)
     {
-        int writingStatusDefCount = writingStatuses.GetDefinitions().Count;
-        int audioStatusDefCount = audioStatuses.GetDefinitions().Count;
+        // Cache definitions to avoid repeated getter calls
+        var wsDefs = writingStatuses.GetDefinitions();
+        var asDefs = audioStatuses.GetDefinitions();
+        int writingStatusDefCount = wsDefs.Count;
+        int audioStatusDefCount = asDefs.Count;
+
+        // Cache colors
+        var wsColors = wsDefs.Select(d => !string.IsNullOrEmpty(d.Color) ? XLColor.FromHtml("#" + d.Color) : null).ToList();
+        var asColors = asDefs.Select(d => !string.IsNullOrEmpty(d.Color) ? XLColor.FromHtml("#" + d.Color) : null).ToList();
 
         // ==========================
         //  Scenes
 
         int row = 1;
-
         var worksheet = workbook.Worksheets.Add("Scenes - " + rootName);
         ExcelUtils.FormatSheet(worksheet);
         row = 1;
@@ -68,7 +71,7 @@ class Stats
         worksheet.Cell(row, 1).Value = "Scene ID";
 
         int col = wsColStart;
-        foreach (var def in writingStatuses.GetDefinitions())
+        foreach (var def in wsDefs)
         {
             worksheet.Cell(row, col).Value = "Writing\n" + def.Status;
             col++;
@@ -77,14 +80,13 @@ class Stats
         worksheet.Cell(row, wsColEnd).Value = "Writing\nTotal";
 
         col = asColStart;
-        foreach (var def in audioStatuses.GetDefinitions())
+        foreach (var def in asDefs)
         {
             worksheet.Cell(row, col).Value = "Audio\n" + def.Status;
             col++;
         }
 
         worksheet.Cell(row, asColEnd).Value = "Audio\nTotal";
-
         worksheet.Cell(row, originCol).Value = "Origin";
 
         ExcelUtils.FormatHeaderLine(worksheet.Cell(row, 1).AsRange());
@@ -92,72 +94,82 @@ class Stats
 
         row++;
 
-        // Scene Writing State
-        // Scene Recording State
-        List<List<int>> wsLineCounts = new();
-        List<List<bool>> wsLineEstimates = new();
+        // Initialise Totals arrays
+        int[] totalWsCounts = new int[writingStatusDefCount + 1]; // +1 for the total column
+        bool[] totalWsEstimates = new bool[writingStatusDefCount + 1];
+        int[] totalAsCounts = new int[audioStatusDefCount];
+
         foreach (var scene in dinkScenes)
         {
             worksheet.Cell(row, 1).Value = scene.SceneID;
             ExcelUtils.FormatStatLine(worksheet.Cell(row, 1).AsRange());
-            col = wsColEnd;
 
+            // Writing Statuses
             GetSceneWritingCols(writingStatuses, scene, out List<int> wsCounts, out List<bool> wsEstimates);
-            wsLineCounts.Add(wsCounts);
-            wsLineEstimates.Add(wsEstimates);
+            
             col = wsColStart;
-            int wsIndex = 0;
-            foreach (var def in audioStatuses.GetDefinitions())
+            for (int i = 0; i < wsCounts.Count; i++)
             {
-                worksheet.Cell(row, col).Value = wsCounts[wsIndex].ToString() + (wsEstimates[wsIndex] ? "?" : "");
-                if (wsIndex > 0)
+                // Update totals
+                totalWsCounts[i] += wsCounts[i];
+                if (wsEstimates[i]) totalWsEstimates[i] = true;
+
+                // Write Cell
+                string cellText = wsCounts[i].ToString() + (wsEstimates[i] ? "?" : "");
+                worksheet.Cell(row, col).Value = cellText;
+
+                // Apply Color (skip total column which is the last index)
+                if (i < wsColors.Count && wsCounts[i] > 0 && wsColors[i] != null)
                 {
-                    if (wsCounts[wsIndex] > 0 && !string.IsNullOrEmpty(def.Color))
-                        worksheet.Cell(row, col).Style.Fill.BackgroundColor = XLColor.FromHtml("#" + def.Color);
+                    worksheet.Cell(row, col).Style.Fill.BackgroundColor = wsColors[i];
                 }
-                wsIndex++;
                 col++;
             }
-            worksheet.Cell(row, wsColEnd).Value = wsCounts[wsIndex].ToString() + (wsEstimates[wsIndex] ? "?" : "");
+            
             worksheet.Cell(row, wsColEnd).Style.Font.Bold = true;
 
+            // Audio Statuses
             col = asColStart;
-            foreach (var def in audioStatuses.GetDefinitions())
+            for(int i = 0; i < asDefs.Count; i++)
             {
+                var def = asDefs[i];
                 int count = audioStatuses.GetSceneTagCount(scene, def.Status);
+                totalAsCounts[i] += count;
+
                 worksheet.Cell(row, col).Value = count;
-                if (count > 0 && !string.IsNullOrEmpty(def.Color))
-                    worksheet.Cell(row, col).Style.Fill.BackgroundColor = XLColor.FromHtml("#" + def.Color);
+                if (count > 0 && asColors[i] != null)
+                    worksheet.Cell(row, col).Style.Fill.BackgroundColor = asColors[i];
                 col++;
             }
+
             worksheet.Cell(row, asColEnd).Value = audioStatuses.GetSceneTagCount(scene);
             worksheet.Cell(row, asColEnd).Style.Font.Bold = true;
             worksheet.Cell(row, originCol).Value = scene.Origin.ToString();
             row++;
         }
 
+        // Non-Dink Logic
         worksheet.Cell(row, 1).Value = "Non-Dink";
         ExcelUtils.FormatStatLine(worksheet.Cell(row, 1).AsRange());
         worksheet.Range(row, 1, row, wsColEnd).Style.Font.Italic = true;
 
         col = wsColStart;
-        List<int> wsNdCounts = new();
-        List<bool> wsNdEstimates = new();
-        foreach (var def in writingStatuses.GetDefinitions())
+        int ndCountTotal = 0;
+        for (int i = 0; i < wsDefs.Count; i++)
         {
-            int count = writingStatuses.GetNonDinkTagCount(nonDinkLines, def.WsTag);
+            int count = writingStatuses.GetNonDinkTagCount(nonDinkLines, wsDefs[i].WsTag);
             worksheet.Cell(row, col).Value = count;
-            wsNdCounts.Add(count);
-            wsNdEstimates.Add(false);
+            
+            // Add to totals (using index i, same as main loop)
+            totalWsCounts[i] += count;
+            ndCountTotal += count;
             col++;
         }
-        int ndCountTotal = writingStatuses.GetNonDinkTagCount(nonDinkLines);
+        
+        // Non-Dink Total Column
         worksheet.Cell(row, wsColEnd).Value = ndCountTotal;
         worksheet.Cell(row, wsColEnd).Style.Font.Bold = true;
-        wsNdCounts.Add(ndCountTotal);
-        wsNdEstimates.Add(false);
-        wsLineCounts.Add(wsNdCounts);
-        wsLineEstimates.Add(wsNdEstimates);
+        totalWsCounts[wsDefs.Count] += ndCountTotal; // Add to the Grand Total accumulator
 
         for (col = asColStart; col <= asColEnd; col++)
         {
@@ -167,32 +179,31 @@ class Stats
 
         row++;
 
+        // ==========================
+        // Totals Row
         worksheet.Cell(row, 1).Value = "Totals";
         ExcelUtils.FormatHeaderLine(worksheet.Cell(row, 1).AsRange());
         worksheet.Cell(row, 1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
 
         col = wsColStart;
-        var wsCountTotals = wsLineCounts.Aggregate((prev, next) =>
-             prev.Zip(next, (a, b) => a + b).ToList());
-        var wsEstimateTotals = wsLineEstimates.Aggregate((prev, next) =>
-             prev.Zip(next, (a, b) => a || b).ToList());
-
-        for (int i = 0; i < wsCountTotals.Count; i++)
+        for (int i = 0; i < totalWsCounts.Length; i++)
         {
-            worksheet.Cell(row, col).Value = wsCountTotals[i].ToString() + (wsEstimateTotals[i] ? "?" : "");
+            worksheet.Cell(row, col).Value = totalWsCounts[i].ToString() + (totalWsEstimates[i] ? "?" : "");
             col++;
         }
 
         col = asColStart;
-        foreach (var def in audioStatuses.GetDefinitions())
+        for(int i = 0; i < totalAsCounts.Length; i++)
         {
-            int count = audioStatuses.GetStatusCount(def.Status);
-            worksheet.Cell(row, col).Value = count;
+            worksheet.Cell(row, col).Value = totalAsCounts[i];
             col++;
         }
+        
+        // Grand total of audio
         worksheet.Cell(row, asColEnd).Value = audioStatuses.GetCount();
         worksheet.Range(row, 1, row, asColEnd).Style.Font.Bold = true;
 
+        // Formatting
         var table = worksheet.Range(1, 1, row, lineEnd).CreateTable();
         ExcelUtils.FormatTableSheet(worksheet, table, 2, false);
 
@@ -212,48 +223,53 @@ class Stats
     private static void GetSceneWritingCols(WritingStatuses writingStatuses, DinkScene scene, out List<int> counts, out List<bool> estimates)
     {
         int estimate = writingStatuses.GetSceneEstimate(scene);
-        counts = new List<int>();
-        estimates = new List<bool>();
+        var definitions = writingStatuses.GetDefinitions();
+        
+        counts = new List<int>(definitions.Count + 1);
+        estimates = new List<bool>(definitions.Count + 1);
+        
         bool validCount = false;
-        foreach(var def in writingStatuses.GetDefinitions())
+        
+        // First pass: collect actual counts
+        foreach(var def in definitions)
         {
-            int count = writingStatuses.GetSceneTagCount(scene,def.WsTag);
+            int count = writingStatuses.GetSceneTagCount(scene, def.WsTag);
             counts.Add(count);
             estimates.Add(false);
-            if (count>0 && !def.Estimate)
+            if (count > 0 && !def.Estimate)
                 validCount = true;
         }
+        
+        // Handle Estimates
         bool estimateMade = false;
-        if (!validCount && estimate>0)
+        if (!validCount && estimate > 0)
         {
-            for (var i=writingStatuses.GetDefinitions().Count-1;i>=0;i--)
+            for (var i = definitions.Count - 1; i >= 0; i--)
             {
-                var def = writingStatuses.GetDefinitions()[i];
+                var def = definitions[i];
                 if (estimateMade)
                 {
-                    counts[i]=0;
+                    counts[i] = 0;
                 }
                 else if (def.Estimate && estimate>0)
                 {
                     estimateMade = true;
-                    counts[i]=estimate;
-                    estimates[i]=true;
+                    counts[i] = estimate;
+                    estimates[i] = true;
                 }
             }
         }
+        
         int total = writingStatuses.GetSceneTagCount(scene);
         if (estimateMade)
             total = estimate;
+            
         counts.Add(total);
         estimates.Add(estimateMade);
     }
 
     private static void WriteCastSummary(string rootName, VoiceLines voiceLines, WritingStatuses writingStatuses, AudioStatuses audioStatuses, Characters characters, XLWorkbook workbook)
     {
-        // ============================================================
-        // -- Actors
-        // Lines Recorded Per Character / Actor
-        // Lines To Be Recorded Per Character / Actor
         IXLWorksheet worksheet = workbook.Worksheets.Add("Cast - " + rootName);
         ExcelUtils.FormatSheet(worksheet);
         int row = 1;
@@ -274,6 +290,7 @@ class Stats
 
             List<string> characterLines = voiceLines.GetByCharacter(character.ID);
             int total = characterLines.Count;
+
             int recorded = audioStatuses.CountRecorded(characterLines);
             int readyToRecord = audioStatuses.CountReadyToRecord(writingStatuses, characterLines);
             int inDraft = audioStatuses.CountInDraft(writingStatuses, characterLines);
@@ -300,11 +317,27 @@ class Stats
         VoiceLines voiceLines, WritingStatuses writingStatuses, 
         AudioStatuses audioStatuses, XLWorkbook workbook)
     {
-        int writingStatusDefCount = writingStatuses.GetDefinitions().Count;
-        int audioStatusDefCount = audioStatuses.GetDefinitions().Count;
-        // ============================================================
-        // -- Line Status
-        // Each line, writing status, recording status
+        var wsDefs = writingStatuses.GetDefinitions();
+        var asDefs = audioStatuses.GetDefinitions();
+        
+        int writingStatusDefCount = wsDefs.Count;
+        int audioStatusDefCount = asDefs.Count;
+
+        var wsStatusToColOffset = new Dictionary<string, int>();
+        var wsStatusColor = new Dictionary<string, XLColor>();
+        for (int i = 0; i < wsDefs.Count; i++) {
+            wsStatusToColOffset[wsDefs[i].Status] = i;
+            if (!string.IsNullOrEmpty(wsDefs[i].Color))
+                wsStatusColor[wsDefs[i].Status] = XLColor.FromHtml("#" + wsDefs[i].Color);
+        }
+
+        var asStatusToColOffset = new Dictionary<string, int>();
+        var asStatusColor = new Dictionary<string, XLColor>();
+        for (int i = 0; i < asDefs.Count; i++) {
+            asStatusToColOffset[asDefs[i].Status] = i;
+            if (!string.IsNullOrEmpty(asDefs[i].Color))
+                asStatusColor[asDefs[i].Status] = XLColor.FromHtml("#" + asDefs[i].Color);
+        }
 
         IXLWorksheet worksheet = workbook.Worksheets.Add("Lines - " + rootName);
         ExcelUtils.FormatSheet(worksheet);
@@ -324,14 +357,14 @@ class Stats
         worksheet.Cell(row, 1).Value = "Line ID";
 
         int col = wsColStart;
-        foreach (var def in writingStatuses.GetDefinitions())
+        foreach (var def in wsDefs)
         {
             worksheet.Cell(row, col).Value = "Writing\n" + def.Status;
             col++;
         }
 
         col = asColStart;
-        foreach (var def in audioStatuses.GetDefinitions())
+        foreach (var def in asDefs)
         {
             worksheet.Cell(row, col).Value = "Audio\n" + def.Status;
             col++;
@@ -354,44 +387,48 @@ class Stats
         {
             worksheet.Cell(row, 1).Value = line.ID;
             ExcelUtils.FormatStatLine(worksheet.Cell(row, 1).AsRange());
-            col = wsColStart;
-            var writingStatus = writingStatuses.GetStatus(line.ID);
-            foreach (var def in writingStatuses.GetDefinitions())
+
+            // Handle Writing Status
+            var wStatus = writingStatuses.GetStatus(line.ID);
+            if (wsStatusToColOffset.TryGetValue(wStatus.Status, out int wOffset))
             {
-                if (writingStatus.Status == def.Status)
+                int targetCol = wsColStart + wOffset;
+                worksheet.Cell(row, targetCol).Value = "X";
+                if (wsStatusColor.TryGetValue(wStatus.Status, out XLColor? color))
                 {
-                    worksheet.Cell(row, col).Value = "X";
-                    if (!string.IsNullOrEmpty(def.Color))
-                        worksheet.Cell(row, col).Style.Fill.BackgroundColor = XLColor.FromHtml("#" + def.Color);
+                    worksheet.Cell(row, targetCol).Style.Fill.BackgroundColor = color;
                 }
-                col++;
-            }
-            col = asColStart;
-            var audioStatus = audioStatuses.GetStatus(line.ID);
-            foreach (var def in audioStatuses.GetDefinitions())
-            {
-                if (!line.IsDink)
-                {
-                    worksheet.Cell(row, col).Value = "-";
-                    worksheet.Cell(row, col).Style.Fill.BackgroundColor = XLColor.DarkGray;
-                    col++;
-                    continue;
-                }
-                if (audioStatus.Status == def.Status)
-                {
-                    worksheet.Cell(row, col).Value = "X";
-                    if (!string.IsNullOrEmpty(def.Color))
-                        worksheet.Cell(row, col).Style.Fill.BackgroundColor = XLColor.FromHtml("#" + def.Color);
-                }
-                col++;
             }
 
+            // Handle Audio Status
+            if (!line.IsDink)
+            {
+                // Bulk paint the non-dink area for this row
+                worksheet.Range(row, asColStart, row, asColEnd).Value = "-";
+                worksheet.Range(row, asColStart, row, asColEnd).Style.Fill.BackgroundColor = XLColor.DarkGray;
+            }
+            else
+            {
+                var aStatus = audioStatuses.GetStatus(line.ID);
+                if (asStatusToColOffset.TryGetValue(aStatus.Status, out int aOffset))
+                {
+                    int targetCol = asColStart + aOffset;
+                    worksheet.Cell(row, targetCol).Value = "X";
+                    if (asStatusColor.TryGetValue(aStatus.Status, out XLColor? color))
+                    {
+                        worksheet.Cell(row, targetCol).Style.Fill.BackgroundColor = color;
+                    }
+                }
+            }
+
+            // Metadata
             worksheet.Cell(row, originCol).Value = line.Origin.ToString();
+            
             bool hasCharacter = false;
             if (line.IsDink)
             {
                 VoiceEntry? entry = voiceLines.GetEntry(line.ID);
-                if (entry!=null)
+                if (entry != null)
                 {
                     worksheet.Cell(row, charCol).Value = entry?.Character;
                     hasCharacter = true;
