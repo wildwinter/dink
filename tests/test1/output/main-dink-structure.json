@@ -1,0 +1,2003 @@
+﻿[
+  {
+    "SceneID": "Scene1",
+    "Blocks": [
+      {
+        "BlockID": "Part1",
+        "Snippets": [
+          {
+            "BraceComments": [],
+            "SnippetID": "Azq9",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "FRED",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "This is a scene.",
+                "LineID": "scene1_Scene1_Part1_S494",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "scene1.ink",
+                  "LineNum": 6
+                },
+                "Comments": [],
+                "Tags": []
+              },
+              {
+                "Type": "Action",
+                "Text": "With several lines.",
+                "LineID": "scene1_Scene1_Part1_621G",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "scene1.ink",
+                  "LineNum": 7
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "scene1.ink",
+              "LineNum": 6
+            },
+            "Comments": [],
+            "Tags": []
+          }
+        ],
+        "Origin": {
+          "SourceFilePath": "scene1.ink",
+          "LineNum": 5
+        },
+        "Comments": [],
+        "Tags": []
+      },
+      {
+        "BlockID": "Part2",
+        "Snippets": [
+          {
+            "BraceComments": [],
+            "SnippetID": "xnR9",
+            "Beats": [
+              {
+                "Type": "Action",
+                "Text": "And here\u0027s part 2.",
+                "LineID": "scene1_Scene1_Part2_N5RW",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "scene1.ink",
+                  "LineNum": 12
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "scene1.ink",
+              "LineNum": 12
+            },
+            "Comments": [],
+            "Tags": []
+          }
+        ],
+        "Origin": {
+          "SourceFilePath": "scene1.ink",
+          "LineNum": 11
+        },
+        "Comments": [
+          "This comment should appear on Part2"
+        ],
+        "Tags": []
+      },
+      {
+        "BlockID": "Part3",
+        "Snippets": [
+          {
+            "BraceComments": [],
+            "SnippetID": "TkIq",
+            "Beats": [
+              {
+                "Type": "Action",
+                "Text": "Dave walks into the room.",
+                "LineID": "scene1_Scene1_Part3_UZOH",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "scene1.ink",
+                  "LineNum": 17
+                },
+                "Comments": [
+                  "This is part 3"
+                ],
+                "Tags": []
+              },
+              {
+                "Type": "Line",
+                "CharacterID": "DAVE",
+                "Qualifier": "",
+                "Direction": "quietly",
+                "Text": "Let\u0027s see if this works, shall we?",
+                "LineID": "scene1_Scene1_Part3_9MXL",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "scene1.ink",
+                  "LineNum": 18
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "scene1.ink",
+              "LineNum": 17
+            },
+            "Comments": [],
+            "Tags": []
+          }
+        ],
+        "Origin": {
+          "SourceFilePath": "scene1.ink",
+          "LineNum": 15
+        },
+        "Comments": [],
+        "Tags": []
+      },
+      {
+        "BlockID": "Part4",
+        "Snippets": [
+          {
+            "BraceComments": [],
+            "SnippetID": "VAm0",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "FRED",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "Go right!",
+                "LineID": "scene1_Scene1_Part4_F0PF",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "scene1.ink",
+                  "LineNum": 26
+                },
+                "Comments": [],
+                "Tags": [
+                  "ws:final"
+                ]
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "scene1.ink",
+              "LineNum": 26
+            },
+            "Comments": [
+              "There is a choice here.",
+              "OPTION \u0022Go right\u0022"
+            ],
+            "Tags": []
+          },
+          {
+            "BraceComments": [],
+            "SnippetID": "A1Om",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "FRED",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "Go left!",
+                "LineID": "scene1_Scene1_Part4_DNII",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "scene1.ink",
+                  "LineNum": 29
+                },
+                "Comments": [],
+                "Tags": [
+                  "ws:final"
+                ]
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "scene1.ink",
+              "LineNum": 29
+            },
+            "Comments": [
+              "OPTION \u0022Go left\u0022"
+            ],
+            "Tags": []
+          },
+          {
+            "BraceComments": [],
+            "SnippetID": "Bdzh",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "FRED",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "Carry on then.",
+                "LineID": "scene1_Scene1_Part4_AJDP",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "scene1.ink",
+                  "LineNum": 32
+                },
+                "Comments": [],
+                "Tags": [
+                  "ws:final"
+                ]
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "scene1.ink",
+              "LineNum": 32
+            },
+            "Comments": [
+              "OPTION \u0022Skip it\u0022"
+            ],
+            "Tags": []
+          },
+          {
+            "BraceComments": [],
+            "SnippetID": "2WCH",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "GEORGE",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "Okay.",
+                "LineID": "scene1_Scene1_Part4_0YY1",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "scene1.ink",
+                  "LineNum": 34
+                },
+                "Comments": [],
+                "Tags": [
+                  "ws:final"
+                ]
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "scene1.ink",
+              "LineNum": 34
+            },
+            "Comments": [
+              "MERGE"
+            ],
+            "Tags": []
+          }
+        ],
+        "Origin": {
+          "SourceFilePath": "scene1.ink",
+          "LineNum": 21
+        },
+        "Comments": [],
+        "Tags": []
+      },
+      {
+        "BlockID": "Right",
+        "Snippets": [
+          {
+            "BraceComments": [],
+            "SnippetID": "2kBT",
+            "Beats": [
+              {
+                "Type": "Action",
+                "Text": "George swerves the car right.",
+                "LineID": "scene1_Scene1_Right_3V6T",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "scene1.ink",
+                  "LineNum": 38
+                },
+                "Comments": [],
+                "Tags": []
+              },
+              {
+                "Type": "Line",
+                "CharacterID": "GEORGE",
+                "Qualifier": "",
+                "Direction": "upset",
+                "Text": "You sure you want to go right?",
+                "LineID": "scene1_Scene1_Right_WM69",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "scene1.ink",
+                  "LineNum": 39
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "scene1.ink",
+              "LineNum": 38
+            },
+            "Comments": [],
+            "Tags": []
+          }
+        ],
+        "Origin": {
+          "SourceFilePath": "scene1.ink",
+          "LineNum": 37
+        },
+        "Comments": [],
+        "Tags": []
+      },
+      {
+        "BlockID": "Left",
+        "Snippets": [
+          {
+            "BraceComments": [],
+            "SnippetID": "hi1A",
+            "Beats": [
+              {
+                "Type": "Action",
+                "Text": "George swerves the car left.",
+                "LineID": "scene1_Scene1_Left_HZ7B",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "scene1.ink",
+                  "LineNum": 43
+                },
+                "Comments": [],
+                "Tags": []
+              },
+              {
+                "Type": "Line",
+                "CharacterID": "GEORGE",
+                "Qualifier": "",
+                "Direction": "upset",
+                "Text": "You sure you want to go left?",
+                "LineID": "scene1_Scene1_Left_MIM6",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "scene1.ink",
+                  "LineNum": 44
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "scene1.ink",
+              "LineNum": 43
+            },
+            "Comments": [],
+            "Tags": []
+          }
+        ],
+        "Origin": {
+          "SourceFilePath": "scene1.ink",
+          "LineNum": 42
+        },
+        "Comments": [],
+        "Tags": []
+      }
+    ],
+    "Origin": {
+      "SourceFilePath": "scene1.ink",
+      "LineNum": 1
+    },
+    "Comments": [],
+    "Tags": [
+      "ws:final"
+    ]
+  },
+  {
+    "SceneID": "TestScene",
+    "Blocks": [
+      {
+        "BlockID": "",
+        "Snippets": [
+          {
+            "BraceComments": [],
+            "SnippetID": "HZsW",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "LAURA",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "This is a line I am saying.",
+                "LineID": "main_TestScene_16U4",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "main.ink",
+                  "LineNum": 32
+                },
+                "Comments": [
+                  "Comment for a line.",
+                  "Another comment for the same line."
+                ],
+                "Tags": [
+                  "tag1",
+                  "tag2",
+                  "ws:stub",
+                  "type:conversation"
+                ]
+              },
+              {
+                "Type": "Line",
+                "CharacterID": "LAURA",
+                "Qualifier": "O.S.",
+                "Direction": "",
+                "Text": "This is another line.",
+                "LineID": "main_TestScene_FF1T",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "main.ink",
+                  "LineNum": 36
+                },
+                "Comments": [
+                  "VO: This comment goes to the voice actor.",
+                  "LOC: This comment goes to the localisers"
+                ],
+                "Tags": [
+                  "ws:stub",
+                  "type:conversation"
+                ]
+              },
+              {
+                "Type": "Line",
+                "CharacterID": "FRED",
+                "Qualifier": "",
+                "Direction": "loudly",
+                "Text": "This is a loud line!",
+                "LineID": "main_TestScene_BQ1E",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "main.ink",
+                  "LineNum": 38
+                },
+                "Comments": [
+                  "Fred is angry."
+                ],
+                "Tags": [
+                  "ws:stub",
+                  "type:conversation"
+                ]
+              },
+              {
+                "Type": "Action",
+                "Text": "Now bounce around the place!",
+                "LineID": "main_TestScene_79PN",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "main.ink",
+                  "LineNum": 39
+                },
+                "Comments": [],
+                "Tags": [
+                  "ws:draft1",
+                  "type:conversation"
+                ]
+              },
+              {
+                "Type": "Action",
+                "Text": "(SFX) Make a bang noise!",
+                "LineID": "main_TestScene_96IR",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "main.ink",
+                  "LineNum": 40
+                },
+                "Comments": [],
+                "Tags": [
+                  "ws:draft2",
+                  "type:conversation"
+                ]
+              },
+              {
+                "Type": "Line",
+                "CharacterID": "FRED",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "Glad that\u0027s over with!",
+                "LineID": "main_TestScene_IQIS",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "main.ink",
+                  "LineNum": 41
+                },
+                "Comments": [],
+                "Tags": [
+                  "vo:loud",
+                  "ws:stub",
+                  "type:conversation"
+                ]
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "main.ink",
+              "LineNum": 32
+            },
+            "Comments": [],
+            "Tags": []
+          }
+        ],
+        "Origin": {
+          "SourceFilePath": "main.ink",
+          "LineNum": 27
+        },
+        "Comments": [
+          "This comment should apply to Test Scene.",
+          "And so should this."
+        ],
+        "Tags": []
+      }
+    ],
+    "Origin": {
+      "SourceFilePath": "main.ink",
+      "LineNum": 27
+    },
+    "Comments": [],
+    "Tags": [
+      "ws:stub",
+      "type:conversation"
+    ]
+  },
+  {
+    "SceneID": "Barks",
+    "Blocks": [
+      {
+        "BlockID": "",
+        "Snippets": [
+          {
+            "BraceComments": [
+              "This is for all the barks."
+            ],
+            "SnippetID": "yB7G",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "FRED",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "Bark1",
+                "LineID": "main_Barks_O037",
+                "Group": 1,
+                "Origin": {
+                  "SourceFilePath": "main.ink",
+                  "LineNum": 47
+                },
+                "Comments": [
+                  "VO:This is for the one-legged version."
+                ],
+                "Tags": [
+                  "ws:stub"
+                ]
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "main.ink",
+              "LineNum": 47
+            },
+            "Comments": [],
+            "Tags": []
+          },
+          {
+            "BraceComments": [
+              "This is for all the barks."
+            ],
+            "SnippetID": "8qco",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "FRED",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "Bark2",
+                "LineID": "main_Barks_UWZ2",
+                "Group": 1,
+                "Origin": {
+                  "SourceFilePath": "main.ink",
+                  "LineNum": 48
+                },
+                "Comments": [],
+                "Tags": [
+                  "ws:stub"
+                ]
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "main.ink",
+              "LineNum": 48
+            },
+            "Comments": [],
+            "Tags": []
+          },
+          {
+            "BraceComments": [
+              "This is for all the barks."
+            ],
+            "SnippetID": "e5CF",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "FRED",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "Bark3",
+                "LineID": "main_Barks_1ZG8",
+                "Group": 1,
+                "Origin": {
+                  "SourceFilePath": "main.ink",
+                  "LineNum": 49
+                },
+                "Comments": [
+                  "VO:How about this?"
+                ],
+                "Tags": [
+                  "vo:soft",
+                  "vo:radio",
+                  "ws:stub"
+                ]
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "main.ink",
+              "LineNum": 49
+            },
+            "Comments": [],
+            "Tags": []
+          },
+          {
+            "BraceComments": [
+              "This is for all the barks."
+            ],
+            "SnippetID": "3D8N",
+            "Beats": [
+              {
+                "Type": "Action",
+                "Text": "Testing a normal line.",
+                "LineID": "main_Barks_046M",
+                "Group": 1,
+                "Origin": {
+                  "SourceFilePath": "main.ink",
+                  "LineNum": 50
+                },
+                "Comments": [],
+                "Tags": [
+                  "ws:stub"
+                ]
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "main.ink",
+              "LineNum": 50
+            },
+            "Comments": [],
+            "Tags": []
+          },
+          {
+            "BraceComments": [
+              "This is for all the barks."
+            ],
+            "SnippetID": "imom",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "FRED",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "Bark4",
+                "LineID": "main_Barks_JFG1",
+                "Group": 1,
+                "Origin": {
+                  "SourceFilePath": "main.ink",
+                  "LineNum": 52
+                },
+                "Comments": [],
+                "Tags": [
+                  "ws:stub"
+                ]
+              },
+              {
+                "Type": "Line",
+                "CharacterID": "JIM",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "Response to Bark 4.",
+                "LineID": "main_Barks_X291",
+                "Group": 1,
+                "Origin": {
+                  "SourceFilePath": "main.ink",
+                  "LineNum": 53
+                },
+                "Comments": [],
+                "Tags": [
+                  "ws:stub"
+                ]
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "main.ink",
+              "LineNum": 52
+            },
+            "Comments": [],
+            "Tags": []
+          },
+          {
+            "BraceComments": [
+              "This is for all the barks."
+            ],
+            "SnippetID": "bM6A",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "FRED",
+                "Qualifier": "",
+                "Direction": "shouting",
+                "Text": "Bark5",
+                "LineID": "main_Barks_L2SX",
+                "Group": 1,
+                "Origin": {
+                  "SourceFilePath": "main.ink",
+                  "LineNum": 55
+                },
+                "Comments": [],
+                "Tags": [
+                  "ws:stub"
+                ]
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "main.ink",
+              "LineNum": 55
+            },
+            "Comments": [],
+            "Tags": []
+          },
+          {
+            "BraceComments": [
+              "This is for all the barks."
+            ],
+            "SnippetID": "iG2V",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "FRED",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "Bark6",
+                "LineID": "main_Barks_N07F",
+                "Group": 1,
+                "Origin": {
+                  "SourceFilePath": "main.ink",
+                  "LineNum": 56
+                },
+                "Comments": [],
+                "Tags": [
+                  "ws:stub"
+                ]
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "main.ink",
+              "LineNum": 56
+            },
+            "Comments": [],
+            "Tags": []
+          }
+        ],
+        "Origin": {
+          "SourceFilePath": "main.ink",
+          "LineNum": 44
+        },
+        "Comments": [],
+        "Tags": []
+      }
+    ],
+    "Origin": {
+      "SourceFilePath": "main.ink",
+      "LineNum": 44
+    },
+    "Comments": [],
+    "Tags": []
+  },
+  {
+    "SceneID": "Recording",
+    "Blocks": [
+      {
+        "BlockID": "",
+        "Snippets": [
+          {
+            "BraceComments": [],
+            "SnippetID": "AeWx",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "FRED",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "This is a recording line.",
+                "LineID": "main_Recording_7ZMT",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "main.ink",
+                  "LineNum": 62
+                },
+                "Comments": [],
+                "Tags": [
+                  "ws:draft1"
+                ]
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "main.ink",
+              "LineNum": 62
+            },
+            "Comments": [],
+            "Tags": []
+          }
+        ],
+        "Origin": {
+          "SourceFilePath": "main.ink",
+          "LineNum": 60
+        },
+        "Comments": [],
+        "Tags": []
+      },
+      {
+        "BlockID": "PartA",
+        "Snippets": [
+          {
+            "BraceComments": [
+              "A: This comment should apply to the snippet.",
+              "this comment should apply to this snippet"
+            ],
+            "SnippetID": "h4kL",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "JIM",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "This is a line hidden by a false clause.",
+                "LineID": "main_Recording_PartA_U9ZN",
+                "Group": 2,
+                "Origin": {
+                  "SourceFilePath": "main.ink",
+                  "LineNum": 70
+                },
+                "Comments": [
+                  "A: This comment should apply to Jim\u0027s line."
+                ],
+                "Tags": [
+                  "ws:draft2"
+                ]
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "main.ink",
+              "LineNum": 70
+            },
+            "Comments": [],
+            "Tags": []
+          }
+        ],
+        "Origin": {
+          "SourceFilePath": "main.ink",
+          "LineNum": 65
+        },
+        "Comments": [],
+        "Tags": []
+      },
+      {
+        "BlockID": "PartB",
+        "Snippets": [
+          {
+            "BraceComments": [
+              "B: This comment should apply to the snippet below.",
+              "B: This should apply to the first bit of the snippet I guess?"
+            ],
+            "SnippetID": "8Dkk",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "JIM",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "This is a line.",
+                "LineID": "main_Recording_PartB_VPX8",
+                "Group": 3,
+                "Origin": {
+                  "SourceFilePath": "main.ink",
+                  "LineNum": 80
+                },
+                "Comments": [],
+                "Tags": [
+                  "ws:draft1"
+                ]
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "main.ink",
+              "LineNum": 80
+            },
+            "Comments": [],
+            "Tags": []
+          },
+          {
+            "BraceComments": [
+              "B: This comment should apply to the snippet below.",
+              "B: This should apply to the first bit of the snippet I guess?"
+            ],
+            "SnippetID": "nNDO",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "FRED",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "This is a line.",
+                "LineID": "main_Recording_PartB_FH4U",
+                "Group": 3,
+                "Origin": {
+                  "SourceFilePath": "main.ink",
+                  "LineNum": 82
+                },
+                "Comments": [],
+                "Tags": [
+                  "ws:draft1"
+                ]
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "main.ink",
+              "LineNum": 82
+            },
+            "Comments": [],
+            "Tags": []
+          },
+          {
+            "BraceComments": [
+              "B: This comment should apply to the snippet below.",
+              "B: This should apply to the first bit of the snippet I guess?"
+            ],
+            "SnippetID": "B23F",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "FRED",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "This is also a line.",
+                "LineID": "main_Recording_PartB_1RQS",
+                "Group": 3,
+                "Origin": {
+                  "SourceFilePath": "main.ink",
+                  "LineNum": 84
+                },
+                "Comments": [],
+                "Tags": [
+                  "ws:draft1"
+                ]
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "main.ink",
+              "LineNum": 84
+            },
+            "Comments": [],
+            "Tags": []
+          }
+        ],
+        "Origin": {
+          "SourceFilePath": "main.ink",
+          "LineNum": 75
+        },
+        "Comments": [
+          "This comment should apply to block PartB"
+        ],
+        "Tags": []
+      },
+      {
+        "BlockID": "PartC",
+        "Snippets": [
+          {
+            "BraceComments": [
+              "C: This comment should apply to the snippet below.",
+              "VO: A set of lines about monkeys"
+            ],
+            "SnippetID": "i6Fp",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "FRED",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "This is a first line about monkeys.",
+                "LineID": "main_Recording_PartC_JITN",
+                "Group": 4,
+                "Origin": {
+                  "SourceFilePath": "main.ink",
+                  "LineNum": 91
+                },
+                "Comments": [],
+                "Tags": [
+                  "ws:draft1"
+                ]
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "main.ink",
+              "LineNum": 91
+            },
+            "Comments": [],
+            "Tags": []
+          },
+          {
+            "BraceComments": [
+              "C: This comment should apply to the snippet below.",
+              "VO: A set of lines about monkeys"
+            ],
+            "SnippetID": "jl4Q",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "FRED",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "This is a second line about monkeys.",
+                "LineID": "main_Recording_PartC_GUS9",
+                "Group": 4,
+                "Origin": {
+                  "SourceFilePath": "main.ink",
+                  "LineNum": 92
+                },
+                "Comments": [],
+                "Tags": [
+                  "ws:draft1"
+                ]
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "main.ink",
+              "LineNum": 92
+            },
+            "Comments": [],
+            "Tags": []
+          },
+          {
+            "BraceComments": [
+              "C: This comment should apply to the snippet below.",
+              "VO: A set of lines about monkeys"
+            ],
+            "SnippetID": "NVBS",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "FRED",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "This is a third monkey line.",
+                "LineID": "main_Recording_PartC_3VZB",
+                "Group": 4,
+                "Origin": {
+                  "SourceFilePath": "main.ink",
+                  "LineNum": 93
+                },
+                "Comments": [],
+                "Tags": [
+                  "ws:draft1"
+                ]
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "main.ink",
+              "LineNum": 93
+            },
+            "Comments": [],
+            "Tags": []
+          },
+          {
+            "BraceComments": [
+              "C: This comment should apply to the snippet below.",
+              "VO: A set of lines about monkeys"
+            ],
+            "SnippetID": "TTtS",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "FRED",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "This is a final monkey line.",
+                "LineID": "main_Recording_PartC_A18G",
+                "Group": 4,
+                "Origin": {
+                  "SourceFilePath": "main.ink",
+                  "LineNum": 94
+                },
+                "Comments": [],
+                "Tags": [
+                  "ws:draft1"
+                ]
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "main.ink",
+              "LineNum": 94
+            },
+            "Comments": [],
+            "Tags": []
+          }
+        ],
+        "Origin": {
+          "SourceFilePath": "main.ink",
+          "LineNum": 88
+        },
+        "Comments": [],
+        "Tags": []
+      },
+      {
+        "BlockID": "PartD",
+        "Snippets": [
+          {
+            "BraceComments": [],
+            "SnippetID": "cdlm",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "JIM",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "This is a line.",
+                "LineID": "main_Recording_PartD_UC9D",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "main.ink",
+                  "LineNum": 102
+                },
+                "Comments": [],
+                "Tags": [
+                  "ws:draft1"
+                ]
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "main.ink",
+              "LineNum": 102
+            },
+            "Comments": [],
+            "Tags": []
+          },
+          {
+            "BraceComments": [],
+            "SnippetID": "ibeO",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "JIM",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "This is also a line.",
+                "LineID": "main_Recording_PartD_08WO",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "main.ink",
+                  "LineNum": 104
+                },
+                "Comments": [],
+                "Tags": [
+                  "ws:draft1"
+                ]
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "main.ink",
+              "LineNum": 104
+            },
+            "Comments": [],
+            "Tags": []
+          }
+        ],
+        "Origin": {
+          "SourceFilePath": "main.ink",
+          "LineNum": 98
+        },
+        "Comments": [],
+        "Tags": []
+      },
+      {
+        "BlockID": "PartE",
+        "Snippets": [
+          {
+            "BraceComments": [],
+            "SnippetID": "5suK",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "FRED",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "Goodbye!",
+                "LineID": "main_Recording_PartE_81AO",
+                "Group": 5,
+                "Origin": {
+                  "SourceFilePath": "main.ink",
+                  "LineNum": 109
+                },
+                "Comments": [],
+                "Tags": [
+                  "ws:draft1"
+                ]
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "main.ink",
+              "LineNum": 109
+            },
+            "Comments": [],
+            "Tags": []
+          },
+          {
+            "BraceComments": [],
+            "SnippetID": "sRTR",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "FRED",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "Seeya!",
+                "LineID": "main_Recording_PartE_JY1W",
+                "Group": 5,
+                "Origin": {
+                  "SourceFilePath": "main.ink",
+                  "LineNum": 110
+                },
+                "Comments": [],
+                "Tags": [
+                  "ws:draft1"
+                ]
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "main.ink",
+              "LineNum": 110
+            },
+            "Comments": [],
+            "Tags": []
+          },
+          {
+            "BraceComments": [],
+            "SnippetID": "49Gp",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "FRED",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "Whoops!",
+                "LineID": "main_Recording_PartE_QEM8",
+                "Group": 5,
+                "Origin": {
+                  "SourceFilePath": "main.ink",
+                  "LineNum": 111
+                },
+                "Comments": [],
+                "Tags": [
+                  "ws:draft1"
+                ]
+              },
+              {
+                "Type": "Line",
+                "CharacterID": "JIM",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "Responds.",
+                "LineID": "main_Recording_PartE_KABN",
+                "Group": 5,
+                "Origin": {
+                  "SourceFilePath": "main.ink",
+                  "LineNum": 112
+                },
+                "Comments": [],
+                "Tags": [
+                  "ws:draft1"
+                ]
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "main.ink",
+              "LineNum": 111
+            },
+            "Comments": [],
+            "Tags": []
+          }
+        ],
+        "Origin": {
+          "SourceFilePath": "main.ink",
+          "LineNum": 107
+        },
+        "Comments": [],
+        "Tags": []
+      }
+    ],
+    "Origin": {
+      "SourceFilePath": "main.ink",
+      "LineNum": 60
+    },
+    "Comments": [],
+    "Tags": [
+      "ws:draft2",
+      "ws:draft1"
+    ]
+  },
+  {
+    "SceneID": "Branches",
+    "Blocks": [
+      {
+        "BlockID": "",
+        "Snippets": [
+          {
+            "BraceComments": [],
+            "SnippetID": "Q67U",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "DAVE",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "This is a conversation.",
+                "LineID": "branches_Branches_41YM",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "branches.ink",
+                  "LineNum": 3
+                },
+                "Comments": [],
+                "Tags": []
+              },
+              {
+                "Type": "Line",
+                "CharacterID": "JIM",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "You\u0027re right, it is! You got a question?",
+                "LineID": "branches_Branches_YTUY",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "branches.ink",
+                  "LineNum": 5
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "branches.ink",
+              "LineNum": 3
+            },
+            "Comments": [],
+            "Tags": []
+          },
+          {
+            "BraceComments": [],
+            "SnippetID": "73gF",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "DAVE",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "I suppose I do.",
+                "LineID": "branches_Branches_I7F9",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "branches.ink",
+                  "LineNum": 8
+                },
+                "Comments": [],
+                "Tags": []
+              },
+              {
+                "Type": "Line",
+                "CharacterID": "JIM",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "Really?",
+                "LineID": "branches_Branches_PACN",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "branches.ink",
+                  "LineNum": 10
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "branches.ink",
+              "LineNum": 8
+            },
+            "Comments": [
+              "OPTION \u0022I suppose I do.\u0022"
+            ],
+            "Tags": []
+          },
+          {
+            "BraceComments": [],
+            "SnippetID": "pNJR",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "DAVE",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "I don\u0027t.",
+                "LineID": "branches_Branches_60XU",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "branches.ink",
+                  "LineNum": 12
+                },
+                "Comments": [],
+                "Tags": []
+              },
+              {
+                "Type": "Line",
+                "CharacterID": "JIM",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "That seems unlikely.",
+                "LineID": "branches_Branches_9ZRB",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "branches.ink",
+                  "LineNum": 14
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "branches.ink",
+              "LineNum": 12
+            },
+            "Comments": [
+              "OPTION \u0022I don\u0027t.\u0022"
+            ],
+            "Tags": []
+          },
+          {
+            "BraceComments": [],
+            "SnippetID": "AAVU",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "JIM",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "Anyway, cold in here isn\u0027t it.",
+                "LineID": "branches_Branches_49C7",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "branches.ink",
+                  "LineNum": 16
+                },
+                "Comments": [],
+                "Tags": []
+              },
+              {
+                "Type": "Line",
+                "CharacterID": "JIM",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "What do you want to do?",
+                "LineID": "branches_Branches_6B6A",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "branches.ink",
+                  "LineNum": 18
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "branches.ink",
+              "LineNum": 16
+            },
+            "Comments": [
+              "MERGE"
+            ],
+            "Tags": []
+          }
+        ],
+        "Origin": {
+          "SourceFilePath": "branches.ink",
+          "LineNum": 1
+        },
+        "Comments": [],
+        "Tags": []
+      },
+      {
+        "BlockID": "BigRoom",
+        "Snippets": [
+          {
+            "BraceComments": [],
+            "SnippetID": "Ei8I",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "DAVE",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "I want to talk about the big room.",
+                "LineID": "branches_Branches_BigRoom_9CMB",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "branches.ink",
+                  "LineNum": 26
+                },
+                "Comments": [],
+                "Tags": []
+              },
+              {
+                "Type": "Line",
+                "CharacterID": "JIM",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "Well, it\u0027s big.",
+                "LineID": "branches_Branches_BigRoom_GPMN",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "branches.ink",
+                  "LineNum": 28
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "branches.ink",
+              "LineNum": 26
+            },
+            "Comments": [],
+            "Tags": []
+          }
+        ],
+        "Origin": {
+          "SourceFilePath": "branches.ink",
+          "LineNum": 25
+        },
+        "Comments": [],
+        "Tags": []
+      },
+      {
+        "BlockID": "SmallRoom",
+        "Snippets": [
+          {
+            "BraceComments": [],
+            "SnippetID": "pKlR",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "DAVE",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "I want to talk about the small room.",
+                "LineID": "branches_Branches_SmallRoom_P8X1",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "branches.ink",
+                  "LineNum": 32
+                },
+                "Comments": [],
+                "Tags": []
+              },
+              {
+                "Type": "Line",
+                "CharacterID": "JIM",
+                "Qualifier": "",
+                "Direction": "sarcastic",
+                "Text": "Wel, it\u0027s quite small.",
+                "LineID": "branches_Branches_SmallRoom_413C",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "branches.ink",
+                  "LineNum": 34
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "branches.ink",
+              "LineNum": 32
+            },
+            "Comments": [],
+            "Tags": []
+          }
+        ],
+        "Origin": {
+          "SourceFilePath": "branches.ink",
+          "LineNum": 31
+        },
+        "Comments": [],
+        "Tags": []
+      },
+      {
+        "BlockID": "Hub",
+        "Snippets": [
+          {
+            "BraceComments": [],
+            "SnippetID": "rVsa",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "JIM",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "Any more questions?",
+                "LineID": "branches_Branches_Hub_4ZNX",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "branches.ink",
+                  "LineNum": 38
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "branches.ink",
+              "LineNum": 38
+            },
+            "Comments": [],
+            "Tags": []
+          },
+          {
+            "BraceComments": [],
+            "SnippetID": "SD5c",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "DAVE",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "What colour is the sky? Green or grey?",
+                "LineID": "branches_Branches_Hub_UYYD",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "branches.ink",
+                  "LineNum": 41
+                },
+                "Comments": [],
+                "Tags": []
+              },
+              {
+                "Type": "Line",
+                "CharacterID": "JIM",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "It\u0027s pink, obviously.",
+                "LineID": "branches_Branches_Hub_A048",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "branches.ink",
+                  "LineNum": 42
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "branches.ink",
+              "LineNum": 41
+            },
+            "Comments": [
+              "OPTION \u0022What colour is the sky?\u0022"
+            ],
+            "Tags": []
+          },
+          {
+            "BraceComments": [],
+            "SnippetID": "KaEG",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "DAVE",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "Why are monkeys green? It\u0027s a bit weird?",
+                "LineID": "branches_Branches_Hub_L1BZ",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "branches.ink",
+                  "LineNum": 44
+                },
+                "Comments": [],
+                "Tags": []
+              },
+              {
+                "Type": "Line",
+                "CharacterID": "JIM",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "Grass-stains.",
+                "LineID": "branches_Branches_Hub_Z1BD",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "branches.ink",
+                  "LineNum": 45
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "branches.ink",
+              "LineNum": 44
+            },
+            "Comments": [
+              "OPTION \u0022Why are monkeys green?\u0022"
+            ],
+            "Tags": []
+          }
+        ],
+        "Origin": {
+          "SourceFilePath": "branches.ink",
+          "LineNum": 37
+        },
+        "Comments": [],
+        "Tags": []
+      },
+      {
+        "BlockID": "Bigger",
+        "Snippets": [
+          {
+            "BraceComments": [],
+            "SnippetID": "al0o",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "DAVE",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "Is there something bigger?",
+                "LineID": "branches_Branches_Bigger_TY68",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "branches.ink",
+                  "LineNum": 56
+                },
+                "Comments": [],
+                "Tags": []
+              },
+              {
+                "Type": "Line",
+                "CharacterID": "JIM",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "Yeah, a real big thing.",
+                "LineID": "branches_Branches_Bigger_MFAH",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "branches.ink",
+                  "LineNum": 57
+                },
+                "Comments": [],
+                "Tags": []
+              },
+              {
+                "Type": "Line",
+                "CharacterID": "JIM",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "With multiple lines.",
+                "LineID": "branches_Branches_Bigger_C70O",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "branches.ink",
+                  "LineNum": 58
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "branches.ink",
+              "LineNum": 56
+            },
+            "Comments": [],
+            "Tags": []
+          }
+        ],
+        "Origin": {
+          "SourceFilePath": "branches.ink",
+          "LineNum": 55
+        },
+        "Comments": [],
+        "Tags": []
+      }
+    ],
+    "Origin": {
+      "SourceFilePath": "branches.ink",
+      "LineNum": 1
+    },
+    "Comments": [],
+    "Tags": []
+  },
+  {
+    "SceneID": "Flow",
+    "Blocks": [
+      {
+        "BlockID": "",
+        "Snippets": [
+          {
+            "BraceComments": [],
+            "SnippetID": "GfO3",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "DAVE",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "I am the colour of night.",
+                "LineID": "branches_Flow_5QGJ",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "branches.ink",
+                  "LineNum": 63
+                },
+                "Comments": [],
+                "Tags": []
+              },
+              {
+                "Type": "Line",
+                "CharacterID": "JIM",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "What a load of nonsense.",
+                "LineID": "branches_Flow_EPML",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "branches.ink",
+                  "LineNum": 64
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "branches.ink",
+              "LineNum": 63
+            },
+            "Comments": [],
+            "Tags": []
+          },
+          {
+            "BraceComments": [],
+            "SnippetID": "h2Bx",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "DAVE",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "Branch 1.",
+                "LineID": "branches_Flow_HWO9",
+                "Group": 1,
+                "Origin": {
+                  "SourceFilePath": "branches.ink",
+                  "LineNum": 68
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "branches.ink",
+              "LineNum": 68
+            },
+            "Comments": [],
+            "Tags": []
+          },
+          {
+            "BraceComments": [],
+            "SnippetID": "vdyO",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "DAVE",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "Branch 2.",
+                "LineID": "branches_Flow_IGPY",
+                "Group": 1,
+                "Origin": {
+                  "SourceFilePath": "branches.ink",
+                  "LineNum": 70
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "branches.ink",
+              "LineNum": 70
+            },
+            "Comments": [],
+            "Tags": []
+          },
+          {
+            "BraceComments": [],
+            "SnippetID": "NiwX",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "DAVE",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "Branch 3.",
+                "LineID": "branches_Flow_QCX4",
+                "Group": 1,
+                "Origin": {
+                  "SourceFilePath": "branches.ink",
+                  "LineNum": 72
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "branches.ink",
+              "LineNum": 72
+            },
+            "Comments": [],
+            "Tags": []
+          },
+          {
+            "BraceComments": [],
+            "SnippetID": "CQBs",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "JIM",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "And we\u0027re back.",
+                "LineID": "branches_Flow_EEQU",
+                "Group": 0,
+                "Origin": {
+                  "SourceFilePath": "branches.ink",
+                  "LineNum": 74
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Origin": {
+              "SourceFilePath": "branches.ink",
+              "LineNum": 74
+            },
+            "Comments": [
+              "MERGE"
+            ],
+            "Tags": []
+          }
+        ],
+        "Origin": {
+          "SourceFilePath": "branches.ink",
+          "LineNum": 61
+        },
+        "Comments": [],
+        "Tags": []
+      }
+    ],
+    "Origin": {
+      "SourceFilePath": "branches.ink",
+      "LineNum": 61
+    },
+    "Comments": [],
+    "Tags": []
+  }
+]

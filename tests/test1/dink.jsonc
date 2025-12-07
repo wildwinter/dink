@@ -2,7 +2,7 @@
     // What's the source Ink file?
     "source": "main.ink",
     // Where's the folder to output everything?
-    "destFolder": "../tmp",
+    "destFolder": "output",
     // What code should be used for the strings file name?
     "defaultLocaleCode":"en-GB",
     // Localise actions?
