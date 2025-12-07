@@ -81,16 +81,17 @@ public class DinkParser
         return false;
     }
     
+    private static readonly Regex _rxFlowBreaking = new Regex(
+        @"^-\s*[A-Z][A-Z0-9_]*.*:", 
+        RegexOptions.Compiled | RegexOptions.Singleline);
+
     public static bool IsFlowBreakingDinkLine(string line)
     {
         line = line.Trim();
         if (string.IsNullOrEmpty(line))
             return false;
 
-        if (Regex.IsMatch(line, @"^-\s*[A-Z][A-Z0-9_]*.*:"))
-            return true;
-
-        return false;
+        return _rxFlowBreaking.IsMatch(line);
     }
 
     public static bool IsFlowBreakingLine(string line)
@@ -136,14 +137,15 @@ public class DinkParser
         return idValue;
     }
 
+    // Matches a line that *only* consists of optional leading/trailing space 
+    // and one or more tag structures (e.g., " #tag1 #tag2 ").
+    private static readonly Regex _rxTagLine = new Regex(
+        @"^\s*(?:\#(?<TagValue>\S+)(\s+\#(?<TagValue>\S+))*)\s*$", 
+        RegexOptions.Compiled | RegexOptions.Singleline);
+
     public static List<string>? ParseTagLine(string line)
     {
-        // Matches a line that *only* consists of optional leading/trailing space 
-        // and one or more tag structures (e.g., " #tag1 #tag2 ").
-        const string pattern =
-            @"^\s*(?:\#(?<TagValue>\S+)(\s+\#(?<TagValue>\S+))*)\s*$";
-
-        Match match = Regex.Match(line, pattern, RegexOptions.Singleline);
+        Match match = _rxTagLine.Match(line);
 
         if (!match.Success)
             return null;
@@ -193,21 +195,22 @@ public class DinkParser
         return true;
     }
     
+    // ^\s* - Optional leading whitespace
+    // [-] - Optional minus symbol (for shuffles etc.)
+    // \s* - Optional whitespace
+    // (?<Text>[\w].*?)                      - Capture Text non-greedily (everything until the tags start)
+    // (?:\s+\#(?<TagValue>\S+))* - Non-capturing group for zero or more tags:
+    //                                      - \s+\# - Must have 1+ whitespace, then '#' (per spec)
+    //                                      - (?<TagValue>\S+) - Capture group 'TagValue' (the tag string without '#')
+    // $   
+    //    
+    private static readonly Regex _rxAction = new Regex(
+        @"^\s*[-]?\s*(?<Text>[^\*\+].*?)(?:\s+\#(?<TagValue>\S+))+$", 
+        RegexOptions.Compiled | RegexOptions.Singleline);
+
     public static DinkAction? ParseAction(string line)
     {
-        // ^\s* - Optional leading whitespace
-        // [-] - Optional minus symbol (for shuffles etc.)
-        // \s* - Optional whitespace
-        // (?<Text>[\w].*?)                      - Capture Text non-greedily (everything until the tags start)
-        // (?:\s+\#(?<TagValue>\S+))* - Non-capturing group for zero or more tags:
-        //                                      - \s+\# - Must have 1+ whitespace, then '#' (per spec)
-        //                                      - (?<TagValue>\S+) - Capture group 'TagValue' (the tag string without '#')
-        // $   
-        //                                    - End of the string
-        const string pattern =
-            @"^\s*[-]?\s*(?<Text>[^\*\+].*?)(?:\s+\#(?<TagValue>\S+))+$";
-
-        Match match = Regex.Match(line, pattern, RegexOptions.Singleline);
+        Match match = _rxAction.Match(line);
 
         if (!match.Success)
             return null;
@@ -223,28 +226,28 @@ public class DinkParser
         return action;
     }
 
+    // Combined Pattern Breakdown:
+    // ^\s* - Optional leading whitespace
+    // [-] - Optional minus symbol (for shuffles etc.)
+    // \s* - Optional whitespace
+    // (?<CharacterID>[A-Z0-9_]+)           - Capture Group 'CharacterID' (caps, numbers, underscores)
+    // \s* - Optional whitespace
+    // (?:\(\s*(?<Qualifier>.*?)\s*\))?    - Optional Qualifier group: ( optional space, Capture 'Qualifier' (non-greedy), optional space )
+    // \s* - Optional whitespace
+    // :                                      - Mandatory colon
+    // \s* - Optional whitespace
+    // (?:\(\s*(?<Direction>.*?)\s*\})?     - Optional Direction group: ( optional space, Capture 'Direction' (non-greedy), optional space )
+    // \s* - Optional whitespace
+    // (?<Text>[\w].*?)                      - Capture Text non-greedily (everything until the tags start)
+    // (?:\s+\#(?<TagValue>\S+))* - Zero or more tags: (whitespace, #, Capture 'TagValue' without #)
+    // $                                      - End of the string
+    private static readonly Regex _rxLine = new Regex(
+        @"^\s*[-]?\s*(?<CharacterID>[A-Z0-9_]+)\s*(?:\(\s*(?<Qualifier>.*?)\s*\))?\s*:\s*(?:\(\s*(?<Direction>.*?)\s*\))?\s*(?<Text>[\w].*?)(?:\s+\#(?<TagValue>\S+))*$", 
+        RegexOptions.Compiled | RegexOptions.Singleline);
+
     public static DinkLine? ParseLine(string line)
     {
-        // Combined Pattern Breakdown:
-        // ^\s* - Optional leading whitespace
-        // [-] - Optional minus symbol (for shuffles etc.)
-        // \s* - Optional whitespace
-        // (?<CharacterID>[A-Z0-9_]+)           - Capture Group 'CharacterID' (caps, numbers, underscores)
-        // \s* - Optional whitespace
-        // (?:\(\s*(?<Qualifier>.*?)\s*\))?    - Optional Qualifier group: ( optional space, Capture 'Qualifier' (non-greedy), optional space )
-        // \s* - Optional whitespace
-        // :                                      - Mandatory colon
-        // \s* - Optional whitespace
-        // (?:\(\s*(?<Direction>.*?)\s*\})?     - Optional Direction group: ( optional space, Capture 'Direction' (non-greedy), optional space )
-        // \s* - Optional whitespace
-        // (?<Text>[\w].*?)                      - Capture Text non-greedily (everything until the tags start)
-        // (?:\s+\#(?<TagValue>\S+))* - Zero or more tags: (whitespace, #, Capture 'TagValue' without #)
-        // $                                      - End of the string
-
-        const string pattern =
-            @"^\s*[-]?\s*(?<CharacterID>[A-Z0-9_]+)\s*(?:\(\s*(?<Qualifier>.*?)\s*\))?\s*:\s*(?:\(\s*(?<Direction>.*?)\s*\))?\s*(?<Text>[\w].*?)(?:\s+\#(?<TagValue>\S+))*$";
-
-        Match match = Regex.Match(line, pattern, RegexOptions.Singleline);
+        Match match = _rxLine.Match(line);
 
         if (!match.Success)
             return null;
@@ -263,11 +266,12 @@ public class DinkParser
         return dinkLine;
     }
 
+    private static readonly Regex _rxOption = new Regex(
+        @"^\s*[*+]\s*\[\s*([^#\]]+?)\s*(?:#.*?)*\s*\]\s*$",
+        RegexOptions.Compiled | RegexOptions.Singleline);
     public static string? ParseOption(string line)
     {
-        string pattern = @"^\s*[*+]\s*\[\s*([^#\]]+?)\s*(?:#.*?)*\s*\]\s*$";
-        
-        Match match = Regex.Match(line, pattern);
+        Match match = _rxOption.Match(line);
         if (match.Success)
         {
             string content = match.Groups[1].Value.Trim();
@@ -281,32 +285,30 @@ public class DinkParser
         return line.Trim()=="-";
     }
 
+    private static readonly Regex _rxKnot = new Regex(
+        @"^\s*={2,}\s*(?<Identifier>\w+)\b.*$",
+        RegexOptions.Compiled | RegexOptions.Singleline);
     public static string? ParseKnot(string line)
     {
-        // Pattern to extract the identifier
-        const string pattern = @"^\s*={2,}\s*(?<Identifier>\w+)\b.*$";
-
-        Match match = Regex.Match(line, pattern);
+        Match match = _rxKnot.Match(line);
 
         if (match.Success)
         {
-            // Return the captured 'Identifier' group value
             return match.Groups["Identifier"].Value;
         }
 
         return null;
     }
-    
+
+    private static readonly Regex _rxStitch = new Regex(
+        @"^\s*=\s*(?<Identifier>\w+)\b.*$",
+        RegexOptions.Compiled | RegexOptions.Singleline);    
     public static string? ParseStitch(string line)
     {
-        // Pattern to extract the identifier
-        const string pattern = @"^\s*=\s*(?<Identifier>\w+)\b.*$";
-        
-        Match match = Regex.Match(line, pattern);
+        Match match = _rxStitch.Match(line);
         
         if (match.Success)
         {
-            // Return the captured 'Identifier' group value
             return match.Groups["Identifier"].Value;
         }
         
@@ -324,9 +326,12 @@ public class DinkParser
         return new string(buffer);
     }
 
+    private static readonly Regex _rxInkGroup = new Regex(
+        @"^\s*\{\s*(\w+)\s*:\s*$",
+        RegexOptions.Compiled | RegexOptions.Singleline);   
     public static bool ContainsInkGroup(string text)
     {
-        return Regex.IsMatch(text, @"^\s*\{\s*(\w+)\s*:\s*$");
+        return _rxInkGroup.IsMatch(text);
     }
 
     public static bool ContainsCode(string text)
@@ -336,11 +341,13 @@ public class DinkParser
                 ||text.StartsWith("~");
     }
 
+    // Must start with a dash, then expression, then colon.
+    private static readonly Regex _rxExpressionClause = new Regex(
+        @"^\s*-\s*(?<Expression>[^#]+?)\s*:\s*(?<Rest>.*)$",
+        RegexOptions.Compiled | RegexOptions.Singleline);   
     public static (string? Expression, bool IsError) ParseExpressionClause(string line)
     {
-        // Must start with a dash, then expression, then colon.
-        const string pattern = @"^\s*-\s*(?<Expression>[^#]+?)\s*:\s*(?<Rest>.*)$";
-        Match match = Regex.Match(line, pattern);
+        Match match = _rxExpressionClause.Match(line);
         
         if (!match.Success) 
             return (null, false);
@@ -694,14 +701,16 @@ public class DinkParser
         return parsedScenes;
     }
 
+    private static readonly Regex _rxBlockComments = new Regex(
+        @"/\*.*?\*/",
+        RegexOptions.Compiled | RegexOptions.Singleline);  
+
     private static string RemoveBlockComments(string text)
     {
         if (string.IsNullOrEmpty(text))
             return "";
 
-        string pattern = @"/\*.*?\*/";
-
-        string processedText = Regex.Replace(text, pattern, match =>
+        string processedText = _rxBlockComments.Replace(text, match =>
         {
             // Filter the matched comment string to keep ONLY newline characters (\r or \n).
             // This effectively deletes the text content of the comment but 
@@ -713,7 +722,7 @@ public class DinkParser
             // If it's an inline comment (no newlines), this returns an empty string.
             // If it's a multi-line comment, this returns the exact blank lines needed to preserve numbering.
             return new string(newlinesOnly);
-        }, RegexOptions.Singleline);
+        });
         return processedText;
     }
 

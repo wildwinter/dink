@@ -90,8 +90,8 @@ JIM: This is a line hidden by a false clause. #id:main_Recording_PartA_U9ZN
 {shuffle: // VO: A set of lines about monkeys
 - FRED: This is a first line about monkeys. #id:main_Recording_PartC_JITN
 - FRED: This is a second line about monkeys. #id:main_Recording_PartC_GUS9
-- FRED: This is also about monkeys line 3. #id:main_Recording_PartC_3VZB
-- FRED: This is also about monkeys line 4. #id:main_Recording_PartC_A18G
+- FRED: This is a third monkey line. #id:main_Recording_PartC_3VZB
+- FRED: This is a final monkey line. #id:main_Recording_PartC_A18G
 }
 -> PartD
 
