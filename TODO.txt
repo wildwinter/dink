@@ -2,6 +2,7 @@ TODO:
 -----
 Better example scripts
 Add speaker to stats file.
+Actor estimates?
 Script flow doc
 Dink editor
 Live build

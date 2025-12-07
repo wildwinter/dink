@@ -645,11 +645,13 @@ And set any of the Writing Status settings to `estimate:true`:
         }
     ],
 ```
-Then any scene with a relevant tag that only has lines of that status or less will use the estimate listed in the stats table.
+Then any scene with a relevant tag that only has lines of that status or less will use the estimate from the estimates list in the stats table.
 
 This is a way of rapidly guessing the size of the game. You
 might sketch out all the conversations and cutscenes as
 `#ws:stub` status (giving them tags of `#conversation` or `#cutscene`) and Dink's stats will use the estimates rather than the real stub line count.
+
+So if your stub has 1 placeholder line, but you expect it to become a conversation of 50 lines, this is how you track that.
 
 Estimates will have a `?` in the relevant column e.g. `50?`
 
