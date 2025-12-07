@@ -1,67 +1,201 @@
 ﻿{
-	"scene1_Scene1_R819": {"Type":"Action","Text":"Here we are in scene1.ink - this is testing a set of different blocks."},
-	"scene1_Scene1_Part1_S494": {"Type":"Line","CharacterID":"FRED","Qualifier":""},
-	"scene1_Scene1_Part1_ICIG": {"Type":"Line","CharacterID":"FRED","Qualifier":""},
-	"scene1_Scene1_Part1_621G": {"Type":"Action","Text":"And this, here, is an Ink Action, not a line."},
-	"scene1_Scene1_Part1_LTDB": {"Type":"Action","Text":"Actions aren\u0027t localised unless you turn on locActionBeats"},
-	"scene1_Scene1_Part2_N5RW": {"Type":"Action","Text":"You saunter into Part2"},
-	"scene1_Scene1_Part2_HQUO": {"Type":"Action","Text":"This is your first visit."},
-	"scene1_Scene1_Part2_3AHR": {"Type":"Action","Text":"This is your second visit."},
-	"scene1_Scene1_Part2_NR0K": {"Type":"Action","Text":"This is one type of random visit."},
-	"scene1_Scene1_Part2_FLIK": {"Type":"Action","Text":"This is another type of random visit"},
-	"scene1_Scene1_Part3_UZOH": {"Type":"Action","Text":"Dave walks into the room."},
-	"scene1_Scene1_Part3_9MXL": {"Type":"Line","CharacterID":"DAVE","Qualifier":""},
-	"scene1_Scene1_Part4_NY6V": {"Type":"Line","CharacterID":"GEORGE","Qualifier":""},
-	"scene1_Scene1_Part4_F0PF": {"Type":"Line","CharacterID":"FRED","Qualifier":""},
-	"scene1_Scene1_Part4_DNII": {"Type":"Line","CharacterID":"FRED","Qualifier":""},
-	"scene1_Scene1_Part4_AJDP": {"Type":"Line","CharacterID":"FRED","Qualifier":""},
-	"scene1_Scene1_Part4_0YY1": {"Type":"Line","CharacterID":"GEORGE","Qualifier":""},
-	"scene1_Scene1_Right_3V6T": {"Type":"Action","Text":"George swerves the car right."},
-	"scene1_Scene1_Right_WM69": {"Type":"Line","CharacterID":"GEORGE","Qualifier":""},
-	"scene1_Scene1_Left_HZ7B": {"Type":"Action","Text":"George swerves the car left."},
-	"scene1_Scene1_Left_MIM6": {"Type":"Line","CharacterID":"GEORGE","Qualifier":""},
-	"main_LauraChat_JPB2": {"Type":"Action","Text":"You go to see Laura."},
-	"main_LauraChat_CO2Z": {"Type":"Line","CharacterID":"LAURA","Qualifier":""},
-	"main_LauraChat_Hub_5T8A": {"Type":"Line","CharacterID":"LAURA","Qualifier":""},
-	"main_LauraChat_Hub_J0MK": {"Type":"Line","CharacterID":"LAURA","Qualifier":""},
-	"main_LauraChat_Hub_CIMX": {"Type":"Line","CharacterID":"LAURA","Qualifier":""},
-	"main_LauraChat_Hub_L3K7": {"Type":"Line","CharacterID":"LAURA","Qualifier":""},
-	"main_LauraChat_Hub_S0VU": {"Type":"Action","Text":"You go back to the options page."},
-	"main_TestScene_16U4": {"Type":"Line","CharacterID":"LAURA","Qualifier":""},
-	"main_TestScene_G33S": {"Type":"Line","CharacterID":"LAURA","Qualifier":""},
-	"main_TestScene_FF1T": {"Type":"Line","CharacterID":"LAURA","Qualifier":"O.S."},
-	"main_TestScene_BQ1E": {"Type":"Line","CharacterID":"FRED","Qualifier":""},
-	"main_TestScene_79PN": {"Type":"Action","Text":"Now bounce around the place!"},
-	"main_TestScene_96IR": {"Type":"Action","Text":"(SFX) Make a bang noise!"},
-	"main_TestScene_IQIS": {"Type":"Line","CharacterID":"FRED","Qualifier":""},
-	"main_Barks_O037": {"Type":"Line","CharacterID":"FRED","Qualifier":""},
-	"main_Barks_UWZ2": {"Type":"Line","CharacterID":"FRED","Qualifier":""},
-	"main_Barks_1ZG8": {"Type":"Line","CharacterID":"FRED","Qualifier":""},
-	"main_Barks_046M": {"Type":"Action","Text":"Fred goes to the fridge."},
-	"main_Barks_JFG1": {"Type":"Line","CharacterID":"FRED","Qualifier":""},
-	"main_Barks_JFG1": {"Type":"Line","CharacterID":"FRED","Qualifier":""},
-	"main_Barks_X291": {"Type":"Line","CharacterID":"JIM","Qualifier":""},
-	"main_Barks_L2SX": {"Type":"Line","CharacterID":"FRED","Qualifier":""},
-	"main_Barks_N07F": {"Type":"Line","CharacterID":"FRED","Qualifier":""},
-	"scene1_Scene1_R819": {"Type":"Action","Text":"Here we are in scene1.ink - this is testing a set of different blocks."},
-	"scene1_Scene1_Part1_S494": {"Type":"Line","CharacterID":"FRED","Qualifier":""},
-	"scene1_Scene1_Part1_ICIG": {"Type":"Line","CharacterID":"FRED","Qualifier":""},
-	"scene1_Scene1_Part1_621G": {"Type":"Action","Text":"And this, here, is an Ink Action, not a line."},
-	"scene1_Scene1_Part1_LTDB": {"Type":"Action","Text":"Actions aren\u0027t localised unless you turn on locActionBeats"},
-	"scene1_Scene1_Part2_N5RW": {"Type":"Action","Text":"You saunter into Part2"},
-	"scene1_Scene1_Part2_HQUO": {"Type":"Action","Text":"This is your first visit."},
-	"scene1_Scene1_Part2_3AHR": {"Type":"Action","Text":"This is your second visit."},
-	"scene1_Scene1_Part2_NR0K": {"Type":"Action","Text":"This is one type of random visit."},
-	"scene1_Scene1_Part2_FLIK": {"Type":"Action","Text":"This is another type of random visit"},
-	"scene1_Scene1_Part3_UZOH": {"Type":"Action","Text":"Dave walks into the room."},
-	"scene1_Scene1_Part3_9MXL": {"Type":"Line","CharacterID":"DAVE","Qualifier":""},
-	"scene1_Scene1_Part4_NY6V": {"Type":"Line","CharacterID":"GEORGE","Qualifier":""},
-	"scene1_Scene1_Part4_F0PF": {"Type":"Line","CharacterID":"FRED","Qualifier":""},
-	"scene1_Scene1_Part4_DNII": {"Type":"Line","CharacterID":"FRED","Qualifier":""},
-	"scene1_Scene1_Part4_AJDP": {"Type":"Line","CharacterID":"FRED","Qualifier":""},
-	"scene1_Scene1_Part4_0YY1": {"Type":"Line","CharacterID":"GEORGE","Qualifier":""},
-	"scene1_Scene1_Right_3V6T": {"Type":"Action","Text":"George swerves the car right."},
-	"scene1_Scene1_Right_WM69": {"Type":"Line","CharacterID":"GEORGE","Qualifier":""},
-	"scene1_Scene1_Left_HZ7B": {"Type":"Action","Text":"George swerves the car left."},
-	"scene1_Scene1_Left_MIM6": {"Type":"Line","CharacterID":"GEORGE","Qualifier":""}
+  "scene1_Scene1_R819": {
+    "Type": "Action",
+    "Text": "Here we are in scene1.ink - this is testing a set of different blocks."
+  },
+  "scene1_Scene1_Part1_S494": {
+    "Type": "Line",
+    "CharacterID": "FRED",
+    "Qualifier": ""
+  },
+  "scene1_Scene1_Part1_ICIG": {
+    "Type": "Line",
+    "CharacterID": "FRED",
+    "Qualifier": ""
+  },
+  "scene1_Scene1_Part1_621G": {
+    "Type": "Action",
+    "Text": "And this, here, is an Ink Action, not a line."
+  },
+  "scene1_Scene1_Part1_LTDB": {
+    "Type": "Action",
+    "Text": "Actions aren\u0027t localised unless you turn on locActionBeats"
+  },
+  "scene1_Scene1_Part2_N5RW": {
+    "Type": "Action",
+    "Text": "You saunter into Part2"
+  },
+  "scene1_Scene1_Part2_HQUO": {
+    "Type": "Action",
+    "Text": "This is your first visit."
+  },
+  "scene1_Scene1_Part2_3AHR": {
+    "Type": "Action",
+    "Text": "This is your second visit."
+  },
+  "scene1_Scene1_Part2_NR0K": {
+    "Type": "Action",
+    "Text": "This is one type of random visit."
+  },
+  "scene1_Scene1_Part2_FLIK": {
+    "Type": "Action",
+    "Text": "This is another type of random visit"
+  },
+  "scene1_Scene1_Part3_UZOH": {
+    "Type": "Action",
+    "Text": "Dave walks into the room."
+  },
+  "scene1_Scene1_Part3_9MXL": {
+    "Type": "Line",
+    "CharacterID": "DAVE",
+    "Qualifier": ""
+  },
+  "scene1_Scene1_Part4_NY6V": {
+    "Type": "Line",
+    "CharacterID": "GEORGE",
+    "Qualifier": ""
+  },
+  "scene1_Scene1_Part4_F0PF": {
+    "Type": "Line",
+    "CharacterID": "FRED",
+    "Qualifier": ""
+  },
+  "scene1_Scene1_Part4_DNII": {
+    "Type": "Line",
+    "CharacterID": "FRED",
+    "Qualifier": ""
+  },
+  "scene1_Scene1_Part4_AJDP": {
+    "Type": "Line",
+    "CharacterID": "FRED",
+    "Qualifier": ""
+  },
+  "scene1_Scene1_Part4_0YY1": {
+    "Type": "Line",
+    "CharacterID": "GEORGE",
+    "Qualifier": ""
+  },
+  "scene1_Scene1_Right_3V6T": {
+    "Type": "Action",
+    "Text": "George swerves the car right."
+  },
+  "scene1_Scene1_Right_WM69": {
+    "Type": "Line",
+    "CharacterID": "GEORGE",
+    "Qualifier": ""
+  },
+  "scene1_Scene1_Left_HZ7B": {
+    "Type": "Action",
+    "Text": "George swerves the car left."
+  },
+  "scene1_Scene1_Left_MIM6": {
+    "Type": "Line",
+    "CharacterID": "GEORGE",
+    "Qualifier": ""
+  },
+  "main_LauraChat_JPB2": {
+    "Type": "Action",
+    "Text": "You go to see Laura."
+  },
+  "main_LauraChat_CO2Z": {
+    "Type": "Line",
+    "CharacterID": "LAURA",
+    "Qualifier": ""
+  },
+  "main_LauraChat_Hub_5T8A": {
+    "Type": "Line",
+    "CharacterID": "LAURA",
+    "Qualifier": ""
+  },
+  "main_LauraChat_Hub_J0MK": {
+    "Type": "Line",
+    "CharacterID": "LAURA",
+    "Qualifier": ""
+  },
+  "main_LauraChat_Hub_CIMX": {
+    "Type": "Line",
+    "CharacterID": "LAURA",
+    "Qualifier": ""
+  },
+  "main_LauraChat_Hub_L3K7": {
+    "Type": "Line",
+    "CharacterID": "LAURA",
+    "Qualifier": ""
+  },
+  "main_LauraChat_Hub_S0VU": {
+    "Type": "Action",
+    "Text": "You go back to the options page."
+  },
+  "main_TestScene_16U4": {
+    "Type": "Line",
+    "CharacterID": "LAURA",
+    "Qualifier": ""
+  },
+  "main_TestScene_G33S": {
+    "Type": "Line",
+    "CharacterID": "LAURA",
+    "Qualifier": ""
+  },
+  "main_TestScene_FF1T": {
+    "Type": "Line",
+    "CharacterID": "LAURA",
+    "Qualifier": "O.S."
+  },
+  "main_TestScene_BQ1E": {
+    "Type": "Line",
+    "CharacterID": "FRED",
+    "Qualifier": ""
+  },
+  "main_TestScene_79PN": {
+    "Type": "Action",
+    "Text": "Now bounce around the place!"
+  },
+  "main_TestScene_96IR": {
+    "Type": "Action",
+    "Text": "(SFX) Make a bang noise!"
+  },
+  "main_TestScene_IQIS": {
+    "Type": "Line",
+    "CharacterID": "FRED",
+    "Qualifier": ""
+  },
+  "main_Barks_O037": {
+    "Type": "Line",
+    "CharacterID": "FRED",
+    "Qualifier": ""
+  },
+  "main_Barks_UWZ2": {
+    "Type": "Line",
+    "CharacterID": "FRED",
+    "Qualifier": ""
+  },
+  "main_Barks_1ZG8": {
+    "Type": "Line",
+    "CharacterID": "FRED",
+    "Qualifier": ""
+  },
+  "main_Barks_046M": {
+    "Type": "Action",
+    "Text": "Fred goes to the fridge."
+  },
+  "main_Barks_JFG1": {
+    "Type": "Line",
+    "CharacterID": "FRED",
+    "Qualifier": ""
+  },
+  "main_Barks_X291": {
+    "Type": "Line",
+    "CharacterID": "JIM",
+    "Qualifier": ""
+  },
+  "main_Barks_L2SX": {
+    "Type": "Line",
+    "CharacterID": "FRED",
+    "Qualifier": ""
+  },
+  "main_Barks_N07F": {
+    "Type": "Line",
+    "CharacterID": "FRED",
+    "Qualifier": ""
+  }
 }

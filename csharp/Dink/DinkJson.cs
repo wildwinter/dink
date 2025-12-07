@@ -36,46 +36,35 @@ public static class DinkJson
     // *shouldn't* be localised.
     public static string WriteMinimal(List<DinkScene> scenes, bool includeActionBeatText)
     {
-        var options = new JsonSerializerOptions { WriteIndented = false };
-        var lines = new List<string>();
-
+        var exportData = new Dictionary<string, object>();
         foreach (var scene in scenes)
         {
             foreach (var beat in scene.IterateBeats())
             {
-                object obj;
                 if (beat is DinkAction action)
                 {
                     if (includeActionBeatText)
                     {
-                        obj = new
+                        exportData[beat.LineID] = new
                         {
                             Type = "Action",
                             Text = action.Text
                         };
                     }
-                    else 
-                    {
-                        obj = new
-                        {
-                            Type = "Action"
-                        };
-                    }
-                    lines.Add($"\t\"{beat.LineID}\": {JsonSerializer.Serialize(obj, options)}");
                 }
                 else if (beat is DinkLine line)
                 {
-                    obj = new
+                    exportData[beat.LineID] = new
                     {
                         Type = "Line",
                         CharacterID = line.CharacterID,
                         Qualifier = line.Qualifier
                     };
-                    lines.Add($"\t\"{beat.LineID}\": {JsonSerializer.Serialize(obj, options)}");
                 }
             }
         }
-    
-        return "{\n"+string.Join(",\n", lines)+"\n}";
+
+        var options = new JsonSerializerOptions { WriteIndented = true };
+        return JsonSerializer.Serialize(exportData, options);
     }
 }
