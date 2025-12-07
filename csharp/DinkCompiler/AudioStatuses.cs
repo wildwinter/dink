@@ -71,19 +71,10 @@ public class AudioStatuses
     {
         int count = 0;
 
-        foreach(var block in scene.Blocks)
+        foreach(var line in scene.IterateLines())
         {
-            foreach(var snippet in block.Snippets)
-            {
-                foreach (var beat in snippet.Beats)
-                {
-                    if (beat is DinkLine line)
-                    {
-                        if (status==null || GetStatus(beat.LineID).Status == status)
-                            count++;
-                    }
-                }
-            }
+            if (status==null || GetStatus(line.LineID).Status == status)
+                count++;
         }
         return count;
     }

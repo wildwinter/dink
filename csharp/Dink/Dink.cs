@@ -111,6 +111,15 @@ public class DinkSnippet : DinkBase
         return GetEntriesWithPrefixes(BraceComments, prefixes);
     }
     
+    public IEnumerable<DinkLine> IterateLines()
+    {
+        foreach (var beat in Beats)
+        {
+            if (beat is DinkLine line)
+                yield return line;
+        }
+    }
+
     public string SnippetID { get; set; } = string.Empty;
     public List<DinkBeat> Beats { get; set; } = new List<DinkBeat>();
     public override string ToString() => $"Snippet: '{SnippetID}'";
@@ -120,6 +129,30 @@ public class DinkBlock : DinkBase
 {
     public string BlockID { get; set; } = string.Empty;
     public List<DinkSnippet> Snippets { get; set; } = new List<DinkSnippet>();
+
+    public IEnumerable<DinkBeat> IterateBeats()
+    {
+        foreach (var snippet in Snippets)
+        {
+            foreach (var beat in snippet.Beats)
+            {
+                yield return beat;
+            }
+        }
+    }
+
+    public IEnumerable<DinkLine> IterateLines()
+    {
+        foreach (var snippet in Snippets)
+        {
+            foreach (var beat in snippet.Beats)
+            {
+                if (beat is DinkLine line)
+                    yield return line;
+            }
+        }
+    }
+
     public override string ToString() => $"Block: '{BlockID}'";
 }
 

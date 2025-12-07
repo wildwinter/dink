@@ -74,23 +74,17 @@ public class WritingStatuses
     public int GetSceneTagCount(DinkScene scene, string? wsTag=null)
     {
         int count = 0;
-        foreach(var block in scene.Blocks)
+        foreach(var beat in scene.IterateBeats())
         {
-            foreach(var snippet in block.Snippets)
+            if (beat is DinkLine line)
             {
-                foreach (var beat in snippet.Beats)
-                {
-                    if (beat is DinkLine line)
-                    {
-                        if (wsTag==null || GetStatus(beat.LineID).WsTag == wsTag)
-                            count++;
-                    } 
-                    else if (_env.LocActionBeats && beat is DinkAction action)
-                    {
-                        if (wsTag==null || GetStatus(beat.LineID).WsTag == wsTag)
-                            count++;
-                    }
-                }
+                if (wsTag==null || GetStatus(beat.LineID).WsTag == wsTag)
+                    count++;
+            } 
+            else if (_env.LocActionBeats && beat is DinkAction action)
+            {
+                if (wsTag==null || GetStatus(beat.LineID).WsTag == wsTag)
+                    count++;
             }
         }
         return count;

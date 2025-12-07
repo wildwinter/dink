@@ -290,47 +290,41 @@ public class Compiler
 
         foreach (var scene in dinkScenes)
         {
-            foreach( var block in scene.Blocks)
+            foreach( var beat in scene.IterateBeats())
             {
-                foreach (var snippet in block.Snippets)
+                if (beat is DinkAction action)
                 {
-                    foreach (var beat in snippet.Beats)
-                    {
-                        if (beat is DinkAction action)
+                    if (_env.LocActionBeats) {
+                        // Include action beat in the string table.
+                        LocEntry entry = new LocEntry()
                         {
-                            if (_env.LocActionBeats) {
-                                // Include action beat in the string table.
-                                LocEntry entry = new LocEntry()
-                                {
-                                    ID = action.LineID,
-                                    Text = action.Text,
-                                    Comments = action.GetCommentsFor(_env.GetCommentFilters("loc")),
-                                    Speaker = "",
-                                    Origin = action.Origin,
-                                    IsDink = true
-                                };
-                                inkStrings.Set(entry);
-                            }
-                            else
-                            {
-                                // Remove action beats from the string table.
-                                inkStrings.Remove(action.LineID);
-                            }
-                        }
-                        else if (beat is DinkLine line)
-                        {
-                            LocEntry entry = new LocEntry()
-                            {
-                                ID = line.LineID,
-                                Text = line.Text,
-                                Comments = line.GetCommentsFor(_env.GetCommentFilters("loc")),
-                                Speaker = line.CharacterID,
-                                Origin = line.Origin,
-                                IsDink = true
-                            };
-                            inkStrings.Set(entry);
-                        }
+                            ID = action.LineID,
+                            Text = action.Text,
+                            Comments = action.GetCommentsFor(_env.GetCommentFilters("loc")),
+                            Speaker = "",
+                            Origin = action.Origin,
+                            IsDink = true
+                        };
+                        inkStrings.Set(entry);
                     }
+                    else
+                    {
+                        // Remove action beats from the string table.
+                        inkStrings.Remove(action.LineID);
+                    }
+                }
+                else if (beat is DinkLine line)
+                {
+                    LocEntry entry = new LocEntry()
+                    {
+                        ID = line.LineID,
+                        Text = line.Text,
+                        Comments = line.GetCommentsFor(_env.GetCommentFilters("loc")),
+                        Speaker = line.CharacterID,
+                        Origin = line.Origin,
+                        IsDink = true
+                    };
+                    inkStrings.Set(entry);
                 }
             }
         }
@@ -355,88 +349,77 @@ public class Compiler
                 int groupNum = 0;
 
                 Dictionary<int, int> groupSizes = new Dictionary<int, int>();
-                foreach (var snippet in block.Snippets)
+
+                foreach (var line in block.IterateLines())
                 {
-                    if (snippet.Beats.Count==0)
-                        continue;
-                    
-                    foreach (var beat in snippet.Beats)
+                    if (line.Group!=0)
                     {
-                        if (beat is DinkLine line)
-                        {
-                            if (beat.Group!=0)
-                            {
-                                if (groupSizes.ContainsKey(beat.Group))
-                                    groupSizes[beat.Group]++;
-                                else
-                                    groupSizes[beat.Group]=1;
-                                break;
-                            }
-                        }
+                        if (groupSizes.ContainsKey(line.Group))
+                            groupSizes[line.Group]++;
+                        else
+                            groupSizes[line.Group]=1;
+                        break;
                     }
                 }
 
                 foreach (var snippet in block.Snippets)
                 { 
                     int lineIndex = 0;
-                    foreach (var beat in snippet.Beats)
+                    foreach (var line in snippet.IterateLines())
                     {
-                        if (beat is DinkLine line)
+                        lineIndex++;
+
+                        if (line.Group!=0)
                         {
-                            lineIndex++;
-
-                            if (beat.Group!=0)
+                            if (line.Group!=groupNum)
                             {
-                                if (beat.Group!=groupNum)
-                                {
-                                    groupIndex = 0;
-                                    groupNum = beat.Group;
-                                }
-                                if (lineIndex==1) {
-                                    groupIndex++;
-                                }
+                                groupIndex = 0;
+                                groupNum = line.Group;
                             }
-                            else
-                            {
-                                groupNum = 0;
+                            if (lineIndex==1) {
+                                groupIndex++;
                             }
-
-                            VoiceEntry entry = new VoiceEntry()
-                            {
-                                ID = line.LineID,
-                                BlockID = scene.SceneID+(block.BlockID!="" ? "_"+block.BlockID : ""),
-                                Character = line.CharacterID,
-                                Qualifier = line.Qualifier,
-                                Line = line.Text,
-                                Direction = line.Direction,
-                                SnippetID = snippet.SnippetID,
-                                GroupIndicator = "",
-                                BraceComments = new List<string>(),
-                                SnippetComments = snippet.GetCommentsFor(_env.GetCommentFilters("record")),
-                                Comments = line.GetCommentsFor(_env.GetCommentFilters("record")),
-                                Tags = line.GetTagsFor(_env.GetTagFilters("record"))
-                            };
-
-                            if (lineIndex>1)
-                            {
-                                entry.SnippetComments.Clear();
-                            }
-                            
-                            if (groupIndex==1)
-                            {
-                                entry.BraceComments = snippet.GetBraceCommentsFor(_env.GetCommentFilters("record"));
-                            }
-
-                            if (groupNum>0)
-                            {
-                                if (lineIndex==1)
-                                    entry.GroupIndicator = $"({groupIndex}/{groupSizes[beat.Group]})";
-                                else 
-                                    entry.GroupIndicator = "(...)";
-                            }
-
-                            voiceLines.Set(entry);
                         }
+                        else
+                        {
+                            groupNum = 0;
+                        }
+
+                        VoiceEntry entry = new VoiceEntry()
+                        {
+                            ID = line.LineID,
+                            BlockID = scene.SceneID+(block.BlockID!="" ? "_"+block.BlockID : ""),
+                            Character = line.CharacterID,
+                            Qualifier = line.Qualifier,
+                            Line = line.Text,
+                            Direction = line.Direction,
+                            SnippetID = snippet.SnippetID,
+                            GroupIndicator = "",
+                            BraceComments = new List<string>(),
+                            SnippetComments = snippet.GetCommentsFor(_env.GetCommentFilters("record")),
+                            Comments = line.GetCommentsFor(_env.GetCommentFilters("record")),
+                            Tags = line.GetTagsFor(_env.GetTagFilters("record"))
+                        };
+
+                        if (lineIndex>1)
+                        {
+                            entry.SnippetComments.Clear();
+                        }
+                        
+                        if (groupIndex==1)
+                        {
+                            entry.BraceComments = snippet.GetBraceCommentsFor(_env.GetCommentFilters("record"));
+                        }
+
+                        if (groupNum>0)
+                        {
+                            if (lineIndex==1)
+                                entry.GroupIndicator = $"({groupIndex}/{groupSizes[line.Group]})";
+                            else 
+                                entry.GroupIndicator = "(...)";
+                        }
+
+                        voiceLines.Set(entry);
                     }
                 }
             }

@@ -19,6 +19,7 @@ DAVE: (quietly) Let's see if this works, shall we? #id:scene1_Scene1_Part3_9MXL
 -> DONE
 
 = Part4
+#ws:final
 // There is a choice here.
 
 + [Go right #id:scene1_Scene1_Part4_T9GZ]
