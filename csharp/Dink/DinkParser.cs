@@ -49,36 +49,15 @@ public class DinkParser
             Console.WriteLine(str);
     }
 
-    public static bool IsBraceOpeningLine(string line)
+    private static int GetBraceDelta(string line)
     {
-        int openCount = 0;
-        int closeCount = 0;
-
+        int delta = 0;
         foreach (char c in line)
         {
-            if (c == '{') openCount++;
-            else if (c == '}') closeCount++;
+            if (c == '{') delta++;
+            else if (c == '}') delta--;
         }
-
-        if (openCount > closeCount)
-            return true;
-        return false;
-    }
-
-    public static bool IsBraceClosingLine(string line)
-    {
-        int openCount = 0;
-        int closeCount = 0;
-
-        foreach (char c in line)
-        {
-            if (c == '{') openCount++;
-            else if (c == '}') closeCount++;
-        }
-
-        if (openCount < closeCount)
-            return true;
-        return false;
+        return delta;
     }
     
     private static readonly Regex _rxFlowBreaking = new Regex(
@@ -490,7 +469,8 @@ public class DinkParser
 
             hitContent();
 
-            if (IsBraceOpeningLine(trimmedLine))
+            int braceDelta = GetBraceDelta(trimmedLine);
+            if (braceDelta>0)
             {
                 currentBraceContainer = new BraceContainer
                 {
@@ -509,7 +489,7 @@ public class DinkParser
                 }
                 addSnippet();
             }
-            else if (IsBraceClosingLine(trimmedLine))
+            else if (braceDelta<0)
             {
                 currentBraceLevel = Math.Max(0, currentBraceLevel - 1);
                 if (currentBraceLevel < activeGroupLevel)
