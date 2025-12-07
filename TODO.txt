@@ -1,6 +1,5 @@
 TODO:
 -----
-Better example scripts
 Actor estimates?
 Script flow doc
 Dink editor
@@ -44,3 +43,4 @@ DinkVoiceExport: Export all lines with specific character, scene, tags.
 Stats doc: Estimates
 Add speaker to stats file.
 Live builder
+Better example scripts
