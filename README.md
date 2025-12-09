@@ -4,20 +4,20 @@
 
 **Dink**, a contraction of **dialogue ink**, is a way of formatting dialogue lines while using and writing in [Ink](https://www.inklestudios.com/ink/), and a set of tools for parsing and supporting that content.
 
-### Ink + Dialogue
+## Ink + Dialogue
 
 Inkle's [Ink](https://www.inklestudios.com/ink/) is a system of writing for text flow, piecing fragments of text together.
 
 It was never designed for lines of dialogue, particularly spoken dialogue, so it's a bit of an odd idea to use it for a subset
-of its real potential. 
+of its real potential.
 
-But that hasn't stopped a number of us using it that way anyway, 
+But that hasn't stopped a number of us using it that way anyway,
 really appreciating the way Ink makes it easy to flow sections of story together depending
-on the game state and choices that the player has made. It's great for conversations, and for sets of barks that depend on the current conditions. 
+on the game state and choices that the player has made. It's great for conversations, and for sets of barks that depend on the current conditions.
 
-So Dink presents some extensions for Ink; a simple markup for specifying dialogue lines and scene actions in an easy to write/read form. 
+So Dink presents some extensions for Ink; a simple markup for specifying dialogue lines and scene actions in an easy to write/read form.
 
-More importantly, it provides tools to help integrate the extensions into a project and ease the production process. Because turning text into audio and managing all that is not trivial. 
+More importantly, it provides tools to help integrate the extensions into a project and ease the production process. Because turning text into audio and managing all that is not trivial.
 
 ```text
 === MyScene
@@ -36,11 +36,13 @@ DAVE: Thar she blows!
 ```
 
 ### But why do I need it?
+
 This all may seem very simple. Why wouldn't you just do some easy parsing in your runtime game - peel off the chunk "DAVE:" at the start so you know who is speaking?
 
 At runtime, that's true.
 
 But there's a lot to manage behind the scenes when dealing with dialogue:
+
 * How many lines does Dave's actor have to record?
 * Are the lines ready for record, or only first draft? Does a line need rewriting?
 * Are some of Dave's lines already recorded?
@@ -61,13 +63,14 @@ Your Ink will work in your runtime as normal, but Dink adds extra info specifica
 for lines of dialogue and helps you manage the production.
 
 * The `DinkCompiler`:
-    * Compiles your Ink as normal, but also extracts text lines for localisation, and parses out extra information such as who is saying which line and bundles it all up for your runtime.
-    * Optionally exports recording scripts and localisation files.
-    * Helps you manage the status of each individual line - is it first draft? Has it been recorded? And produces overview statistics - how many lines are still to be completed? How many lines still need to be recorded by a particular actor?
-    * Can generate a placeholder audio file for each line for testing.
-    * Can run in [live mode](#live-mode) which means it'll keep re-exporting your data every time you edit the Ink files.
+
+  * Compiles your Ink as normal, but also extracts text lines for localisation, and parses out extra information such as who is saying which line and bundles it all up for your runtime.
+  * Optionally exports recording scripts and localisation files.
+  * Helps you manage the status of each individual line - is it first draft? Has it been recorded? And produces overview statistics - how many lines are still to be completed? How many lines still need to be recorded by a particular actor?
+  * Can generate a placeholder audio file for each line for testing.
+  * Can run in [live mode](#live-mode) which means it'll keep re-exporting your data every time you edit the Ink files.
 * Utilities:
-    * `DinkVoiceExport` - collects together source WAV files with certain criteria, to make them easier for audio processing.
+  * `DinkVoiceExport` - collects together source WAV files with certain criteria, to make them easier for audio processing.
 
 ### Contents
 
@@ -125,12 +128,14 @@ Releases will be available in the releases area in [Github](https://github.com/w
 ## Usage
 
 ### Overview
+
 Here's a quick how-you-might-use...
 
 1. **Set up a [Project Config File](#config-file)** so you don't have to keep typing everything on the command line.
 2. **Create a [Character List File](#character-list)** so you can check that the script you're writing doesn't have any mistakes in character names.
 3. **Write your script in [Dink Format](#the-dink-spec)**, which is just **Ink** with some very simple rules on top. \
 e.g.
+
 ```text
 VAR DaveDrunk = true // Pure Ink
 -> MyScene
@@ -162,6 +167,7 @@ LAURA: There, awake, okay?
 }
 
 ```
+
 4. **Run the [Dink Compiler](#command-line-tool)** which will take your ink file and anything it includes, decorate it with `#id:` tags so each line has a unique identifier, compile it to JSON like Inky normally does, and then produce a whole pile of other useful things - runtime files you can use in your game, and lots of production files like a [recording script](#recording-script) for use in the booth, a [stats overview file](#stats-file), a localisation file and so on.
 5. **Load the Ink JSON file** into your game.
 6. **Load the extra Dink runtime file** into your game.
@@ -293,7 +299,7 @@ Or instead, grab all the settings from a project file:
     If supplied, configuration will be read from the given JSON file, instead
     of just given as command-line options. This also means that the folder that the
     supplied project file is in will be treated as a potential source file for the Ink
-    and for the characters.json if those aren't fully qualified paths. 
+    and for the characters.json if those aren't fully qualified paths.
     See [Config File](#config-file) for details. You can do more with it than
     you do with the command-line options.
 
@@ -333,7 +339,7 @@ Or instead, grab all the settings from a project file:
 
 * `--tts`
 
-    Use Google TTS to generate temp audio for your spoken lines. 
+    Use Google TTS to generate temp audio for your spoken lines.
     You need to [configure it](#google-tts) first in the config file.
 
 ### Live Mode
@@ -369,6 +375,7 @@ will be checked against that character list, and if it isn't present the process
 The **Actors** column will be copied in to the recording script export, for ease of use with recording.
 
 #### Cast Recording Stats
+
 If you supply a Characters list list this you will also get a Cast page in the Excel [stats file](#stats-file).
 This will list all the characters, how many lines exist for them, how many are ready to record and how many are already recorded.
 
@@ -382,6 +389,7 @@ of all the lines in the project.
 
 You can define a list of statuses in your project file, to suit whatever your project needs.
 Each status type has:
+
 * A tag which you'll put in your Ink file.
 * A status label which will end up in the status Excel document.
 * An optional colour which will end up in the status Excel documen (to easily see those unfinished lines!)
@@ -390,6 +398,7 @@ Each status type has:
 If you don't specify any statuses in the project file, the system won't be used, and all your lines will be included in recording and localisation.
 
 #### The Status Tag
+
 In Ink, you'll use a tag starting with `#ws:` - for example, `#ws:final`, `#ws:draft1` etc.
 
 You can define these.
@@ -434,14 +443,16 @@ Here's an example set of statuses. These enable you to use
 ```
 
 #### Applying Tags
+
 You can put a tag on a line, as you might expect:
+
 ```text
 FRED: Hello folks! #id:main_Script1_HG5x #ws:draft1
 ```
 
 But it would be really annoying to have to do that on every line. So you can also apply a status at the top of a stitch, then it'll apply to every line in that stitch (unless you override it on an individual line). Similarly you can apply it to the knot containing the stitch or to the file itself!
 
-```text 
+```text
 //Myfile.ink
 #ws:stub
 
@@ -549,6 +560,7 @@ includes all comments (and all tags for the recording script). But you can tweak
 into those particular scripts.
 
 e.g. if your script has something like:
+
 ```text
 // This is the line about the blue mushroom.
 // SFX: Make sure there's a blue mushroom sound here.
@@ -556,6 +568,7 @@ e.g. if your script has something like:
 // LOC: This is a toadstool, genus todus stoolus.
 FRED: It's big, and it's blue!
 ```
+
 That's an awful lot of comments to end up everywhere.
 You can set up your comment filter to use whatever prefixes suit your project.
 The '?' option means "If a line has no prefix, include it."
@@ -594,6 +607,7 @@ passed to the recording script (or you'd be overwhelmed!)
 Comment and tag filters can be customised in the [Project Config File](#config-file).
 
 ### Recording Script
+
 ![Recording Script](doc/Recording.png)
 *A section of the spreadsheet. It's quite wide.*
 
@@ -601,6 +615,7 @@ This lists all the recordable voice lines in the game. (If you've set up your [W
 
 There are a whole bunch of different columns here which may
 or may not be useful to your recording setup, but amongst other things it shows:
+
 * **Line ID** - This will stay the same throughout the project. You can see it at the end of each Ink line.
 * **Block ID** - Knot in the Ink script that contains the line.
 * **Character** - e.g. `FRED: Hello!` will have `FRED` in this line.
@@ -609,20 +624,21 @@ or may not be useful to your recording setup, but amongst other things it shows:
 * **Text** - The actual text to record!
 * **Direction** e.g. `MARK: (angrily) Hello!`
 * **Comments**, which can be inherited from the Knot or the Stitch or the line itself, and also include autogenerated things to be helpful in the booth like:
-  * Information about groups of alternative lines like `(1/3)`,`(2/3)` if the line is part of an Ink shuffle or cycle or a set of alternatives with tests. 
+  * Information about groups of alternative lines like `(1/3)`,`(2/3)` if the line is part of an Ink shuffle or cycle or a set of alternatives with tests.
   * Information on whether the line follows an Ink option in a choice, and what the text of that option is.
   * `MERGE` if the line is a gather after a set of alternatives.
 * **Tags** from Ink which are useful to call out specific classes of line that are useful for whoever is processing the audio. e.g. `#vo:loud` or `#vo:radio`
 * **Snippet ID** - Lines which have the same snippet ID are a *run* of lines that don't have any branching or alternatives in it. That's useful for the actor and director to know. It's also highlighted by the file colouring.
 * **Audio Status** - Which tracks the [Audio Status](#audio-file-status) so that you know if a line still needs to be recorded or not!
 
-
 ### Stats File
+
 The **Stats File** is output as Excel format, and gives you a bunch of hopefully useful information about the project!
 
 For this to work, make sure you've set up your [Writing Status](#writing-status) and [Audio Status](#audio-file-status) in the [Project Config File](#config-file).
 
 #### Status Summary
+
 ![Status Summary](doc/StatSummary.png)
 
 An overview of the state of each scene.
@@ -633,6 +649,7 @@ any written text in Ink that isn't part of a #dink knot. It's included so you ca
 ##### Estimates
 
 If you set up estimates in the project file, like so:
+
 ```jsonc
     // Estimates
     "estimates":[
@@ -642,7 +659,9 @@ If you set up estimates in the project file, like so:
         {"tag":"cutscene", "lines":10}        
     ]
 ```
+
 And set any of the Writing Status settings to `estimate:true`:
+
 ```jsonc
     [
         {
@@ -658,6 +677,7 @@ And set any of the Writing Status settings to `estimate:true`:
         }
     ],
 ```
+
 Then any scene with a relevant tag that only has lines of that status or less will use the estimate from the estimates list in the stats table.
 
 This is a way of rapidly guessing the size of the game. You
@@ -671,11 +691,13 @@ Estimates will have a `?` in the relevant column e.g. `50?`
 ![Estimates](doc/Estimates.png)
 
 #### Cast Summary
+
 ![Cast Summary](doc/StatCast.png)
 
-If you've set up your [Character List](#character-list), then this page will show you an overview of your characters, the actors connected to them, and the states of any lines that are for them. 
+If you've set up your [Character List](#character-list), then this page will show you an overview of your characters, the actors connected to them, and the states of any lines that are for them.
 
 #### Line Statuses
+
 ![Line Statuses](doc/StatLines.png)
 
 This gives you the state of every single line in the game,
@@ -694,6 +716,7 @@ files for your production.
 *You will need a Google Text to Speech API account and a JSON authentication file.*
 
 To do that, provide Google TTS config settings in the project file.
+
 ```jsonc
     // GoogleTTS parameters
     "googleTTS": {
@@ -702,6 +725,7 @@ To do that, provide Google TTS config settings in the project file.
         "outputFolder":"Audio/TTS"
     }
 ```
+
 If you make sure your `outputFolder` matches a folder in your [Audio Status](#audio-file-status) config then the generated TTS will appear in your audio status results.
 
 To specify the voice to use for each character, specify the Google Voice ID in the [Character List](#character-list) like so:
@@ -869,24 +893,27 @@ A JSON or JSONC file (i.e. JSON with comments) having all or some of the require
 This was created to help out the audio team. You give it a spec of particular Dink lines, and it collects the corresponding WAV files and copies them to a destination.
 
 For example:
-```
+
+```text
 DinkVoiceExport --project dink.jsonc --tags vo:radio --audioStatus Recorded
 ```
+
 This would copy any lines with the tag `#vo:radio` out of the `Recorded` folder and copy them somewhere else, so they can be processed as a batch.
 
-```
+```text
 DinkVoiceExport --project dink.jsonc --character DJBRIAN --audioFolder myArchiveFolder/someFiles
 ```
+
 This would copy any lines for the character `DJBRIAN` out
 of a specific folder and copy them somewhere else, so they can be processed as a batch.
 
-**IMPORTANT:** This utility relies on the Dink Structure 
+**IMPORTANT:** This utility relies on the Dink Structure
 file (e.g. `myproject-dink.json`) having been
 created and being up to date. This means you should have
-recently run `DinkCompiler` and made sure `--dinkStructure` was on the command line or `outputDinkStructure` set in 
+recently run `DinkCompiler` and made sure `--dinkStructure` was on the command line or `outputDinkStructure` set in
 the project file.
 
-#### Arguments
+#### Tool Arguments
 
 * `--project <projectFile>` (REQUIRED)
 

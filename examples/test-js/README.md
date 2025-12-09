@@ -9,13 +9,15 @@ The principles are the same in other systems too.
 `dink-src` contains the `.ink` files and the Dink project configuration.
 
 Running DinkCompiler with these params:
-```
+
+```text
 DinkCompiler --project dink-src\dink.jsonc
 ```
 
 will create Dink's runtime files in `dink-content`.
 
 ## Runtime
+
 At runtime, `index.html` loads the Ink runtime (`ink.js`) and `main.js`, which is where we have the main behaviour for the game.
 
 `main.js` loads the compiled Ink story (`main.json`) which is what you'd normally expect from an Ink game.
@@ -29,11 +31,13 @@ Then like in a normal Ink project, `main.js` repeatedly calls Ink's `story.Conti
 Instead of using the text you get back from `story.Continue()`, you look for an Ink tag starting with the characters `id:`. The Dink compiler added one of these to every Ink line.
 
 So if the line was:
-```
+
+```text
 FRED: (loudly) How is everyone? #id:part1_comedy_5XfA
 ```
 
 Then at runtime you grab that ID tag from `story.currentTags`. This is what we use in the demo:
+
 ```javascript
 function findID(tags) {
     for (const tag of tags) {

@@ -4,6 +4,7 @@ Actor estimates?
 Script flow doc
 Dink editor
 TTS web demo
+Strip out text
 
 TCR:
 Revisit action type
