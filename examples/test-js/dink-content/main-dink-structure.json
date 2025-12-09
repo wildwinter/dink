@@ -6,8 +6,8 @@
         "BlockID": "",
         "Snippets": [
           {
-            "BraceComments": [],
-            "SnippetID": "jqHS",
+            "GroupComments": [],
+            "SnippetID": "IJZS",
             "Beats": [
               {
                 "Type": "Action",
@@ -22,6 +22,8 @@
               }
             ],
             "Group": 0,
+            "GroupIndex": 0,
+            "GroupCount": 0,
             "Origin": {
               "SourceFilePath": "scene1.ink",
               "LineNum": 3
@@ -41,8 +43,8 @@
         "BlockID": "Part1",
         "Snippets": [
           {
-            "BraceComments": [],
-            "SnippetID": "IWdy",
+            "GroupComments": [],
+            "SnippetID": "uXOa",
             "Beats": [
               {
                 "Type": "Line",
@@ -96,6 +98,8 @@
               }
             ],
             "Group": 0,
+            "GroupIndex": 0,
+            "GroupCount": 0,
             "Origin": {
               "SourceFilePath": "scene1.ink",
               "LineNum": 7
@@ -115,8 +119,8 @@
         "BlockID": "Part2",
         "Snippets": [
           {
-            "BraceComments": [],
-            "SnippetID": "OfkP",
+            "GroupComments": [],
+            "SnippetID": "rO79",
             "Beats": [
               {
                 "Type": "Action",
@@ -131,6 +135,8 @@
               }
             ],
             "Group": 0,
+            "GroupIndex": 0,
+            "GroupCount": 0,
             "Origin": {
               "SourceFilePath": "scene1.ink",
               "LineNum": 16
@@ -141,8 +147,8 @@
             "Tags": []
           },
           {
-            "BraceComments": [],
-            "SnippetID": "bon3",
+            "GroupComments": [],
+            "SnippetID": "Ddid",
             "Beats": [
               {
                 "Type": "Action",
@@ -157,6 +163,8 @@
               }
             ],
             "Group": 1,
+            "GroupIndex": 1,
+            "GroupCount": 4,
             "Origin": {
               "SourceFilePath": "scene1.ink",
               "LineNum": 18
@@ -165,8 +173,8 @@
             "Tags": []
           },
           {
-            "BraceComments": [],
-            "SnippetID": "eALk",
+            "GroupComments": [],
+            "SnippetID": "2mOa",
             "Beats": [
               {
                 "Type": "Action",
@@ -181,6 +189,8 @@
               }
             ],
             "Group": 1,
+            "GroupIndex": 2,
+            "GroupCount": 4,
             "Origin": {
               "SourceFilePath": "scene1.ink",
               "LineNum": 19
@@ -189,8 +199,8 @@
             "Tags": []
           },
           {
-            "BraceComments": [],
-            "SnippetID": "PmEd",
+            "GroupComments": [],
+            "SnippetID": "XhZX",
             "Beats": [
               {
                 "Type": "Action",
@@ -205,6 +215,8 @@
               }
             ],
             "Group": 1,
+            "GroupIndex": 3,
+            "GroupCount": 4,
             "Origin": {
               "SourceFilePath": "scene1.ink",
               "LineNum": 22
@@ -213,8 +225,8 @@
             "Tags": []
           },
           {
-            "BraceComments": [],
-            "SnippetID": "9pcu",
+            "GroupComments": [],
+            "SnippetID": "yeh8",
             "Beats": [
               {
                 "Type": "Action",
@@ -229,6 +241,8 @@
               }
             ],
             "Group": 1,
+            "GroupIndex": 4,
+            "GroupCount": 4,
             "Origin": {
               "SourceFilePath": "scene1.ink",
               "LineNum": 23
@@ -250,8 +264,8 @@
         "BlockID": "Part3",
         "Snippets": [
           {
-            "BraceComments": [],
-            "SnippetID": "zZ8o",
+            "GroupComments": [],
+            "SnippetID": "N3Ke",
             "Beats": [
               {
                 "Type": "Action",
@@ -282,6 +296,8 @@
               }
             ],
             "Group": 0,
+            "GroupIndex": 0,
+            "GroupCount": 0,
             "Origin": {
               "SourceFilePath": "scene1.ink",
               "LineNum": 31
@@ -301,8 +317,8 @@
         "BlockID": "Part4",
         "Snippets": [
           {
-            "BraceComments": [],
-            "SnippetID": "ZIf7",
+            "GroupComments": [],
+            "SnippetID": "9Xte",
             "Beats": [
               {
                 "Type": "Line",
@@ -322,6 +338,8 @@
               }
             ],
             "Group": 0,
+            "GroupIndex": 0,
+            "GroupCount": 0,
             "Origin": {
               "SourceFilePath": "scene1.ink",
               "LineNum": 38
@@ -330,8 +348,8 @@
             "Tags": []
           },
           {
-            "BraceComments": [],
-            "SnippetID": "O39G",
+            "GroupComments": [],
+            "SnippetID": "Bpuz",
             "Beats": [
               {
                 "Type": "Line",
@@ -349,6 +367,8 @@
               }
             ],
             "Group": 0,
+            "GroupIndex": 0,
+            "GroupCount": 0,
             "Origin": {
               "SourceFilePath": "scene1.ink",
               "LineNum": 40
@@ -359,8 +379,8 @@
             "Tags": []
           },
           {
-            "BraceComments": [],
-            "SnippetID": "wIjn",
+            "GroupComments": [],
+            "SnippetID": "8KkF",
             "Beats": [
               {
                 "Type": "Line",
@@ -378,6 +398,8 @@
               }
             ],
             "Group": 0,
+            "GroupIndex": 0,
+            "GroupCount": 0,
             "Origin": {
               "SourceFilePath": "scene1.ink",
               "LineNum": 43
@@ -388,8 +410,8 @@
             "Tags": []
           },
           {
-            "BraceComments": [],
-            "SnippetID": "l70x",
+            "GroupComments": [],
+            "SnippetID": "igag",
             "Beats": [
               {
                 "Type": "Line",
@@ -407,6 +429,8 @@
               }
             ],
             "Group": 0,
+            "GroupIndex": 0,
+            "GroupCount": 0,
             "Origin": {
               "SourceFilePath": "scene1.ink",
               "LineNum": 46
@@ -417,8 +441,8 @@
             "Tags": []
           },
           {
-            "BraceComments": [],
-            "SnippetID": "2uOq",
+            "GroupComments": [],
+            "SnippetID": "uQLC",
             "Beats": [
               {
                 "Type": "Line",
@@ -436,6 +460,8 @@
               }
             ],
             "Group": 0,
+            "GroupIndex": 0,
+            "GroupCount": 0,
             "Origin": {
               "SourceFilePath": "scene1.ink",
               "LineNum": 48
@@ -457,8 +483,8 @@
         "BlockID": "Right",
         "Snippets": [
           {
-            "BraceComments": [],
-            "SnippetID": "bENa",
+            "GroupComments": [],
+            "SnippetID": "5N0e",
             "Beats": [
               {
                 "Type": "Action",
@@ -487,6 +513,8 @@
               }
             ],
             "Group": 0,
+            "GroupIndex": 0,
+            "GroupCount": 0,
             "Origin": {
               "SourceFilePath": "scene1.ink",
               "LineNum": 53
@@ -506,8 +534,8 @@
         "BlockID": "Left",
         "Snippets": [
           {
-            "BraceComments": [],
-            "SnippetID": "g7QL",
+            "GroupComments": [],
+            "SnippetID": "I2Ri",
             "Beats": [
               {
                 "Type": "Action",
@@ -536,6 +564,8 @@
               }
             ],
             "Group": 0,
+            "GroupIndex": 0,
+            "GroupCount": 0,
             "Origin": {
               "SourceFilePath": "scene1.ink",
               "LineNum": 59
@@ -566,8 +596,8 @@
         "BlockID": "",
         "Snippets": [
           {
-            "BraceComments": [],
-            "SnippetID": "Y94A",
+            "GroupComments": [],
+            "SnippetID": "7cC0",
             "Beats": [
               {
                 "Type": "Action",
@@ -596,6 +626,8 @@
               }
             ],
             "Group": 0,
+            "GroupIndex": 0,
+            "GroupCount": 0,
             "Origin": {
               "SourceFilePath": "main.ink",
               "LineNum": 30
@@ -619,8 +651,8 @@
         "BlockID": "Hub",
         "Snippets": [
           {
-            "BraceComments": [],
-            "SnippetID": "H8CC",
+            "GroupComments": [],
+            "SnippetID": "d5aj",
             "Beats": [
               {
                 "Type": "Line",
@@ -638,6 +670,8 @@
               }
             ],
             "Group": 0,
+            "GroupIndex": 0,
+            "GroupCount": 0,
             "Origin": {
               "SourceFilePath": "main.ink",
               "LineNum": 37
@@ -648,8 +682,8 @@
             "Tags": []
           },
           {
-            "BraceComments": [],
-            "SnippetID": "1ZnP",
+            "GroupComments": [],
+            "SnippetID": "AJbt",
             "Beats": [
               {
                 "Type": "Line",
@@ -667,6 +701,8 @@
               }
             ],
             "Group": 1,
+            "GroupIndex": 1,
+            "GroupCount": 3,
             "Origin": {
               "SourceFilePath": "main.ink",
               "LineNum": 40
@@ -675,8 +711,8 @@
             "Tags": []
           },
           {
-            "BraceComments": [],
-            "SnippetID": "wbeV",
+            "GroupComments": [],
+            "SnippetID": "QxNF",
             "Beats": [
               {
                 "Type": "Line",
@@ -694,6 +730,8 @@
               }
             ],
             "Group": 1,
+            "GroupIndex": 2,
+            "GroupCount": 3,
             "Origin": {
               "SourceFilePath": "main.ink",
               "LineNum": 41
@@ -702,8 +740,8 @@
             "Tags": []
           },
           {
-            "BraceComments": [],
-            "SnippetID": "MBNA",
+            "GroupComments": [],
+            "SnippetID": "uR5r",
             "Beats": [
               {
                 "Type": "Line",
@@ -723,6 +761,8 @@
               }
             ],
             "Group": 1,
+            "GroupIndex": 3,
+            "GroupCount": 3,
             "Origin": {
               "SourceFilePath": "main.ink",
               "LineNum": 42
@@ -731,8 +771,8 @@
             "Tags": []
           },
           {
-            "BraceComments": [],
-            "SnippetID": "gWFU",
+            "GroupComments": [],
+            "SnippetID": "7Ohy",
             "Beats": [
               {
                 "Type": "Action",
@@ -747,6 +787,8 @@
               }
             ],
             "Group": 0,
+            "GroupIndex": 0,
+            "GroupCount": 0,
             "Origin": {
               "SourceFilePath": "main.ink",
               "LineNum": 45
@@ -781,8 +823,8 @@
         "BlockID": "",
         "Snippets": [
           {
-            "BraceComments": [],
-            "SnippetID": "X2VI",
+            "GroupComments": [],
+            "SnippetID": "zyiY",
             "Beats": [
               {
                 "Type": "Line",
@@ -886,6 +928,8 @@
               }
             ],
             "Group": 0,
+            "GroupIndex": 0,
+            "GroupCount": 0,
             "Origin": {
               "SourceFilePath": "main.ink",
               "LineNum": 57
@@ -922,10 +966,10 @@
         "BlockID": "",
         "Snippets": [
           {
-            "BraceComments": [
+            "GroupComments": [
               "Set of random barks."
             ],
-            "SnippetID": "pOMH",
+            "SnippetID": "1gvn",
             "Beats": [
               {
                 "Type": "Line",
@@ -943,6 +987,8 @@
               }
             ],
             "Group": 1,
+            "GroupIndex": 1,
+            "GroupCount": 7,
             "Origin": {
               "SourceFilePath": "main.ink",
               "LineNum": 79
@@ -951,10 +997,10 @@
             "Tags": []
           },
           {
-            "BraceComments": [
+            "GroupComments": [
               "Set of random barks."
             ],
-            "SnippetID": "OWPJ",
+            "SnippetID": "pnRQ",
             "Beats": [
               {
                 "Type": "Line",
@@ -972,6 +1018,8 @@
               }
             ],
             "Group": 1,
+            "GroupIndex": 2,
+            "GroupCount": 7,
             "Origin": {
               "SourceFilePath": "main.ink",
               "LineNum": 80
@@ -980,10 +1028,10 @@
             "Tags": []
           },
           {
-            "BraceComments": [
+            "GroupComments": [
               "Set of random barks."
             ],
-            "SnippetID": "nQK7",
+            "SnippetID": "arGM",
             "Beats": [
               {
                 "Type": "Line",
@@ -1003,6 +1051,8 @@
               }
             ],
             "Group": 1,
+            "GroupIndex": 3,
+            "GroupCount": 7,
             "Origin": {
               "SourceFilePath": "main.ink",
               "LineNum": 81
@@ -1011,10 +1061,10 @@
             "Tags": []
           },
           {
-            "BraceComments": [
+            "GroupComments": [
               "Set of random barks."
             ],
-            "SnippetID": "XwRg",
+            "SnippetID": "m7xl",
             "Beats": [
               {
                 "Type": "Action",
@@ -1043,6 +1093,8 @@
               }
             ],
             "Group": 1,
+            "GroupIndex": 4,
+            "GroupCount": 7,
             "Origin": {
               "SourceFilePath": "main.ink",
               "LineNum": 83
@@ -1051,10 +1103,10 @@
             "Tags": []
           },
           {
-            "BraceComments": [
+            "GroupComments": [
               "Set of random barks."
             ],
-            "SnippetID": "x0s5",
+            "SnippetID": "ky8X",
             "Beats": [
               {
                 "Type": "Line",
@@ -1086,6 +1138,8 @@
               }
             ],
             "Group": 1,
+            "GroupIndex": 5,
+            "GroupCount": 7,
             "Origin": {
               "SourceFilePath": "main.ink",
               "LineNum": 86
@@ -1094,10 +1148,10 @@
             "Tags": []
           },
           {
-            "BraceComments": [
+            "GroupComments": [
               "Set of random barks."
             ],
-            "SnippetID": "zKgw",
+            "SnippetID": "roOK",
             "Beats": [
               {
                 "Type": "Line",
@@ -1115,6 +1169,8 @@
               }
             ],
             "Group": 1,
+            "GroupIndex": 6,
+            "GroupCount": 7,
             "Origin": {
               "SourceFilePath": "main.ink",
               "LineNum": 89
@@ -1123,10 +1179,10 @@
             "Tags": []
           },
           {
-            "BraceComments": [
+            "GroupComments": [
               "Set of random barks."
             ],
-            "SnippetID": "rXaB",
+            "SnippetID": "oUh7",
             "Beats": [
               {
                 "Type": "Line",
@@ -1144,6 +1200,8 @@
               }
             ],
             "Group": 1,
+            "GroupIndex": 7,
+            "GroupCount": 7,
             "Origin": {
               "SourceFilePath": "main.ink",
               "LineNum": 90

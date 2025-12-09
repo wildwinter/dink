@@ -109,10 +109,10 @@ public class DinkAction : DinkBeat
 public class DinkSnippet : DinkBase
 {
     // Comments collected from braces { } that enclose this snippet
-    public List<string> BraceComments { get; set; } = new List<string>();
-    public List<string> GetBraceCommentsFor(List<string> prefixes)
+    public List<string> GroupComments { get; set; } = new List<string>();
+    public List<string> GetGroupCommentsFor(List<string> prefixes)
     {
-        return GetEntriesWithPrefixes(BraceComments, prefixes);
+        return GetEntriesWithPrefixes(GroupComments, prefixes);
     }
     
     public IEnumerable<DinkLine> IterateLines()
@@ -127,6 +127,8 @@ public class DinkSnippet : DinkBase
     public string SnippetID { get; set; } = string.Empty;
     public List<DinkBeat> Beats { get; set; } = new List<DinkBeat>();
     public int Group {get;set;} = 0;
+    public int GroupIndex {get;set;} = 0;
+    public int GroupCount {get;set;} = 0;
     public override string ToString() => $"Snippet: '{SnippetID}'";
 }
 

@@ -321,42 +321,12 @@ public class Compiler
         {
             foreach (var block in scene.Blocks)
             {
-                int groupIndex = 0;
-                int groupNum = 0;
-
-                Dictionary<int, int> groupSizes = new Dictionary<int, int>();
-
-                foreach (var snippet in block.Snippets)
-                {
-                    if (snippet.Group!=0)
-                    {
-                        if (groupSizes.ContainsKey(snippet.Group))
-                        {
-                            groupSizes[snippet.Group]++;
-                        }
-                        else
-                        {
-                            groupSizes[snippet.Group]=1;
-                        }
-                    }
-                }
-
                 foreach (var snippet in block.Snippets)
                 { 
                     string groupIndicator = "";
                     if (snippet.Group!=0)
                     {
-                        if (snippet.Group!=groupNum)
-                        {
-                            groupIndex = 0;
-                            groupNum = snippet.Group;
-                        }
-                        groupIndex++;
-                        groupIndicator = $"({groupIndex}/{groupSizes[snippet.Group]})";
-                    }
-                    else
-                    {
-                        groupNum = 0;
+                        groupIndicator = $"({snippet.GroupIndex}/{snippet.GroupCount})";
                     }
 
                     int lineIndex = 0;
@@ -384,12 +354,12 @@ public class Compiler
                             entry.SnippetComments.Clear();
                         }
                         
-                        if (groupIndex==1)
+                        if (snippet.GroupIndex==1)
                         {
-                            entry.BraceComments = snippet.GetBraceCommentsFor(_env.GetCommentFilters("record"));
+                            entry.BraceComments = snippet.GetGroupCommentsFor(_env.GetCommentFilters("record"));
                         }
 
-                        if (groupNum>0)
+                        if (snippet.Group>0)
                         {
                             if (lineIndex==1)
                                 entry.GroupIndicator = groupIndicator;

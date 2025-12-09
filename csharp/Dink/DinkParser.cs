@@ -386,7 +386,7 @@ public class DinkParser
                 snippet.Group = activeGroup;
             if (currentBraceContainer != null)
             {
-                snippet.BraceComments.AddRange(currentBraceContainer.GetComments());
+                snippet.GroupComments.AddRange(currentBraceContainer.GetComments());
             }
             snippet.Comments.AddRange(comments);
             comments.Clear();
@@ -427,6 +427,31 @@ public class DinkParser
                 block.Tags.AddRange(stitchTags);
                 stitchTags.Clear();
                 scene.Blocks.Add(block);
+
+                // Figure out the group indices and counts.
+                int groupMax = block.Snippets.Max(s => s.Group);
+                foreach(var group in block.Snippets.GroupBy(b => b.Group))
+                {
+                    if (group.Key==0)
+                        continue;
+
+                    var snippets = group.ToList();
+                    for(var i=0;i<snippets.Count;i++)
+                    {
+                        var groupSnippet = snippets[i];
+                        if (groupSnippet==null)
+                            continue;
+
+                        if (snippets.Count==1)
+                        {
+                            groupSnippet.Group=0;
+                            continue;
+                        }
+                        
+                        groupSnippet.GroupIndex = i+1;
+                        groupSnippet.GroupCount = snippets.Count;
+                    }
+                }
             }
         }
 
