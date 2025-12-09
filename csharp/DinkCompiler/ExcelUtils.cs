@@ -1,9 +1,12 @@
 namespace DinkCompiler;
 
 using ClosedXML.Excel;
+using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
+using System;
 using System.Linq;
+using System.Collections.Generic;
 
 public class ExcelUtils 
 {
@@ -77,42 +80,69 @@ public class ExcelUtils
         {
             var workbookPart = doc.WorkbookPart;
             if (workbookPart==null)
-            {
-                Console.Error.WriteLine("Error finding workbookPart");
                 return;
-            }
 
             var sheet = workbookPart.Workbook.Descendants<Sheet>()
                 .FirstOrDefault(s => s.Name == sheetName);
 
-            if (sheet == null || sheet.Id==null)
-            {
-                Console.Error.WriteLine($"Error finding sheet {sheetName}");
-                return;
-            }
+            if (sheet == null) return;
 
             var worksheetPart = (WorksheetPart)workbookPart.GetPartById(sheet.Id!);
             var worksheet = worksheetPart.Worksheet;
 
-            var ignoredErrors = worksheet.GetFirstChild<IgnoredErrors>();
-            if (ignoredErrors == null)
+            // Check if IgnoredErrors already exists
+            if (worksheet.GetFirstChild<IgnoredErrors>() == null)
             {
-                ignoredErrors = new IgnoredErrors();
-                 var sheetData = worksheet.GetFirstChild<SheetData>();
-                worksheet.InsertAfter(ignoredErrors, sheetData);
+                var ignoredErrors = new IgnoredErrors();
+
+                var elementsThatMustComeAfter = new HashSet<string>
+                {
+                    "smartTags",
+                    "drawing",               // Charts/Shapes
+                    "legacyDrawing",         // Comments often use this
+                    "legacyDrawingHF",       // Header/Footer images
+                    "picture",
+                    "oleObjects",
+                    "controls",
+                    "webPublishItems",
+                    "tableParts",            // Excel Tables
+                    "extLst"                 // Future extensions
+                };
+
+                OpenXmlElement? refElement = null;
+
+                // Find the first child element that matches our list
+                foreach (var child in worksheet.Elements())
+                {
+                    if (elementsThatMustComeAfter.Contains(child.LocalName))
+                    {
+                        refElement = child;
+                        break;
+                    }
+                }
+
+                if (refElement != null)
+                {
+                    worksheet.InsertBefore(ignoredErrors, refElement);
+                }
+                else
+                {
+                    // If no drawings/tables exist, safe to append to the end 
+                    // (This places it after SheetData, MergeCells, PageSetup, etc.)
+                    worksheet.Append(ignoredErrors);
+                }
+
+                // Create the rule to ignore the error
+                var ignoredError = new IgnoredError()
+                {
+                    NumberStoredAsText = true,
+                    // A1 to the last possible cell in Excel
+                    SequenceOfReferences = new ListValue<StringValue>() { InnerText = "A1:XFD1048576" }
+                };
+
+                ignoredErrors.Append(ignoredError);
+                worksheet.Save();
             }
-
-            var ignoredError = new IgnoredError() 
-            { 
-                NumberStoredAsText = true, 
-                SequenceOfReferences = new DocumentFormat.OpenXml.ListValue<DocumentFormat.OpenXml.StringValue>() 
-                { 
-                    InnerText = "A1:XFD1048576" 
-                } 
-            };
-
-            ignoredErrors.Append(ignoredError);
-            worksheet.Save();
         }
     }
 }
