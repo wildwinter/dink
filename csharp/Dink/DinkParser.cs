@@ -378,19 +378,8 @@ public class DinkParser
             return true;
         }
 
-        void addSnippet()
+        void createSnippet()
         {
-            if (snippet != null && block != null && snippet.Beats.Count > 0) 
-            { 
-                snippet.Origin = snippet.Beats[0].Origin;
-                block.Snippets.Add(snippet);
-            }
-        }
-
-        void addAndStartSnippet()
-        {
-            addSnippet();
-
             snippet = new DinkSnippet();
             snippet.SnippetID = GenerateID();
             if (activeGroupLevel>0)
@@ -403,6 +392,34 @@ public class DinkParser
             comments.Clear();
         }
 
+        void addSnippet()
+        {
+            if (snippet != null && block != null && snippet.Beats.Count > 0) 
+            { 
+                snippet.Origin = snippet.Beats[0].Origin;
+                block.Snippets.Add(snippet);
+            }
+        }
+
+        void addAndCreateSnippet()
+        {
+            addSnippet();
+            createSnippet();
+        }
+
+        void createBlock(DinkOrigin origin, string id="")
+        {
+            block = new DinkBlock();
+            block.BlockID = id;
+            block.Origin = scene.Origin;
+            block.Comments.AddRange(comments);
+
+            activeGroupLevel = 0;
+            activeGroup = 0;
+            currentBraceContainer = null;
+            currentBraceLevel = 0;
+        }
+
         void addBlock()
         {
             if (block!=null && scene!=null && block.Snippets.Count > 0)
@@ -411,6 +428,13 @@ public class DinkParser
                 stitchTags.Clear();
                 scene.Blocks.Add(block);
             }
+        }
+
+        void createScene(DinkOrigin origin, string id)
+        {
+            scene = new DinkScene();
+            scene.SceneID = id;
+            scene.Origin = origin;
         }
 
         void addScene()
@@ -524,7 +548,7 @@ public class DinkParser
                         activeGroup++;
                     }
                 }
-                addAndStartSnippet();
+                addAndCreateSnippet();
             }
             else if (braceDelta<0)
             {
@@ -537,7 +561,7 @@ public class DinkParser
                 }
                 if (currentBraceContainer!=null)
                     currentBraceContainer = currentBraceContainer?.Parent;
-                addAndStartSnippet();
+                addAndCreateSnippet();
             }
             else if (IsFlowBreakingLine(trimmedLine))
             {
@@ -545,7 +569,7 @@ public class DinkParser
                 {
                     List<string> saveComments = comments.ToList();
                     comments.Clear();
-                    addAndStartSnippet();
+                    addAndCreateSnippet();
                     comments.AddRange(saveComments);
                 }
                 else
@@ -564,7 +588,7 @@ public class DinkParser
                     {
                         inOptions = false;
                     }
-                    addAndStartSnippet();
+                    addAndCreateSnippet();
                 }
             }
 
@@ -581,7 +605,7 @@ public class DinkParser
                 }
                 else
                 {
-                    addAndStartSnippet();
+                    addAndCreateSnippet();
                     continue;
                 }
             }
@@ -592,27 +616,14 @@ public class DinkParser
                 addScene();
                 
                 parsing = false;
+
                 hitFirstKnotContent = false;
                 knotTags.Clear();
 
-                scene = new DinkScene();
-                scene.SceneID = knot;
-                scene.Origin = line.Origin;
+                createScene(line.Origin, knot);
+                createBlock(line.Origin);
+                createSnippet();
 
-                block = new DinkBlock();
-                block.BlockID = "";
-                block.Origin = scene.Origin;
-                block.Comments.AddRange(comments);
-
-                activeGroupLevel = 0;
-                activeGroup = 0;
-                currentBraceContainer = null;
-                currentBraceLevel = 0;
-
-                snippet = new DinkSnippet();
-                snippet.SnippetID = GenerateID();
-
-                comments.Clear();
                 Log($"Scene: {scene}");
                 continue;
             }
@@ -624,20 +635,9 @@ public class DinkParser
                 hitFirstStitchContent = false;
                 stitchTags.Clear();
 
-                block = new DinkBlock();
-                block.BlockID = stitch;
-                block.Origin = line.Origin;
-                block.Comments.AddRange(comments);
+                createBlock(line.Origin, stitch);
+                createSnippet();
 
-                activeGroupLevel = 0;
-                activeGroup = 0;
-                currentBraceContainer = null;
-                currentBraceLevel = 0;
-
-                snippet = new DinkSnippet();
-                snippet.SnippetID = GenerateID();
-                
-                comments.Clear();
                 Log($"Snippet: {snippet}");
                 continue;
             }
@@ -695,7 +695,7 @@ public class DinkParser
             comments.Clear();
         }
 
-        addAndStartSnippet();
+        addAndCreateSnippet();
         addBlock();
         addScene();
 
