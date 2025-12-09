@@ -7,7 +7,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "IJZS",
+            "SnippetID": "CbAk",
             "Beats": [
               {
                 "Type": "Action",
@@ -44,7 +44,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "uXOa",
+            "SnippetID": "E0yl",
             "Beats": [
               {
                 "Type": "Line",
@@ -120,7 +120,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "rO79",
+            "SnippetID": "4Sn2",
             "Beats": [
               {
                 "Type": "Action",
@@ -141,14 +141,12 @@
               "SourceFilePath": "scene1.ink",
               "LineNum": 16
             },
-            "Comments": [
-              "This comment should appear on Part2"
-            ],
+            "Comments": [],
             "Tags": []
           },
           {
             "GroupComments": [],
-            "SnippetID": "Ddid",
+            "SnippetID": "9Eqo",
             "Beats": [
               {
                 "Type": "Action",
@@ -174,7 +172,7 @@
           },
           {
             "GroupComments": [],
-            "SnippetID": "2mOa",
+            "SnippetID": "lAMk",
             "Beats": [
               {
                 "Type": "Action",
@@ -200,7 +198,7 @@
           },
           {
             "GroupComments": [],
-            "SnippetID": "XhZX",
+            "SnippetID": "fyo9",
             "Beats": [
               {
                 "Type": "Action",
@@ -226,7 +224,7 @@
           },
           {
             "GroupComments": [],
-            "SnippetID": "yeh8",
+            "SnippetID": "NYkx",
             "Beats": [
               {
                 "Type": "Action",
@@ -265,7 +263,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "N3Ke",
+            "SnippetID": "RQnI",
             "Beats": [
               {
                 "Type": "Action",
@@ -318,7 +316,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "9Xte",
+            "SnippetID": "deKv",
             "Beats": [
               {
                 "Type": "Line",
@@ -349,7 +347,7 @@
           },
           {
             "GroupComments": [],
-            "SnippetID": "Bpuz",
+            "SnippetID": "2UmX",
             "Beats": [
               {
                 "Type": "Line",
@@ -380,7 +378,7 @@
           },
           {
             "GroupComments": [],
-            "SnippetID": "8KkF",
+            "SnippetID": "bbtQ",
             "Beats": [
               {
                 "Type": "Line",
@@ -411,7 +409,7 @@
           },
           {
             "GroupComments": [],
-            "SnippetID": "igag",
+            "SnippetID": "fKgl",
             "Beats": [
               {
                 "Type": "Line",
@@ -442,7 +440,7 @@
           },
           {
             "GroupComments": [],
-            "SnippetID": "uQLC",
+            "SnippetID": "noYh",
             "Beats": [
               {
                 "Type": "Line",
@@ -484,7 +482,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "5N0e",
+            "SnippetID": "6Pqk",
             "Beats": [
               {
                 "Type": "Action",
@@ -535,7 +533,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "I2Ri",
+            "SnippetID": "45gk",
             "Beats": [
               {
                 "Type": "Action",
@@ -597,7 +595,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "7cC0",
+            "SnippetID": "kMzI",
             "Beats": [
               {
                 "Type": "Action",
@@ -632,9 +630,7 @@
               "SourceFilePath": "main.ink",
               "LineNum": 30
             },
-            "Comments": [
-              "A scene where we chat to Laura."
-            ],
+            "Comments": [],
             "Tags": []
           }
         ],
@@ -642,9 +638,7 @@
           "SourceFilePath": "main.ink",
           "LineNum": 28
         },
-        "Comments": [
-          "A scene where we chat to Laura."
-        ],
+        "Comments": [],
         "Tags": []
       },
       {
@@ -652,7 +646,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "d5aj",
+            "SnippetID": "Gxkk",
             "Beats": [
               {
                 "Type": "Line",
@@ -682,8 +676,10 @@
             "Tags": []
           },
           {
-            "GroupComments": [],
-            "SnippetID": "AJbt",
+            "GroupComments": [
+              "OPTION \u0022What\u0027s the weather like?\u0022"
+            ],
+            "SnippetID": "Fhde",
             "Beats": [
               {
                 "Type": "Line",
@@ -711,8 +707,10 @@
             "Tags": []
           },
           {
-            "GroupComments": [],
-            "SnippetID": "QxNF",
+            "GroupComments": [
+              "OPTION \u0022What\u0027s the weather like?\u0022"
+            ],
+            "SnippetID": "wNMx",
             "Beats": [
               {
                 "Type": "Line",
@@ -740,8 +738,10 @@
             "Tags": []
           },
           {
-            "GroupComments": [],
-            "SnippetID": "uR5r",
+            "GroupComments": [
+              "OPTION \u0022What\u0027s the weather like?\u0022"
+            ],
+            "SnippetID": "VeH1",
             "Beats": [
               {
                 "Type": "Line",
@@ -754,9 +754,7 @@
                   "SourceFilePath": "main.ink",
                   "LineNum": 42
                 },
-                "Comments": [
-                  "VO: Really mean it!"
-                ],
+                "Comments": [],
                 "Tags": []
               }
             ],
@@ -772,7 +770,7 @@
           },
           {
             "GroupComments": [],
-            "SnippetID": "7Ohy",
+            "SnippetID": "mYNL",
             "Beats": [
               {
                 "Type": "Action",
@@ -813,7 +811,9 @@
       "SourceFilePath": "main.ink",
       "LineNum": 28
     },
-    "Comments": [],
+    "Comments": [
+      "A scene where we chat to Laura."
+    ],
     "Tags": []
   },
   {
@@ -824,7 +824,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "zyiY",
+            "SnippetID": "wug3",
             "Beats": [
               {
                 "Type": "Line",
@@ -934,10 +934,7 @@
               "SourceFilePath": "main.ink",
               "LineNum": 57
             },
-            "Comments": [
-              "This comment should apply to Test Scene.",
-              "And so should this."
-            ],
+            "Comments": [],
             "Tags": []
           }
         ],
@@ -945,10 +942,7 @@
           "SourceFilePath": "main.ink",
           "LineNum": 52
         },
-        "Comments": [
-          "This comment should apply to Test Scene.",
-          "And so should this."
-        ],
+        "Comments": [],
         "Tags": []
       }
     ],
@@ -956,7 +950,10 @@
       "SourceFilePath": "main.ink",
       "LineNum": 52
     },
-    "Comments": [],
+    "Comments": [
+      "This comment should apply to Test Scene.",
+      "And so should this."
+    ],
     "Tags": []
   },
   {
@@ -969,7 +966,7 @@
             "GroupComments": [
               "Set of random barks."
             ],
-            "SnippetID": "1gvn",
+            "SnippetID": "mzxR",
             "Beats": [
               {
                 "Type": "Line",
@@ -1000,7 +997,7 @@
             "GroupComments": [
               "Set of random barks."
             ],
-            "SnippetID": "pnRQ",
+            "SnippetID": "3qM4",
             "Beats": [
               {
                 "Type": "Line",
@@ -1031,7 +1028,7 @@
             "GroupComments": [
               "Set of random barks."
             ],
-            "SnippetID": "arGM",
+            "SnippetID": "Py3Z",
             "Beats": [
               {
                 "Type": "Line",
@@ -1044,9 +1041,7 @@
                   "SourceFilePath": "main.ink",
                   "LineNum": 81
                 },
-                "Comments": [
-                  "How about this?"
-                ],
+                "Comments": [],
                 "Tags": []
               }
             ],
@@ -1064,7 +1059,7 @@
             "GroupComments": [
               "Set of random barks."
             ],
-            "SnippetID": "m7xl",
+            "SnippetID": "RPFJ",
             "Beats": [
               {
                 "Type": "Action",
@@ -1106,7 +1101,7 @@
             "GroupComments": [
               "Set of random barks."
             ],
-            "SnippetID": "ky8X",
+            "SnippetID": "lD2g",
             "Beats": [
               {
                 "Type": "Line",
@@ -1151,7 +1146,7 @@
             "GroupComments": [
               "Set of random barks."
             ],
-            "SnippetID": "roOK",
+            "SnippetID": "a5d3",
             "Beats": [
               {
                 "Type": "Line",
@@ -1182,7 +1177,7 @@
             "GroupComments": [
               "Set of random barks."
             ],
-            "SnippetID": "oUh7",
+            "SnippetID": "nqK2",
             "Beats": [
               {
                 "Type": "Line",

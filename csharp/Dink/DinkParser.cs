@@ -371,7 +371,7 @@ public class DinkParser
         {
             if (IDs.Contains(id))
             {
-                Console.Error.WriteLine($"Duplicate ID at {origin.ToString()}");
+                Console.Error.WriteLine($"Duplicate ID at {origin}");
                 return false;
             }
             IDs.Add(id);
@@ -394,10 +394,13 @@ public class DinkParser
 
         void addSnippet()
         {
-            if (snippet != null && block != null && snippet.Beats.Count > 0) 
+            if (snippet != null && block != null) 
             { 
-                snippet.Origin = snippet.Beats[0].Origin;
-                block.Snippets.Add(snippet);
+                if (snippet.Beats.Count > 0)
+                {
+                    snippet.Origin = snippet.Beats[0].Origin;
+                    block.Snippets.Add(snippet);
+                }
             }
         }
 
@@ -413,6 +416,7 @@ public class DinkParser
             block.BlockID = id;
             block.Origin = origin;
             block.Comments.AddRange(comments);
+            comments.Clear();
 
             activeGroupLevel = 0;
             activeGroup = 0;
@@ -460,6 +464,8 @@ public class DinkParser
             scene = new DinkScene();
             scene.SceneID = id;
             scene.Origin = origin;
+            scene.Comments.AddRange(comments);
+            comments.Clear();
         }
 
         void addScene()
@@ -565,10 +571,14 @@ public class DinkParser
                 currentBraceContainer.Comments.AddRange(comments);
                 comments.Clear();
                 currentBraceLevel++;
+
+                List<string> savingComments = new();
                 if (ContainsInkGroup(trimmedLine))
                 {
                     if (activeGroupLevel==0)
                     {
+                        if (snippet!=null && snippet.Comments.Count>0)
+                            currentBraceContainer.Comments.InsertRange(0, snippet.Comments);
                         activeGroupLevel = currentBraceLevel;
                         activeGroup++;
                     }
@@ -590,12 +600,10 @@ public class DinkParser
             }
             else if (IsFlowBreakingLine(trimmedLine))
             {
+                comments.Clear();
                 if (IsFlowBreakingDinkLine(trimmedLine) && parsing)
                 {
-                    List<string> saveComments = comments.ToList();
-                    comments.Clear();
                     addAndCreateSnippet();
-                    comments.AddRange(saveComments);
                 }
                 else
                 {
