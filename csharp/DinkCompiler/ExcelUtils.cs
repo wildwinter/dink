@@ -1,6 +1,9 @@
 namespace DinkCompiler;
 
 using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
+using System.Linq;
 
 public class ExcelUtils 
 {
@@ -66,5 +69,50 @@ public class ExcelUtils
         range.Style.Font.Bold = true;
         range.Style.Font.FontColor = XLColor.White;
         range.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+    }
+
+    public static void SuppressNumberStoredAsTextWarning(string filePath, string sheetName)
+    {
+        using (var doc = SpreadsheetDocument.Open(filePath, true))
+        {
+            var workbookPart = doc.WorkbookPart;
+            if (workbookPart==null)
+            {
+                Console.Error.WriteLine("Error finding workbookPart");
+                return;
+            }
+
+            var sheet = workbookPart.Workbook.Descendants<Sheet>()
+                .FirstOrDefault(s => s.Name == sheetName);
+
+            if (sheet == null || sheet.Id==null)
+            {
+                Console.Error.WriteLine($"Error finding sheet {sheetName}");
+                return;
+            }
+
+            var worksheetPart = (WorksheetPart)workbookPart.GetPartById(sheet.Id!);
+            var worksheet = worksheetPart.Worksheet;
+
+            var ignoredErrors = worksheet.GetFirstChild<IgnoredErrors>();
+            if (ignoredErrors == null)
+            {
+                ignoredErrors = new IgnoredErrors();
+                 var sheetData = worksheet.GetFirstChild<SheetData>();
+                worksheet.InsertAfter(ignoredErrors, sheetData);
+            }
+
+            var ignoredError = new IgnoredError() 
+            { 
+                NumberStoredAsText = true, 
+                SequenceOfReferences = new DocumentFormat.OpenXml.ListValue<DocumentFormat.OpenXml.StringValue>() 
+                { 
+                    InnerText = "A1:XFD1048576" 
+                } 
+            };
+
+            ignoredErrors.Append(ignoredError);
+            worksheet.Save();
+        }
     }
 }
