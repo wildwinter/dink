@@ -411,7 +411,7 @@ public class DinkParser
         {
             block = new DinkBlock();
             block.BlockID = id;
-            block.Origin = scene.Origin;
+            block.Origin = origin;
             block.Comments.AddRange(comments);
 
             activeGroupLevel = 0;

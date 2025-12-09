@@ -7,7 +7,7 @@
         "Snippets": [
           {
             "BraceComments": [],
-            "SnippetID": "12z1",
+            "SnippetID": "jqHS",
             "Beats": [
               {
                 "Type": "Action",
@@ -42,7 +42,7 @@
         "Snippets": [
           {
             "BraceComments": [],
-            "SnippetID": "zePM",
+            "SnippetID": "IWdy",
             "Beats": [
               {
                 "Type": "Line",
@@ -106,7 +106,7 @@
         ],
         "Origin": {
           "SourceFilePath": "scene1.ink",
-          "LineNum": 1
+          "LineNum": 6
         },
         "Comments": [],
         "Tags": []
@@ -116,7 +116,7 @@
         "Snippets": [
           {
             "BraceComments": [],
-            "SnippetID": "oEGE",
+            "SnippetID": "OfkP",
             "Beats": [
               {
                 "Type": "Action",
@@ -142,7 +142,7 @@
           },
           {
             "BraceComments": [],
-            "SnippetID": "mMOp",
+            "SnippetID": "bon3",
             "Beats": [
               {
                 "Type": "Action",
@@ -166,7 +166,7 @@
           },
           {
             "BraceComments": [],
-            "SnippetID": "xzvS",
+            "SnippetID": "eALk",
             "Beats": [
               {
                 "Type": "Action",
@@ -190,7 +190,7 @@
           },
           {
             "BraceComments": [],
-            "SnippetID": "l5Cz",
+            "SnippetID": "PmEd",
             "Beats": [
               {
                 "Type": "Action",
@@ -214,7 +214,7 @@
           },
           {
             "BraceComments": [],
-            "SnippetID": "jKIM",
+            "SnippetID": "9pcu",
             "Beats": [
               {
                 "Type": "Action",
@@ -239,7 +239,7 @@
         ],
         "Origin": {
           "SourceFilePath": "scene1.ink",
-          "LineNum": 1
+          "LineNum": 15
         },
         "Comments": [
           "This comment should appear on Part2"
@@ -251,7 +251,7 @@
         "Snippets": [
           {
             "BraceComments": [],
-            "SnippetID": "EKuW",
+            "SnippetID": "zZ8o",
             "Beats": [
               {
                 "Type": "Action",
@@ -292,7 +292,7 @@
         ],
         "Origin": {
           "SourceFilePath": "scene1.ink",
-          "LineNum": 1
+          "LineNum": 29
         },
         "Comments": [],
         "Tags": []
@@ -302,7 +302,7 @@
         "Snippets": [
           {
             "BraceComments": [],
-            "SnippetID": "bFJM",
+            "SnippetID": "ZIf7",
             "Beats": [
               {
                 "Type": "Line",
@@ -331,7 +331,7 @@
           },
           {
             "BraceComments": [],
-            "SnippetID": "vTdb",
+            "SnippetID": "O39G",
             "Beats": [
               {
                 "Type": "Line",
@@ -360,7 +360,7 @@
           },
           {
             "BraceComments": [],
-            "SnippetID": "LcJr",
+            "SnippetID": "wIjn",
             "Beats": [
               {
                 "Type": "Line",
@@ -389,7 +389,7 @@
           },
           {
             "BraceComments": [],
-            "SnippetID": "UEXj",
+            "SnippetID": "l70x",
             "Beats": [
               {
                 "Type": "Line",
@@ -418,7 +418,7 @@
           },
           {
             "BraceComments": [],
-            "SnippetID": "YkT5",
+            "SnippetID": "2uOq",
             "Beats": [
               {
                 "Type": "Line",
@@ -448,7 +448,7 @@
         ],
         "Origin": {
           "SourceFilePath": "scene1.ink",
-          "LineNum": 1
+          "LineNum": 36
         },
         "Comments": [],
         "Tags": []
@@ -458,7 +458,7 @@
         "Snippets": [
           {
             "BraceComments": [],
-            "SnippetID": "yXHM",
+            "SnippetID": "bENa",
             "Beats": [
               {
                 "Type": "Action",
@@ -497,7 +497,7 @@
         ],
         "Origin": {
           "SourceFilePath": "scene1.ink",
-          "LineNum": 1
+          "LineNum": 52
         },
         "Comments": [],
         "Tags": []
@@ -507,7 +507,7 @@
         "Snippets": [
           {
             "BraceComments": [],
-            "SnippetID": "ElwT",
+            "SnippetID": "g7QL",
             "Beats": [
               {
                 "Type": "Action",
@@ -546,7 +546,7 @@
         ],
         "Origin": {
           "SourceFilePath": "scene1.ink",
-          "LineNum": 1
+          "LineNum": 58
         },
         "Comments": [],
         "Tags": []
@@ -567,7 +567,7 @@
         "Snippets": [
           {
             "BraceComments": [],
-            "SnippetID": "44GW",
+            "SnippetID": "Y94A",
             "Beats": [
               {
                 "Type": "Action",
@@ -620,7 +620,7 @@
         "Snippets": [
           {
             "BraceComments": [],
-            "SnippetID": "aOWn",
+            "SnippetID": "H8CC",
             "Beats": [
               {
                 "Type": "Line",
@@ -649,7 +649,7 @@
           },
           {
             "BraceComments": [],
-            "SnippetID": "4THa",
+            "SnippetID": "1ZnP",
             "Beats": [
               {
                 "Type": "Line",
@@ -676,7 +676,7 @@
           },
           {
             "BraceComments": [],
-            "SnippetID": "xik1",
+            "SnippetID": "wbeV",
             "Beats": [
               {
                 "Type": "Line",
@@ -703,7 +703,7 @@
           },
           {
             "BraceComments": [],
-            "SnippetID": "wggi",
+            "SnippetID": "MBNA",
             "Beats": [
               {
                 "Type": "Line",
@@ -732,7 +732,7 @@
           },
           {
             "BraceComments": [],
-            "SnippetID": "guuo",
+            "SnippetID": "gWFU",
             "Beats": [
               {
                 "Type": "Action",
@@ -759,7 +759,7 @@
         ],
         "Origin": {
           "SourceFilePath": "main.ink",
-          "LineNum": 28
+          "LineNum": 35
         },
         "Comments": [
           "This keeps looping."
@@ -782,7 +782,7 @@
         "Snippets": [
           {
             "BraceComments": [],
-            "SnippetID": "U41v",
+            "SnippetID": "X2VI",
             "Beats": [
               {
                 "Type": "Line",
@@ -925,7 +925,7 @@
             "BraceComments": [
               "Set of random barks."
             ],
-            "SnippetID": "FHl1",
+            "SnippetID": "pOMH",
             "Beats": [
               {
                 "Type": "Line",
@@ -954,7 +954,7 @@
             "BraceComments": [
               "Set of random barks."
             ],
-            "SnippetID": "5He7",
+            "SnippetID": "OWPJ",
             "Beats": [
               {
                 "Type": "Line",
@@ -983,7 +983,7 @@
             "BraceComments": [
               "Set of random barks."
             ],
-            "SnippetID": "E3lC",
+            "SnippetID": "nQK7",
             "Beats": [
               {
                 "Type": "Line",
@@ -1014,7 +1014,7 @@
             "BraceComments": [
               "Set of random barks."
             ],
-            "SnippetID": "kdLg",
+            "SnippetID": "XwRg",
             "Beats": [
               {
                 "Type": "Action",
@@ -1054,7 +1054,7 @@
             "BraceComments": [
               "Set of random barks."
             ],
-            "SnippetID": "VyIu",
+            "SnippetID": "x0s5",
             "Beats": [
               {
                 "Type": "Line",
@@ -1097,7 +1097,7 @@
             "BraceComments": [
               "Set of random barks."
             ],
-            "SnippetID": "g4Iz",
+            "SnippetID": "zKgw",
             "Beats": [
               {
                 "Type": "Line",
@@ -1126,7 +1126,7 @@
             "BraceComments": [
               "Set of random barks."
             ],
-            "SnippetID": "k4UT",
+            "SnippetID": "rXaB",
             "Beats": [
               {
                 "Type": "Line",
