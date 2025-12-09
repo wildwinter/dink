@@ -88,7 +88,7 @@ public class VoiceExport
         scenes = new List<DinkScene>();
         if (!File.Exists(scenesFile))
         {
-            Console.WriteLine($"{scenesFile} not found - make sure the Dink Compiler was run before using this utility.");
+            Console.WriteLine($"{scenesFile} not found - make sure the Dink Compiler was run using --outputStructure before using this utility.");
             return false;
         }
 

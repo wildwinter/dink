@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DinkTests", "csharp\Dink.Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DinkVoiceExport", "csharp\DinkVoiceExport\DinkVoiceExport.csproj", "{B05BE596-A7A8-4CB0-91B7-9FDE53B81184}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DinkViewer", "csharp\DinkViewer\DinkViewer.csproj", "{E4A8B6A9-EF89-4D06-998E-B8DD1CAD1654}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +36,10 @@ Global
 		{B05BE596-A7A8-4CB0-91B7-9FDE53B81184}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B05BE596-A7A8-4CB0-91B7-9FDE53B81184}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B05BE596-A7A8-4CB0-91B7-9FDE53B81184}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4A8B6A9-EF89-4D06-998E-B8DD1CAD1654}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4A8B6A9-EF89-4D06-998E-B8DD1CAD1654}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4A8B6A9-EF89-4D06-998E-B8DD1CAD1654}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4A8B6A9-EF89-4D06-998E-B8DD1CAD1654}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -43,6 +49,7 @@ Global
 		{31766958-78F8-CE7A-AEF0-2B1A06B19813} = {B41BF331-FCCB-2ADF-CDB6-767964B34647}
 		{EBD654EE-A8DF-D35F-984C-D6064E0F927B} = {B41BF331-FCCB-2ADF-CDB6-767964B34647}
 		{B05BE596-A7A8-4CB0-91B7-9FDE53B81184} = {B41BF331-FCCB-2ADF-CDB6-767964B34647}
+		{E4A8B6A9-EF89-4D06-998E-B8DD1CAD1654} = {B41BF331-FCCB-2ADF-CDB6-767964B34647}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {88169278-ED9A-490F-9E74-9B928E03C840}

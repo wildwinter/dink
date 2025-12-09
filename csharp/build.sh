@@ -18,6 +18,10 @@ for target in "${targets[@]}"; do
     dotnet publish -c Release -r ${target} -o ../dist/${target}
     cd ..
 
+    cd DinkViewer
+    dotnet publish -c Release -r ${target} -o ../dist/${target}
+    cd ..
+
     rm ./dist/${target}/*.pdb
     cp ./dist/dll/Dink.dll ./dist/${target}
     cp ../LICENSE ./dist/${target}
