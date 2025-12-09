@@ -183,6 +183,11 @@
     "CharacterID": "FRED",
     "Qualifier": ""
   },
+  "main_Barks_4444": {
+    "Type": "Line",
+    "CharacterID": "FRED",
+    "Qualifier": ""
+  },
   "main_Barks_X291": {
     "Type": "Line",
     "CharacterID": "JIM",

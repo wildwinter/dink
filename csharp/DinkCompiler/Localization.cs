@@ -68,10 +68,10 @@ public class LocStrings
     {
         Console.WriteLine("Writing localisation file: " + destLocFile);
         
-        bool useWritingStatus = !writingStatuses.IsEmpty()&&!ignoreWritingStatus;
+        bool useWritingStatus = writingStatuses.HasDefinitions()&&!ignoreWritingStatus;
 
         var recordsToExport = OrderedEntries
-            .Where(v => !useWritingStatus||writingStatuses.GetStatus(v.ID).Loc)
+            .Where(v => (!useWritingStatus)||writingStatuses.GetStatus(v.ID).Loc)
             .Select(v => new LocEntryExport
             {
                 ID = v.ID,

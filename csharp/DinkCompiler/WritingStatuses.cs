@@ -16,8 +16,6 @@ public class WritingStatuses
         _env = env;
     }
 
-    public bool IsEmpty() {return _ids.Count==0;}
-
     public bool HasDefinitions() {return GetDefinitions().Count>1;}
 
     private void Set(string id, string wsTag)

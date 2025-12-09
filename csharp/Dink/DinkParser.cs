@@ -346,6 +346,7 @@ public class DinkParser
     
     private static List<DinkScene> ParseInkLines(List<ParsingLine> lines, List<NonDinkLine> outNonDinkLines)
     {
+        List<string> IDs = new();
         List<DinkScene> parsedScenes = new List<DinkScene>();
         DinkScene? scene = null;
         DinkBlock? block = null;
@@ -366,6 +367,17 @@ public class DinkParser
         List<string> knotTags = new List<string>();
         List<string> stitchTags = new List<string>();
 
+        bool CheckID(string id, DinkOrigin origin)
+        {
+            if (IDs.Contains(id))
+            {
+                Console.Error.WriteLine($"Duplicate ID at {origin.ToString()}");
+                return false;
+            }
+            IDs.Add(id);
+            return true;
+        }
+
         void addSnippet()
         {
             if (snippet != null && block != null) 
@@ -378,6 +390,8 @@ public class DinkParser
 
             snippet = new DinkSnippet();
             snippet.SnippetID = GenerateID();
+            if (activeGroupLevel>0)
+                snippet.Group = activeGroup;
             if (currentBraceContainer != null)
             {
                 snippet.BraceComments.AddRange(currentBraceContainer.GetComments());
@@ -627,10 +641,10 @@ public class DinkParser
                 }
                 else
                 {
+                    if (!CheckID(dinkLine.LineID,line.Origin))
+                        return parsedScenes;
                     dinkLine.Origin = line.Origin;
                     dinkLine.Comments.AddRange(comments);
-                    if (activeGroupLevel>0)
-                        dinkLine.Group = activeGroup;
                     snippet?.Beats.Add(dinkLine);
                     comments.Clear();
                     addTags(dinkLine);
@@ -640,10 +654,10 @@ public class DinkParser
             }
             else if (parsing && ParseAction(trimmedLine) is DinkAction dinkAction)
             {
+                if (!CheckID(dinkAction.LineID,line.Origin))
+                    return parsedScenes;
                 dinkAction.Origin = line.Origin;
                 dinkAction.Comments.AddRange(comments);
-                if (activeGroupLevel>0)
-                    dinkAction.Group = activeGroup;
                 snippet?.Beats.Add(dinkAction);
                 comments.Clear();
                 addTags(dinkAction);
@@ -655,6 +669,8 @@ public class DinkParser
             {
                 if (ndLine.ID!=null)
                 {
+                    if (!CheckID(ndLine.ID,line.Origin))
+                        return parsedScenes;
                     ndLine.Tags.AddRange(stitchTags);
                     ndLine.Tags.AddRange(knotTags);
                     ndLine.Tags.AddRange(fileTags);

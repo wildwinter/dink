@@ -66,10 +66,10 @@ public class VoiceLines
                             AudioStatuses audioStatuses, 
                             string destVoiceFile)
     {
-        bool useWritingStatus = !writingStatuses.IsEmpty()&&!ignoreWritingStatus;
+        bool useWritingStatus = writingStatuses.HasDefinitions()&&!ignoreWritingStatus;
 
         List<VoiceEntryExport> recordsToExport = OrderedEntries
-            .Where(v => !useWritingStatus||writingStatuses.GetStatus(v.ID).Record)
+            .Where(v => (!useWritingStatus)||writingStatuses.GetStatus(v.ID).Record)
             .Select(v => new VoiceEntryExport
             {
                 ID = v.ID,

@@ -326,41 +326,43 @@ public class Compiler
 
                 Dictionary<int, int> groupSizes = new Dictionary<int, int>();
 
-                foreach (var line in block.IterateLines())
+                foreach (var snippet in block.Snippets)
                 {
-                    if (line.Group!=0)
+                    if (snippet.Group!=0)
                     {
-                        if (groupSizes.ContainsKey(line.Group))
-                            groupSizes[line.Group]++;
+                        if (groupSizes.ContainsKey(snippet.Group))
+                        {
+                            groupSizes[snippet.Group]++;
+                        }
                         else
-                            groupSizes[line.Group]=1;
-                        break;
+                        {
+                            groupSizes[snippet.Group]=1;
+                        }
                     }
                 }
 
                 foreach (var snippet in block.Snippets)
                 { 
+                    string groupIndicator = "";
+                    if (snippet.Group!=0)
+                    {
+                        if (snippet.Group!=groupNum)
+                        {
+                            groupIndex = 0;
+                            groupNum = snippet.Group;
+                        }
+                        groupIndex++;
+                        groupIndicator = $"({groupIndex}/{groupSizes[snippet.Group]})";
+                    }
+                    else
+                    {
+                        groupNum = 0;
+                    }
+
                     int lineIndex = 0;
                     foreach (var line in snippet.IterateLines())
                     {
                         lineIndex++;
-
-                        if (line.Group!=0)
-                        {
-                            if (line.Group!=groupNum)
-                            {
-                                groupIndex = 0;
-                                groupNum = line.Group;
-                            }
-                            if (lineIndex==1) {
-                                groupIndex++;
-                            }
-                        }
-                        else
-                        {
-                            groupNum = 0;
-                        }
-
                         VoiceEntry entry = new VoiceEntry()
                         {
                             ID = line.LineID,
@@ -390,7 +392,7 @@ public class Compiler
                         if (groupNum>0)
                         {
                             if (lineIndex==1)
-                                entry.GroupIndicator = $"({groupIndex}/{groupSizes[line.Group]})";
+                                entry.GroupIndicator = groupIndicator;
                             else 
                                 entry.GroupIndicator = "(...)";
                         }

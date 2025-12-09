@@ -81,7 +81,6 @@ public abstract class DinkBase
 public class DinkBeat : DinkBase
 {
     public string LineID { get; set; } = string.Empty;
-    public int Group { get; set; } = 0;
 
     public override string ToString() =>
         $", Tags: [{string.Join(", ", Tags)}], LineID: {LineID}, Comments: [{string.Join(",", Comments)}]";
@@ -127,6 +126,7 @@ public class DinkSnippet : DinkBase
 
     public string SnippetID { get; set; } = string.Empty;
     public List<DinkBeat> Beats { get; set; } = new List<DinkBeat>();
+    public int Group {get;set;} = 0;
     public override string ToString() => $"Snippet: '{SnippetID}'";
 }
 
