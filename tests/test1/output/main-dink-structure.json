@@ -7,7 +7,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "ViVI",
+            "SnippetID": "mqrG",
             "Beats": [
               {
                 "Type": "Line",
@@ -58,7 +58,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "pRee",
+            "SnippetID": "vgMx",
             "Beats": [
               {
                 "Type": "Action",
@@ -79,9 +79,7 @@
               "SourceFilePath": "scene1.ink",
               "LineNum": 12
             },
-            "Comments": [
-              "This comment should appear on Part2"
-            ],
+            "Comments": [],
             "Tags": []
           }
         ],
@@ -99,7 +97,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "b0aX",
+            "SnippetID": "jnBw",
             "Beats": [
               {
                 "Type": "Action",
@@ -152,7 +150,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "hyEM",
+            "SnippetID": "qidl",
             "Beats": [
               {
                 "Type": "Line",
@@ -179,14 +177,13 @@
               "LineNum": 26
             },
             "Comments": [
-              "There is a choice here.",
               "OPTION \u0022Go right\u0022"
             ],
             "Tags": []
           },
           {
             "GroupComments": [],
-            "SnippetID": "YiSO",
+            "SnippetID": "SUNv",
             "Beats": [
               {
                 "Type": "Line",
@@ -219,7 +216,7 @@
           },
           {
             "GroupComments": [],
-            "SnippetID": "Zy0S",
+            "SnippetID": "D84D",
             "Beats": [
               {
                 "Type": "Line",
@@ -252,7 +249,7 @@
           },
           {
             "GroupComments": [],
-            "SnippetID": "tSLO",
+            "SnippetID": "EoTA",
             "Beats": [
               {
                 "Type": "Line",
@@ -298,7 +295,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "Mvm7",
+            "SnippetID": "Gcb0",
             "Beats": [
               {
                 "Type": "Action",
@@ -349,7 +346,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "mA8L",
+            "SnippetID": "Zeqp",
             "Beats": [
               {
                 "Type": "Action",
@@ -411,7 +408,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "SETw",
+            "SnippetID": "aWNi",
             "Beats": [
               {
                 "Type": "Line",
@@ -528,10 +525,7 @@
               "SourceFilePath": "main.ink",
               "LineNum": 32
             },
-            "Comments": [
-              "This comment should apply to Test Scene.",
-              "And so should this."
-            ],
+            "Comments": [],
             "Tags": []
           }
         ],
@@ -539,10 +533,7 @@
           "SourceFilePath": "main.ink",
           "LineNum": 27
         },
-        "Comments": [
-          "This comment should apply to Test Scene.",
-          "And so should this."
-        ],
+        "Comments": [],
         "Tags": []
       }
     ],
@@ -550,7 +541,10 @@
       "SourceFilePath": "main.ink",
       "LineNum": 27
     },
-    "Comments": [],
+    "Comments": [
+      "This comment should apply to Test Scene.",
+      "And so should this."
+    ],
     "Tags": [
       "ws:stub",
       "type:conversation"
@@ -566,7 +560,7 @@
             "GroupComments": [
               "This is for all the barks."
             ],
-            "SnippetID": "8wYj",
+            "SnippetID": "Ivci",
             "Beats": [
               {
                 "Type": "Line",
@@ -579,9 +573,7 @@
                   "SourceFilePath": "main.ink",
                   "LineNum": 47
                 },
-                "Comments": [
-                  "VO:This is for the one-legged version."
-                ],
+                "Comments": [],
                 "Tags": [
                   "ws:stub"
                 ]
@@ -601,7 +593,7 @@
             "GroupComments": [
               "This is for all the barks."
             ],
-            "SnippetID": "iwh8",
+            "SnippetID": "ZZCv",
             "Beats": [
               {
                 "Type": "Line",
@@ -634,7 +626,7 @@
             "GroupComments": [
               "This is for all the barks."
             ],
-            "SnippetID": "UvrK",
+            "SnippetID": "gQ3M",
             "Beats": [
               {
                 "Type": "Line",
@@ -647,9 +639,7 @@
                   "SourceFilePath": "main.ink",
                   "LineNum": 49
                 },
-                "Comments": [
-                  "VO:How about this?"
-                ],
+                "Comments": [],
                 "Tags": [
                   "vo:soft",
                   "vo:radio",
@@ -671,7 +661,7 @@
             "GroupComments": [
               "This is for all the barks."
             ],
-            "SnippetID": "vq3Y",
+            "SnippetID": "YDbJ",
             "Beats": [
               {
                 "Type": "Action",
@@ -701,7 +691,7 @@
             "GroupComments": [
               "This is for all the barks."
             ],
-            "SnippetID": "M3Ap",
+            "SnippetID": "JpmJ",
             "Beats": [
               {
                 "Type": "Line",
@@ -750,7 +740,7 @@
             "GroupComments": [
               "This is for all the barks."
             ],
-            "SnippetID": "Pk5H",
+            "SnippetID": "Bun9",
             "Beats": [
               {
                 "Type": "Line",
@@ -783,7 +773,7 @@
             "GroupComments": [
               "This is for all the barks."
             ],
-            "SnippetID": "OZBd",
+            "SnippetID": "Fken",
             "Beats": [
               {
                 "Type": "Line",
@@ -836,7 +826,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "KjQI",
+            "SnippetID": "QpWE",
             "Beats": [
               {
                 "Type": "Line",
@@ -881,7 +871,7 @@
               "A: This comment should apply to the snippet.",
               "this comment should apply to this snippet"
             ],
-            "SnippetID": "wRQW",
+            "SnippetID": "MQGj",
             "Beats": [
               {
                 "Type": "Line",
@@ -930,7 +920,7 @@
               "B: This comment should apply to the snippet below.",
               "B: This should apply to the first bit of the snippet I guess?"
             ],
-            "SnippetID": "7pM9",
+            "SnippetID": "5hEN",
             "Beats": [
               {
                 "Type": "Line",
@@ -964,7 +954,7 @@
               "B: This comment should apply to the snippet below.",
               "B: This should apply to the first bit of the snippet I guess?"
             ],
-            "SnippetID": "6IVI",
+            "SnippetID": "yV9X",
             "Beats": [
               {
                 "Type": "Line",
@@ -998,7 +988,7 @@
               "B: This comment should apply to the snippet below.",
               "B: This should apply to the first bit of the snippet I guess?"
             ],
-            "SnippetID": "k5XG",
+            "SnippetID": "lfUb",
             "Beats": [
               {
                 "Type": "Line",
@@ -1045,7 +1035,7 @@
               "C: This comment should apply to the snippet below.",
               "VO: A set of lines about monkeys"
             ],
-            "SnippetID": "V4Wh",
+            "SnippetID": "pZwi",
             "Beats": [
               {
                 "Type": "Line",
@@ -1079,7 +1069,7 @@
               "C: This comment should apply to the snippet below.",
               "VO: A set of lines about monkeys"
             ],
-            "SnippetID": "HZkD",
+            "SnippetID": "qxob",
             "Beats": [
               {
                 "Type": "Line",
@@ -1113,7 +1103,7 @@
               "C: This comment should apply to the snippet below.",
               "VO: A set of lines about monkeys"
             ],
-            "SnippetID": "OLBu",
+            "SnippetID": "tc8C",
             "Beats": [
               {
                 "Type": "Line",
@@ -1147,7 +1137,7 @@
               "C: This comment should apply to the snippet below.",
               "VO: A set of lines about monkeys"
             ],
-            "SnippetID": "UX92",
+            "SnippetID": "68Sc",
             "Beats": [
               {
                 "Type": "Line",
@@ -1189,7 +1179,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "al4B",
+            "SnippetID": "E5ZZ",
             "Beats": [
               {
                 "Type": "Line",
@@ -1220,7 +1210,7 @@
           },
           {
             "GroupComments": [],
-            "SnippetID": "DXz9",
+            "SnippetID": "anrS",
             "Beats": [
               {
                 "Type": "Line",
@@ -1262,7 +1252,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "lrJo",
+            "SnippetID": "pIFe",
             "Beats": [
               {
                 "Type": "Line",
@@ -1293,7 +1283,7 @@
           },
           {
             "GroupComments": [],
-            "SnippetID": "86Hm",
+            "SnippetID": "Vvby",
             "Beats": [
               {
                 "Type": "Line",
@@ -1324,7 +1314,7 @@
           },
           {
             "GroupComments": [],
-            "SnippetID": "vEFY",
+            "SnippetID": "sQuy",
             "Beats": [
               {
                 "Type": "Line",
@@ -1395,7 +1385,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "AajE",
+            "SnippetID": "yZTD",
             "Beats": [
               {
                 "Type": "Line",
@@ -1438,7 +1428,7 @@
           },
           {
             "GroupComments": [],
-            "SnippetID": "8RXF",
+            "SnippetID": "tQ7q",
             "Beats": [
               {
                 "Type": "Line",
@@ -1483,7 +1473,7 @@
           },
           {
             "GroupComments": [],
-            "SnippetID": "Bi4R",
+            "SnippetID": "Mtbr",
             "Beats": [
               {
                 "Type": "Line",
@@ -1528,7 +1518,7 @@
           },
           {
             "GroupComments": [],
-            "SnippetID": "yyAI",
+            "SnippetID": "lMbn",
             "Beats": [
               {
                 "Type": "Line",
@@ -1584,7 +1574,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "JrNK",
+            "SnippetID": "wRVG",
             "Beats": [
               {
                 "Type": "Line",
@@ -1638,7 +1628,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "z87I",
+            "SnippetID": "NVPq",
             "Beats": [
               {
                 "Type": "Line",
@@ -1692,7 +1682,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "XDVJ",
+            "SnippetID": "LUnl",
             "Beats": [
               {
                 "Type": "Line",
@@ -1721,7 +1711,7 @@
           },
           {
             "GroupComments": [],
-            "SnippetID": "7pR2",
+            "SnippetID": "hiPf",
             "Beats": [
               {
                 "Type": "Line",
@@ -1766,7 +1756,7 @@
           },
           {
             "GroupComments": [],
-            "SnippetID": "RExl",
+            "SnippetID": "ShN2",
             "Beats": [
               {
                 "Type": "Line",
@@ -1822,7 +1812,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "X89o",
+            "SnippetID": "6hRb",
             "Beats": [
               {
                 "Type": "Line",
@@ -1901,7 +1891,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "6vTn",
+            "SnippetID": "s5iM",
             "Beats": [
               {
                 "Type": "Line",
@@ -1944,7 +1934,7 @@
           },
           {
             "GroupComments": [],
-            "SnippetID": "OQQQ",
+            "SnippetID": "cpha",
             "Beats": [
               {
                 "Type": "Line",
@@ -1973,7 +1963,7 @@
           },
           {
             "GroupComments": [],
-            "SnippetID": "VXjF",
+            "SnippetID": "qeo2",
             "Beats": [
               {
                 "Type": "Line",
@@ -2002,7 +1992,7 @@
           },
           {
             "GroupComments": [],
-            "SnippetID": "dh6W",
+            "SnippetID": "G4JV",
             "Beats": [
               {
                 "Type": "Line",
@@ -2031,7 +2021,7 @@
           },
           {
             "GroupComments": [],
-            "SnippetID": "r2CR",
+            "SnippetID": "TFED",
             "Beats": [
               {
                 "Type": "Line",
