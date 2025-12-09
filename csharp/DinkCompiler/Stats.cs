@@ -42,6 +42,11 @@ class Stats
 
     private static void WriteSceneSummary(string rootName, List<DinkScene> dinkScenes, List<NonDinkLine> nonDinkLines, WritingStatuses writingStatuses, AudioStatuses audioStatuses, XLWorkbook workbook)
     {
+        string forceCellString(int val)
+        {
+            return "\u00A0"+val;
+        }
+
         // Cache definitions to avoid repeated getter calls
         var wsDefs = writingStatuses.GetDefinitions();
         var asDefs = audioStatuses.GetDefinitions();
@@ -116,7 +121,7 @@ class Stats
 
                 // Write Cell
                 string cellText = wsCounts[i].ToString() + (wsEstimates[i] ? "?" : "");
-                worksheet.Cell(row, col).Value = " "+cellText;
+                worksheet.Cell(row, col).Value = cellText;
 
                 // Apply Color (skip total column which is the last index)
                 if (i < wsColors.Count && wsCounts[i] > 0 && wsColors[i] != null)
@@ -136,7 +141,7 @@ class Stats
                 int count = audioStatuses.GetSceneTagCount(scene, def.Status);
                 totalAsCounts[i] += count;
 
-                worksheet.Cell(row, col).Value = " "+count;
+                worksheet.Cell(row, col).Value = forceCellString(count);
                 if (count > 0 && asColors[i] != null)
                     worksheet.Cell(row, col).Style.Fill.BackgroundColor = asColors[i];
                 col++;
@@ -158,7 +163,7 @@ class Stats
         for (int i = 0; i < wsDefs.Count; i++)
         {
             int count = writingStatuses.GetNonDinkTagCount(nonDinkLines, wsDefs[i].WsTag);
-            worksheet.Cell(row, col).Value = " "+count;
+            worksheet.Cell(row, col).Value = forceCellString(count);
             
             // Add to totals (using index i, same as main loop)
             totalWsCounts[i] += count;
