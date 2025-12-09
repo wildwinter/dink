@@ -160,6 +160,30 @@ public class DinkBlock : DinkBase
         }
     }
 
+    public IEnumerable<List<DinkSnippet>> IterateSnippetGroups()
+    {
+        if (Snippets == null || Snippets.Count == 0)
+            yield break;
+
+        var currentBatch = new List<DinkSnippet>();
+        int currentGroupId = Snippets[0].Group;
+        foreach (var snippet in Snippets)
+        {
+            if (snippet.Group != currentGroupId)
+            {
+                yield return currentBatch;
+                currentBatch = new List<DinkSnippet>();
+                currentGroupId = snippet.Group;
+            }
+
+            currentBatch.Add(snippet);
+        }
+        if (currentBatch.Count > 0)
+        {
+            yield return currentBatch;
+        }
+    }
+
     public override string ToString() => $"Block: '{BlockID}'";
 }
 

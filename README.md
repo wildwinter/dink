@@ -1,6 +1,6 @@
 # dink
 
-**Work in progress!**
+**Work in progress! NOT FIT TO USE YET, STILL TESTING.**
 
 **Dink**, a contraction of **dialogue ink**, is a way of formatting dialogue lines while using and writing in [Ink](https://www.inklestudios.com/ink/), and a set of tools for parsing and supporting that content.
 
