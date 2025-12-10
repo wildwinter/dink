@@ -12,7 +12,7 @@
         "build:dv": "cd DinkViewer && dotnet build",
         "build": "npm run build:di && npm run build:dc && npm run build:dv && npm run build:dve",
         "test": "npm run build && cd Dink.Tests && dotnet test",
-        "try:dc": "npm run build:di && npm run build:dc && DinkCompiler/bin/Debug/net8.0/osx-arm64/DinkCompiler --project ../examples/test-js/dink-src/dink.jsonc --ignoreWritingStatus --dinkStructure",
+        "try:dc": "npm run build:di && npm run build:dc && DinkCompiler/bin/Debug/net8.0/osx-arm64/DinkCompiler --project ../examples/test-js/dink-src/dink.jsonc --ignoreWritingStatus --dinkStructure --stats --localization --recordingScript",
         "try:dv": "npm run build:di && npm run build:dv && DinkViewer/bin/Debug/net8.0/osx-arm64/DinkViewer --project ../examples/test-js/dink-src/dink.jsonc",
         "try:dc2": "npm run build:di && npm run build:dc && DinkCompiler/bin/Debug/net8.0/osx-arm64/DinkCompiler --project ../tests/test1/dink.jsonc --ignoreWritingStatus --dinkStructure",
         "try:dv2": "npm run build:di && npm run build:dv && DinkViewer/bin/Debug/net8.0/osx-arm64/DinkViewer --project ../tests/test1/dink.jsonc",
