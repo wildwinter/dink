@@ -43,11 +43,6 @@ public:
 
     // END LINE TYPE
 
-    // These apply only to Action type
-    // BEGIN ACTION TYPE
-
-    // END ACTION TYPE
-
     FString ToString() const;
     static void ParseTags(const FString& tagsRaw, FDinkBeat& outDinkBeat);
 };
@@ -98,17 +93,4 @@ public:
     TArray<FDinkBlock> Blocks;
 
     FString ToString() const;
-};
-
-UCLASS(BlueprintType)
-class DINK_API UDinkParser : public UObject
-{
-    GENERATED_BODY()
-
-public:
-    static bool ParseAction(const FString& line, FDinkBeat& outBeat);
-    static bool ParseLine(const FString& line, FDinkBeat& outBeat);
-    static bool ParseInkLines(const TArray<FString>& lines, TArray<FDinkScene>& outDinkScenes);
-    static bool ParseInk(const FString& text, TArray<FDinkScene>& outDinkScenes);
-    static FString RemoveBlockComments(const FString& Text);
 };
