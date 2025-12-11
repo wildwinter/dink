@@ -72,6 +72,10 @@ public class ProjectSettings
     // Output a statistics document
     public bool OutputStats = false;
 
+    // Output the line origins as a JSON document
+    public bool OutputOrigins = false;
+
+
     // This is where the game will look for
     // audio files that start with the ID names of the lines.
     // The folders (and their children) will be searched in this
@@ -156,6 +160,7 @@ public class ProjectEnvironment
     public bool OutputDinkStructure {get{return _settings.OutputDinkStructure;}}
     public bool OutputLocalization {get{return _settings.OutputLocalization;}}
     public bool OutputRecordingScript {get{return _settings.OutputRecordingScript;}}
+    public bool OutputOrigins {get{return _settings.OutputOrigins;}}
     public bool IgnoreWritingStatus {get {return _settings.IgnoreWritingStatus;}}
     public bool OutputStats{ get {return _settings.OutputStats;}}
     public string RootFilename {get{return Path.GetFileNameWithoutExtension(SourceInkFile);}}
@@ -348,6 +353,7 @@ public class ProjectEnvironment
     public string DestRuntimeStringsFile {get{return MakeDestFile($"-strings-{DefaultLocaleCode}.json");}}
     public string DestLocFile {get{return MakeDestFile("-loc.xlsx");}}
     public string DestStatsFile {get{return MakeDestFile("-stats.xlsx");}}
+    public string DestOriginsFile {get {return MakeDestFile("-origins.json");}}
     public List<string> GetCommentFilters(string commentType)
     {
         if (CommentFilters.TryGetValue(commentType, out List<string>? filters))

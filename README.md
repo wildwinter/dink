@@ -65,7 +65,7 @@ for lines of dialogue and helps you manage the production.
 * The `DinkCompiler`:
 
   * Compiles your Ink as normal, but also extracts text lines for localisation, and parses out extra information such as who is saying which line and bundles it all up for your runtime.
-  * Optionally exports recording scripts and localisation files.
+  * Optionally exports recording scripts, localisation files, and lists of where lines came from.
   * Helps you manage the status of each individual line - is it first draft? Has it been recorded? And produces overview statistics - how many lines are still to be completed? How many lines still need to be recorded by a particular actor?
   * Can generate a placeholder audio file for each line for testing.
   * Can run in [live mode](#live-mode) which means it'll keep re-exporting your data every time you edit the Ink files.
@@ -107,7 +107,10 @@ A JSON structure containing one entry for each LineID, with the runtime data you
 * **Strings Runtime File (`myproject-strings-en-GB.json`)**:\
 A JSON file containing an entry for every string in Ink, along with the string used in the original script. This is probably your master language file for runtime - you'll want to create copies of it for your localisation. When you display an Ink or Dink line you'll want to use the string data in here rather than in Ink itself. (You can change that default ISO code to `en-US` if you must!)
 * **Dink Structure File (`myproject-dink-structure.json`)**:\
-*(Optional)* A JSON structure containing all the Dink scenes and their blocks, snippets, and beats, and useful information such as tags, lines, comments, source origins and so on. This is most likely to be useful in your edit pipeline for updating items in your editor based on Dink scripts - for example, creating placeholder scene layouts.
+*(Optional)* A JSON structure containing all the Dink scenes and their blocks, snippets, and beats, and useful information such as tags, lines, comments and so on. This is most likely to be useful in your edit pipeline for updating items in your editor based on Dink scripts - for example, creating placeholder scene layouts.
+* **Origins File (`myproject-origins.json`)**:\
+*(Optional)* A JSON structure useful for debugging and editing, which lists the origin of
+each line of text, giving filename, line number, knot, and stitch.
 * **Stats File (`myproject-stats.xslx`)**:\
 *(Optional)* An Excel file giving details of the status of every line in the game, both writing and recording.
 * **Strings File for Localisation (`myproject-loc.xslx`)**:\
@@ -331,6 +334,10 @@ Or instead, grab all the settings from a project file:
 * `--stats`
 
     If present, outputs a file of the status of all the lines as an Excel file (`*-stats.xlsx`).
+
+* `--origins`
+
+    If present, outputs a JSON file giving the file, line number, knot, and stitch where you'll find your text. Useful for editor and debug tools. (`*-origins.json`).
 
 * `--ignoreWritingStatus`
 

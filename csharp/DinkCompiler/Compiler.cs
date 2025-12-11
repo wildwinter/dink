@@ -8,6 +8,7 @@ using Dink;
 using Ink;
 using InkLocaliser;
 using DinkTool;
+using System.Text.Json;
 
 public class Compiler
 {
@@ -24,7 +25,7 @@ public class Compiler
         // Steps:
 
         // ----- Process Ink files for string data and IDs -----
-        bool success = ProcessInkStrings(_env.SourceInkFolder, out LocStrings inkStrings, out List<string> usedInkFiles);
+        bool success = ProcessInkStrings(_env.SourceInkFolder, out LocStrings inkStrings, out List<string> usedInkFiles, out Dictionary<string, Localiser.Origin> origins);
         UsedInkFiles = usedInkFiles;
         if (!success)
             return false;
@@ -112,6 +113,13 @@ public class Compiler
                 return false;
         }
 
+        // ----- Output origins (JSON) -----
+        if (_env.OutputOrigins)
+        {
+            if (!WriteOrigins(origins, _env.DestOriginsFile))
+                return false;
+        }
+
         Console.WriteLine("Processing complete.");
         return true;
     }
@@ -130,10 +138,12 @@ public class Compiler
         return false;
     }
 
-    private bool ProcessInkStrings(string inkFolder, out LocStrings inkStrings, out List<string> usedInkFiles)
+    private bool ProcessInkStrings(string inkFolder, out LocStrings inkStrings, 
+        out List<string> usedInkFiles, out Dictionary<string, Localiser.Origin> origins)
     {
         inkStrings = new LocStrings();
         usedInkFiles = new();
+        origins = new();
 
         Console.WriteLine("Processing Ink for IDs and string content... " + inkFolder);
         var localiser = new Localiser(new Localiser.Options()
@@ -147,6 +157,7 @@ public class Compiler
             return false;
         }
         usedInkFiles = localiser.UsedInkFiles;
+        origins = localiser.LineOrigins;
         foreach (var key in localiser.GetStringKeys())
         {
             LocEntry entry = new LocEntry
@@ -227,7 +238,8 @@ public class Compiler
         return success;
     }
 
-    private bool ParseDinkScenes(List<string> usedInkFiles, Characters? characters, out List<DinkScene> dinkScenes, out List<NonDinkLine> ndLines)
+    private bool ParseDinkScenes(List<string> usedInkFiles, Characters? characters,
+        out List<DinkScene> dinkScenes, out List<NonDinkLine> ndLines)
     {
         ndLines = new List<NonDinkLine>();
         dinkScenes = new List<DinkScene>();
@@ -439,6 +451,23 @@ public class Compiler
     {
         if (!inkStrings.WriteToExcel(_env.RootFilename, writingStatuses, _env.IgnoreWritingStatus, destLocFile))
             return false;
+        return true;
+    }
+
+    private bool WriteOrigins(Dictionary<string, Localiser.Origin> origins, string destOriginsFile)
+    {
+        Console.WriteLine("Writing origins file: " + destOriginsFile);
+
+        try {
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            string fileContents = JsonSerializer.Serialize(origins, options);
+
+            File.WriteAllText(destOriginsFile, fileContents, Encoding.UTF8);
+        }
+        catch (Exception ex) {
+                Console.Error.WriteLine($"Error writing out origins JSON file {destOriginsFile}: " + ex.Message);
+            return false;
+        }
         return true;
     }
 }

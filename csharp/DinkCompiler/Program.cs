@@ -63,6 +63,13 @@ Option<bool> googleTTSOption = new("--tts")
     Description = "Generate text-to-speech."
 };
 command.Options.Add(googleTTSOption);
+
+Option<bool> outputOriginsOption = new("--origins")
+{
+    Description = "Generate origins JSON file, showing which file/line number is the source of a line."
+};
+command.Options.Add(outputOriginsOption);
+
 Option<bool> liveOption = new("--live")
 {
     Description = "Live mode: stay running, watch for changes in Ink files, and automatically recompile."
@@ -108,6 +115,8 @@ command.SetAction(parseResult =>
         settings.OutputStats = true;
     if (parseResult.GetValue<bool>(googleTTSOption))
         settings.GoogleTTS.Generate = true;
+    if (parseResult.GetValue<bool>(outputOriginsOption))
+        settings.OutputOrigins = true;
 
     ProjectEnvironment env = new ProjectEnvironment(settings);
     if (!env.Init())

@@ -6,9 +6,7 @@ Dink editor
 TTS web demo
 Strip out text
 
-TCR:
-Revisit action type
-Switch a:x to vo:x
+Localizer: Export line origins
 
 DONE:
 -----
