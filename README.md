@@ -349,6 +349,12 @@ Or instead, grab all the settings from a project file:
     Use Google TTS to generate temp audio for your spoken lines.
     You need to [configure it](#google-tts) first in the config file.
 
+* `--nostrip`
+
+    By default, any Ink lines which have been given and ID and exported as a string in the string table (for localisation) will be stripped from the compiled Ink JSON file. Instead,
+    you'll get back an ID e.g. `someFilename_someKnot_someStitch_XXZZ`. Passing this param
+    will leave the strings during compilation.
+
 ### Live Mode
 
 If you call the compiler on the command line with `--live` it will start waiting for changes to your Ink files. Any changes will cause the compiler to rebuild and reexport everything (according to the [project config](#config-file)). This means your scripts and stats will always be up to date!
@@ -770,6 +776,9 @@ A JSON or JSONC file (i.e. JSON with comments) having all or some of the require
     // Default is false, which means no text in Action beats
     // will be localised
     "locActionBeats":false,
+
+    // Don't strip the text from the compiled Ink
+    "nostrip":true,
     
     // If true, outputs the structured dink file (json)
     "outputDinkStructure": false,

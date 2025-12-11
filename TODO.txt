@@ -4,9 +4,6 @@ Actor estimates?
 Script flow doc
 Dink editor
 TTS web demo
-Strip out text
-
-Localizer: Export line origins
 
 DONE:
 -----
@@ -43,3 +40,4 @@ Stats doc: Estimates
 Add speaker to stats file.
 Live builder
 Better example scripts
+Strip out text from compiled version

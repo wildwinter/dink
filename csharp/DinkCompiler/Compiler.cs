@@ -25,13 +25,14 @@ public class Compiler
         // Steps:
 
         // ----- Process Ink files for string data and IDs -----
-        bool success = ProcessInkStrings(_env.SourceInkFolder, out LocStrings inkStrings, out List<string> usedInkFiles, out Dictionary<string, Localiser.Origin> origins);
+        bool success = ProcessInkStrings(_env.SourceInkFolder, out LocStrings inkStrings, 
+            out List<string> usedInkFiles, out Dictionary<string, Localiser.Origin> origins);
         UsedInkFiles = usedInkFiles;
         if (!success)
             return false;
 
         // ----- Compile to json -----
-        if (!CompileToJson(_env.SourceInkFile, _env.DestCompiledInkFile))
+        if (!CompileToJson(_env.SourceInkFile, inkStrings, !_env.NoStrip, _env.DestCompiledInkFile))
             return false;
 
         // ----- Read characters -----
@@ -195,7 +196,8 @@ public class Compiler
         }
     }
 
-    private bool CompileToJson(string sourceInkFile, string destFile)
+    private bool CompileToJson(string sourceInkFile, LocStrings inkStrings, 
+        bool stripText, string destFile)
     {
         bool success = true;
         _compileErrors.Clear();
@@ -204,13 +206,14 @@ public class Compiler
         string cwd = Directory.GetCurrentDirectory();
         Directory.SetCurrentDirectory(Path.GetDirectoryName(sourceInkFile) ?? Directory.GetCurrentDirectory());
 
-        string inputString = File.ReadAllText(sourceInkFile);
+        var fileHandler = new InkFileHandler(inkStrings, stripText);
+        string inputString = fileHandler.LoadInkFileContents(sourceInkFile);
 
         Ink.Compiler compiler = new Ink.Compiler(inputString, new Ink.Compiler.Options
         {
             sourceFilename = sourceInkFile,
             errorHandler = OnCompileError,
-            fileHandler = new DefaultFileHandler()
+            fileHandler = fileHandler
         });
         Ink.Runtime.Story story = compiler.Compile();
         success = !(story == null || _compileErrors.Count > 0);
@@ -469,5 +472,47 @@ public class Compiler
             return false;
         }
         return true;
+    }
+
+    public class InkFileHandler : IFileHandler
+    {
+        private LocStrings _strings;
+        private bool _stripText;
+
+        public InkFileHandler(LocStrings locStrings, bool stripText)
+        {
+            _strings = locStrings;
+            _stripText = stripText;
+        }
+
+        public string ResolveInkFilename(string includeName)
+        {
+            return Path.Combine(Directory.GetCurrentDirectory(), includeName);
+        }
+
+        public string LoadInkFileContents(string fullFilename)
+        {
+            string fileText = File.ReadAllText(fullFilename);
+            if (!_stripText)
+                return fileText;
+
+            // In case someone's commented out lines with IDs.
+            fileText = DinkParser.RemoveBlockComments(fileText);
+
+            List<string> lines = DinkParser.SplitTextIntoLines(fileText);
+            for(int i=0;i<lines.Count;i++)
+            {
+                string line = lines[i].Trim();
+                string? id = DinkParser.ParseID(line);
+                if (id==null)
+                    continue;
+                string? text = _strings.GetText(id);
+                if (text==null)
+                    continue;
+                lines[i] = line.Replace(text,id);
+            }
+            fileText = string.Join("\n",lines);
+            return fileText;
+        }
     }
 }

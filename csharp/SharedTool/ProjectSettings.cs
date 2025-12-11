@@ -56,6 +56,9 @@ public class ProjectSettings
     // to be localised, and not in the Dink minimal
     public bool LocActionBeats = false;
 
+    // If true, doesn't strip out the text from the compiled JSON.
+    public bool NoStrip = false;
+
     // If true, outputs the structured dink file (json)
     public bool OutputDinkStructure = false;
 
@@ -157,6 +160,7 @@ public class ProjectEnvironment
     public string DestFolder {get; private set;}
     public string DefaultLocaleCode {get {return _settings.DefaultLocaleCode;}}
     public bool LocActionBeats {get{return _settings.LocActionBeats;}}
+    public bool NoStrip {get{return _settings.NoStrip;}}
     public bool OutputDinkStructure {get{return _settings.OutputDinkStructure;}}
     public bool OutputLocalization {get{return _settings.OutputLocalization;}}
     public bool OutputRecordingScript {get{return _settings.OutputRecordingScript;}}

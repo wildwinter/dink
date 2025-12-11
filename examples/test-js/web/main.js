@@ -55,13 +55,14 @@ function runInk() {
     while (story.canContinue) {
 
         // Get ink to generate the next paragraph
-        var nextLine = story.Continue();
+        var nextLine = story.Continue().trim();
         if (nextLine.trim()=="")
             continue;
 
         // By default, we could use the Ink string. But
         // we'll try to get Dink to replace it with something better.
         var outText = `[Raw Ink] '${nextLine}'`; 
+        console.log(outText);
 
         var lineID = findID(story.currentTags);
 
@@ -119,7 +120,15 @@ function runInk() {
 
         var para = document.createElement('li');
         para.classList.add("choice");
-        para.innerHTML = `<a href='#'>${choice.text}</a>`
+
+        var choiceText = choice.text;
+
+        // Is this a localised string? Then replace it.
+        var lineID = findID(choice.tags);
+        if (lineID!=null)
+            choiceText = getLocString(lineID);
+
+        para.innerHTML = `<a href='#'>${choiceText}</a>`
         ul.appendChild(para);
 
         // Click on choice

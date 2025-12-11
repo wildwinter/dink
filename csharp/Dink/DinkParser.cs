@@ -739,7 +739,7 @@ public class DinkParser
         @"/\*.*?\*/",
         RegexOptions.Compiled | RegexOptions.Singleline);  
 
-    private static string RemoveBlockComments(string text)
+    public static string RemoveBlockComments(string text)
     {
         if (string.IsNullOrEmpty(text))
             return "";
@@ -823,5 +823,17 @@ public class DinkParser
             parsingLines.Add(parsingLine);
         }
         return ParseInkLines(parsingLines, outNonDinkLines);
+    }
+
+    private static readonly Regex _rxID = new Regex(
+        @"#id:(\w+)", 
+        RegexOptions.Compiled
+    );
+
+    public static string? ParseID(string input)
+    {
+        if (string.IsNullOrEmpty(input)) return null;
+        Match match = _rxID.Match(input);
+        return match.Success ? match.Groups[1].Value : null;
     }
 }

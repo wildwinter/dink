@@ -76,6 +76,12 @@ Option<bool> liveOption = new("--live")
 };
 command.Options.Add(liveOption);
 
+Option<bool> nostripOption = new("--nostrip")
+{
+    Description = "Don't strip the text out of the compiled Ink."
+};
+command.Options.Add(nostripOption);
+
 command.Validators.Add(result =>
 {
     // Is a project file specified?
@@ -117,6 +123,8 @@ command.SetAction(parseResult =>
         settings.GoogleTTS.Generate = true;
     if (parseResult.GetValue<bool>(outputOriginsOption))
         settings.OutputOrigins = true;
+    if (parseResult.GetValue<bool>(nostripOption))
+        settings.NoStrip = true;
 
     ProjectEnvironment env = new ProjectEnvironment(settings);
     if (!env.Init())
