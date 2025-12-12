@@ -25,14 +25,16 @@ public class Compiler
         // Steps:
 
         // ----- Process Ink files for string data and IDs -----
-        bool success = ProcessInkStrings(_env.SourceInkFolder, out LocStrings inkStrings, 
-            out List<string> usedInkFiles, out Dictionary<string, Localiser.Origin> origins);
-        UsedInkFiles = usedInkFiles;
+        bool success = ProcessInkStrings(_env.SourceInkFile, out LocStrings inkStrings, 
+            out List<string> locUsedInkFiles, out Dictionary<string, Localiser.Origin> origins);
+        UsedInkFiles = locUsedInkFiles;
         if (!success)
             return false;
 
         // ----- Compile to json -----
-        if (!CompileToJson(_env.SourceInkFile, inkStrings, !_env.NoStrip, _env.DestCompiledInkFile))
+        success = CompileToJson(_env.SourceInkFile, inkStrings, !_env.NoStrip, _env.DestCompiledInkFile, out List<string> compiledUsedInkFiles);
+        UsedInkFiles = compiledUsedInkFiles;
+        if (!success)
             return false;
 
         // ----- Read characters -----
@@ -41,7 +43,7 @@ public class Compiler
         ReadCharacters(charFile, out Characters? characters);
 
         // ----- Parse ink files, extract Dink beats -----
-        if (!ParseDinkScenes(usedInkFiles, characters, out List<DinkScene> dinkScenes, out List<NonDinkLine> nonDinkLines))
+        if (!ParseDinkScenes(UsedInkFiles, characters, out List<DinkScene> dinkScenes, out List<NonDinkLine> nonDinkLines))
             return false;
 
         // ---- Remove any action and character references from the localisation -----
@@ -139,17 +141,17 @@ public class Compiler
         return false;
     }
 
-    private bool ProcessInkStrings(string inkFolder, out LocStrings inkStrings, 
+    private bool ProcessInkStrings(string inkFile, out LocStrings inkStrings, 
         out List<string> usedInkFiles, out Dictionary<string, Localiser.Origin> origins)
     {
         inkStrings = new LocStrings();
         usedInkFiles = new();
         origins = new();
 
-        Console.WriteLine("Processing Ink for IDs and string content... " + inkFolder);
+        Console.WriteLine("Processing Ink for IDs and string content... " + inkFile);
         var localiser = new Localiser(new Localiser.Options()
         {
-            folder = inkFolder
+            file = inkFile
         });
         if (!localiser.Run())
         {
@@ -197,7 +199,7 @@ public class Compiler
     }
 
     private bool CompileToJson(string sourceInkFile, LocStrings inkStrings, 
-        bool stripText, string destFile)
+        bool stripText, string destFile, out List<string> usedInkFiles)
     {
         bool success = true;
         _compileErrors.Clear();
@@ -217,6 +219,7 @@ public class Compiler
         });
         Ink.Runtime.Story story = compiler.Compile();
         success = !(story == null || _compileErrors.Count > 0);
+        usedInkFiles = fileHandler.UsedInkFiles;
         if (!success)
         {
             Console.WriteLine("Compilation failed with errors:");
@@ -478,6 +481,7 @@ public class Compiler
     {
         private LocStrings _strings;
         private bool _stripText;
+        public List<string> UsedInkFiles = new();
 
         public InkFileHandler(LocStrings locStrings, bool stripText)
         {
@@ -492,6 +496,9 @@ public class Compiler
 
         public string LoadInkFileContents(string fullFilename)
         {
+            if (!UsedInkFiles.Contains(fullFilename))
+                UsedInkFiles.Add(fullFilename);
+
             string fileText = File.ReadAllText(fullFilename);
             if (!_stripText)
                 return fileText;
