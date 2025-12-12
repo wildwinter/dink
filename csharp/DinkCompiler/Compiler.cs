@@ -26,15 +26,13 @@ public class Compiler
 
         // ----- Process Ink files for string data and IDs -----
         bool success = ProcessInkStrings(_env.SourceInkFile, out LocStrings inkStrings, 
-            out List<string> locUsedInkFiles, out Dictionary<string, Localiser.Origin> origins);
-        UsedInkFiles = locUsedInkFiles;
+            out List<string> usedInkFiles, out Dictionary<string, Localiser.Origin> origins);
+        UsedInkFiles = usedInkFiles;
         if (!success)
             return false;
 
         // ----- Compile to json -----
-        success = CompileToJson(_env.SourceInkFile, inkStrings, !_env.NoStrip, _env.DestCompiledInkFile, out List<string> compiledUsedInkFiles);
-        UsedInkFiles = compiledUsedInkFiles;
-        if (!success)
+        if (!CompileToJson(_env.SourceInkFile, inkStrings, !_env.NoStrip, _env.DestCompiledInkFile))
             return false;
 
         // ----- Read characters -----
@@ -43,7 +41,7 @@ public class Compiler
         ReadCharacters(charFile, out Characters? characters);
 
         // ----- Parse ink files, extract Dink beats -----
-        if (!ParseDinkScenes(UsedInkFiles, characters, out List<DinkScene> dinkScenes, out List<NonDinkLine> nonDinkLines))
+        if (!ParseDinkScenes(usedInkFiles, characters, out List<DinkScene> dinkScenes, out List<NonDinkLine> nonDinkLines))
             return false;
 
         // ---- Remove any action and character references from the localisation -----
@@ -199,7 +197,7 @@ public class Compiler
     }
 
     private bool CompileToJson(string sourceInkFile, LocStrings inkStrings, 
-        bool stripText, string destFile, out List<string> usedInkFiles)
+        bool stripText, string destFile)
     {
         bool success = true;
         _compileErrors.Clear();
@@ -219,7 +217,6 @@ public class Compiler
         });
         Ink.Runtime.Story story = compiler.Compile();
         success = !(story == null || _compileErrors.Count > 0);
-        usedInkFiles = fileHandler.UsedInkFiles;
         if (!success)
         {
             Console.WriteLine("Compilation failed with errors:");
@@ -481,7 +478,6 @@ public class Compiler
     {
         private LocStrings _strings;
         private bool _stripText;
-        public List<string> UsedInkFiles = new();
 
         public InkFileHandler(LocStrings locStrings, bool stripText)
         {
@@ -496,9 +492,6 @@ public class Compiler
 
         public string LoadInkFileContents(string fullFilename)
         {
-            if (!UsedInkFiles.Contains(fullFilename))
-                UsedInkFiles.Add(fullFilename);
-
             string fileText = File.ReadAllText(fullFilename);
             if (!_stripText)
                 return fileText;
