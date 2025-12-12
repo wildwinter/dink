@@ -43,6 +43,7 @@ public class DinkEditor : ModuleRules
                 "EditorSubsystem",
                 "AssetRegistry",
                 "Dink",
+                "Projects"
             }
             );
 
