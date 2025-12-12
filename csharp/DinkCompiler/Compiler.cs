@@ -25,7 +25,7 @@ public class Compiler
         // Steps:
 
         // ----- Process Ink files for string data and IDs -----
-        bool success = ProcessInkStrings(_env.SourceInkFolder, out LocStrings inkStrings, 
+        bool success = ProcessInkStrings(_env.SourceInkFile, out LocStrings inkStrings, 
             out List<string> usedInkFiles, out Dictionary<string, Localiser.Origin> origins);
         UsedInkFiles = usedInkFiles;
         if (!success)
@@ -139,17 +139,17 @@ public class Compiler
         return false;
     }
 
-    private bool ProcessInkStrings(string inkFolder, out LocStrings inkStrings, 
+    private bool ProcessInkStrings(string inkFile, out LocStrings inkStrings, 
         out List<string> usedInkFiles, out Dictionary<string, Localiser.Origin> origins)
     {
         inkStrings = new LocStrings();
         usedInkFiles = new();
         origins = new();
 
-        Console.WriteLine("Processing Ink for IDs and string content... " + inkFolder);
+        Console.WriteLine("Processing Ink for IDs and string content... " + inkFile);
         var localiser = new Localiser(new Localiser.Options()
         {
-            folder = inkFolder
+            file = inkFile
         });
         if (!localiser.Run())
         {
