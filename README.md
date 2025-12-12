@@ -126,7 +126,7 @@ The source can be found on [Github](https://github.com/wildwinter/dink), and is 
 
 ## Releases
 
-Releases will be available in the releases area in [Github](https://github.com/wildwinter/dink/releases).
+Releases are available in the releases area in [Github](https://github.com/wildwinter/dink/releases).
 
 ## Usage
 
