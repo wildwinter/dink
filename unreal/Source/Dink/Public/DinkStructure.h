@@ -1,18 +1,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "DinkFormat.generated.h"
-
-UENUM(BlueprintType)
-enum class EDinkBeatType : uint8
-{
-    Line    UMETA(DisplayName = "Line"),
-    Action  UMETA(DisplayName = "Action")
-};
-
+#include "Dink.h"
+#include "DinkStructure.generated.h"
 
 USTRUCT(BlueprintType)
-struct DINK_API FDinkBeat
+struct DINK_API FDinkStructureBeat
 {
     GENERATED_BODY()
 
@@ -44,12 +37,11 @@ public:
     // END LINE TYPE
 
     FString ToString() const;
-    static void ParseTags(const FString& tagsRaw, FDinkBeat& outDinkBeat);
 };
 
 // Equivalent of an Ink flow fragment
 USTRUCT(BlueprintType)
-struct DINK_API FDinkSnippet
+struct DINK_API FDinkStructureSnippet
 {
     GENERATED_BODY()
 
@@ -58,14 +50,14 @@ public:
     FName SnippetID;
 
     UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
-    TArray<FDinkBeat> Beats;
+    TArray<FDinkStructureBeat> Beats;
 
     FString ToString() const;
 };
 
 // Equivalent of an Ink Stitch
 USTRUCT(BlueprintType)
-struct DINK_API FDinkBlock
+struct DINK_API FDinkStructureBlock
 {
     GENERATED_BODY()
 
@@ -74,14 +66,14 @@ public:
     FName BlockID;
 
     UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
-    TArray<FDinkSnippet> Snippets;
+    TArray<FDinkStructureSnippet> Snippets;
 
     FString ToString() const;
 };
 
 // Equivalent of an Ink Knot
 USTRUCT(BlueprintType)
-struct DINK_API FDinkScene
+struct DINK_API FDinkStructureScene
 {
     GENERATED_BODY()
 
@@ -90,7 +82,7 @@ public:
     FName SceneID;
 
     UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
-    TArray<FDinkBlock> Blocks;
+    TArray<FDinkStructureBlock> Blocks;
 
     FString ToString() const;
 };

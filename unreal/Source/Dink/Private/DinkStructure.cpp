@@ -1,8 +1,6 @@
-#include "DinkFormat.h"
+#include "DinkStructure.h"
 
-DEFINE_LOG_CATEGORY_STATIC(LogDinkFormat, Log, All);
-
-FString FDinkBeat::ToString() const
+FString FDinkStructureBeat::ToString() const
 {
     FString dump = FString::Printf(TEXT("[%s] "), *LineID.ToString());
 
@@ -33,56 +31,30 @@ FString FDinkBeat::ToString() const
     return dump;
 }
 
-void FDinkBeat::ParseTags(const FString& tagsRaw, FDinkBeat& outDinkBeat) {
-    if (!tagsRaw.IsEmpty())
-    {
-        TArray<FString> rawTags;
-        tagsRaw.ParseIntoArray(rawTags, TEXT("#"), true);
-        for (const FString& tag : rawTags)
-        {
-            if (!tag.IsEmpty())
-            {
-                FString trimmed = tag.TrimStart();
-                if (trimmed.StartsWith("id:")) {
-                    outDinkBeat.LineID = FName(trimmed.Mid(3));
-                }
-                else
-                {
-                    outDinkBeat.Tags.Add(trimmed);
-                }
-            }
-        }
-    }
-
-    if (outDinkBeat.LineID.IsNone()) {
-        UE_LOG(LogDinkFormat, Warning, TEXT("Dink beat is missing a LineID! %s"), *outDinkBeat.ToString());
-    }
-}
-
-FString FDinkSnippet::ToString() const
+FString FDinkStructureSnippet::ToString() const
 {
     FString dump = FString::Printf(TEXT("  Snippet:%s Beats:%d"), *SnippetID.ToString(), Beats.Num());
-    for (const FDinkBeat& beat : Beats)
+    for (const FDinkStructureBeat& beat : Beats)
     {
         dump += FString::Printf(TEXT("\n    %s"), *beat.ToString());
     }
     return dump;
 }
 
-FString FDinkBlock::ToString() const
+FString FDinkStructureBlock::ToString() const
 {
     FString dump = FString::Printf(TEXT("  Block:%s Snippets:%d"), *BlockID.ToString(), Snippets.Num());
-    for (const FDinkSnippet& snippet : Snippets)
+    for (const FDinkStructureSnippet& snippet : Snippets)
     {
         dump += FString::Printf(TEXT("\n        %s"), *snippet.ToString());
     }
     return dump;
 }
 
-FString FDinkScene::ToString() const
+FString FDinkStructureScene::ToString() const
 {
     FString dump = FString::Printf(TEXT("Scene:%s Blocks:%d"), *SceneID.ToString(), Blocks.Num());
-    for (const FDinkBlock& block : Blocks)
+    for (const FDinkStructureBlock& block : Blocks)
     {
         dump += FString::Printf(TEXT("\n%s"), *block.ToString());
     }

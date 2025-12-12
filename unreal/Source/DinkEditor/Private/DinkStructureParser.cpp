@@ -1,4 +1,5 @@
-#include "DinkFormat.h" // Ensure this includes your structs (FDinkScene, etc.)
+#include "DinkStructureParser.h"
+#include "DinkStructure.h"
 #include "Serialization/JsonSerializer.h"
 #include "Policies/CondensedJsonPrintPolicy.h"
 
@@ -13,11 +14,11 @@ static EDinkBeatType ParseBeatType(const FString& TypeStr)
 }
 
 // Helper to parse a single Beat
-static FDinkBeat ParseBeat(TSharedPtr<FJsonObject> JsonBeat)
+static FDinkStructureBeat ParseBeat(TSharedPtr<FJsonObject> JsonBeat)
 {
-    FDinkBeat Beat;
+    FDinkStructureBeat Beat;
 
-    // 1. Common Fields
+    // Common Fields
     FString TypeStr = JsonBeat->GetStringField(TEXT("Type"));
     Beat.Type = ParseBeatType(TypeStr);
     
@@ -33,7 +34,7 @@ static FDinkBeat ParseBeat(TSharedPtr<FJsonObject> JsonBeat)
         }
     }
 
-    // 2. Line-specific Fields
+    // Line-specific Fields
     if (Beat.Type == EDinkBeatType::Line)
     {
         Beat.CharacterID = FName(*JsonBeat->GetStringField(TEXT("CharacterID")));
@@ -41,16 +42,13 @@ static FDinkBeat ParseBeat(TSharedPtr<FJsonObject> JsonBeat)
         Beat.Direction = JsonBeat->GetStringField(TEXT("Direction"));
     }
 
-    // Note: 'Origin' and 'Comments' in the JSON are currently ignored 
-    // as they don't exist in the FDinkBeat struct in DinkFormat.h.
-
     return Beat;
 }
 
 // Helper to parse a Snippet
-static FDinkSnippet ParseSnippet(TSharedPtr<FJsonObject> JsonSnippet)
+static FDinkStructureSnippet ParseSnippet(TSharedPtr<FJsonObject> JsonSnippet)
 {
-    FDinkSnippet Snippet;
+    FDinkStructureSnippet Snippet;
     Snippet.SnippetID = FName(*JsonSnippet->GetStringField(TEXT("SnippetID")));
 
     const TArray<TSharedPtr<FJsonValue>>* BeatsArray;
@@ -69,9 +67,9 @@ static FDinkSnippet ParseSnippet(TSharedPtr<FJsonObject> JsonSnippet)
 }
 
 // Helper to parse a Block
-static FDinkBlock ParseBlock(TSharedPtr<FJsonObject> JsonBlock)
+static FDinkStructureBlock ParseBlock(TSharedPtr<FJsonObject> JsonBlock)
 {
-    FDinkBlock Block;
+    FDinkStructureBlock Block;
     // Handle empty block IDs which might come in as null or empty strings
     FString BlockIDStr;
     if (JsonBlock->TryGetStringField(TEXT("BlockID"), BlockIDStr))
@@ -95,9 +93,9 @@ static FDinkBlock ParseBlock(TSharedPtr<FJsonObject> JsonBlock)
 }
 
 // Helper to parse a Scene
-static FDinkScene ParseScene(TSharedPtr<FJsonObject> JsonScene)
+static FDinkStructureScene ParseScene(TSharedPtr<FJsonObject> JsonScene)
 {
-    FDinkScene Scene;
+    FDinkStructureScene Scene;
     Scene.SceneID = FName(*JsonScene->GetStringField(TEXT("SceneID")));
 
     const TArray<TSharedPtr<FJsonValue>>* BlocksArray;
@@ -115,7 +113,7 @@ static FDinkScene ParseScene(TSharedPtr<FJsonObject> JsonScene)
     return Scene;
 }
 
-bool UDinkJSONParser::ParseDinkJSON(const FString& JsonRaw, TArray<FDinkScene>& OutScenes)
+bool UDinkStructureParser::ParseJSON(const FString& JsonRaw, TArray<FDinkStructureScene>& OutScenes)
 {
     TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(JsonRaw);
     TArray<TSharedPtr<FJsonValue>> JsonRootArray;

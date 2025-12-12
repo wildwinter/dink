@@ -2,7 +2,33 @@
 
 DEFINE_LOG_CATEGORY_STATIC(LogDinkLegacyParser, Log, All);
 
-bool UDinkLegacyParser::ParseLine(const FString& line, FDinkBeat& outBeat)
+static void ParseTags(const FString& tagsRaw, FDinkStructureBeat& outDinkBeat) {
+    if (!tagsRaw.IsEmpty())
+    {
+        TArray<FString> rawTags;
+        tagsRaw.ParseIntoArray(rawTags, TEXT("#"), true);
+        for (const FString& tag : rawTags)
+        {
+            if (!tag.IsEmpty())
+            {
+                FString trimmed = tag.TrimStart();
+                if (trimmed.StartsWith("id:")) {
+                    outDinkBeat.LineID = FName(trimmed.Mid(3));
+                }
+                else
+                {
+                    outDinkBeat.Tags.Add(trimmed);
+                }
+            }
+        }
+    }
+
+    if (outDinkBeat.LineID.IsNone()) {
+        UE_LOG(LogDinkLegacyParser, Warning, TEXT("Dink beat is missing a LineID! %s"), *outDinkBeat.ToString());
+    }
+}
+
+bool ParseLine(const FString& line, FDinkStructureBeat& outBeat)
 {
     /*
     Regex logic for parsing standard Dialogue lines
@@ -22,13 +48,13 @@ bool UDinkLegacyParser::ParseLine(const FString& line, FDinkBeat& outBeat)
     outBeat.Text = matcher.GetCaptureGroup(4).TrimEnd();
 
     FString tagsRaw = matcher.GetCaptureGroup(5);
-    FDinkBeat::ParseTags(tagsRaw, outBeat);
+    ParseTags(tagsRaw, outBeat);
 
     return true;
 }
 
 
-bool UDinkLegacyParser::ParseAction(const FString& line, FDinkBeat& outBeat)
+bool ParseAction(const FString& line, FDinkStructureBeat& outBeat)
 {
     /*
     Regex logic for parsing Action lines
@@ -45,7 +71,7 @@ bool UDinkLegacyParser::ParseAction(const FString& line, FDinkBeat& outBeat)
     outBeat.Text = matcher.GetCaptureGroup(1).TrimEnd();
 
     FString tagsRaw = matcher.GetCaptureGroup(2);
-    FDinkBeat::ParseTags(tagsRaw, outBeat);
+    ParseTags(tagsRaw, outBeat);
 
     return true;
 }
@@ -161,11 +187,11 @@ static bool ParseExpressionClause(const FString& Line, FString& OutExpression, b
     return true;
 }
 
-bool UDinkLegacyParser::ParseInkLines(const TArray<FString>& lines, TArray<FDinkScene>& outDinkScenes)
+bool ParseInkLines(const TArray<FString>& lines, TArray<FDinkStructureScene>& outDinkScenes)
 {
-    FDinkScene scene;
-    FDinkBlock block;
-    FDinkSnippet snippet;
+    FDinkStructureScene scene;
+    FDinkStructureBlock block;
+    FDinkStructureSnippet snippet;
     bool parsing = false;
 
     auto addSnippet = [&]()
@@ -179,7 +205,7 @@ bool UDinkLegacyParser::ParseInkLines(const TArray<FString>& lines, TArray<FDink
                 return;
             }
 
-            snippet = FDinkSnippet();
+            snippet = FDinkStructureSnippet();
             snippet.SnippetID = FName(GenerateShortHash());
         };
 
@@ -188,7 +214,7 @@ bool UDinkLegacyParser::ParseInkLines(const TArray<FString>& lines, TArray<FDink
         FString trimmedLine = line.TrimStartAndEnd();
         FString knot;
         FString stitch;
-        FDinkBeat dinkBeat;
+        FDinkStructureBeat dinkBeat;
 
         UE_LOG(LogDinkLegacyParser, Log, TEXT("Parsing line: %s"), *trimmedLine);
 
@@ -233,11 +259,11 @@ bool UDinkLegacyParser::ParseInkLines(const TArray<FString>& lines, TArray<FDink
                 outDinkScenes.Add(scene);
             }
             parsing = false;
-            scene = FDinkScene();
+            scene = FDinkStructureScene();
             scene.SceneID = FName(knot);
-            block = FDinkBlock();
+            block = FDinkStructureBlock();
             block.BlockID = "";
-            snippet = FDinkSnippet();
+            snippet = FDinkStructureSnippet();
             snippet.SnippetID = FName(GenerateShortHash());
             UE_LOG(LogDinkLegacyParser, Log, TEXT("Began scene: %s"), *knot);
             continue;
@@ -250,9 +276,9 @@ bool UDinkLegacyParser::ParseInkLines(const TArray<FString>& lines, TArray<FDink
             if (block.Snippets.Num() > 0) {
                 scene.Blocks.Add(block);
             }
-            block = FDinkBlock();
+            block = FDinkStructureBlock();
             block.BlockID = FName(stitch);
-            snippet = FDinkSnippet();
+            snippet = FDinkStructureSnippet();
             snippet.SnippetID = FName(GenerateShortHash());
             UE_LOG(LogDinkLegacyParser, Log, TEXT("Began snippet: %s"), *stitch);
             continue;
@@ -301,7 +327,7 @@ bool UDinkLegacyParser::ParseInkLines(const TArray<FString>& lines, TArray<FDink
     return true;
 }
 
-FString UDinkLegacyParser::RemoveBlockComments(const FString& Text)
+FString RemoveBlockComments(const FString& Text)
 {
     const FRegexPattern Pattern(TEXT("/\\*[\\s\\S]*?\\*/"));
     FRegexMatcher Matcher(Pattern, Text);
@@ -318,7 +344,7 @@ FString UDinkLegacyParser::RemoveBlockComments(const FString& Text)
     return Result;
 }
 
-bool UDinkLegacyParser::ParseInk(const FString& text, TArray<FDinkScene>& outDinkScenes)
+bool ParseInk(const FString& text, TArray<FDinkStructureScene>& outDinkScenes)
 {
     FString textWithoutComments = RemoveBlockComments(text);
     TArray<FString> lines;
@@ -326,4 +352,94 @@ bool UDinkLegacyParser::ParseInk(const FString& text, TArray<FDinkScene>& outDin
     if (ParseInkLines(lines, outDinkScenes))
         return true;
     return false;
+}
+
+FString GetCanonicalFullPath(const FString& path)
+{
+    FString fullPath = FPaths::ConvertRelativePathToFull(path);
+    FPaths::MakeStandardFilename(fullPath);
+    return fullPath;
+}
+
+bool LoadSourceFile(const FString& filePath, FString& outText)
+{
+    FString fullPath = FPaths::ConvertRelativePathToFull(filePath);
+
+    if (FFileHelper::LoadFileToString(outText, *fullPath))
+        return true;
+
+    UE_LOG(LogDinkLegacyParser, Warning, TEXT("Failed to load file: %s"), *fullPath);
+    return false;
+}
+
+// Loads all the source from this starting file path into the current InkSourceMap
+void LoadAllSource(const FString& startFilePath, TMap<FString, FString>& outSourceMap)
+{
+    TArray<FString> toLoad;
+
+    FString fullStartPath = GetCanonicalFullPath(startFilePath);
+    FString rootPath = FPaths::GetPath(fullStartPath);
+
+    toLoad.Add(FPaths::GetCleanFilename(startFilePath));
+
+    while (toLoad.Num() > 0)
+    {
+        FString sourceFilePath = toLoad.Pop();
+        FString sourceFileFullPath = GetCanonicalFullPath(FPaths::Combine(rootPath, sourceFilePath));
+
+        if (outSourceMap.Contains(sourceFileFullPath))
+        {
+            // Already loaded, no need to do it again.
+            continue;
+        }
+
+        FString fileText;
+        if (!LoadSourceFile(sourceFileFullPath, fileText))
+            continue;
+
+        outSourceMap.Add(sourceFileFullPath, fileText);
+        //UE_LOG(LogDinkLegacyParser, Log, TEXT("Loaded ink source file: %s"), *sourceFileFullPath);
+
+        // Search for INCLUDE
+        fileText = RemoveBlockComments(fileText);
+        TArray<FString> lines;
+        fileText.ParseIntoArrayLines(lines, false);
+
+        const FRegexPattern pattern(TEXT("^\\s*INCLUDE\\s+([^\\s\\/\\*]+(?:\\/[^\\s\\/\\*]+)*)\\s*(?:\\/\\/.*|\\*\\*.*)?$"));
+
+        for (const FString& line : lines)
+        {
+            FRegexMatcher matcher(pattern, line);
+            if (matcher.FindNext())
+            {
+                const FString& newInclude = matcher.GetCaptureGroup(1);
+                //UE_LOG(LogDinkLegacyParser, Log, TEXT("Found include required: %s"), *newInclude);
+                toLoad.Add(newInclude);
+            }
+        }
+
+    }
+}
+
+void UDinkLegacyParser::ParseDinkScenes(const FString& sourceFile, TArray<FDinkStructureScene>& outParsedScenes) 
+{
+
+    FString inkRootName = FPaths::GetBaseFilename(FPaths::GetCleanFilename(sourceFile));
+
+    TMap<FString, FString> InkSourceMap;
+    LoadAllSource(sourceFile, InkSourceMap);
+
+    TArray<FString> inkFiles;
+    InkSourceMap.GetKeys(inkFiles);
+
+    UE_LOG(LogDinkLegacyParser, Log, TEXT("Source maps loaded."));
+
+    for (const FString& inkFile : inkFiles)
+    {
+        //UE_LOG(LogDinkSequencesEditor, Log, TEXT("Processing: %s"), *inkFile);
+        FString inkFileContent = InkSourceMap[inkFile];
+        ParseInk(inkFileContent, outParsedScenes);
+    }
+
+    UE_LOG(LogDinkLegacyParser, Log, TEXT("Parsed %d scenes"), outParsedScenes.Num());
 }
