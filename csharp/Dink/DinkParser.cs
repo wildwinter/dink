@@ -119,11 +119,16 @@ public class DinkParser
     // Matches a line that *only* consists of optional leading/trailing space 
     // and one or more tag structures (e.g., " #tag1 #tag2 ").
     private static readonly Regex _rxTagLine = new Regex(
-        @"^\s*(?:\#(?<TagValue>\S+)(\s+\#(?<TagValue>\S+))*)\s*$", 
+        @"^\s*(?:\#(?<TagValue>[^#]+))*\s*$", 
         RegexOptions.Compiled | RegexOptions.Singleline);
 
     public static List<string>? ParseTagLine(string line)
     {
+        if (string.IsNullOrWhiteSpace(line))
+        {
+            return null;
+        }
+
         Match match = _rxTagLine.Match(line);
 
         if (!match.Success)
@@ -131,7 +136,13 @@ public class DinkParser
 
         List<string> tags = match.Groups["TagValue"].Captures
             .Select(c => c.Value.Trim())
+            .Where(t => !string.IsNullOrEmpty(t))
             .ToList();
+            
+        if (tags.Count == 0)
+        {
+            return null;
+        }
             
         return tags;
     }
@@ -184,7 +195,7 @@ public class DinkParser
     // $   
     //    
     private static readonly Regex _rxAction = new Regex(
-        @"^\s*[-]?\s*(?<Text>[^\*\+].*?)(?:\s+\#(?<TagValue>\S+))+$", 
+        @"^\s*(?!->)[-]?\s*(?<Text>[^\*\+].*?)(?:\s+\#(?<TagValue>\S+))+$", 
         RegexOptions.Compiled | RegexOptions.Singleline);
 
     public static DinkAction? ParseAction(string line)
@@ -221,12 +232,23 @@ public class DinkParser
     // (?:\s+\#(?<TagValue>\S+))* - Zero or more tags: (whitespace, #, Capture 'TagValue' without #)
     // $                                      - End of the string
     private static readonly Regex _rxLine = new Regex(
-        @"^\s*[-]?\s*(?<CharacterID>[A-Z0-9_]+)\s*(?:\(\s*(?<Qualifier>.*?)\s*\))?\s*:\s*(?:\(\s*(?<Direction>.*?)\s*\))?\s*(?<Text>[\w].*?)(?:\s+\#(?<TagValue>\S+))*$", 
+        @"^\s*[-]?\s*(?<CharacterID>[A-Z0-9_]+)\s*(?:\(\s*(?<Qualifier>.*?)\s*\))?\s*:\s*(?:\(\s*(?<Direction>.*?)\s*\))?\s*(?<Text>[\w].*?)(?:\s+\#(?<TagValue>\S+))+$", 
+        RegexOptions.Compiled | RegexOptions.Singleline);
+    private static readonly Regex _rxLineInner = new Regex(
+        @"^\s*[-]?\s*(?<CharacterID>[A-Z0-9_]+)\s*(?:\(\s*(?<Qualifier>.*?)\s*\))?\s*:\s*(?:\(\s*(?<Direction>.*?)\s*\))?\s*(?<Text>[\w].*?)\s*$", 
         RegexOptions.Compiled | RegexOptions.Singleline);
 
-    public static DinkLine? ParseLine(string line)
+    public static DinkLine? ParseLine(string line, bool inner=false)
     {
-        Match match = _rxLine.Match(line);
+        Match match;
+        if (inner)
+        {
+            match = _rxLineInner.Match(line);
+        }
+        else
+        {
+            match = _rxLine.Match(line);
+        }
 
         if (!match.Success)
             return null;
@@ -610,7 +632,7 @@ public class DinkParser
                     {
                         inOptions = true;
                         // What if the option is a dialogue line?
-                        if (parsing && ParseLine(option) is DinkLine dinkLine)
+                        if (parsing && ParseLine(option, true) is DinkLine dinkLine)
                         {
                             dinkLine.LineID = ParseID(trimmedLine)??"";
                             if (string.IsNullOrEmpty(dinkLine.LineID))

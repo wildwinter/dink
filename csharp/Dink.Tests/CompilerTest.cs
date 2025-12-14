@@ -15,15 +15,14 @@ public class ParserTest
     [Fact]
     public void Test1()
     {
-        //string source = loadTestFile("Scratch.fountain");
-        //string match = loadTestFile("Scratch.txt");
-
         var settings = new ProjectSettings()
         {
             Source = "../../../../../tests/test1/main.ink",
-            DestFolder = "../../../../../tests/tmp"
+            DestFolder = "./output"
         };
-        Compiler cp = new Compiler(settings);
+        var env = new ProjectEnvironment(settings);
+        env.Init();
+        Compiler cp = new Compiler(env);
         Assert.True(cp.Run());
     }
 }
