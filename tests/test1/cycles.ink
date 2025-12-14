@@ -23,7 +23,7 @@ LIST testList = item1, item2
 - FRED: Fancy Bark 2 #id:cycles_Cycles_FancyBarkTest_D4KV
 - FRED: Fancy Bark 3 #id:cycles_Cycles_FancyBarkTest_A2I1
 - FRED: Fancy Bark 4 #id:cycles_Cycles_FancyBarkTest_3KK1
-    {shuffle:
+-   {shuffle:
         - FRED: Spinning on fancy bark 5 #id:cycles_Cycles_FancyBarkTest_FF35
         - FRED: Spinning on fancy bark 6 #id:cycles_Cycles_FancyBarkTest_23Q8
     }
