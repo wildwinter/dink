@@ -1,196 +1,4 @@
 ﻿{
-  "scene1_Scene1_R819": {
-    "File": "scene1.ink",
-    "LineNumber": 3,
-    "Knot": "Scene1",
-    "Stitch": ""
-  },
-  "scene1_Scene1_Part1_S494": {
-    "File": "scene1.ink",
-    "LineNumber": 7,
-    "Knot": "Scene1",
-    "Stitch": "Part1"
-  },
-  "scene1_Scene1_Part1_ICIG": {
-    "File": "scene1.ink",
-    "LineNumber": 8,
-    "Knot": "Scene1",
-    "Stitch": "Part1"
-  },
-  "scene1_Scene1_Part1_621G": {
-    "File": "scene1.ink",
-    "LineNumber": 9,
-    "Knot": "Scene1",
-    "Stitch": "Part1"
-  },
-  "scene1_Scene1_Part1_LTDB": {
-    "File": "scene1.ink",
-    "LineNumber": 10,
-    "Knot": "Scene1",
-    "Stitch": "Part1"
-  },
-  "scene1_Scene1_Part1_VXIU": {
-    "File": "scene1.ink",
-    "LineNumber": 11,
-    "Knot": "Scene1",
-    "Stitch": "Part1"
-  },
-  "scene1_Scene1_Part2_N5RW": {
-    "File": "scene1.ink",
-    "LineNumber": 16,
-    "Knot": "Scene1",
-    "Stitch": "Part2"
-  },
-  "scene1_Scene1_Part2_HQUO": {
-    "File": "scene1.ink",
-    "LineNumber": 18,
-    "Knot": "Scene1",
-    "Stitch": "Part2"
-  },
-  "scene1_Scene1_Part2_3AHR": {
-    "File": "scene1.ink",
-    "LineNumber": 19,
-    "Knot": "Scene1",
-    "Stitch": "Part2"
-  },
-  "scene1_Scene1_Part2_NR0K": {
-    "File": "scene1.ink",
-    "LineNumber": 22,
-    "Knot": "Scene1",
-    "Stitch": "Part2"
-  },
-  "scene1_Scene1_Part2_FLIK": {
-    "File": "scene1.ink",
-    "LineNumber": 23,
-    "Knot": "Scene1",
-    "Stitch": "Part2"
-  },
-  "scene1_Scene1_Part2_CF6W": {
-    "File": "scene1.ink",
-    "LineNumber": 26,
-    "Knot": "Scene1",
-    "Stitch": "Part2"
-  },
-  "scene1_Scene1_Part3_UZOH": {
-    "File": "scene1.ink",
-    "LineNumber": 31,
-    "Knot": "Scene1",
-    "Stitch": "Part3"
-  },
-  "scene1_Scene1_Part3_9MXL": {
-    "File": "scene1.ink",
-    "LineNumber": 32,
-    "Knot": "Scene1",
-    "Stitch": "Part3"
-  },
-  "scene1_Scene1_Part3_YTMH": {
-    "File": "scene1.ink",
-    "LineNumber": 33,
-    "Knot": "Scene1",
-    "Stitch": "Part3"
-  },
-  "scene1_Scene1_Part4_NY6V": {
-    "File": "scene1.ink",
-    "LineNumber": 38,
-    "Knot": "Scene1",
-    "Stitch": "Part4"
-  },
-  "scene1_Scene1_Part4_T9GZ": {
-    "File": "scene1.ink",
-    "LineNumber": 39,
-    "Knot": "Scene1",
-    "Stitch": "Part4"
-  },
-  "scene1_Scene1_Part4_F0PF": {
-    "File": "scene1.ink",
-    "LineNumber": 40,
-    "Knot": "Scene1",
-    "Stitch": "Part4"
-  },
-  "scene1_Scene1_Part4_9L7I": {
-    "File": "scene1.ink",
-    "LineNumber": 42,
-    "Knot": "Scene1",
-    "Stitch": "Part4"
-  },
-  "scene1_Scene1_Part4_DNII": {
-    "File": "scene1.ink",
-    "LineNumber": 43,
-    "Knot": "Scene1",
-    "Stitch": "Part4"
-  },
-  "scene1_Scene1_Part4_Q8FK": {
-    "File": "scene1.ink",
-    "LineNumber": 45,
-    "Knot": "Scene1",
-    "Stitch": "Part4"
-  },
-  "scene1_Scene1_Part4_AJDP": {
-    "File": "scene1.ink",
-    "LineNumber": 46,
-    "Knot": "Scene1",
-    "Stitch": "Part4"
-  },
-  "scene1_Scene1_Part4_0YY1": {
-    "File": "scene1.ink",
-    "LineNumber": 48,
-    "Knot": "Scene1",
-    "Stitch": "Part4"
-  },
-  "scene1_Scene1_Part4_PZV1": {
-    "File": "scene1.ink",
-    "LineNumber": 49,
-    "Knot": "Scene1",
-    "Stitch": "Part4"
-  },
-  "scene1_Scene1_Right_3V6T": {
-    "File": "scene1.ink",
-    "LineNumber": 53,
-    "Knot": "Scene1",
-    "Stitch": "Right"
-  },
-  "scene1_Scene1_Right_WM69": {
-    "File": "scene1.ink",
-    "LineNumber": 54,
-    "Knot": "Scene1",
-    "Stitch": "Right"
-  },
-  "scene1_Scene1_Right_P8FP": {
-    "File": "scene1.ink",
-    "LineNumber": 55,
-    "Knot": "Scene1",
-    "Stitch": "Right"
-  },
-  "scene1_Scene1_Left_HZ7B": {
-    "File": "scene1.ink",
-    "LineNumber": 59,
-    "Knot": "Scene1",
-    "Stitch": "Left"
-  },
-  "scene1_Scene1_Left_MIM6": {
-    "File": "scene1.ink",
-    "LineNumber": 60,
-    "Knot": "Scene1",
-    "Stitch": "Left"
-  },
-  "scene1_Scene1_Left_WXCN": {
-    "File": "scene1.ink",
-    "LineNumber": 61,
-    "Knot": "Scene1",
-    "Stitch": "Left"
-  },
-  "scene1_Scene1_OtherContent_FSDK": {
-    "File": "scene1.ink",
-    "LineNumber": 65,
-    "Knot": "OtherContent",
-    "Stitch": ""
-  },
-  "scene1_OtherContent_VZWQ": {
-    "File": "scene1.ink",
-    "LineNumber": 66,
-    "Knot": "OtherContent",
-    "Stitch": ""
-  },
   "main_Main_S72S": {
     "File": "main.ink",
     "LineNumber": 3,
@@ -405,6 +213,198 @@
     "File": "main.ink",
     "LineNumber": 90,
     "Knot": "Barks",
+    "Stitch": ""
+  },
+  "scene1_Scene1_R819": {
+    "File": "scene1.ink",
+    "LineNumber": 3,
+    "Knot": "Scene1",
+    "Stitch": ""
+  },
+  "scene1_Scene1_Part1_S494": {
+    "File": "scene1.ink",
+    "LineNumber": 7,
+    "Knot": "Scene1",
+    "Stitch": "Part1"
+  },
+  "scene1_Scene1_Part1_ICIG": {
+    "File": "scene1.ink",
+    "LineNumber": 8,
+    "Knot": "Scene1",
+    "Stitch": "Part1"
+  },
+  "scene1_Scene1_Part1_621G": {
+    "File": "scene1.ink",
+    "LineNumber": 9,
+    "Knot": "Scene1",
+    "Stitch": "Part1"
+  },
+  "scene1_Scene1_Part1_LTDB": {
+    "File": "scene1.ink",
+    "LineNumber": 10,
+    "Knot": "Scene1",
+    "Stitch": "Part1"
+  },
+  "scene1_Scene1_Part1_VXIU": {
+    "File": "scene1.ink",
+    "LineNumber": 11,
+    "Knot": "Scene1",
+    "Stitch": "Part1"
+  },
+  "scene1_Scene1_Part2_N5RW": {
+    "File": "scene1.ink",
+    "LineNumber": 16,
+    "Knot": "Scene1",
+    "Stitch": "Part2"
+  },
+  "scene1_Scene1_Part2_HQUO": {
+    "File": "scene1.ink",
+    "LineNumber": 18,
+    "Knot": "Scene1",
+    "Stitch": "Part2"
+  },
+  "scene1_Scene1_Part2_3AHR": {
+    "File": "scene1.ink",
+    "LineNumber": 19,
+    "Knot": "Scene1",
+    "Stitch": "Part2"
+  },
+  "scene1_Scene1_Part2_NR0K": {
+    "File": "scene1.ink",
+    "LineNumber": 22,
+    "Knot": "Scene1",
+    "Stitch": "Part2"
+  },
+  "scene1_Scene1_Part2_FLIK": {
+    "File": "scene1.ink",
+    "LineNumber": 23,
+    "Knot": "Scene1",
+    "Stitch": "Part2"
+  },
+  "scene1_Scene1_Part2_CF6W": {
+    "File": "scene1.ink",
+    "LineNumber": 26,
+    "Knot": "Scene1",
+    "Stitch": "Part2"
+  },
+  "scene1_Scene1_Part3_UZOH": {
+    "File": "scene1.ink",
+    "LineNumber": 31,
+    "Knot": "Scene1",
+    "Stitch": "Part3"
+  },
+  "scene1_Scene1_Part3_9MXL": {
+    "File": "scene1.ink",
+    "LineNumber": 32,
+    "Knot": "Scene1",
+    "Stitch": "Part3"
+  },
+  "scene1_Scene1_Part3_YTMH": {
+    "File": "scene1.ink",
+    "LineNumber": 33,
+    "Knot": "Scene1",
+    "Stitch": "Part3"
+  },
+  "scene1_Scene1_Part4_NY6V": {
+    "File": "scene1.ink",
+    "LineNumber": 38,
+    "Knot": "Scene1",
+    "Stitch": "Part4"
+  },
+  "scene1_Scene1_Part4_T9GZ": {
+    "File": "scene1.ink",
+    "LineNumber": 39,
+    "Knot": "Scene1",
+    "Stitch": "Part4"
+  },
+  "scene1_Scene1_Part4_F0PF": {
+    "File": "scene1.ink",
+    "LineNumber": 40,
+    "Knot": "Scene1",
+    "Stitch": "Part4"
+  },
+  "scene1_Scene1_Part4_9L7I": {
+    "File": "scene1.ink",
+    "LineNumber": 42,
+    "Knot": "Scene1",
+    "Stitch": "Part4"
+  },
+  "scene1_Scene1_Part4_DNII": {
+    "File": "scene1.ink",
+    "LineNumber": 43,
+    "Knot": "Scene1",
+    "Stitch": "Part4"
+  },
+  "scene1_Scene1_Part4_Q8FK": {
+    "File": "scene1.ink",
+    "LineNumber": 45,
+    "Knot": "Scene1",
+    "Stitch": "Part4"
+  },
+  "scene1_Scene1_Part4_AJDP": {
+    "File": "scene1.ink",
+    "LineNumber": 46,
+    "Knot": "Scene1",
+    "Stitch": "Part4"
+  },
+  "scene1_Scene1_Part4_0YY1": {
+    "File": "scene1.ink",
+    "LineNumber": 48,
+    "Knot": "Scene1",
+    "Stitch": "Part4"
+  },
+  "scene1_Scene1_Part4_PZV1": {
+    "File": "scene1.ink",
+    "LineNumber": 49,
+    "Knot": "Scene1",
+    "Stitch": "Part4"
+  },
+  "scene1_Scene1_Right_3V6T": {
+    "File": "scene1.ink",
+    "LineNumber": 53,
+    "Knot": "Scene1",
+    "Stitch": "Right"
+  },
+  "scene1_Scene1_Right_WM69": {
+    "File": "scene1.ink",
+    "LineNumber": 54,
+    "Knot": "Scene1",
+    "Stitch": "Right"
+  },
+  "scene1_Scene1_Right_P8FP": {
+    "File": "scene1.ink",
+    "LineNumber": 55,
+    "Knot": "Scene1",
+    "Stitch": "Right"
+  },
+  "scene1_Scene1_Left_HZ7B": {
+    "File": "scene1.ink",
+    "LineNumber": 59,
+    "Knot": "Scene1",
+    "Stitch": "Left"
+  },
+  "scene1_Scene1_Left_MIM6": {
+    "File": "scene1.ink",
+    "LineNumber": 60,
+    "Knot": "Scene1",
+    "Stitch": "Left"
+  },
+  "scene1_Scene1_Left_WXCN": {
+    "File": "scene1.ink",
+    "LineNumber": 61,
+    "Knot": "Scene1",
+    "Stitch": "Left"
+  },
+  "scene1_Scene1_OtherContent_FSDK": {
+    "File": "scene1.ink",
+    "LineNumber": 65,
+    "Knot": "OtherContent",
+    "Stitch": ""
+  },
+  "scene1_OtherContent_VZWQ": {
+    "File": "scene1.ink",
+    "LineNumber": 66,
+    "Knot": "OtherContent",
     "Stitch": ""
   }
 }

@@ -253,7 +253,12 @@ public class Compiler
             Console.WriteLine($"Using Ink file '{inkFile}'");
             var text = File.ReadAllText(inkFile);
             var inkFileRelativeToProject = Path.GetRelativePath(_env.ProjectFolder, inkFile);
-            var scenes = DinkParser.ParseInk(text, inkFileRelativeToProject, ndLines);
+            var scenes = new List<DinkScene>();
+            if (!DinkParser.ParseInk(text, inkFileRelativeToProject, scenes, ndLines))
+            {
+                Console.Error.WriteLine("Failed to parse Dink in file: " + inkFile);
+                return false;
+            }
 
             if (characters!=null)
             {
@@ -496,6 +501,10 @@ public class Compiler
             if (!_stripText)
                 return fileText;
 
+            // If stripping of text is required, we don't
+            // return the actual text of the file, we strip
+            // it of text first.
+
             // In case someone's commented out lines with IDs.
             fileText = DinkParser.RemoveBlockComments(fileText);
 
@@ -503,12 +512,18 @@ public class Compiler
             for(int i=0;i<lines.Count;i++)
             {
                 string line = lines[i].Trim();
+
+                // Does the line have an ID?
                 string? id = DinkParser.ParseID(line);
                 if (id==null)
                     continue;
+
+                // If so, look for the text already extracted for that ID in the line...
                 string? text = _strings.GetText(id);
                 if (text==null)
                     continue;
+
+                // and replace it with just the readable ID.
                 lines[i] = line.Replace(text,id);
             }
             fileText = string.Join("\n",lines);

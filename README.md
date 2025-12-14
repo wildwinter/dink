@@ -1,8 +1,8 @@
 # dink
 
-**Work in progress! NOT FIT TO USE YET, STILL TESTING.**
+**Work in progress!**
 
-**Dink**, a contraction of **dialogue ink**, is a way of formatting dialogue lines while using and writing in [Ink](https://www.inklestudios.com/ink/), and a set of tools for parsing and supporting that content.
+**Dink**, a contraction of **dialogue ink**, is a way of formatting dialogue lines while using and writing in [Ink](https://www.inklestudios.com/ink/), and a set of tools for parsing and supporting that content. Importantly, it includes **production pipeline** features to make it easier to manage the content during development of a game.
 
 ## Ink + Dialogue
 
@@ -62,15 +62,15 @@ So with a simple bit of markup, Dink is targeted at helping out with the product
 Your Ink will work in your runtime as normal, but Dink adds extra info specifically
 for lines of dialogue and helps you manage the production.
 
-* The `DinkCompiler`:
+- **The `DinkCompiler`**:
 
-  * Compiles your Ink as normal, but also extracts text lines for localisation, and parses out extra information such as who is saying which line and bundles it all up for your runtime.
-  * Optionally exports recording scripts, localisation files, and lists of where lines came from.
-  * Helps you manage the status of each individual line - is it first draft? Has it been recorded? And produces overview statistics - how many lines are still to be completed? How many lines still need to be recorded by a particular actor?
-  * Can generate a placeholder audio file for each line for testing.
-  * Can run in [live mode](#live-mode) which means it'll keep re-exporting your data every time you edit the Ink files.
-* Utilities:
-  * `DinkVoiceExport` - collects together source WAV files with certain criteria, to make them easier for audio processing.
+  - Compiles your Ink as normal, but also extracts text lines for localisation, and parses out extra information such as who is saying which line and bundles it all up for your runtime.
+  - Optionally exports recording scripts, localisation files, and lists of where lines came from.
+  - Helps you manage the status of each individual line - is it first draft? Has it been recorded? And produces overview statistics - how many lines are still to be completed? How many lines still need to be recorded by a particular actor?
+  - Can generate a placeholder audio file for each line for testing.
+  - Can run in [live mode](#live-mode) which means it'll keep re-exporting your data every time you edit the Ink files.
+- **Utilities**:
+  - `DinkVoiceExport` - collects together source WAV files with certain criteria to make them easier for audio processing. For example, if you want to process all the recorded lines for a particular character, this collects them. Or all the lines marked `#vo:radio`.
 
 ### Contents
 
@@ -99,7 +99,7 @@ for lines of dialogue and helps you manage the production.
 The `DinkCompiler` will take in an Ink file (for example, `myproject.ink`) and its includes, process it, and the results are the following:
 
 * **Updated Source File (`myproject.ink`)**:\
-Any lines of text in the source Ink file that don't have a unique identifier of the form `#id:xxx` tags will have been added.
+Any lines of text in the source Ink file that don't have a unique identifier tag of the form `#id:xxx` will have had those tags added.
 * **Compiled Ink File (`myproject.json`)**:\
 The Ink file compiled to JSON using `inklecate`, as Inky usually does.
 * **Dink Runtime File (`myproject-dink.json`)**:\
@@ -173,8 +173,8 @@ LAURA: There, awake, okay?
 
 4. **Run the [Dink Compiler](#command-line-tool)** which will take your ink file and anything it includes, decorate it with `#id:` tags so each line has a unique identifier, compile it to JSON like Inky normally does, and then produce a whole pile of other useful things - runtime files you can use in your game, and lots of production files like a [recording script](#recording-script) for use in the booth, a [stats overview file](#stats-file), a localisation file and so on.
 5. **Load the Ink JSON file** into your game.
-6. **Load the extra Dink runtime file** into your game.
-7. **Load the Dink strings file** and any other versions you've made in other languages into your game.
+6. **Load the extra Dink runtime JSON file** into your game.
+7. **Load the Dink strings file** and any other copies you've made in other languages into your game.
 8. **Step through Ink at Runtime** using standard Ink calls such as `story.Continue()`.
     * Each Ink line will have an `#id` tag.
     * You can use that ID to grab extra line data from the Dink runtime file (like who is speaking).
@@ -187,72 +187,66 @@ That's it, you have a working dialogue system!
 
 ### The Dink Spec
 
-A Dink **scene** is the equivalent of an Ink **knot**.
+**Dink** is just **Ink**, but with some extra rules about lines of dialogue. Knots of Ink can mix freely with Knots of Dink.
 
-Each Dink scene consists of one or more Dink **blocks**. A Dink block is the equivalent of an ink **stitch**.
+To denote a stitch as containing Dink, you just tag it with `#dink` at the top, like so:
 
-A scene might only contain one block, the "main" block, which is unnamed. Any further blocks will be named after the stitch.
+```text
+== Knot1
+This is a normal Ink knot.
+-> DONE
 
-Each Dink block consists of one or more Dink **snippets**. A Dink snippet is the equivalent of an Ink flow fragment - it is a run of lines that doesn't have any flow changes or diversions in it.
+== Knot2
+#dink
+DAVE: This is a Dink knot!
+-> DONE
 
-Each **snippet** consists of **beats**.
+```
+In a Dink knot, along with your normal Ink logic and flow, there are two types of lines - **dialogue** lines and **action** lines. Dink calls them *beats*.
 
-Each beat can either be a **line of dialogue**, or a **line of action**.
+A **dialogue** line looks like this:
 
-At a very simplistic level this can be interpreted as "X happens, then X happens".
+```text
+CHARACTER_NAME (optional qualifier): (optional direction) A line of dialogue
+```
+
+* The *optional qualifier* is the sort of thing you find on a movie script which might say (O.S.) for off-screen or (V.O.) for voice-over.
+* The *optional direction* is the sort of thing you find in a movie script which might say (disappointed) or (sarcastic).
+
+An **action** line is a normal line of text!
+
+e.g.
 
 ```text
 == MyScene
 #dink
-
-// Comment that applies to the following line
-// Another comment that'll apply to the same line.
-ACTOR (qualifier): (direction) Dialogue line. #tag1 #tag3 #tag4 #id:xxxxxx
-
-// Comment will get carried over.
-// LOC: This comment will go to the localisers
-Line of action #tag1 #tag2 #id:xxxxxx // This comment too.
--> DONE
-```
-
-Comments, *qualifier* and *direction* are optional, as are the tags except *#id:* which must exist and be unique. The Dink compiler will generate these (based on the Ink Localiser tool I made a while back).
-
-Here is a simple scene, with only one (anonymous) block:
-
-```javascript
-== MyScene
-#dink
-// VO: This comment will go to the voice actors
-// This comment will go to everyone
+// This beat is a dialogue line
 DAVE (V.O.): It was a quiet morning in May... #id:intro_R6Sg
 
-// Dave is working at the counter
+// This beat is another dialogue line.
 DAVE: Morning. #id:intro_XC5r
 
-// Fred has come in from the street.
-FRED: Hello to you too!
+// An action beat
+Fred walks into the room.
 
-(SFX) The door slams. #id:intro_yS6G // Make this loud!
+// This is more dialogue
+FRED: (excitedly) Hello to you too! #id:intro_uy78
+
+// An action beat
+(SFX) The door slams. #id:intro_yS6G
 -> DONE
 ```
 
-Here is a scene with an anonymous block to start and then another:
+At a very simplistic level, each beat can be interpreted as "X happens, then X happens", just like a movie script.
 
-```javascript
-== MyOtherScene
-#dink
-// This is the anon block
-FRED (V.O.): It was a cold day in December... #id:main_MyOtherScene_R6Sg
--> Part2
+You can mix in Ink logic and options as usual. You can't use glue such as `<>` as recorded dialogue isn't the sort of thing you want to stitch together.
 
-// This is the block called Part2
-= Part2
-// This is fred talking.
-FRED: Good morning! #id:main_MyOtherScene_Part2_R6Sg
--> DONE
-```
+Just keep your scripts clean and straightforward and all should work fine!
 
 #### Comments
+
+Comments will be read from your script by Dink and copied
+into recording scripts and localisation documents.
 
 Comments use `//` to make them meaningful to Dink, but any content in block-style comments
 (e.g. `/* */`) will be skipped, like in normal Ink.
@@ -272,6 +266,120 @@ DAVE (V.O.): It was a quiet morning in May... #id:intro_R6Sg // And so will this
 ```
 
 See also [Comment and Tag Filtering](#comment-and-tag-filtering) to find out how you can control which comment gets output where!
+
+#### Choice Options
+
+The usual Ink options structure I use - and that
+Dink works well with - is a line of text in square
+brackets followed by a diverts or a group of lines.
+
+So it works well with text paraphrases, like so:
+
+```text
+== MyScene
+ROB: So what are you thinking?
+
+* [I'm not sure.]
+    FRED: I'm really not sure. 
+    ROB: Oh, make up your mind.
+
+* [The blue one?]
+    FRED: I think the blue one - what do you think?
+    ROB: Hey, it's your spacecat.
+
+* [The green one.]
+    FRED: The green one.
+    ROB: Really? Green is so last year.
+-
+ROB: Anyway, shall we go to the pub?
+-> DONE
+```
+
+Similarly it works fine with diverts:
+
+```text
+== MyScene
+ROB: So what are you thinking?
+
+* [I'm not sure.]
+    -> NotSure
+
+* [The blue one?]
+    -> BlueCat
+
+* [The green one.]
+    -> GreenCat
+```
+
+And it works with spoken Dink lines if you don't
+want paraphrases:
+
+```text
+== MyScene
+ROB: So what are you thinking?
+
+* [FRED: I'm really not sure.]  
+    ROB: Oh, make up your mind.
+
+* [FRED: I think the blue one - what do you think?]
+    ROB: Hey, it's your spacecat.
+
+* [FRED: The green one.]
+    ROB: Really? Green is so last year.
+-
+ROB: Anyway, shall we go to the pub?
+-> DONE
+```
+
+*NOTE*: Currently it only works with square brackets
+because that's what I use and I haven't removed it!
+
+Where this is useful in Dink is that it automatically adds comments the recording script saying when a line follows an option in the script. `OPTION: I'm not sure.` This makes life easier for voice direction.
+
+#### Shuffles and Cycles
+
+Dink is happy with structures like:
+
+```text
+== DangerBark
+{shuffle:
+- FRED: Look out, danger!
+- FRED: Aagh, peril!
+- FRED: Ooh, uncertainty!
+}
+```
+
+And will mark recording scripts with a count e.g. `(1/3)` to show that a line is one of a set of alternative lines. Again this makes life easier for voice direction.
+
+#### Internally
+
+A Dink **scene** is the equivalent of an Ink **knot**.
+
+Each Dink scene consists of one or more Dink **blocks**. A Dink block is the equivalent of an ink **stitch**.
+
+A scene might only contain one block, the "main" block, which is unnamed. Any further blocks will be named after the stitch.
+
+Each Dink block consists of one or more Dink **snippets**. A Dink snippet is the equivalent of an Ink flow fragment - it is a run of lines that doesn't have any flow changes or diversions in it.
+
+Each **snippet** consists of **beats**.
+
+Each beat can either be a **line of dialogue**, or a **line of action**.
+
+Here is a scene with an anonymous block to start and then another:
+
+```text
+== MyOtherScene
+#dink
+// This is the anon block
+FRED (V.O.): It was a cold day in December... #id:main_MyOtherScene_R6Sg
+-> Part2
+
+// This is the block called Part2
+= Part2
+// This is fred talking.
+FRED: Good morning! #id:main_MyOtherScene_Part2_R6Sg
+-> DONE
+```
 
 ### Command-Line Tool
 

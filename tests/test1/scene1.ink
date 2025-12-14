@@ -1,4 +1,4 @@
-=== Scene1
+﻿=== Scene1
 #dink
 -> Part1
 
@@ -30,6 +30,9 @@ DAVE: (quietly) Let's see if this works, shall we? #id:scene1_Scene1_Part3_9MXL
     -> Left
 + [Skip it #id:scene1_Scene1_Part4_Q8FK]
     FRED: Carry on then. #id:scene1_Scene1_Part4_AJDP
++ [FRED: Trying dialogue here. #id:scene1_Scene1_Part4_P46B]
+    GEORGE: By George, I think it works! #id:scene1_Scene1_Part4_4NZN
++ [FRED: Trying dialogue with no line underneath. #id:scene1_Scene1_Part4_6IBF]
 -
 GEORGE: Okay. #id:scene1_Scene1_Part4_0YY1
 -> DONE

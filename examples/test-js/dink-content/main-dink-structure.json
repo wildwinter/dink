@@ -1,593 +1,5 @@
 ﻿[
   {
-    "SceneID": "Scene1",
-    "Blocks": [
-      {
-        "BlockID": "",
-        "Snippets": [
-          {
-            "GroupComments": [],
-            "SnippetID": "Rpql",
-            "Beats": [
-              {
-                "Type": "Action",
-                "Text": "Here we are in scene1.ink - this is testing a set of different blocks.",
-                "LineID": "scene1_Scene1_R819",
-                "Origin": {
-                  "SourceFilePath": "scene1.ink",
-                  "LineNum": 3
-                },
-                "Comments": [],
-                "Tags": []
-              }
-            ],
-            "Group": 0,
-            "GroupIndex": 0,
-            "GroupCount": 0,
-            "Origin": {
-              "SourceFilePath": "scene1.ink",
-              "LineNum": 3
-            },
-            "Comments": [],
-            "Tags": []
-          }
-        ],
-        "Origin": {
-          "SourceFilePath": "scene1.ink",
-          "LineNum": 1
-        },
-        "Comments": [],
-        "Tags": []
-      },
-      {
-        "BlockID": "Part1",
-        "Snippets": [
-          {
-            "GroupComments": [],
-            "SnippetID": "w7zp",
-            "Beats": [
-              {
-                "Type": "Line",
-                "CharacterID": "FRED",
-                "Qualifier": "",
-                "Direction": "",
-                "Text": "This is a block called Part1 in a scene.",
-                "LineID": "scene1_Scene1_Part1_S494",
-                "Origin": {
-                  "SourceFilePath": "scene1.ink",
-                  "LineNum": 7
-                },
-                "Comments": [],
-                "Tags": []
-              },
-              {
-                "Type": "Line",
-                "CharacterID": "FRED",
-                "Qualifier": "",
-                "Direction": "",
-                "Text": "It consists of a run of lines.",
-                "LineID": "scene1_Scene1_Part1_ICIG",
-                "Origin": {
-                  "SourceFilePath": "scene1.ink",
-                  "LineNum": 8
-                },
-                "Comments": [],
-                "Tags": []
-              },
-              {
-                "Type": "Action",
-                "Text": "And this, here, is an Ink Action, not a line.",
-                "LineID": "scene1_Scene1_Part1_621G",
-                "Origin": {
-                  "SourceFilePath": "scene1.ink",
-                  "LineNum": 9
-                },
-                "Comments": [],
-                "Tags": []
-              },
-              {
-                "Type": "Action",
-                "Text": "Actions aren\u0027t localised unless you turn on locActionBeats",
-                "LineID": "scene1_Scene1_Part1_LTDB",
-                "Origin": {
-                  "SourceFilePath": "scene1.ink",
-                  "LineNum": 10
-                },
-                "Comments": [],
-                "Tags": []
-              }
-            ],
-            "Group": 0,
-            "GroupIndex": 0,
-            "GroupCount": 0,
-            "Origin": {
-              "SourceFilePath": "scene1.ink",
-              "LineNum": 7
-            },
-            "Comments": [],
-            "Tags": []
-          }
-        ],
-        "Origin": {
-          "SourceFilePath": "scene1.ink",
-          "LineNum": 6
-        },
-        "Comments": [],
-        "Tags": []
-      },
-      {
-        "BlockID": "Part2",
-        "Snippets": [
-          {
-            "GroupComments": [],
-            "SnippetID": "cmlb",
-            "Beats": [
-              {
-                "Type": "Action",
-                "Text": "You saunter into Part2",
-                "LineID": "scene1_Scene1_Part2_N5RW",
-                "Origin": {
-                  "SourceFilePath": "scene1.ink",
-                  "LineNum": 16
-                },
-                "Comments": [],
-                "Tags": []
-              }
-            ],
-            "Group": 0,
-            "GroupIndex": 0,
-            "GroupCount": 0,
-            "Origin": {
-              "SourceFilePath": "scene1.ink",
-              "LineNum": 16
-            },
-            "Comments": [],
-            "Tags": []
-          },
-          {
-            "GroupComments": [],
-            "SnippetID": "7wO0",
-            "Beats": [
-              {
-                "Type": "Action",
-                "Text": "This is your first visit.",
-                "LineID": "scene1_Scene1_Part2_HQUO",
-                "Origin": {
-                  "SourceFilePath": "scene1.ink",
-                  "LineNum": 18
-                },
-                "Comments": [],
-                "Tags": []
-              }
-            ],
-            "Group": 1,
-            "GroupIndex": 1,
-            "GroupCount": 4,
-            "Origin": {
-              "SourceFilePath": "scene1.ink",
-              "LineNum": 18
-            },
-            "Comments": [],
-            "Tags": []
-          },
-          {
-            "GroupComments": [],
-            "SnippetID": "8OAc",
-            "Beats": [
-              {
-                "Type": "Action",
-                "Text": "This is your second visit.",
-                "LineID": "scene1_Scene1_Part2_3AHR",
-                "Origin": {
-                  "SourceFilePath": "scene1.ink",
-                  "LineNum": 19
-                },
-                "Comments": [],
-                "Tags": []
-              }
-            ],
-            "Group": 1,
-            "GroupIndex": 2,
-            "GroupCount": 4,
-            "Origin": {
-              "SourceFilePath": "scene1.ink",
-              "LineNum": 19
-            },
-            "Comments": [],
-            "Tags": []
-          },
-          {
-            "GroupComments": [],
-            "SnippetID": "b4qh",
-            "Beats": [
-              {
-                "Type": "Action",
-                "Text": "This is one type of random visit.",
-                "LineID": "scene1_Scene1_Part2_NR0K",
-                "Origin": {
-                  "SourceFilePath": "scene1.ink",
-                  "LineNum": 22
-                },
-                "Comments": [],
-                "Tags": []
-              }
-            ],
-            "Group": 1,
-            "GroupIndex": 3,
-            "GroupCount": 4,
-            "Origin": {
-              "SourceFilePath": "scene1.ink",
-              "LineNum": 22
-            },
-            "Comments": [],
-            "Tags": []
-          },
-          {
-            "GroupComments": [],
-            "SnippetID": "rZxL",
-            "Beats": [
-              {
-                "Type": "Action",
-                "Text": "This is another type of random visit",
-                "LineID": "scene1_Scene1_Part2_FLIK",
-                "Origin": {
-                  "SourceFilePath": "scene1.ink",
-                  "LineNum": 23
-                },
-                "Comments": [],
-                "Tags": []
-              }
-            ],
-            "Group": 1,
-            "GroupIndex": 4,
-            "GroupCount": 4,
-            "Origin": {
-              "SourceFilePath": "scene1.ink",
-              "LineNum": 23
-            },
-            "Comments": [],
-            "Tags": []
-          }
-        ],
-        "Origin": {
-          "SourceFilePath": "scene1.ink",
-          "LineNum": 15
-        },
-        "Comments": [
-          "This comment should appear on Part2"
-        ],
-        "Tags": []
-      },
-      {
-        "BlockID": "Part3",
-        "Snippets": [
-          {
-            "GroupComments": [],
-            "SnippetID": "D5hS",
-            "Beats": [
-              {
-                "Type": "Action",
-                "Text": "Dave walks into the room.",
-                "LineID": "scene1_Scene1_Part3_UZOH",
-                "Origin": {
-                  "SourceFilePath": "scene1.ink",
-                  "LineNum": 31
-                },
-                "Comments": [
-                  "This is part 3"
-                ],
-                "Tags": []
-              },
-              {
-                "Type": "Line",
-                "CharacterID": "DAVE",
-                "Qualifier": "",
-                "Direction": "quietly",
-                "Text": "Let\u0027s see if this works, shall we?",
-                "LineID": "scene1_Scene1_Part3_9MXL",
-                "Origin": {
-                  "SourceFilePath": "scene1.ink",
-                  "LineNum": 32
-                },
-                "Comments": [],
-                "Tags": []
-              }
-            ],
-            "Group": 0,
-            "GroupIndex": 0,
-            "GroupCount": 0,
-            "Origin": {
-              "SourceFilePath": "scene1.ink",
-              "LineNum": 31
-            },
-            "Comments": [],
-            "Tags": []
-          }
-        ],
-        "Origin": {
-          "SourceFilePath": "scene1.ink",
-          "LineNum": 29
-        },
-        "Comments": [],
-        "Tags": []
-      },
-      {
-        "BlockID": "Part4",
-        "Snippets": [
-          {
-            "GroupComments": [],
-            "SnippetID": "WSyU",
-            "Beats": [
-              {
-                "Type": "Line",
-                "CharacterID": "GEORGE",
-                "Qualifier": "",
-                "Direction": "",
-                "Text": "Which way would you like to go?",
-                "LineID": "scene1_Scene1_Part4_NY6V",
-                "Origin": {
-                  "SourceFilePath": "scene1.ink",
-                  "LineNum": 38
-                },
-                "Comments": [
-                  "There is a choice here."
-                ],
-                "Tags": []
-              }
-            ],
-            "Group": 0,
-            "GroupIndex": 0,
-            "GroupCount": 0,
-            "Origin": {
-              "SourceFilePath": "scene1.ink",
-              "LineNum": 38
-            },
-            "Comments": [],
-            "Tags": []
-          },
-          {
-            "GroupComments": [],
-            "SnippetID": "aaR0",
-            "Beats": [
-              {
-                "Type": "Line",
-                "CharacterID": "FRED",
-                "Qualifier": "",
-                "Direction": "",
-                "Text": "I\u0027d like to go right!",
-                "LineID": "scene1_Scene1_Part4_F0PF",
-                "Origin": {
-                  "SourceFilePath": "scene1.ink",
-                  "LineNum": 40
-                },
-                "Comments": [],
-                "Tags": []
-              }
-            ],
-            "Group": 0,
-            "GroupIndex": 0,
-            "GroupCount": 0,
-            "Origin": {
-              "SourceFilePath": "scene1.ink",
-              "LineNum": 40
-            },
-            "Comments": [
-              "OPTION \u0022Go right.\u0022"
-            ],
-            "Tags": []
-          },
-          {
-            "GroupComments": [],
-            "SnippetID": "YDaQ",
-            "Beats": [
-              {
-                "Type": "Line",
-                "CharacterID": "FRED",
-                "Qualifier": "",
-                "Direction": "",
-                "Text": "I\u0027d like like to go left!",
-                "LineID": "scene1_Scene1_Part4_DNII",
-                "Origin": {
-                  "SourceFilePath": "scene1.ink",
-                  "LineNum": 43
-                },
-                "Comments": [],
-                "Tags": []
-              }
-            ],
-            "Group": 0,
-            "GroupIndex": 0,
-            "GroupCount": 0,
-            "Origin": {
-              "SourceFilePath": "scene1.ink",
-              "LineNum": 43
-            },
-            "Comments": [
-              "OPTION \u0022Go left.\u0022"
-            ],
-            "Tags": []
-          },
-          {
-            "GroupComments": [],
-            "SnippetID": "blNR",
-            "Beats": [
-              {
-                "Type": "Line",
-                "CharacterID": "FRED",
-                "Qualifier": "",
-                "Direction": "",
-                "Text": "Carry on then.",
-                "LineID": "scene1_Scene1_Part4_AJDP",
-                "Origin": {
-                  "SourceFilePath": "scene1.ink",
-                  "LineNum": 46
-                },
-                "Comments": [],
-                "Tags": []
-              }
-            ],
-            "Group": 0,
-            "GroupIndex": 0,
-            "GroupCount": 0,
-            "Origin": {
-              "SourceFilePath": "scene1.ink",
-              "LineNum": 46
-            },
-            "Comments": [
-              "OPTION \u0022Skip it.\u0022"
-            ],
-            "Tags": []
-          },
-          {
-            "GroupComments": [],
-            "SnippetID": "GX53",
-            "Beats": [
-              {
-                "Type": "Line",
-                "CharacterID": "GEORGE",
-                "Qualifier": "",
-                "Direction": "",
-                "Text": "Okay.",
-                "LineID": "scene1_Scene1_Part4_0YY1",
-                "Origin": {
-                  "SourceFilePath": "scene1.ink",
-                  "LineNum": 48
-                },
-                "Comments": [],
-                "Tags": []
-              }
-            ],
-            "Group": 0,
-            "GroupIndex": 0,
-            "GroupCount": 0,
-            "Origin": {
-              "SourceFilePath": "scene1.ink",
-              "LineNum": 48
-            },
-            "Comments": [
-              "MERGE"
-            ],
-            "Tags": []
-          }
-        ],
-        "Origin": {
-          "SourceFilePath": "scene1.ink",
-          "LineNum": 36
-        },
-        "Comments": [],
-        "Tags": []
-      },
-      {
-        "BlockID": "Right",
-        "Snippets": [
-          {
-            "GroupComments": [],
-            "SnippetID": "nvdw",
-            "Beats": [
-              {
-                "Type": "Action",
-                "Text": "George swerves the car right.",
-                "LineID": "scene1_Scene1_Right_3V6T",
-                "Origin": {
-                  "SourceFilePath": "scene1.ink",
-                  "LineNum": 53
-                },
-                "Comments": [],
-                "Tags": []
-              },
-              {
-                "Type": "Line",
-                "CharacterID": "GEORGE",
-                "Qualifier": "",
-                "Direction": "upset",
-                "Text": "You sure you want to go right?",
-                "LineID": "scene1_Scene1_Right_WM69",
-                "Origin": {
-                  "SourceFilePath": "scene1.ink",
-                  "LineNum": 54
-                },
-                "Comments": [],
-                "Tags": []
-              }
-            ],
-            "Group": 0,
-            "GroupIndex": 0,
-            "GroupCount": 0,
-            "Origin": {
-              "SourceFilePath": "scene1.ink",
-              "LineNum": 53
-            },
-            "Comments": [],
-            "Tags": []
-          }
-        ],
-        "Origin": {
-          "SourceFilePath": "scene1.ink",
-          "LineNum": 52
-        },
-        "Comments": [],
-        "Tags": []
-      },
-      {
-        "BlockID": "Left",
-        "Snippets": [
-          {
-            "GroupComments": [],
-            "SnippetID": "SlpG",
-            "Beats": [
-              {
-                "Type": "Action",
-                "Text": "George swerves the car left.",
-                "LineID": "scene1_Scene1_Left_HZ7B",
-                "Origin": {
-                  "SourceFilePath": "scene1.ink",
-                  "LineNum": 59
-                },
-                "Comments": [],
-                "Tags": []
-              },
-              {
-                "Type": "Line",
-                "CharacterID": "GEORGE",
-                "Qualifier": "",
-                "Direction": "upset",
-                "Text": "You sure you want to go left?",
-                "LineID": "scene1_Scene1_Left_MIM6",
-                "Origin": {
-                  "SourceFilePath": "scene1.ink",
-                  "LineNum": 60
-                },
-                "Comments": [],
-                "Tags": []
-              }
-            ],
-            "Group": 0,
-            "GroupIndex": 0,
-            "GroupCount": 0,
-            "Origin": {
-              "SourceFilePath": "scene1.ink",
-              "LineNum": 59
-            },
-            "Comments": [],
-            "Tags": []
-          }
-        ],
-        "Origin": {
-          "SourceFilePath": "scene1.ink",
-          "LineNum": 58
-        },
-        "Comments": [],
-        "Tags": []
-      }
-    ],
-    "Origin": {
-      "SourceFilePath": "scene1.ink",
-      "LineNum": 1
-    },
-    "Comments": [],
-    "Tags": []
-  },
-  {
     "SceneID": "LauraChat",
     "Blocks": [
       {
@@ -595,7 +7,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "sd2u",
+            "SnippetID": "xrCj",
             "Beats": [
               {
                 "Type": "Action",
@@ -646,7 +58,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "LTD9",
+            "SnippetID": "Ng99",
             "Beats": [
               {
                 "Type": "Line",
@@ -679,7 +91,7 @@
             "GroupComments": [
               "OPTION \u0022What\u0027s the weather like?\u0022"
             ],
-            "SnippetID": "wEui",
+            "SnippetID": "dYqx",
             "Beats": [
               {
                 "Type": "Line",
@@ -710,7 +122,7 @@
             "GroupComments": [
               "OPTION \u0022What\u0027s the weather like?\u0022"
             ],
-            "SnippetID": "GVje",
+            "SnippetID": "7jHP",
             "Beats": [
               {
                 "Type": "Line",
@@ -741,7 +153,7 @@
             "GroupComments": [
               "OPTION \u0022What\u0027s the weather like?\u0022"
             ],
-            "SnippetID": "7inI",
+            "SnippetID": "rju7",
             "Beats": [
               {
                 "Type": "Line",
@@ -770,7 +182,7 @@
           },
           {
             "GroupComments": [],
-            "SnippetID": "KzML",
+            "SnippetID": "YVpk",
             "Beats": [
               {
                 "Type": "Action",
@@ -824,7 +236,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "y2Bv",
+            "SnippetID": "ltTb",
             "Beats": [
               {
                 "Type": "Line",
@@ -966,7 +378,7 @@
             "GroupComments": [
               "Set of random barks."
             ],
-            "SnippetID": "hUaM",
+            "SnippetID": "AhmM",
             "Beats": [
               {
                 "Type": "Line",
@@ -997,7 +409,7 @@
             "GroupComments": [
               "Set of random barks."
             ],
-            "SnippetID": "lAkH",
+            "SnippetID": "sv3X",
             "Beats": [
               {
                 "Type": "Line",
@@ -1028,7 +440,7 @@
             "GroupComments": [
               "Set of random barks."
             ],
-            "SnippetID": "PSMq",
+            "SnippetID": "3eFd",
             "Beats": [
               {
                 "Type": "Line",
@@ -1059,7 +471,7 @@
             "GroupComments": [
               "Set of random barks."
             ],
-            "SnippetID": "xSfR",
+            "SnippetID": "6PPO",
             "Beats": [
               {
                 "Type": "Action",
@@ -1101,7 +513,7 @@
             "GroupComments": [
               "Set of random barks."
             ],
-            "SnippetID": "U06q",
+            "SnippetID": "8qfr",
             "Beats": [
               {
                 "Type": "Line",
@@ -1146,7 +558,7 @@
             "GroupComments": [
               "Set of random barks."
             ],
-            "SnippetID": "EhGW",
+            "SnippetID": "IsSk",
             "Beats": [
               {
                 "Type": "Line",
@@ -1177,7 +589,7 @@
             "GroupComments": [
               "Set of random barks."
             ],
-            "SnippetID": "ylr1",
+            "SnippetID": "NA0w",
             "Beats": [
               {
                 "Type": "Line",
@@ -1216,6 +628,594 @@
     "Origin": {
       "SourceFilePath": "main.ink",
       "LineNum": 75
+    },
+    "Comments": [],
+    "Tags": []
+  },
+  {
+    "SceneID": "Scene1",
+    "Blocks": [
+      {
+        "BlockID": "",
+        "Snippets": [
+          {
+            "GroupComments": [],
+            "SnippetID": "NNiZ",
+            "Beats": [
+              {
+                "Type": "Action",
+                "Text": "Here we are in scene1.ink - this is testing a set of different blocks.",
+                "LineID": "scene1_Scene1_R819",
+                "Origin": {
+                  "SourceFilePath": "scene1.ink",
+                  "LineNum": 3
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Group": 0,
+            "GroupIndex": 0,
+            "GroupCount": 0,
+            "Origin": {
+              "SourceFilePath": "scene1.ink",
+              "LineNum": 3
+            },
+            "Comments": [],
+            "Tags": []
+          }
+        ],
+        "Origin": {
+          "SourceFilePath": "scene1.ink",
+          "LineNum": 1
+        },
+        "Comments": [],
+        "Tags": []
+      },
+      {
+        "BlockID": "Part1",
+        "Snippets": [
+          {
+            "GroupComments": [],
+            "SnippetID": "hnEq",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "FRED",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "This is a block called Part1 in a scene.",
+                "LineID": "scene1_Scene1_Part1_S494",
+                "Origin": {
+                  "SourceFilePath": "scene1.ink",
+                  "LineNum": 7
+                },
+                "Comments": [],
+                "Tags": []
+              },
+              {
+                "Type": "Line",
+                "CharacterID": "FRED",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "It consists of a run of lines.",
+                "LineID": "scene1_Scene1_Part1_ICIG",
+                "Origin": {
+                  "SourceFilePath": "scene1.ink",
+                  "LineNum": 8
+                },
+                "Comments": [],
+                "Tags": []
+              },
+              {
+                "Type": "Action",
+                "Text": "And this, here, is an Ink Action, not a line.",
+                "LineID": "scene1_Scene1_Part1_621G",
+                "Origin": {
+                  "SourceFilePath": "scene1.ink",
+                  "LineNum": 9
+                },
+                "Comments": [],
+                "Tags": []
+              },
+              {
+                "Type": "Action",
+                "Text": "Actions aren\u0027t localised unless you turn on locActionBeats",
+                "LineID": "scene1_Scene1_Part1_LTDB",
+                "Origin": {
+                  "SourceFilePath": "scene1.ink",
+                  "LineNum": 10
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Group": 0,
+            "GroupIndex": 0,
+            "GroupCount": 0,
+            "Origin": {
+              "SourceFilePath": "scene1.ink",
+              "LineNum": 7
+            },
+            "Comments": [],
+            "Tags": []
+          }
+        ],
+        "Origin": {
+          "SourceFilePath": "scene1.ink",
+          "LineNum": 6
+        },
+        "Comments": [],
+        "Tags": []
+      },
+      {
+        "BlockID": "Part2",
+        "Snippets": [
+          {
+            "GroupComments": [],
+            "SnippetID": "ZDMP",
+            "Beats": [
+              {
+                "Type": "Action",
+                "Text": "You saunter into Part2",
+                "LineID": "scene1_Scene1_Part2_N5RW",
+                "Origin": {
+                  "SourceFilePath": "scene1.ink",
+                  "LineNum": 16
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Group": 0,
+            "GroupIndex": 0,
+            "GroupCount": 0,
+            "Origin": {
+              "SourceFilePath": "scene1.ink",
+              "LineNum": 16
+            },
+            "Comments": [],
+            "Tags": []
+          },
+          {
+            "GroupComments": [],
+            "SnippetID": "yrqt",
+            "Beats": [
+              {
+                "Type": "Action",
+                "Text": "This is your first visit.",
+                "LineID": "scene1_Scene1_Part2_HQUO",
+                "Origin": {
+                  "SourceFilePath": "scene1.ink",
+                  "LineNum": 18
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Group": 1,
+            "GroupIndex": 1,
+            "GroupCount": 4,
+            "Origin": {
+              "SourceFilePath": "scene1.ink",
+              "LineNum": 18
+            },
+            "Comments": [],
+            "Tags": []
+          },
+          {
+            "GroupComments": [],
+            "SnippetID": "GoCZ",
+            "Beats": [
+              {
+                "Type": "Action",
+                "Text": "This is your second visit.",
+                "LineID": "scene1_Scene1_Part2_3AHR",
+                "Origin": {
+                  "SourceFilePath": "scene1.ink",
+                  "LineNum": 19
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Group": 1,
+            "GroupIndex": 2,
+            "GroupCount": 4,
+            "Origin": {
+              "SourceFilePath": "scene1.ink",
+              "LineNum": 19
+            },
+            "Comments": [],
+            "Tags": []
+          },
+          {
+            "GroupComments": [],
+            "SnippetID": "kBHS",
+            "Beats": [
+              {
+                "Type": "Action",
+                "Text": "This is one type of random visit.",
+                "LineID": "scene1_Scene1_Part2_NR0K",
+                "Origin": {
+                  "SourceFilePath": "scene1.ink",
+                  "LineNum": 22
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Group": 1,
+            "GroupIndex": 3,
+            "GroupCount": 4,
+            "Origin": {
+              "SourceFilePath": "scene1.ink",
+              "LineNum": 22
+            },
+            "Comments": [],
+            "Tags": []
+          },
+          {
+            "GroupComments": [],
+            "SnippetID": "E4oY",
+            "Beats": [
+              {
+                "Type": "Action",
+                "Text": "This is another type of random visit",
+                "LineID": "scene1_Scene1_Part2_FLIK",
+                "Origin": {
+                  "SourceFilePath": "scene1.ink",
+                  "LineNum": 23
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Group": 1,
+            "GroupIndex": 4,
+            "GroupCount": 4,
+            "Origin": {
+              "SourceFilePath": "scene1.ink",
+              "LineNum": 23
+            },
+            "Comments": [],
+            "Tags": []
+          }
+        ],
+        "Origin": {
+          "SourceFilePath": "scene1.ink",
+          "LineNum": 15
+        },
+        "Comments": [
+          "This comment should appear on Part2"
+        ],
+        "Tags": []
+      },
+      {
+        "BlockID": "Part3",
+        "Snippets": [
+          {
+            "GroupComments": [],
+            "SnippetID": "c8Dr",
+            "Beats": [
+              {
+                "Type": "Action",
+                "Text": "Dave walks into the room.",
+                "LineID": "scene1_Scene1_Part3_UZOH",
+                "Origin": {
+                  "SourceFilePath": "scene1.ink",
+                  "LineNum": 31
+                },
+                "Comments": [
+                  "This is part 3"
+                ],
+                "Tags": []
+              },
+              {
+                "Type": "Line",
+                "CharacterID": "DAVE",
+                "Qualifier": "",
+                "Direction": "quietly",
+                "Text": "Let\u0027s see if this works, shall we?",
+                "LineID": "scene1_Scene1_Part3_9MXL",
+                "Origin": {
+                  "SourceFilePath": "scene1.ink",
+                  "LineNum": 32
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Group": 0,
+            "GroupIndex": 0,
+            "GroupCount": 0,
+            "Origin": {
+              "SourceFilePath": "scene1.ink",
+              "LineNum": 31
+            },
+            "Comments": [],
+            "Tags": []
+          }
+        ],
+        "Origin": {
+          "SourceFilePath": "scene1.ink",
+          "LineNum": 29
+        },
+        "Comments": [],
+        "Tags": []
+      },
+      {
+        "BlockID": "Part4",
+        "Snippets": [
+          {
+            "GroupComments": [],
+            "SnippetID": "05Th",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "GEORGE",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "Which way would you like to go?",
+                "LineID": "scene1_Scene1_Part4_NY6V",
+                "Origin": {
+                  "SourceFilePath": "scene1.ink",
+                  "LineNum": 38
+                },
+                "Comments": [
+                  "There is a choice here."
+                ],
+                "Tags": []
+              }
+            ],
+            "Group": 0,
+            "GroupIndex": 0,
+            "GroupCount": 0,
+            "Origin": {
+              "SourceFilePath": "scene1.ink",
+              "LineNum": 38
+            },
+            "Comments": [],
+            "Tags": []
+          },
+          {
+            "GroupComments": [],
+            "SnippetID": "dPGP",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "FRED",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "I\u0027d like to go right!",
+                "LineID": "scene1_Scene1_Part4_F0PF",
+                "Origin": {
+                  "SourceFilePath": "scene1.ink",
+                  "LineNum": 40
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Group": 0,
+            "GroupIndex": 0,
+            "GroupCount": 0,
+            "Origin": {
+              "SourceFilePath": "scene1.ink",
+              "LineNum": 40
+            },
+            "Comments": [
+              "OPTION \u0022Go right.\u0022"
+            ],
+            "Tags": []
+          },
+          {
+            "GroupComments": [],
+            "SnippetID": "efn4",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "FRED",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "I\u0027d like like to go left!",
+                "LineID": "scene1_Scene1_Part4_DNII",
+                "Origin": {
+                  "SourceFilePath": "scene1.ink",
+                  "LineNum": 43
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Group": 0,
+            "GroupIndex": 0,
+            "GroupCount": 0,
+            "Origin": {
+              "SourceFilePath": "scene1.ink",
+              "LineNum": 43
+            },
+            "Comments": [
+              "OPTION \u0022Go left.\u0022"
+            ],
+            "Tags": []
+          },
+          {
+            "GroupComments": [],
+            "SnippetID": "hKWW",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "FRED",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "Carry on then.",
+                "LineID": "scene1_Scene1_Part4_AJDP",
+                "Origin": {
+                  "SourceFilePath": "scene1.ink",
+                  "LineNum": 46
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Group": 0,
+            "GroupIndex": 0,
+            "GroupCount": 0,
+            "Origin": {
+              "SourceFilePath": "scene1.ink",
+              "LineNum": 46
+            },
+            "Comments": [
+              "OPTION \u0022Skip it.\u0022"
+            ],
+            "Tags": []
+          },
+          {
+            "GroupComments": [],
+            "SnippetID": "MBZQ",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "GEORGE",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "Okay.",
+                "LineID": "scene1_Scene1_Part4_0YY1",
+                "Origin": {
+                  "SourceFilePath": "scene1.ink",
+                  "LineNum": 48
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Group": 0,
+            "GroupIndex": 0,
+            "GroupCount": 0,
+            "Origin": {
+              "SourceFilePath": "scene1.ink",
+              "LineNum": 48
+            },
+            "Comments": [
+              "MERGE"
+            ],
+            "Tags": []
+          }
+        ],
+        "Origin": {
+          "SourceFilePath": "scene1.ink",
+          "LineNum": 36
+        },
+        "Comments": [],
+        "Tags": []
+      },
+      {
+        "BlockID": "Right",
+        "Snippets": [
+          {
+            "GroupComments": [],
+            "SnippetID": "mdoK",
+            "Beats": [
+              {
+                "Type": "Action",
+                "Text": "George swerves the car right.",
+                "LineID": "scene1_Scene1_Right_3V6T",
+                "Origin": {
+                  "SourceFilePath": "scene1.ink",
+                  "LineNum": 53
+                },
+                "Comments": [],
+                "Tags": []
+              },
+              {
+                "Type": "Line",
+                "CharacterID": "GEORGE",
+                "Qualifier": "",
+                "Direction": "upset",
+                "Text": "You sure you want to go right?",
+                "LineID": "scene1_Scene1_Right_WM69",
+                "Origin": {
+                  "SourceFilePath": "scene1.ink",
+                  "LineNum": 54
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Group": 0,
+            "GroupIndex": 0,
+            "GroupCount": 0,
+            "Origin": {
+              "SourceFilePath": "scene1.ink",
+              "LineNum": 53
+            },
+            "Comments": [],
+            "Tags": []
+          }
+        ],
+        "Origin": {
+          "SourceFilePath": "scene1.ink",
+          "LineNum": 52
+        },
+        "Comments": [],
+        "Tags": []
+      },
+      {
+        "BlockID": "Left",
+        "Snippets": [
+          {
+            "GroupComments": [],
+            "SnippetID": "rH1O",
+            "Beats": [
+              {
+                "Type": "Action",
+                "Text": "George swerves the car left.",
+                "LineID": "scene1_Scene1_Left_HZ7B",
+                "Origin": {
+                  "SourceFilePath": "scene1.ink",
+                  "LineNum": 59
+                },
+                "Comments": [],
+                "Tags": []
+              },
+              {
+                "Type": "Line",
+                "CharacterID": "GEORGE",
+                "Qualifier": "",
+                "Direction": "upset",
+                "Text": "You sure you want to go left?",
+                "LineID": "scene1_Scene1_Left_MIM6",
+                "Origin": {
+                  "SourceFilePath": "scene1.ink",
+                  "LineNum": 60
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Group": 0,
+            "GroupIndex": 0,
+            "GroupCount": 0,
+            "Origin": {
+              "SourceFilePath": "scene1.ink",
+              "LineNum": 59
+            },
+            "Comments": [],
+            "Tags": []
+          }
+        ],
+        "Origin": {
+          "SourceFilePath": "scene1.ink",
+          "LineNum": 58
+        },
+        "Comments": [],
+        "Tags": []
+      }
+    ],
+    "Origin": {
+      "SourceFilePath": "scene1.ink",
+      "LineNum": 1
     },
     "Comments": [],
     "Tags": []

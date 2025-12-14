@@ -1,5 +1,32 @@
 TODO:
 -----
+Check:
+{
+- this:
+- this:
+}
+
+Check:
+{shuffle:
+-
+-
+-
+{cycle:
+}
+}
+
+Check:
+{test:
+- "test":
+}
+
+Check:
+{test:
+- listItem:
+}
+
+Remove [] from options.
+
 Actor estimates?
 Script flow doc
 Dink editor

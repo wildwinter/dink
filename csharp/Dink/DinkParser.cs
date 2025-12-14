@@ -344,10 +344,9 @@ public class DinkParser
         return (expression, false);
     }
     
-    private static List<DinkScene> ParseInkLines(List<ParsingLine> lines, List<NonDinkLine> outNonDinkLines)
+    private static bool ParseInkLines(List<ParsingLine> lines, List<DinkScene> outDinkScenes, List<NonDinkLine> outNonDinkLines)
     {
         List<string> IDs = new();
-        List<DinkScene> parsedScenes = new List<DinkScene>();
         DinkScene? scene = null;
         DinkBlock? block = null;
         DinkSnippet? snippet = null;
@@ -371,7 +370,7 @@ public class DinkParser
         {
             if (IDs.Contains(id))
             {
-                Console.Error.WriteLine($"Duplicate ID at {origin}");
+                Console.Error.WriteLine($"Duplicate ID {id} at {origin}");
                 return false;
             }
             IDs.Add(id);
@@ -474,7 +473,7 @@ public class DinkParser
             {
                 scene.Tags.AddRange(knotTags);
                 knotTags.Clear();
-                parsedScenes.Add(scene);
+                outDinkScenes.Add(scene);
             }
         }
 
@@ -609,19 +608,47 @@ public class DinkParser
                 {
                     if (ParseOption(trimmedLine) is string option)
                     {
-                        comments.Add($"OPTION \"{option}\"");
                         inOptions = true;
+                        // What if the option is a dialogue line?
+                        if (parsing && ParseLine(option) is DinkLine dinkLine)
+                        {
+                            dinkLine.LineID = ParseID(trimmedLine)??"";
+                            if (string.IsNullOrEmpty(dinkLine.LineID))
+                            {
+                                Console.Error.WriteLine($"Couldn't find an ID at option line {line.Origin}");
+                                return false;
+                            }
+
+                            if (!CheckID(dinkLine.LineID,line.Origin))
+                                return false;
+                                
+                            addAndCreateSnippet();
+                            comments.Add($"OPTION \"{dinkLine.Text}\"");
+                            dinkLine.Origin = line.Origin;
+                            dinkLine.Comments.AddRange(comments);
+                            snippet?.Beats.Add(dinkLine);
+                            comments.Clear();
+                            addTags(dinkLine);
+                            Log(dinkLine.ToString());
+                            continue;
+                        }
+                        else
+                        {
+                            comments.Add($"OPTION \"{option}\"");
+                            addAndCreateSnippet();
+                        }
                     }
                     else if (ParseGather(trimmedLine) && inOptions)
                     {
                         comments.Add("MERGE");
                         inOptions = false;
+                        addAndCreateSnippet();
                     }
                     else
                     {
                         inOptions = false;
+                        addAndCreateSnippet();
                     }
-                    addAndCreateSnippet();
                 }
             }
 
@@ -632,8 +659,8 @@ public class DinkParser
                 {
                     if (parsing)
                     {
-                        Console.WriteLine("Dink Format Error: Line starts with expression but has content after colon.");
-                        Console.WriteLine($"    {trimmedLine}");
+                        Console.Error.WriteLine("Dink Format Error: Line starts with expression but has content after colon.");
+                        Console.Error.WriteLine($"    {trimmedLine}");
                     }
                 }
                 else
@@ -689,7 +716,7 @@ public class DinkParser
                 else
                 {
                     if (!CheckID(dinkLine.LineID,line.Origin))
-                        return parsedScenes;
+                        return false;
                     dinkLine.Origin = line.Origin;
                     dinkLine.Comments.AddRange(comments);
                     snippet?.Beats.Add(dinkLine);
@@ -702,7 +729,7 @@ public class DinkParser
             else if (parsing && ParseAction(trimmedLine) is DinkAction dinkAction)
             {
                 if (!CheckID(dinkAction.LineID,line.Origin))
-                    return parsedScenes;
+                    return false;
                 dinkAction.Origin = line.Origin;
                 dinkAction.Comments.AddRange(comments);
                 snippet?.Beats.Add(dinkAction);
@@ -717,7 +744,7 @@ public class DinkParser
                 if (ndLine.ID!=null)
                 {
                     if (!CheckID(ndLine.ID,line.Origin))
-                        return parsedScenes;
+                        return false;
                     ndLine.Tags.AddRange(stitchTags);
                     ndLine.Tags.AddRange(knotTags);
                     ndLine.Tags.AddRange(fileTags);
@@ -732,7 +759,7 @@ public class DinkParser
         addBlock();
         addScene();
 
-        return parsedScenes;
+        return true;
     }
 
     private static readonly Regex _rxBlockComments = new Regex(
@@ -809,7 +836,7 @@ public class DinkParser
         return linesArray.ToList();
     }
 
-    public static List<DinkScene> ParseInk(string text, string sourceFilePath, List<NonDinkLine> outNonDinkLines)
+    public static bool ParseInk(string text, string sourceFilePath, List<DinkScene> outDinkScenes, List<NonDinkLine> outNonDinkLines)
     {
         string textWithoutComments = RemoveBlockComments(text);
         List<string> lines = SplitTextIntoLines(textWithoutComments);
@@ -822,14 +849,13 @@ public class DinkParser
             parsingLine.Origin.LineNum = i+1;
             parsingLines.Add(parsingLine);
         }
-        return ParseInkLines(parsingLines, outNonDinkLines);
+        return ParseInkLines(parsingLines, outDinkScenes, outNonDinkLines);
     }
 
     private static readonly Regex _rxID = new Regex(
         @"#id:(\w+)", 
         RegexOptions.Compiled
     );
-
     public static string? ParseID(string input)
     {
         if (string.IsNullOrEmpty(input)) return null;
