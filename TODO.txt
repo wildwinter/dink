@@ -1,30 +1,5 @@
 TODO:
 -----
-Check:
-{
-- this:
-- this:
-}
-
-Check:
-{shuffle:
--
--
--
-{cycle:
-}
-}
-
-Check:
-{test:
-- "test":
-}
-
-Check:
-{test:
-- listItem:
-}
-
 Actor estimates?
 Script flow doc
 Dink editor
@@ -68,3 +43,4 @@ Better example scripts
 Strip out text from compiled version
 Allow dialogue in options.
 Allow options without [].
+Test different expression layouts.

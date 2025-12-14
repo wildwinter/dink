@@ -1,5 +1,6 @@
 INCLUDE scene1.ink
 INCLUDE branches.ink
+INCLUDE cycles.ink
 
 #ws:stub
 -> Barks

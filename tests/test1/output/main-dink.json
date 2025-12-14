@@ -345,5 +345,73 @@
     "Type": "Line",
     "CharacterID": "JIM",
     "Qualifier": ""
+  },
+  "cycles_Cycles_LineTest_65J9": {
+    "Type": "Line",
+    "CharacterID": "FRED",
+    "Qualifier": ""
+  },
+  "cycles_Cycles_LineTest_XFQW": {
+    "Type": "Line",
+    "CharacterID": "GEORGE",
+    "Qualifier": ""
+  },
+  "cycles_Cycles_FancyBarkTest_RR4G": {
+    "Type": "Line",
+    "CharacterID": "FRED",
+    "Qualifier": ""
+  },
+  "cycles_Cycles_FancyBarkTest_D4KV": {
+    "Type": "Line",
+    "CharacterID": "FRED",
+    "Qualifier": ""
+  },
+  "cycles_Cycles_FancyBarkTest_A2I1": {
+    "Type": "Line",
+    "CharacterID": "FRED",
+    "Qualifier": ""
+  },
+  "cycles_Cycles_FancyBarkTest_3KK1": {
+    "Type": "Line",
+    "CharacterID": "FRED",
+    "Qualifier": ""
+  },
+  "cycles_Cycles_FancyBarkTest_FF35": {
+    "Type": "Line",
+    "CharacterID": "FRED",
+    "Qualifier": ""
+  },
+  "cycles_Cycles_FancyBarkTest_23Q8": {
+    "Type": "Line",
+    "CharacterID": "FRED",
+    "Qualifier": ""
+  },
+  "cycles_Cycles_StringExpressionsTest_Y7QJ": {
+    "Type": "Action",
+    "Text": "Check:"
+  },
+  "cycles_Cycles_StringExpressionsTest_1L9A": {
+    "Type": "Line",
+    "CharacterID": "GEORGE",
+    "Qualifier": ""
+  },
+  "cycles_Cycles_StringExpressionsTest_ZHNZ": {
+    "Type": "Line",
+    "CharacterID": "FRED",
+    "Qualifier": ""
+  },
+  "cycles_Cycles_ListExpressionTest_EWNK": {
+    "Type": "Action",
+    "Text": "Check:"
+  },
+  "cycles_Cycles_ListExpressionTest_LUCG": {
+    "Type": "Line",
+    "CharacterID": "GEORGE",
+    "Qualifier": ""
+  },
+  "cycles_Cycles_ListExpressionTest_JXXD": {
+    "Type": "Line",
+    "CharacterID": "GEORGE",
+    "Qualifier": ""
   }
 }

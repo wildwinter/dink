@@ -7,7 +7,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "oKmf",
+            "SnippetID": "DDSN",
             "Beats": [
               {
                 "Type": "Line",
@@ -18,7 +18,7 @@
                 "LineID": "main_TestScene_16U4",
                 "Origin": {
                   "SourceFilePath": "main.ink",
-                  "LineNum": 32
+                  "LineNum": 33
                 },
                 "Comments": [
                   "Comment for a line.",
@@ -40,7 +40,7 @@
                 "LineID": "main_TestScene_FF1T",
                 "Origin": {
                   "SourceFilePath": "main.ink",
-                  "LineNum": 36
+                  "LineNum": 37
                 },
                 "Comments": [
                   "VO: This comment goes to the voice actor.",
@@ -60,7 +60,7 @@
                 "LineID": "main_TestScene_BQ1E",
                 "Origin": {
                   "SourceFilePath": "main.ink",
-                  "LineNum": 38
+                  "LineNum": 39
                 },
                 "Comments": [
                   "Fred is angry."
@@ -76,7 +76,7 @@
                 "LineID": "main_TestScene_79PN",
                 "Origin": {
                   "SourceFilePath": "main.ink",
-                  "LineNum": 39
+                  "LineNum": 40
                 },
                 "Comments": [],
                 "Tags": [
@@ -90,7 +90,7 @@
                 "LineID": "main_TestScene_96IR",
                 "Origin": {
                   "SourceFilePath": "main.ink",
-                  "LineNum": 40
+                  "LineNum": 41
                 },
                 "Comments": [],
                 "Tags": [
@@ -107,7 +107,7 @@
                 "LineID": "main_TestScene_IQIS",
                 "Origin": {
                   "SourceFilePath": "main.ink",
-                  "LineNum": 41
+                  "LineNum": 42
                 },
                 "Comments": [],
                 "Tags": [
@@ -122,7 +122,7 @@
             "GroupCount": 0,
             "Origin": {
               "SourceFilePath": "main.ink",
-              "LineNum": 32
+              "LineNum": 33
             },
             "Comments": [],
             "Tags": []
@@ -130,7 +130,7 @@
         ],
         "Origin": {
           "SourceFilePath": "main.ink",
-          "LineNum": 27
+          "LineNum": 28
         },
         "Comments": [],
         "Tags": []
@@ -138,7 +138,7 @@
     ],
     "Origin": {
       "SourceFilePath": "main.ink",
-      "LineNum": 27
+      "LineNum": 28
     },
     "Comments": [
       "This comment should apply to Test Scene.",
@@ -159,7 +159,7 @@
             "GroupComments": [
               "This is for all the barks."
             ],
-            "SnippetID": "EWWw",
+            "SnippetID": "5xr2",
             "Beats": [
               {
                 "Type": "Line",
@@ -170,7 +170,7 @@
                 "LineID": "main_Barks_O037",
                 "Origin": {
                   "SourceFilePath": "main.ink",
-                  "LineNum": 47
+                  "LineNum": 48
                 },
                 "Comments": [],
                 "Tags": [
@@ -183,7 +183,7 @@
             "GroupCount": 7,
             "Origin": {
               "SourceFilePath": "main.ink",
-              "LineNum": 47
+              "LineNum": 48
             },
             "Comments": [],
             "Tags": []
@@ -192,7 +192,7 @@
             "GroupComments": [
               "This is for all the barks."
             ],
-            "SnippetID": "fkRB",
+            "SnippetID": "2wJ0",
             "Beats": [
               {
                 "Type": "Line",
@@ -203,7 +203,7 @@
                 "LineID": "main_Barks_UWZ2",
                 "Origin": {
                   "SourceFilePath": "main.ink",
-                  "LineNum": 48
+                  "LineNum": 49
                 },
                 "Comments": [],
                 "Tags": [
@@ -216,7 +216,7 @@
             "GroupCount": 7,
             "Origin": {
               "SourceFilePath": "main.ink",
-              "LineNum": 48
+              "LineNum": 49
             },
             "Comments": [],
             "Tags": []
@@ -225,7 +225,7 @@
             "GroupComments": [
               "This is for all the barks."
             ],
-            "SnippetID": "jw60",
+            "SnippetID": "DqGK",
             "Beats": [
               {
                 "Type": "Line",
@@ -236,7 +236,7 @@
                 "LineID": "main_Barks_1ZG8",
                 "Origin": {
                   "SourceFilePath": "main.ink",
-                  "LineNum": 49
+                  "LineNum": 50
                 },
                 "Comments": [],
                 "Tags": [
@@ -251,7 +251,7 @@
             "GroupCount": 7,
             "Origin": {
               "SourceFilePath": "main.ink",
-              "LineNum": 49
+              "LineNum": 50
             },
             "Comments": [],
             "Tags": []
@@ -260,7 +260,7 @@
             "GroupComments": [
               "This is for all the barks."
             ],
-            "SnippetID": "9YSi",
+            "SnippetID": "Jsnc",
             "Beats": [
               {
                 "Type": "Action",
@@ -268,7 +268,7 @@
                 "LineID": "main_Barks_046M",
                 "Origin": {
                   "SourceFilePath": "main.ink",
-                  "LineNum": 50
+                  "LineNum": 51
                 },
                 "Comments": [],
                 "Tags": [
@@ -281,7 +281,7 @@
             "GroupCount": 7,
             "Origin": {
               "SourceFilePath": "main.ink",
-              "LineNum": 50
+              "LineNum": 51
             },
             "Comments": [],
             "Tags": []
@@ -290,7 +290,7 @@
             "GroupComments": [
               "This is for all the barks."
             ],
-            "SnippetID": "n0GD",
+            "SnippetID": "Wd4x",
             "Beats": [
               {
                 "Type": "Line",
@@ -301,7 +301,7 @@
                 "LineID": "main_Barks_JFG1",
                 "Origin": {
                   "SourceFilePath": "main.ink",
-                  "LineNum": 52
+                  "LineNum": 53
                 },
                 "Comments": [],
                 "Tags": [
@@ -317,7 +317,7 @@
                 "LineID": "main_Barks_X291",
                 "Origin": {
                   "SourceFilePath": "main.ink",
-                  "LineNum": 53
+                  "LineNum": 54
                 },
                 "Comments": [],
                 "Tags": [
@@ -330,7 +330,7 @@
             "GroupCount": 7,
             "Origin": {
               "SourceFilePath": "main.ink",
-              "LineNum": 52
+              "LineNum": 53
             },
             "Comments": [],
             "Tags": []
@@ -339,7 +339,7 @@
             "GroupComments": [
               "This is for all the barks."
             ],
-            "SnippetID": "ScZx",
+            "SnippetID": "wIO9",
             "Beats": [
               {
                 "Type": "Line",
@@ -350,7 +350,7 @@
                 "LineID": "main_Barks_L2SX",
                 "Origin": {
                   "SourceFilePath": "main.ink",
-                  "LineNum": 55
+                  "LineNum": 56
                 },
                 "Comments": [],
                 "Tags": [
@@ -363,7 +363,7 @@
             "GroupCount": 7,
             "Origin": {
               "SourceFilePath": "main.ink",
-              "LineNum": 55
+              "LineNum": 56
             },
             "Comments": [],
             "Tags": []
@@ -372,7 +372,7 @@
             "GroupComments": [
               "This is for all the barks."
             ],
-            "SnippetID": "0HuQ",
+            "SnippetID": "2sVi",
             "Beats": [
               {
                 "Type": "Line",
@@ -383,7 +383,7 @@
                 "LineID": "main_Barks_N07F",
                 "Origin": {
                   "SourceFilePath": "main.ink",
-                  "LineNum": 56
+                  "LineNum": 57
                 },
                 "Comments": [],
                 "Tags": [
@@ -396,7 +396,7 @@
             "GroupCount": 7,
             "Origin": {
               "SourceFilePath": "main.ink",
-              "LineNum": 56
+              "LineNum": 57
             },
             "Comments": [],
             "Tags": []
@@ -404,7 +404,7 @@
         ],
         "Origin": {
           "SourceFilePath": "main.ink",
-          "LineNum": 44
+          "LineNum": 45
         },
         "Comments": [],
         "Tags": []
@@ -412,7 +412,7 @@
     ],
     "Origin": {
       "SourceFilePath": "main.ink",
-      "LineNum": 44
+      "LineNum": 45
     },
     "Comments": [],
     "Tags": []
@@ -425,7 +425,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "Fph3",
+            "SnippetID": "FcUw",
             "Beats": [
               {
                 "Type": "Line",
@@ -436,7 +436,7 @@
                 "LineID": "main_Recording_7ZMT",
                 "Origin": {
                   "SourceFilePath": "main.ink",
-                  "LineNum": 62
+                  "LineNum": 63
                 },
                 "Comments": [],
                 "Tags": [
@@ -449,7 +449,7 @@
             "GroupCount": 0,
             "Origin": {
               "SourceFilePath": "main.ink",
-              "LineNum": 62
+              "LineNum": 63
             },
             "Comments": [],
             "Tags": []
@@ -457,7 +457,7 @@
         ],
         "Origin": {
           "SourceFilePath": "main.ink",
-          "LineNum": 60
+          "LineNum": 61
         },
         "Comments": [],
         "Tags": []
@@ -470,7 +470,7 @@
               "A: This comment should apply to the snippet.",
               "this comment should apply to this snippet"
             ],
-            "SnippetID": "5hE2",
+            "SnippetID": "BXx4",
             "Beats": [
               {
                 "Type": "Line",
@@ -481,7 +481,7 @@
                 "LineID": "main_Recording_PartA_U9ZN",
                 "Origin": {
                   "SourceFilePath": "main.ink",
-                  "LineNum": 70
+                  "LineNum": 71
                 },
                 "Comments": [
                   "A: This comment should apply to Jim\u0027s line."
@@ -496,7 +496,7 @@
             "GroupCount": 0,
             "Origin": {
               "SourceFilePath": "main.ink",
-              "LineNum": 70
+              "LineNum": 71
             },
             "Comments": [],
             "Tags": []
@@ -504,7 +504,7 @@
         ],
         "Origin": {
           "SourceFilePath": "main.ink",
-          "LineNum": 65
+          "LineNum": 66
         },
         "Comments": [],
         "Tags": [
@@ -519,7 +519,7 @@
               "B: This comment should apply to the snippet below.",
               "B: This should apply to the first bit of the snippet I guess?"
             ],
-            "SnippetID": "5PeT",
+            "SnippetID": "mbU7",
             "Beats": [
               {
                 "Type": "Line",
@@ -530,7 +530,7 @@
                 "LineID": "main_Recording_PartB_VPX8",
                 "Origin": {
                   "SourceFilePath": "main.ink",
-                  "LineNum": 80
+                  "LineNum": 81
                 },
                 "Comments": [],
                 "Tags": [
@@ -543,7 +543,7 @@
             "GroupCount": 3,
             "Origin": {
               "SourceFilePath": "main.ink",
-              "LineNum": 80
+              "LineNum": 81
             },
             "Comments": [],
             "Tags": []
@@ -553,7 +553,7 @@
               "B: This comment should apply to the snippet below.",
               "B: This should apply to the first bit of the snippet I guess?"
             ],
-            "SnippetID": "9a3L",
+            "SnippetID": "BwlM",
             "Beats": [
               {
                 "Type": "Line",
@@ -564,7 +564,7 @@
                 "LineID": "main_Recording_PartB_FH4U",
                 "Origin": {
                   "SourceFilePath": "main.ink",
-                  "LineNum": 82
+                  "LineNum": 83
                 },
                 "Comments": [],
                 "Tags": [
@@ -577,7 +577,7 @@
             "GroupCount": 3,
             "Origin": {
               "SourceFilePath": "main.ink",
-              "LineNum": 82
+              "LineNum": 83
             },
             "Comments": [],
             "Tags": []
@@ -587,7 +587,7 @@
               "B: This comment should apply to the snippet below.",
               "B: This should apply to the first bit of the snippet I guess?"
             ],
-            "SnippetID": "wPIk",
+            "SnippetID": "C1bZ",
             "Beats": [
               {
                 "Type": "Line",
@@ -598,7 +598,7 @@
                 "LineID": "main_Recording_PartB_1RQS",
                 "Origin": {
                   "SourceFilePath": "main.ink",
-                  "LineNum": 84
+                  "LineNum": 85
                 },
                 "Comments": [],
                 "Tags": [
@@ -611,7 +611,7 @@
             "GroupCount": 3,
             "Origin": {
               "SourceFilePath": "main.ink",
-              "LineNum": 84
+              "LineNum": 85
             },
             "Comments": [],
             "Tags": []
@@ -619,7 +619,7 @@
         ],
         "Origin": {
           "SourceFilePath": "main.ink",
-          "LineNum": 75
+          "LineNum": 76
         },
         "Comments": [
           "This comment should apply to block PartB"
@@ -634,7 +634,7 @@
               "C: This comment should apply to the snippet below.",
               "VO: A set of lines about monkeys"
             ],
-            "SnippetID": "N2nj",
+            "SnippetID": "KBWr",
             "Beats": [
               {
                 "Type": "Line",
@@ -643,40 +643,6 @@
                 "Direction": "",
                 "Text": "This is a first line about monkeys.",
                 "LineID": "main_Recording_PartC_JITN",
-                "Origin": {
-                  "SourceFilePath": "main.ink",
-                  "LineNum": 91
-                },
-                "Comments": [],
-                "Tags": [
-                  "ws:draft1"
-                ]
-              }
-            ],
-            "Group": 1,
-            "GroupIndex": 1,
-            "GroupCount": 4,
-            "Origin": {
-              "SourceFilePath": "main.ink",
-              "LineNum": 91
-            },
-            "Comments": [],
-            "Tags": []
-          },
-          {
-            "GroupComments": [
-              "C: This comment should apply to the snippet below.",
-              "VO: A set of lines about monkeys"
-            ],
-            "SnippetID": "OYCT",
-            "Beats": [
-              {
-                "Type": "Line",
-                "CharacterID": "FRED",
-                "Qualifier": "",
-                "Direction": "",
-                "Text": "This is a second line about monkeys.",
-                "LineID": "main_Recording_PartC_GUS9",
                 "Origin": {
                   "SourceFilePath": "main.ink",
                   "LineNum": 92
@@ -688,7 +654,7 @@
               }
             ],
             "Group": 1,
-            "GroupIndex": 2,
+            "GroupIndex": 1,
             "GroupCount": 4,
             "Origin": {
               "SourceFilePath": "main.ink",
@@ -702,15 +668,15 @@
               "C: This comment should apply to the snippet below.",
               "VO: A set of lines about monkeys"
             ],
-            "SnippetID": "Rqfr",
+            "SnippetID": "u6bN",
             "Beats": [
               {
                 "Type": "Line",
                 "CharacterID": "FRED",
                 "Qualifier": "",
                 "Direction": "",
-                "Text": "This is a third monkey line.",
-                "LineID": "main_Recording_PartC_3VZB",
+                "Text": "This is a second line about monkeys.",
+                "LineID": "main_Recording_PartC_GUS9",
                 "Origin": {
                   "SourceFilePath": "main.ink",
                   "LineNum": 93
@@ -722,7 +688,7 @@
               }
             ],
             "Group": 1,
-            "GroupIndex": 3,
+            "GroupIndex": 2,
             "GroupCount": 4,
             "Origin": {
               "SourceFilePath": "main.ink",
@@ -736,7 +702,41 @@
               "C: This comment should apply to the snippet below.",
               "VO: A set of lines about monkeys"
             ],
-            "SnippetID": "j2Eo",
+            "SnippetID": "osUJ",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "FRED",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "This is a third monkey line.",
+                "LineID": "main_Recording_PartC_3VZB",
+                "Origin": {
+                  "SourceFilePath": "main.ink",
+                  "LineNum": 94
+                },
+                "Comments": [],
+                "Tags": [
+                  "ws:draft1"
+                ]
+              }
+            ],
+            "Group": 1,
+            "GroupIndex": 3,
+            "GroupCount": 4,
+            "Origin": {
+              "SourceFilePath": "main.ink",
+              "LineNum": 94
+            },
+            "Comments": [],
+            "Tags": []
+          },
+          {
+            "GroupComments": [
+              "C: This comment should apply to the snippet below.",
+              "VO: A set of lines about monkeys"
+            ],
+            "SnippetID": "sqID",
             "Beats": [
               {
                 "Type": "Line",
@@ -747,7 +747,7 @@
                 "LineID": "main_Recording_PartC_A18G",
                 "Origin": {
                   "SourceFilePath": "main.ink",
-                  "LineNum": 94
+                  "LineNum": 95
                 },
                 "Comments": [],
                 "Tags": [
@@ -760,7 +760,7 @@
             "GroupCount": 4,
             "Origin": {
               "SourceFilePath": "main.ink",
-              "LineNum": 94
+              "LineNum": 95
             },
             "Comments": [],
             "Tags": []
@@ -768,7 +768,7 @@
         ],
         "Origin": {
           "SourceFilePath": "main.ink",
-          "LineNum": 88
+          "LineNum": 89
         },
         "Comments": [],
         "Tags": []
@@ -778,7 +778,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "Vv9k",
+            "SnippetID": "cXeC",
             "Beats": [
               {
                 "Type": "Line",
@@ -789,7 +789,7 @@
                 "LineID": "main_Recording_PartD_UC9D",
                 "Origin": {
                   "SourceFilePath": "main.ink",
-                  "LineNum": 102
+                  "LineNum": 103
                 },
                 "Comments": [],
                 "Tags": [
@@ -802,14 +802,14 @@
             "GroupCount": 0,
             "Origin": {
               "SourceFilePath": "main.ink",
-              "LineNum": 102
+              "LineNum": 103
             },
             "Comments": [],
             "Tags": []
           },
           {
             "GroupComments": [],
-            "SnippetID": "EDuz",
+            "SnippetID": "Slu0",
             "Beats": [
               {
                 "Type": "Line",
@@ -820,7 +820,7 @@
                 "LineID": "main_Recording_PartD_08WO",
                 "Origin": {
                   "SourceFilePath": "main.ink",
-                  "LineNum": 104
+                  "LineNum": 105
                 },
                 "Comments": [],
                 "Tags": [
@@ -833,7 +833,7 @@
             "GroupCount": 0,
             "Origin": {
               "SourceFilePath": "main.ink",
-              "LineNum": 104
+              "LineNum": 105
             },
             "Comments": [],
             "Tags": []
@@ -841,7 +841,7 @@
         ],
         "Origin": {
           "SourceFilePath": "main.ink",
-          "LineNum": 98
+          "LineNum": 99
         },
         "Comments": [],
         "Tags": []
@@ -851,7 +851,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "17Dg",
+            "SnippetID": "i9o8",
             "Beats": [
               {
                 "Type": "Line",
@@ -862,7 +862,7 @@
                 "LineID": "main_Recording_PartE_81AO",
                 "Origin": {
                   "SourceFilePath": "main.ink",
-                  "LineNum": 109
+                  "LineNum": 110
                 },
                 "Comments": [],
                 "Tags": [
@@ -875,14 +875,14 @@
             "GroupCount": 3,
             "Origin": {
               "SourceFilePath": "main.ink",
-              "LineNum": 109
+              "LineNum": 110
             },
             "Comments": [],
             "Tags": []
           },
           {
             "GroupComments": [],
-            "SnippetID": "1xIF",
+            "SnippetID": "w5cl",
             "Beats": [
               {
                 "Type": "Line",
@@ -893,7 +893,7 @@
                 "LineID": "main_Recording_PartE_JY1W",
                 "Origin": {
                   "SourceFilePath": "main.ink",
-                  "LineNum": 110
+                  "LineNum": 111
                 },
                 "Comments": [],
                 "Tags": [
@@ -906,14 +906,14 @@
             "GroupCount": 3,
             "Origin": {
               "SourceFilePath": "main.ink",
-              "LineNum": 110
+              "LineNum": 111
             },
             "Comments": [],
             "Tags": []
           },
           {
             "GroupComments": [],
-            "SnippetID": "bGx0",
+            "SnippetID": "4mW6",
             "Beats": [
               {
                 "Type": "Line",
@@ -924,7 +924,7 @@
                 "LineID": "main_Recording_PartE_QEM8",
                 "Origin": {
                   "SourceFilePath": "main.ink",
-                  "LineNum": 111
+                  "LineNum": 112
                 },
                 "Comments": [],
                 "Tags": [
@@ -940,7 +940,7 @@
                 "LineID": "main_Recording_PartE_KABN",
                 "Origin": {
                   "SourceFilePath": "main.ink",
-                  "LineNum": 112
+                  "LineNum": 113
                 },
                 "Comments": [],
                 "Tags": [
@@ -953,7 +953,7 @@
             "GroupCount": 3,
             "Origin": {
               "SourceFilePath": "main.ink",
-              "LineNum": 111
+              "LineNum": 112
             },
             "Comments": [],
             "Tags": []
@@ -961,7 +961,7 @@
         ],
         "Origin": {
           "SourceFilePath": "main.ink",
-          "LineNum": 107
+          "LineNum": 108
         },
         "Comments": [],
         "Tags": []
@@ -969,7 +969,7 @@
     ],
     "Origin": {
       "SourceFilePath": "main.ink",
-      "LineNum": 60
+      "LineNum": 61
     },
     "Comments": [],
     "Tags": [
@@ -984,7 +984,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "ugeS",
+            "SnippetID": "pV00",
             "Beats": [
               {
                 "Type": "Line",
@@ -1035,7 +1035,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "09XM",
+            "SnippetID": "GvRI",
             "Beats": [
               {
                 "Type": "Action",
@@ -1074,7 +1074,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "rMi4",
+            "SnippetID": "cpYd",
             "Beats": [
               {
                 "Type": "Action",
@@ -1127,7 +1127,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "Iu8v",
+            "SnippetID": "2veJ",
             "Beats": [
               {
                 "Type": "Line",
@@ -1160,7 +1160,7 @@
           },
           {
             "GroupComments": [],
-            "SnippetID": "N5Ua",
+            "SnippetID": "44Oa",
             "Beats": [
               {
                 "Type": "Line",
@@ -1193,7 +1193,7 @@
           },
           {
             "GroupComments": [],
-            "SnippetID": "GvGO",
+            "SnippetID": "MccZ",
             "Beats": [
               {
                 "Type": "Line",
@@ -1226,7 +1226,7 @@
           },
           {
             "GroupComments": [],
-            "SnippetID": "90Aj",
+            "SnippetID": "NcRf",
             "Beats": [
               {
                 "Type": "Line",
@@ -1275,7 +1275,7 @@
           },
           {
             "GroupComments": [],
-            "SnippetID": "BLqx",
+            "SnippetID": "DKhp",
             "Beats": [
               {
                 "Type": "Line",
@@ -1308,7 +1308,7 @@
           },
           {
             "GroupComments": [],
-            "SnippetID": "Zyoh",
+            "SnippetID": "V1r2",
             "Beats": [
               {
                 "Type": "Line",
@@ -1354,7 +1354,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "mwR8",
+            "SnippetID": "loqZ",
             "Beats": [
               {
                 "Type": "Action",
@@ -1405,7 +1405,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "DiZp",
+            "SnippetID": "CrFU",
             "Beats": [
               {
                 "Type": "Action",
@@ -1467,7 +1467,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "tWdz",
+            "SnippetID": "nBk0",
             "Beats": [
               {
                 "Type": "Line",
@@ -1510,7 +1510,7 @@
           },
           {
             "GroupComments": [],
-            "SnippetID": "vlAh",
+            "SnippetID": "mr6c",
             "Beats": [
               {
                 "Type": "Line",
@@ -1555,7 +1555,7 @@
           },
           {
             "GroupComments": [],
-            "SnippetID": "O2sZ",
+            "SnippetID": "YQ08",
             "Beats": [
               {
                 "Type": "Line",
@@ -1600,7 +1600,7 @@
           },
           {
             "GroupComments": [],
-            "SnippetID": "Klxp",
+            "SnippetID": "Uakk",
             "Beats": [
               {
                 "Type": "Line",
@@ -1656,7 +1656,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "JLYX",
+            "SnippetID": "qbbd",
             "Beats": [
               {
                 "Type": "Line",
@@ -1710,7 +1710,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "43cO",
+            "SnippetID": "qF2Q",
             "Beats": [
               {
                 "Type": "Line",
@@ -1764,7 +1764,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "ZNMU",
+            "SnippetID": "eQy2",
             "Beats": [
               {
                 "Type": "Line",
@@ -1793,7 +1793,7 @@
           },
           {
             "GroupComments": [],
-            "SnippetID": "tclJ",
+            "SnippetID": "O0Kh",
             "Beats": [
               {
                 "Type": "Line",
@@ -1838,7 +1838,7 @@
           },
           {
             "GroupComments": [],
-            "SnippetID": "DWQB",
+            "SnippetID": "FgqI",
             "Beats": [
               {
                 "Type": "Line",
@@ -1894,7 +1894,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "DPh5",
+            "SnippetID": "2VlY",
             "Beats": [
               {
                 "Type": "Line",
@@ -1973,7 +1973,7 @@
         "Snippets": [
           {
             "GroupComments": [],
-            "SnippetID": "kukZ",
+            "SnippetID": "VJSX",
             "Beats": [
               {
                 "Type": "Line",
@@ -2016,7 +2016,7 @@
           },
           {
             "GroupComments": [],
-            "SnippetID": "EDLn",
+            "SnippetID": "NqZF",
             "Beats": [
               {
                 "Type": "Line",
@@ -2045,7 +2045,7 @@
           },
           {
             "GroupComments": [],
-            "SnippetID": "VVAn",
+            "SnippetID": "3tO3",
             "Beats": [
               {
                 "Type": "Line",
@@ -2074,7 +2074,7 @@
           },
           {
             "GroupComments": [],
-            "SnippetID": "4xa0",
+            "SnippetID": "4xU3",
             "Beats": [
               {
                 "Type": "Line",
@@ -2103,7 +2103,7 @@
           },
           {
             "GroupComments": [],
-            "SnippetID": "wVpR",
+            "SnippetID": "vb5K",
             "Beats": [
               {
                 "Type": "Line",
@@ -2144,6 +2144,477 @@
     "Origin": {
       "SourceFilePath": "branches.ink",
       "LineNum": 61
+    },
+    "Comments": [],
+    "Tags": []
+  },
+  {
+    "SceneID": "Cycles",
+    "Blocks": [
+      {
+        "BlockID": "LineTest",
+        "Snippets": [
+          {
+            "GroupComments": [
+              "This should allow tests inside a bracketed section"
+            ],
+            "SnippetID": "w49a",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "FRED",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "This should be fine.",
+                "LineID": "cycles_Cycles_LineTest_65J9",
+                "Origin": {
+                  "SourceFilePath": "cycles.ink",
+                  "LineNum": 13
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Group": 0,
+            "GroupIndex": 0,
+            "GroupCount": 0,
+            "Origin": {
+              "SourceFilePath": "cycles.ink",
+              "LineNum": 13
+            },
+            "Comments": [],
+            "Tags": []
+          },
+          {
+            "GroupComments": [
+              "This should allow tests inside a bracketed section"
+            ],
+            "SnippetID": "rJya",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "GEORGE",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "So should this.",
+                "LineID": "cycles_Cycles_LineTest_XFQW",
+                "Origin": {
+                  "SourceFilePath": "cycles.ink",
+                  "LineNum": 15
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Group": 0,
+            "GroupIndex": 0,
+            "GroupCount": 0,
+            "Origin": {
+              "SourceFilePath": "cycles.ink",
+              "LineNum": 15
+            },
+            "Comments": [],
+            "Tags": []
+          }
+        ],
+        "Origin": {
+          "SourceFilePath": "cycles.ink",
+          "LineNum": 9
+        },
+        "Comments": [],
+        "Tags": []
+      },
+      {
+        "BlockID": "FancyBarkTest",
+        "Snippets": [
+          {
+            "GroupComments": [
+              "How does the bracket (1/6) etc. work on this?"
+            ],
+            "SnippetID": "BnFD",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "FRED",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "Fancy Bark 1",
+                "LineID": "cycles_Cycles_FancyBarkTest_RR4G",
+                "Origin": {
+                  "SourceFilePath": "cycles.ink",
+                  "LineNum": 22
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Group": 1,
+            "GroupIndex": 1,
+            "GroupCount": 6,
+            "Origin": {
+              "SourceFilePath": "cycles.ink",
+              "LineNum": 22
+            },
+            "Comments": [],
+            "Tags": []
+          },
+          {
+            "GroupComments": [
+              "How does the bracket (1/6) etc. work on this?"
+            ],
+            "SnippetID": "EHpN",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "FRED",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "Fancy Bark 2",
+                "LineID": "cycles_Cycles_FancyBarkTest_D4KV",
+                "Origin": {
+                  "SourceFilePath": "cycles.ink",
+                  "LineNum": 23
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Group": 1,
+            "GroupIndex": 2,
+            "GroupCount": 6,
+            "Origin": {
+              "SourceFilePath": "cycles.ink",
+              "LineNum": 23
+            },
+            "Comments": [],
+            "Tags": []
+          },
+          {
+            "GroupComments": [
+              "How does the bracket (1/6) etc. work on this?"
+            ],
+            "SnippetID": "YC5M",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "FRED",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "Fancy Bark 3",
+                "LineID": "cycles_Cycles_FancyBarkTest_A2I1",
+                "Origin": {
+                  "SourceFilePath": "cycles.ink",
+                  "LineNum": 24
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Group": 1,
+            "GroupIndex": 3,
+            "GroupCount": 6,
+            "Origin": {
+              "SourceFilePath": "cycles.ink",
+              "LineNum": 24
+            },
+            "Comments": [],
+            "Tags": []
+          },
+          {
+            "GroupComments": [
+              "How does the bracket (1/6) etc. work on this?"
+            ],
+            "SnippetID": "yiQu",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "FRED",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "Fancy Bark 4",
+                "LineID": "cycles_Cycles_FancyBarkTest_3KK1",
+                "Origin": {
+                  "SourceFilePath": "cycles.ink",
+                  "LineNum": 25
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Group": 1,
+            "GroupIndex": 4,
+            "GroupCount": 6,
+            "Origin": {
+              "SourceFilePath": "cycles.ink",
+              "LineNum": 25
+            },
+            "Comments": [],
+            "Tags": []
+          },
+          {
+            "GroupComments": [
+              "How does the bracket (1/6) etc. work on this?"
+            ],
+            "SnippetID": "Cy34",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "FRED",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "Spinning on fancy bark 5",
+                "LineID": "cycles_Cycles_FancyBarkTest_FF35",
+                "Origin": {
+                  "SourceFilePath": "cycles.ink",
+                  "LineNum": 27
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Group": 1,
+            "GroupIndex": 5,
+            "GroupCount": 6,
+            "Origin": {
+              "SourceFilePath": "cycles.ink",
+              "LineNum": 27
+            },
+            "Comments": [],
+            "Tags": []
+          },
+          {
+            "GroupComments": [
+              "How does the bracket (1/6) etc. work on this?"
+            ],
+            "SnippetID": "1ewU",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "FRED",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "Spinning on fancy bark 6",
+                "LineID": "cycles_Cycles_FancyBarkTest_23Q8",
+                "Origin": {
+                  "SourceFilePath": "cycles.ink",
+                  "LineNum": 28
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Group": 1,
+            "GroupIndex": 6,
+            "GroupCount": 6,
+            "Origin": {
+              "SourceFilePath": "cycles.ink",
+              "LineNum": 28
+            },
+            "Comments": [],
+            "Tags": []
+          }
+        ],
+        "Origin": {
+          "SourceFilePath": "cycles.ink",
+          "LineNum": 19
+        },
+        "Comments": [],
+        "Tags": []
+      },
+      {
+        "BlockID": "StringExpressionsTest",
+        "Snippets": [
+          {
+            "GroupComments": [],
+            "SnippetID": "8yyr",
+            "Beats": [
+              {
+                "Type": "Action",
+                "Text": "Check:",
+                "LineID": "cycles_Cycles_StringExpressionsTest_Y7QJ",
+                "Origin": {
+                  "SourceFilePath": "cycles.ink",
+                  "LineNum": 34
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Group": 0,
+            "GroupIndex": 0,
+            "GroupCount": 0,
+            "Origin": {
+              "SourceFilePath": "cycles.ink",
+              "LineNum": 34
+            },
+            "Comments": [],
+            "Tags": []
+          },
+          {
+            "GroupComments": [],
+            "SnippetID": "ue0w",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "GEORGE",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "Huh.",
+                "LineID": "cycles_Cycles_StringExpressionsTest_1L9A",
+                "Origin": {
+                  "SourceFilePath": "cycles.ink",
+                  "LineNum": 37
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Group": 1,
+            "GroupIndex": 1,
+            "GroupCount": 2,
+            "Origin": {
+              "SourceFilePath": "cycles.ink",
+              "LineNum": 37
+            },
+            "Comments": [],
+            "Tags": []
+          },
+          {
+            "GroupComments": [],
+            "SnippetID": "Mgbb",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "FRED",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "Huh yourself.",
+                "LineID": "cycles_Cycles_StringExpressionsTest_ZHNZ",
+                "Origin": {
+                  "SourceFilePath": "cycles.ink",
+                  "LineNum": 39
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Group": 1,
+            "GroupIndex": 2,
+            "GroupCount": 2,
+            "Origin": {
+              "SourceFilePath": "cycles.ink",
+              "LineNum": 39
+            },
+            "Comments": [],
+            "Tags": []
+          }
+        ],
+        "Origin": {
+          "SourceFilePath": "cycles.ink",
+          "LineNum": 33
+        },
+        "Comments": [],
+        "Tags": []
+      },
+      {
+        "BlockID": "ListExpressionTest",
+        "Snippets": [
+          {
+            "GroupComments": [],
+            "SnippetID": "kLsr",
+            "Beats": [
+              {
+                "Type": "Action",
+                "Text": "Check:",
+                "LineID": "cycles_Cycles_ListExpressionTest_EWNK",
+                "Origin": {
+                  "SourceFilePath": "cycles.ink",
+                  "LineNum": 44
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Group": 0,
+            "GroupIndex": 0,
+            "GroupCount": 0,
+            "Origin": {
+              "SourceFilePath": "cycles.ink",
+              "LineNum": 44
+            },
+            "Comments": [],
+            "Tags": []
+          },
+          {
+            "GroupComments": [],
+            "SnippetID": "T0pe",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "GEORGE",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "List item 1.",
+                "LineID": "cycles_Cycles_ListExpressionTest_LUCG",
+                "Origin": {
+                  "SourceFilePath": "cycles.ink",
+                  "LineNum": 47
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Group": 1,
+            "GroupIndex": 1,
+            "GroupCount": 2,
+            "Origin": {
+              "SourceFilePath": "cycles.ink",
+              "LineNum": 47
+            },
+            "Comments": [],
+            "Tags": []
+          },
+          {
+            "GroupComments": [],
+            "SnippetID": "ZidI",
+            "Beats": [
+              {
+                "Type": "Line",
+                "CharacterID": "GEORGE",
+                "Qualifier": "",
+                "Direction": "",
+                "Text": "List item 2.",
+                "LineID": "cycles_Cycles_ListExpressionTest_JXXD",
+                "Origin": {
+                  "SourceFilePath": "cycles.ink",
+                  "LineNum": 49
+                },
+                "Comments": [],
+                "Tags": []
+              }
+            ],
+            "Group": 1,
+            "GroupIndex": 2,
+            "GroupCount": 2,
+            "Origin": {
+              "SourceFilePath": "cycles.ink",
+              "LineNum": 49
+            },
+            "Comments": [],
+            "Tags": []
+          }
+        ],
+        "Origin": {
+          "SourceFilePath": "cycles.ink",
+          "LineNum": 43
+        },
+        "Comments": [],
+        "Tags": []
+      }
+    ],
+    "Origin": {
+      "SourceFilePath": "cycles.ink",
+      "LineNum": 5
     },
     "Comments": [],
     "Tags": []

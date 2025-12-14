@@ -62,15 +62,15 @@ So with a simple bit of markup, Dink is targeted at helping out with the product
 Your Ink will work in your runtime as normal, but Dink adds extra info specifically
 for lines of dialogue and helps you manage the production.
 
-- **The `DinkCompiler`**:
+* **The `DinkCompiler`**:
 
-  - Compiles your Ink as normal, but also extracts text lines for localisation, and parses out extra information such as who is saying which line and bundles it all up for your runtime.
-  - Optionally exports recording scripts, localisation files, and lists of where lines came from.
-  - Helps you manage the status of each individual line - is it first draft? Has it been recorded? And produces overview statistics - how many lines are still to be completed? How many lines still need to be recorded by a particular actor?
-  - Can generate a placeholder audio file for each line for testing.
-  - Can run in [live mode](#live-mode) which means it'll keep re-exporting your data every time you edit the Ink files.
-- **Utilities**:
-  - `DinkVoiceExport` - collects together source WAV files with certain criteria to make them easier for audio processing. For example, if you want to process all the recorded lines for a particular character, this collects them. Or all the lines marked `#vo:radio`.
+  * Compiles your Ink as normal, but also extracts text lines for localisation, and parses out extra information such as who is saying which line and bundles it all up for your runtime.
+  * Optionally exports recording scripts, localisation files, and lists of where lines came from.
+  * Helps you manage the status of each individual line - is it first draft? Has it been recorded? And produces overview statistics - how many lines are still to be completed? How many lines still need to be recorded by a particular actor?
+  * Can generate a placeholder audio file for each line for testing.
+  * Can run in [live mode](#live-mode) which means it'll keep re-exporting your data every time you edit the Ink files.
+* **Utilities**:
+  * `DinkVoiceExport` - collects together source WAV files with certain criteria to make them easier for audio processing. For example, if you want to process all the recorded lines for a particular character, this collects them. Or all the lines marked `#vo:radio`.
 
 ### Contents
 
@@ -200,8 +200,8 @@ This is a normal Ink knot.
 #dink
 DAVE: This is a Dink knot!
 -> DONE
-
 ```
+
 In a Dink knot, along with your normal Ink logic and flow, there are two types of lines - **dialogue** lines and **action** lines. Dink calls them *beats*.
 
 A **dialogue** line looks like this:
@@ -365,6 +365,75 @@ Dink is happy with structures like:
 ```
 
 And will mark recording scripts with a count e.g. `(1/3)` to show that a line is one of a set of alternative lines. Again this makes life easier for voice direction.
+
+It can even cope with:
+
+```text
+= FancyBark
+// This gets numbered 1/6 - 6/6 for the recording script.
+{stopping:
+- FRED: Fancy Bark 1 
+- FRED: Fancy Bark 2 
+- FRED: Fancy Bark 3 
+- FRED: Fancy Bark 4 
+    {shuffle:
+        - FRED: Spinning on fancy bark 5 
+        - FRED: Spinning on fancy bark 6
+    }
+}
+-> DONE
+```
+
+#### Switches and Tests
+
+Dink can handle switches and tests, but just lay them out so that **conditions are
+on different lines from the Dink**. So these are all fine:
+
+```text
+VAR testInt = 0
+VAR testString = ""
+
+= LineTest
+{
+- testInt==1:
+    FRED: This should be fine.
+- testInt==2:
+    GEORGE: So should this.
+}
+-> DONE
+
+= StringExpressionsTest
+{testString:
+- "test1":
+    GEORGE: Huh.
+- "test2":
+    FRED: Huh yourself.
+}
+-> DONE
+```
+
+But these are **NOT** and Dink will complain on parsing:
+
+```text
+VAR testInt = 0
+VAR testString = ""
+
+= LineTest
+{
+- testInt==1: FRED: This should be fine.
+- testInt==2: GEORGE: So should this.
+}
+-> DONE
+
+= StringExpressionsTest
+{testString:
+- "test1": GEORGE: Huh.
+- "test2": FRED: Huh yourself.
+}
+-> DONE
+```
+
+Just lay things out cleanly and it should be fine!
 
 #### Internally
 

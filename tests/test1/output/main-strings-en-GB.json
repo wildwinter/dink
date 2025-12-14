@@ -75,5 +75,17 @@
 	"branches_Flow_HWO9": "Branch 1.",
 	"branches_Flow_IGPY": "Branch 2.",
 	"branches_Flow_QCX4": "Branch 3.",
-	"branches_Flow_EEQU": "And we're back."
+	"branches_Flow_EEQU": "And we're back.",
+	"cycles_Cycles_LineTest_65J9": "This should be fine.",
+	"cycles_Cycles_LineTest_XFQW": "So should this.",
+	"cycles_Cycles_FancyBarkTest_RR4G": "Fancy Bark 1",
+	"cycles_Cycles_FancyBarkTest_D4KV": "Fancy Bark 2",
+	"cycles_Cycles_FancyBarkTest_A2I1": "Fancy Bark 3",
+	"cycles_Cycles_FancyBarkTest_3KK1": "Fancy Bark 4",
+	"cycles_Cycles_FancyBarkTest_FF35": "Spinning on fancy bark 5",
+	"cycles_Cycles_FancyBarkTest_23Q8": "Spinning on fancy bark 6",
+	"cycles_Cycles_StringExpressionsTest_1L9A": "Huh.",
+	"cycles_Cycles_StringExpressionsTest_ZHNZ": "Huh yourself.",
+	"cycles_Cycles_ListExpressionTest_LUCG": "List item 1.",
+	"cycles_Cycles_ListExpressionTest_JXXD": "List item 2."
 }
