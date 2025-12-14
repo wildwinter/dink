@@ -377,7 +377,7 @@ It can even cope with:
 - FRED: Fancy Bark 2 
 - FRED: Fancy Bark 3 
 - FRED: Fancy Bark 4 
-    {shuffle:
+-   {shuffle:
         - FRED: Spinning on fancy bark 5 
         - FRED: Spinning on fancy bark 6
     }
