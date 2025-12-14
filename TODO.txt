@@ -25,8 +25,6 @@ Check:
 - listItem:
 }
 
-Remove [] from options.
-
 Actor estimates?
 Script flow doc
 Dink editor
@@ -68,3 +66,5 @@ Add speaker to stats file.
 Live builder
 Better example scripts
 Strip out text from compiled version
+Allow dialogue in options.
+Allow options without [].

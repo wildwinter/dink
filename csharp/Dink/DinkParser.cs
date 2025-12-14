@@ -246,7 +246,7 @@ public class DinkParser
     }
 
     private static readonly Regex _rxOption = new Regex(
-        @"^\s*[*+]\s*\[\s*([^#\]]+?)\s*(?:#.*?)*\s*\]\s*$",
+        @"^\s*[*+]\s*\[?\s*([^#\]]+?)\s*(?:#.*?)*\s*\]?\s*$",
         RegexOptions.Compiled | RegexOptions.Singleline);
     public static string? ParseOption(string line)
     {

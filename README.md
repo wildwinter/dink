@@ -269,11 +269,11 @@ See also [Comment and Tag Filtering](#comment-and-tag-filtering) to find out how
 
 #### Choice Options
 
-The usual Ink options structure I use - and that
-Dink works well with - is a line of text in square
-brackets followed by a diverts or a group of lines.
+Dink automatically adds comments the recording script saying when a line follows an option in the script. `OPTION: I'm not sure.` This makes life easier for voice direction.
 
-So it works well with text paraphrases, like so:
+All the examples here are valid.
+
+Paraphrase text followed by option:
 
 ```text
 == MyScene
@@ -331,10 +331,25 @@ ROB: Anyway, shall we go to the pub?
 -> DONE
 ```
 
-*NOTE*: Currently it only works with square brackets
-because that's what I use and I haven't removed it!
+or without square brackets, depending on how your story
+parsing is presenting options at runtime.
 
-Where this is useful in Dink is that it automatically adds comments the recording script saying when a line follows an option in the script. `OPTION: I'm not sure.` This makes life easier for voice direction.
+```text
+== MyScene
+ROB: So what are you thinking?
+
+* FRED: I'm really not sure.
+    ROB: Oh, make up your mind.
+
+* FRED: I think the blue one - what do you think?
+    ROB: Hey, it's your spacecat.
+
+* FRED: The green one.
+    ROB: Really? Green is so last year.
+-
+ROB: Anyway, shall we go to the pub?
+-> DONE
+```
 
 #### Shuffles and Cycles
 
