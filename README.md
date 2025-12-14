@@ -92,6 +92,7 @@ for lines of dialogue and helps you manage the production.
 * [Utilites](#utilities)
   * [Dink Voice Export](#dinkvoiceexport)
 * [Contributors](#contributors)
+* [Acknowledgements](#acknowledgements)
 * [License](#license)
 
 ## The Basics
@@ -1169,7 +1170,9 @@ the project file.
 
 * [wildwinter](https://github.com/wildwinter) - original author
 
-And thanks to Joseph Humfrey's amazing work on Ink.
+## Acknowledgements
+
+As ever, huge thanks to [Inkle](https://www.inklestudios.com/) (and **Joseph Humfrey** in particular) for [Ink](https://www.inklestudios.com/ink/) and the ecosystem around it, it's made my life way easier.
 
 ## License
 
