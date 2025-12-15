@@ -278,6 +278,7 @@ Paraphrase text followed by option:
 
 ```text
 == MyScene
+#dink
 ROB: So what are you thinking?
 
 * [I'm not sure.]
@@ -300,6 +301,7 @@ Similarly it works fine with diverts:
 
 ```text
 == MyScene
+#dink
 ROB: So what are you thinking?
 
 * [I'm not sure.]
@@ -317,6 +319,7 @@ want paraphrases:
 
 ```text
 == MyScene
+#dink
 ROB: So what are you thinking?
 
 * [FRED: I'm really not sure.]  
@@ -337,6 +340,7 @@ parsing is presenting options at runtime.
 
 ```text
 == MyScene
+#dink
 ROB: So what are you thinking?
 
 * FRED: I'm really not sure.
@@ -358,6 +362,7 @@ Dink is happy with structures like:
 
 ```text
 == DangerBark
+#dink
 {shuffle:
 - FRED: Look out, danger!
 - FRED: Aagh, peril!
@@ -370,7 +375,8 @@ And will mark recording scripts with a count e.g. `(1/3)` to show that a line is
 It can even cope with:
 
 ```text
-= FancyBark
+== FancyBark
+#dink
 // This gets numbered 1/6 - 6/6 for the recording script.
 {stopping:
 - FRED: Fancy Bark 1 
@@ -394,7 +400,8 @@ on different lines from the Dink**. So these are all fine:
 VAR testInt = 0
 VAR testString = ""
 
-= LineTest
+== LineTest
+#dink
 {
 - testInt==1:
     FRED: This should be fine.
@@ -403,7 +410,8 @@ VAR testString = ""
 }
 -> DONE
 
-= StringExpressionsTest
+== StringExpressionsTest
+#dink
 {testString:
 - "test1":
     GEORGE: Huh.
@@ -419,14 +427,16 @@ But these are **NOT** and Dink will complain on parsing:
 VAR testInt = 0
 VAR testString = ""
 
-= LineTest
+== LineTest
+#dink
 {
 - testInt==1: FRED: This should be fine.
 - testInt==2: GEORGE: So should this.
 }
 -> DONE
 
-= StringExpressionsTest
+== StringExpressionsTest
+#dink
 {testString:
 - "test1": GEORGE: Huh.
 - "test2": FRED: Huh yourself.
@@ -663,10 +673,12 @@ But it would be really annoying to have to do that on every line. So you can als
 #ws:stub
 
 == Scene1
+#dink
 FRED: This line will appear as a stub because it inherits from the top of the file.
 -> Scene2
 
 == Scene2
+#dink
 #ws:draft1
 FRED: This line will appear as draft 1.
 FRED: And so will this.
@@ -685,6 +697,7 @@ GEORGE: I'm still Draft1 because that's what my Knot says.
 -> DONE
 
 == Scene3
+#dink
 FRED: But I am back to being a stub!
 JIM: Unlike me! #ws:final
 ```
