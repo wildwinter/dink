@@ -570,15 +570,15 @@
               "B: This comment should apply to the snippet below.",
               "B: This should apply to the first bit of the snippet I guess?"
             ],
-            "SnippetID": "Irth7D",
+            "SnippetID": "MhRVDG",
             "Beats": [
               {
                 "Type": "Line",
                 "CharacterID": "FRED",
                 "Qualifier": "",
                 "Direction": "",
-                "Text": "This is also a line.",
-                "LineID": "main_Recording_PartB_1RQS",
+                "Text": "This is a line.",
+                "LineID": "main_Recording_PartB_FH4U",
                 "Origin": {
                   "SourceFilePath": "main.ink",
                   "LineNum": 84
@@ -604,15 +604,15 @@
               "B: This comment should apply to the snippet below.",
               "B: This should apply to the first bit of the snippet I guess?"
             ],
-            "SnippetID": "MhRVDG",
+            "SnippetID": "Irth7D",
             "Beats": [
               {
                 "Type": "Line",
                 "CharacterID": "FRED",
                 "Qualifier": "",
                 "Direction": "",
-                "Text": "This is a line.",
-                "LineID": "main_Recording_PartB_FH4U",
+                "Text": "This is also a line.",
+                "LineID": "main_Recording_PartB_1RQS",
                 "Origin": {
                   "SourceFilePath": "main.ink",
                   "LineNum": 86
