@@ -2,6 +2,8 @@ namespace Dink;
 
 using System.Text.RegularExpressions;
 using System.Linq;
+using System.Text;
+using System.Security.Cryptography;
 
 public class NonDinkLine
 {
@@ -316,15 +318,55 @@ public class DinkParser
         return null;
     }
 
+    private static readonly Regex _regexIgnoredWords = new Regex(@"\b(a|an|the|of|to|it)\b", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+    private static readonly Regex _regexNonAlphanumeric = new Regex("[^a-z0-9]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
     private static readonly Random _rng = new Random();
-    private const string Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    private const string _HashChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     public static string GenerateID()
     {
         char[] buffer = new char[4];
         for (int i = 0; i < 4; i++)
-            buffer[i] = Chars[_rng.Next(Chars.Length)];
+            buffer[i] = _HashChars[_rng.Next(_HashChars.Length)];
         return new string(buffer);
+    }
+
+    private static string GenerateSnippetID(DinkSnippet snippet)
+    {
+        var content = new StringBuilder();
+        foreach (var beat in snippet.Beats)
+        {
+            if (beat is DinkLine line)
+            {
+                content.Append(line.Text);
+            }
+            else if (beat is DinkAction action)
+            {
+                content.Append(action.Text);
+            }
+        }
+
+        if (content.Length == 0)
+            return GenerateID();
+
+        string normalized = content.ToString().ToLower();
+        normalized = _regexIgnoredWords.Replace(normalized, "");
+        normalized = _regexNonAlphanumeric.Replace(normalized, "");
+
+        if (string.IsNullOrWhiteSpace(normalized))
+            return GenerateID(); 
+
+        using (MD5 md5 = MD5.Create())
+        {
+            byte[] hashBytes = md5.ComputeHash(Encoding.UTF8.GetBytes(normalized));
+            var resultChars = new char[6];
+            for (int i = 0; i < 6; i++)
+            {
+                resultChars[i] = _HashChars[hashBytes[i] % _HashChars.Length];
+            }
+            return new string(resultChars);
+        }
     }
 
     private static readonly Regex _rxInkGroup = new Regex(
@@ -402,7 +444,7 @@ public class DinkParser
         void createSnippet()
         {
             snippet = new DinkSnippet();
-            snippet.SnippetID = GenerateID();
+            //snippet.SnippetID = GenerateID();
             if (activeGroupLevel>0)
                 snippet.Group = activeGroup;
             if (currentBraceContainer != null)
@@ -420,6 +462,7 @@ public class DinkParser
                 if (snippet.Beats.Count > 0)
                 {
                     snippet.Origin = snippet.Beats[0].Origin;
+                    snippet.SnippetID = GenerateSnippetID(snippet);
                     block.Snippets.Add(snippet);
                 }
             }
