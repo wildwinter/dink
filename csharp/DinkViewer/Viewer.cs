@@ -111,7 +111,7 @@ public class Viewer
             .beat-content { display: grid; grid-template-columns: 120px 1fr; gap: 10px; }
             .beat .character { font-weight: bold; text-align: right; }
             .beat .text { white-space: pre-wrap; }
-            .identifier { color: #AAAAAA; margin-left: 10px; font-size: 0.8em; display: inline; }
+            .identifier { color: grey; margin-left: 10px; font-size: 0.8em; display: inline; cursor: pointer; }
             .identifier:hover { color: black; }
         ";
     }
@@ -135,7 +135,22 @@ document.addEventListener('DOMContentLoaded', () => {
     function createIdElement(id) {
         const idElement = document.createElement('span');
         idElement.className = 'identifier';
-        idElement.textContent = `ID: ${id}`;
+        idElement.textContent = `🔗 ID: ${id}`;
+        idElement.title = 'Copy ID';
+
+        idElement.addEventListener('click', (e) => {
+            e.preventDefault();
+            navigator.clipboard.writeText(id).then(() => {
+                const originalText = idElement.textContent;
+                idElement.textContent = 'Copied!';
+                setTimeout(() => {
+                    idElement.textContent = originalText;
+                }, 1000);
+            }, (err) => {
+                console.error('Could not copy text: ', err);
+                alert('Could not copy ID.');
+            });
+        });
         return idElement;
     }
 
@@ -181,9 +196,9 @@ document.addEventListener('DOMContentLoaded', () => {
         details.open = true;
 
         const summary = document.createElement('summary');
-        summary.textContent = `Snippet: ${snippet.SnippetID}`;
+        summary.textContent = `Snippet`;
         if (snippet.Group > 0) {
-            summary.textContent += ` (Group ${snippet.GroupIndex}/${snippet.GroupCount})`;
+            summary.textContent += ` (${snippet.GroupIndex}/${snippet.GroupCount})`;
         }
         const comments = createCommentElement(snippet.Comments);
         if (comments) summary.appendChild(comments);
@@ -209,7 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const summary = document.createElement('summary');
         const first = snippets[0];
-        summary.textContent = `Group (${first.GroupCount})`;
+        summary.textContent = `Group (${first.GroupCount} snippets)`;
         const comments = createCommentElement(first.GroupComments);
         if (comments) summary.appendChild(comments);
 
