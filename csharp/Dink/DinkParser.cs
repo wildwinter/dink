@@ -383,7 +383,7 @@ public class DinkParser
         }
     }
 
-    public static string? FindBestMatchSnippetID(DinkSnippet newSnippet, IEnumerable<DinkSnippet> oldSnippets, double similarityThreshold = 0.5)
+    public static string? FindBestMatchSnippetID(DinkSnippet newSnippet, IEnumerable<DinkSnippet> oldSnippets, double similarityThreshold = 0.25)
     {
         if (newSnippet == null || !newSnippet.Beats.Any())
         {
