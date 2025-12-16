@@ -1,6 +1,7 @@
 namespace DinkViewer;
 
 using DinkTool;
+using Dink;
 using System.Text;
 
 public class ViewerSettings
@@ -111,8 +112,8 @@ public class Viewer
             .beat { border-left: 3px solid #ddd; padding-left: 15px; margin: 10px 0; }
             .beat > .comments { display: block; margin-left: 0; margin-bottom: 5px; }
             .beat-content { display: grid; grid-template-columns: 120px 1fr; gap: 10px; }
+            .action-beat .beat-content { grid-template-columns: 1fr; }
             .beat .character { font-weight: bold; text-align: right; }
-            .character.action { color: #AAAAAA; }
             .beat .text { white-space: pre-wrap; }
             .identifier { color: grey; margin-left: 10px; font-size: 0.8em; display: inline; cursor: pointer; }
             .identifier:hover { color: black; }
@@ -171,17 +172,15 @@ document.addEventListener('DOMContentLoaded', () => {{
         const content = document.createElement('div');
         content.className = 'beat-content';
 
-        const char = document.createElement('div');
-        char.className = 'character';
-        
         const isAction = !beat.hasOwnProperty('CharacterID');
         if (isAction) {{ // It's an action
-            char.textContent = 'ACTION';
-            char.classList.add('action');
+            beatDiv.classList.add('action-beat');
         }} else {{ // It's a line
+            const char = document.createElement('div');
+            char.className = 'character';
             char.textContent = beat.CharacterID + (beat.Qualifier ? ` (${{beat.Qualifier}})` : '');
+            content.appendChild(char);
         }}
-        content.appendChild(char);
 
         const text = document.createElement('div');
         text.className = 'text';
@@ -327,5 +326,5 @@ document.addEventListener('DOMContentLoaded', () => {{
     }});
 }});
 ";
-
-}}
+    }
+}
