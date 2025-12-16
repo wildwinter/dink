@@ -12,8 +12,8 @@ public:
     static bool CompileMinimal(const FString& sourceFile, const FString& destFolder);
 
     UFUNCTION(BlueprintCallable, Category = "Dink")
-    static bool CompileProject(const FString& projectFile);
+    static bool CompileProject(TArray<FString> additionalArgs);
 
     UFUNCTION(BlueprintCallable, Category = "Dink")
-    static bool CompileWithStructure(const FString& sourceFile, const FString& destFolder);
+    static bool CompileWithProject(const FString& sourceFile, const FString& destFolder, bool withStructure = false);
 };

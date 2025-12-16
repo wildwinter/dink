@@ -25,9 +25,7 @@ public class Dink : ModuleRules
 			{
 				"Core",
                 "CoreUObject",
-                "Engine",
-                "Json",
-                "JsonUtilities"
+                "Engine"
             }
             );
 			
@@ -35,6 +33,8 @@ public class Dink : ModuleRules
 		PrivateDependencyModuleNames.AddRange(
 			new string[]
 			{
+                "Json",
+                "JsonUtilities"
             }
             );
 

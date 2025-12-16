@@ -28,9 +28,7 @@ public class DinkEditor : ModuleRules
                 "EditorSubsystem",
                 "Engine",
                 "Slate",
-                "SlateCore",
-                "Json",
-                "JsonUtilities"
+                "SlateCore"
             }
             );
 
@@ -43,7 +41,10 @@ public class DinkEditor : ModuleRules
                 "EditorSubsystem",
                 "AssetRegistry",
                 "Dink",
-                "Projects"
+                "Projects",
+                "Json",
+                "JsonUtilities",
+                "DeveloperSettings"
             }
             );
 
