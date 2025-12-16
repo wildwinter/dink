@@ -4,6 +4,9 @@ Actor estimates?
 Script flow doc
 Dink editor
 TTS web demo
+Templating
+Fountain
+FDX
 
 DONE:
 -----
