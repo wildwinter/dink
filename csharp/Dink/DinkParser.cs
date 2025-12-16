@@ -383,7 +383,7 @@ public class DinkParser
         }
     }
 
-    public static string? FindBestMatchSnippetID(DinkSnippet newSnippet, IEnumerable<DinkSnippet> oldSnippets, double similarityThreshold = 0.25)
+    public static string? FindBestMatchSnippetID(DinkSnippet newSnippet, IEnumerable<DinkSnippet> oldSnippets, ICollection<string>? usedIds = null, double similarityThreshold = 0.25)
     {
         if (newSnippet == null || !newSnippet.Beats.Any())
         {
@@ -403,6 +403,11 @@ public class DinkParser
         foreach (var oldSnippet in oldSnippets)
         {
             if (oldSnippet == null || !oldSnippet.Beats.Any())
+            {
+                continue;
+            }
+
+            if (usedIds != null && usedIds.Contains(oldSnippet.SnippetID))
             {
                 continue;
             }
@@ -475,6 +480,7 @@ public class DinkParser
     private static bool ParseInkLines(List<ParsingLine> lines, List<DinkScene> outDinkScenes, List<NonDinkLine> outNonDinkLines, List<DinkScene>? oldScenes = null)
     {
         List<string> IDs = new();
+        HashSet<string> usedOldSnippetIDs = new();
         DinkScene? scene = null;
         DinkBlock? block = null;
         DinkSnippet? snippet = null;
@@ -536,7 +542,11 @@ public class DinkParser
                             var oldBlock = oldScene.Blocks.FirstOrDefault(b => b.BlockID == block.BlockID);
                             if (oldBlock != null)
                             {
-                                existingId = FindBestMatchSnippetID(snippet, oldBlock.Snippets);
+                                existingId = FindBestMatchSnippetID(snippet, oldBlock.Snippets, usedOldSnippetIDs);
+                                if (existingId != null)
+                                {
+                                    usedOldSnippetIDs.Add(existingId);
+                                }
                             }
                         }
                     }
