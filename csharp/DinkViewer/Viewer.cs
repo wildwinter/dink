@@ -106,6 +106,9 @@ public class Viewer
             details > summary { cursor: pointer; font-weight: bold; padding: 5px; background: #f0f0f0; border-radius: 4px; margin-bottom: 5px; }
             details > summary:hover { background: #e0e0e0; }
             .comments { font-style: italic; color: #666; margin-left: 10px; display:inline; }
+            .snippet { background: #f9f9f9; border-radius: 4px; padding: 15px; margin-bottom: 15px; }
+            .snippet:hover { background: #f0f0f0; }
+            .snippet > .comments { display: block; margin-left: 0; margin-bottom: 10px; }
             .beat { border-left: 3px solid #ddd; padding-left: 15px; margin: 10px 0; }
             .beat > .comments { display: block; margin-left: 0; margin-bottom: 5px; }
             .beat-content { display: grid; grid-template-columns: 120px 1fr; gap: 10px; }
@@ -191,26 +194,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function createSnippetElement(snippet) {
-        const details = document.createElement('details');
-        details.className = 'snippet';
-        details.open = true;
+        const snippetDiv = document.createElement('div');
+        snippetDiv.className = 'snippet';
 
-        const summary = document.createElement('summary');
-        summary.textContent = `Snippet`;
-        if (snippet.Group > 0) {
-            summary.textContent += ` (${snippet.GroupIndex}/${snippet.GroupCount})`;
-        }
         const comments = createCommentElement(snippet.Comments);
-        if (comments) summary.appendChild(comments);
+        if (comments) snippetDiv.appendChild(comments);
         
-        details.appendChild(summary);
+        snippet.Beats.forEach(beat => snippetDiv.appendChild(createBeatElement(beat)));
 
-        const content = document.createElement('div');
-        content.className = 'dink-indent';
-        snippet.Beats.forEach(beat => content.appendChild(createBeatElement(beat)));
-        details.appendChild(content);
-
-        return details;
+        return snippetDiv;
     }
     
     function createSnippetGroupElement(snippets) {
