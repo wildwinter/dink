@@ -107,9 +107,12 @@ public class Viewer
             details > summary:hover { background: #e0e0e0; }
             .comments { font-style: italic; color: #666; margin-left: 10px; display:inline; }
             .beat { border-left: 3px solid #ddd; padding-left: 15px; margin: 10px 0; }
+            .beat > .comments { display: block; margin-left: 0; margin-bottom: 5px; }
             .beat-content { display: grid; grid-template-columns: 120px 1fr; gap: 10px; }
             .beat .character { font-weight: bold; text-align: right; }
             .beat .text { white-space: pre-wrap; }
+            .identifier { color: #AAAAAA; margin-left: 10px; font-size: 0.8em; display: inline; }
+            .identifier:hover { color: black; }
         ";
     }
 
@@ -129,6 +132,13 @@ document.addEventListener('DOMContentLoaded', () => {
         return container;
     }
 
+    function createIdElement(id) {
+        const idElement = document.createElement('span');
+        idElement.className = 'identifier';
+        idElement.textContent = `ID: ${id}`;
+        return idElement;
+    }
+
     function createBeatElement(beat) {
         const beatDiv = document.createElement('div');
         beatDiv.className = 'beat';
@@ -136,35 +146,31 @@ document.addEventListener('DOMContentLoaded', () => {
             beatDiv.dataset.lineid = beat.LineID;
         }
 
+        const comments = createCommentElement(beat.Comments);
+        if (comments) beatDiv.appendChild(comments);
+
         const content = document.createElement('div');
         content.className = 'beat-content';
 
+        const char = document.createElement('div');
+        char.className = 'character';
+        
         if (beat.hasOwnProperty('CharacterID')) { // It's a line
-            const char = document.createElement('div');
-            char.className = 'character';
             char.textContent = beat.CharacterID + (beat.Qualifier ? ` (${beat.Qualifier})` : '');
-            content.appendChild(char);
-
-            const text = document.createElement('div');
-            text.className = 'text';
-            text.textContent = beat.Text;
-            content.appendChild(text);
         } else { // It's an action
-            const char = document.createElement('div');
-            char.className = 'character';
             char.textContent = 'ACTION';
-            content.appendChild(char);
-
-            const text = document.createElement('div');
-            text.className = 'text';
-            text.textContent = beat.Text;
-            content.appendChild(text);
         }
+        content.appendChild(char);
+
+        const text = document.createElement('div');
+        text.className = 'text';
+        text.textContent = beat.Text;
+        if (beat.LineID) {
+            text.appendChild(createIdElement(beat.LineID));
+        }
+        content.appendChild(text);
         
         beatDiv.appendChild(content);
-
-        const comments = createCommentElement(beat.Comments);
-        if (comments) beatDiv.appendChild(comments);
         
         return beatDiv;
     }
