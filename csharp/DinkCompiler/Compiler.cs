@@ -40,8 +40,17 @@ public class Compiler
         // Character list is optional.
         ReadCharacters(charFile, out Characters? characters);
 
+        // ----- Does a previous structure file exist? -----
+        List<DinkScene>? previousScenes = null;
+        if (File.Exists(_env.DestDinkStructureFile))
+        {
+            string fileText = File.ReadAllText(_env.DestDinkStructureFile);
+            previousScenes = DinkJson.ReadScenes(fileText);
+        }
+
         // ----- Parse ink files, extract Dink beats -----
-        if (!ParseDinkScenes(usedInkFiles, characters, out List<DinkScene> dinkScenes, out List<NonDinkLine> nonDinkLines))
+        if (!ParseDinkScenes(usedInkFiles, characters, previousScenes,
+            out List<DinkScene> dinkScenes, out List<NonDinkLine> nonDinkLines))
             return false;
 
         // ---- Remove any action and character references from the localisation -----
@@ -242,6 +251,7 @@ public class Compiler
     }
 
     private bool ParseDinkScenes(List<string> usedInkFiles, Characters? characters,
+        List<DinkScene>? previousParsedScenes,
         out List<DinkScene> dinkScenes, out List<NonDinkLine> ndLines)
     {
         ndLines = new List<NonDinkLine>();
@@ -254,7 +264,8 @@ public class Compiler
             var text = File.ReadAllText(inkFile);
             var inkFileRelativeToProject = Path.GetRelativePath(_env.ProjectFolder, inkFile);
             var scenes = new List<DinkScene>();
-            if (!DinkParser.ParseInk(text, inkFileRelativeToProject, scenes, ndLines))
+            if (!DinkParser.ParseInk(text, inkFileRelativeToProject, 
+                    scenes, ndLines, previousParsedScenes))
             {
                 Console.Error.WriteLine("Failed to parse Dink in file: " + inkFile);
                 return false;

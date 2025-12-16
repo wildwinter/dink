@@ -47,141 +47,147 @@
     "Knot": "TestScene",
     "Stitch": ""
   },
-  "main_Barks_O037": {
+  "main_TestScene_Q099": {
     "File": "main.ink",
-    "LineNumber": 48,
-    "Knot": "Barks",
+    "LineNumber": 43,
+    "Knot": "TestScene",
     "Stitch": ""
   },
-  "main_Barks_UWZ2": {
+  "main_Barks_O037": {
     "File": "main.ink",
     "LineNumber": 49,
     "Knot": "Barks",
     "Stitch": ""
   },
-  "main_Barks_1ZG8": {
+  "main_Barks_UWZ2": {
     "File": "main.ink",
     "LineNumber": 50,
     "Knot": "Barks",
     "Stitch": ""
   },
-  "main_Barks_046M": {
+  "main_Barks_1ZG8": {
     "File": "main.ink",
     "LineNumber": 51,
     "Knot": "Barks",
     "Stitch": ""
   },
-  "main_Barks_JFG1": {
+  "main_Barks_046M": {
     "File": "main.ink",
-    "LineNumber": 53,
+    "LineNumber": 52,
     "Knot": "Barks",
     "Stitch": ""
   },
-  "main_Barks_X291": {
+  "main_Barks_JFG1": {
     "File": "main.ink",
     "LineNumber": 54,
     "Knot": "Barks",
     "Stitch": ""
   },
-  "main_Barks_L2SX": {
+  "main_Barks_X291": {
     "File": "main.ink",
-    "LineNumber": 56,
+    "LineNumber": 55,
     "Knot": "Barks",
     "Stitch": ""
   },
-  "main_Barks_N07F": {
+  "main_Barks_L2SX": {
     "File": "main.ink",
     "LineNumber": 57,
     "Knot": "Barks",
     "Stitch": ""
   },
+  "main_Barks_N07F": {
+    "File": "main.ink",
+    "LineNumber": 58,
+    "Knot": "Barks",
+    "Stitch": ""
+  },
   "main_Recording_7ZMT": {
     "File": "main.ink",
-    "LineNumber": 63,
+    "LineNumber": 64,
     "Knot": "Recording",
     "Stitch": ""
   },
   "main_Recording_PartA_U9ZN": {
     "File": "main.ink",
-    "LineNumber": 71,
+    "LineNumber": 72,
     "Knot": "Recording",
     "Stitch": "PartA"
   },
   "main_Recording_PartB_VPX8": {
     "File": "main.ink",
-    "LineNumber": 81,
+    "LineNumber": 82,
     "Knot": "Recording",
     "Stitch": "PartB"
   },
   "main_Recording_PartB_FH4U": {
     "File": "main.ink",
-    "LineNumber": 83,
+    "LineNumber": 84,
     "Knot": "Recording",
     "Stitch": "PartB"
   },
   "main_Recording_PartB_1RQS": {
     "File": "main.ink",
-    "LineNumber": 85,
+    "LineNumber": 86,
     "Knot": "Recording",
     "Stitch": "PartB"
   },
   "main_Recording_PartC_JITN": {
     "File": "main.ink",
-    "LineNumber": 92,
+    "LineNumber": 93,
     "Knot": "Recording",
     "Stitch": "PartC"
   },
   "main_Recording_PartC_GUS9": {
     "File": "main.ink",
-    "LineNumber": 93,
+    "LineNumber": 94,
     "Knot": "Recording",
     "Stitch": "PartC"
   },
   "main_Recording_PartC_3VZB": {
     "File": "main.ink",
-    "LineNumber": 94,
+    "LineNumber": 95,
     "Knot": "Recording",
     "Stitch": "PartC"
   },
   "main_Recording_PartC_A18G": {
     "File": "main.ink",
-    "LineNumber": 95,
+    "LineNumber": 96,
     "Knot": "Recording",
     "Stitch": "PartC"
   },
   "main_Recording_PartD_UC9D": {
     "File": "main.ink",
-    "LineNumber": 103,
+    "LineNumber": 104,
     "Knot": "Recording",
     "Stitch": "PartD"
   },
   "main_Recording_PartD_08WO": {
     "File": "main.ink",
-    "LineNumber": 105,
+    "LineNumber": 106,
     "Knot": "Recording",
     "Stitch": "PartD"
   },
   "main_Recording_PartE_81AO": {
     "File": "main.ink",
-    "LineNumber": 110,
+    "LineNumber": 111,
     "Knot": "Recording",
     "Stitch": "PartE"
   },
   "main_Recording_PartE_JY1W": {
     "File": "main.ink",
-    "LineNumber": 111,
+    "LineNumber": 112,
     "Knot": "Recording",
     "Stitch": "PartE"
   },
   "main_Recording_PartE_QEM8": {
     "File": "main.ink",
-    "LineNumber": 112,
+    "LineNumber": 113,
     "Knot": "Recording",
     "Stitch": "PartE"
   },
   "main_Recording_PartE_KABN": {
     "File": "main.ink",
-    "LineNumber": 113,
+    "LineNumber": 114,
     "Knot": "Recording",
     "Stitch": "PartE"
   },

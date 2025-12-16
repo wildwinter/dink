@@ -1,4 +1,4 @@
-INCLUDE scene1.ink
+﻿INCLUDE scene1.ink
 INCLUDE branches.ink
 INCLUDE cycles.ink
 
@@ -40,6 +40,7 @@ FRED: (loudly) This is a loud line! #id:main_TestScene_BQ1E
 Now bounce around the place! #id:main_TestScene_79PN #ws:draft1
 (SFX) Make a bang noise! #id:main_TestScene_96IR #ws:draft2 
 FRED: Glad that's over with! #id:main_TestScene_IQIS #vo:loud
+FRED: Same snippet? #id:main_TestScene_Q099
 -> DONE
 
 === Barks

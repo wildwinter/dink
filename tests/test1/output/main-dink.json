@@ -27,6 +27,11 @@
     "CharacterID": "FRED",
     "Qualifier": ""
   },
+  "main_TestScene_Q099": {
+    "Type": "Line",
+    "CharacterID": "FRED",
+    "Qualifier": ""
+  },
   "main_Barks_O037": {
     "Type": "Line",
     "CharacterID": "FRED",

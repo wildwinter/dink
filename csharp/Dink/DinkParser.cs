@@ -324,7 +324,38 @@ public class DinkParser
     private static readonly Random _rng = new Random();
     private const string _HashChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-    public static string GenerateID()
+    private static string NormalizeBeatText(string text)
+    {
+        string normalized = text.ToLower();
+        normalized = _regexIgnoredWords.Replace(normalized, "");
+        normalized = _regexNonAlphanumeric.Replace(normalized, "");
+        return normalized;
+    }
+
+    private static HashSet<string> GetNormalizedBeatTexts(DinkSnippet snippet)
+    {
+        var beatTexts = new HashSet<string>();
+        foreach (var beat in snippet.Beats)
+        {
+            string textToNormalize = "";
+            if (beat is DinkLine line)
+            {
+                textToNormalize = line.Text;
+            }
+            else if (beat is DinkAction action)
+            {
+                textToNormalize = action.Text;
+            }
+            
+            if (!string.IsNullOrEmpty(textToNormalize))
+            {
+                beatTexts.Add(NormalizeBeatText(textToNormalize));
+            }
+        }
+        return beatTexts;
+    }
+
+    private static string GenerateID()
     {
         char[] buffer = new char[4];
         for (int i = 0; i < 4; i++)
@@ -350,9 +381,7 @@ public class DinkParser
         if (content.Length == 0)
             return GenerateID();
 
-        string normalized = content.ToString().ToLower();
-        normalized = _regexIgnoredWords.Replace(normalized, "");
-        normalized = _regexNonAlphanumeric.Replace(normalized, "");
+        string normalized = NormalizeBeatText(content.ToString());
 
         if (string.IsNullOrWhiteSpace(normalized))
             return GenerateID(); 
@@ -368,6 +397,57 @@ public class DinkParser
             return new string(resultChars);
         }
     }
+
+    public static string? FindBestMatchSnippetID(DinkSnippet newSnippet, IEnumerable<DinkSnippet> oldSnippets, double similarityThreshold = 0.5)
+    {
+        if (newSnippet == null || !newSnippet.Beats.Any())
+        {
+            return null;
+        }
+
+        HashSet<string> newSnippetBeatTexts = GetNormalizedBeatTexts(newSnippet);
+
+        if (!newSnippetBeatTexts.Any())
+        {
+            return null;
+        }
+
+        string? bestMatchId = null;
+        double bestScore = 0.0;
+
+        foreach (var oldSnippet in oldSnippets)
+        {
+            if (oldSnippet == null || !oldSnippet.Beats.Any())
+            {
+                continue;
+            }
+
+            HashSet<string> oldSnippetBeatTexts = GetNormalizedBeatTexts(oldSnippet);
+            if (!oldSnippetBeatTexts.Any())
+            {
+                continue;
+            }
+
+            // Calculate Jaccard Index
+            double intersection = newSnippetBeatTexts.Intersect(oldSnippetBeatTexts).Count();
+            double union = newSnippetBeatTexts.Union(oldSnippetBeatTexts).Count();
+            double score = union == 0 ? 0 : intersection / union;
+
+            if (score > bestScore)
+            {
+                bestScore = score;
+                bestMatchId = oldSnippet.SnippetID;
+            }
+        }
+
+        if (bestScore > similarityThreshold)
+        {
+            return bestMatchId;
+        }
+
+        return null;
+    }
+
 
     private static readonly Regex _rxInkGroup = new Regex(
         @"^\s*\{\s*(\w+)\s*:\s*$",
@@ -408,7 +488,7 @@ public class DinkParser
         return (expression, false);
     }
     
-    private static bool ParseInkLines(List<ParsingLine> lines, List<DinkScene> outDinkScenes, List<NonDinkLine> outNonDinkLines)
+    private static bool ParseInkLines(List<ParsingLine> lines, List<DinkScene> outDinkScenes, List<NonDinkLine> outNonDinkLines, List<DinkScene>? oldScenes = null)
     {
         List<string> IDs = new();
         DinkScene? scene = null;
@@ -462,7 +542,22 @@ public class DinkParser
                 if (snippet.Beats.Count > 0)
                 {
                     snippet.Origin = snippet.Beats[0].Origin;
-                    snippet.SnippetID = GenerateSnippetID(snippet);
+
+                    string? existingId = null;
+                    if (oldScenes != null && scene != null)
+                    {
+                        var oldScene = oldScenes.FirstOrDefault(s => s.SceneID == scene.SceneID);
+                        if (oldScene != null)
+                        {
+                            var oldBlock = oldScene.Blocks.FirstOrDefault(b => b.BlockID == block.BlockID);
+                            if (oldBlock != null)
+                            {
+                                existingId = FindBestMatchSnippetID(snippet, oldBlock.Snippets);
+                            }
+                        }
+                    }
+
+                    snippet.SnippetID = existingId ?? GenerateSnippetID(snippet);
                     block.Snippets.Add(snippet);
                 }
             }
@@ -901,7 +996,19 @@ public class DinkParser
         return linesArray.ToList();
     }
 
-    public static bool ParseInk(string text, string sourceFilePath, List<DinkScene> outDinkScenes, List<NonDinkLine> outNonDinkLines)
+    private static readonly Regex _rxID = new Regex(
+        @"#id:(\w+)", 
+        RegexOptions.Compiled
+    );
+    public static string? ParseID(string input)
+    {
+        if (string.IsNullOrEmpty(input)) return null;
+        Match match = _rxID.Match(input);
+        return match.Success ? match.Groups[1].Value : null;
+    }
+
+    public static bool ParseInk(string text, string sourceFilePath, 
+        List<DinkScene> outDinkScenes, List<NonDinkLine> outNonDinkLines, List<DinkScene>? oldScenes = null)
     {
         string textWithoutComments = RemoveBlockComments(text);
         List<string> lines = SplitTextIntoLines(textWithoutComments);
@@ -914,17 +1021,6 @@ public class DinkParser
             parsingLine.Origin.LineNum = i+1;
             parsingLines.Add(parsingLine);
         }
-        return ParseInkLines(parsingLines, outDinkScenes, outNonDinkLines);
-    }
-
-    private static readonly Regex _rxID = new Regex(
-        @"#id:(\w+)", 
-        RegexOptions.Compiled
-    );
-    public static string? ParseID(string input)
-    {
-        if (string.IsNullOrEmpty(input)) return null;
-        Match match = _rxID.Match(input);
-        return match.Success ? match.Groups[1].Value : null;
+        return ParseInkLines(parsingLines, outDinkScenes, outNonDinkLines, oldScenes);
     }
 }
