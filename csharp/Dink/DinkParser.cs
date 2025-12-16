@@ -332,27 +332,12 @@ public class DinkParser
         return normalized;
     }
 
-    private static HashSet<string> GetNormalizedBeatTexts(DinkSnippet snippet)
+    private static HashSet<string> GetBeatLineIDs(DinkSnippet snippet)
     {
-        var beatTexts = new HashSet<string>();
-        foreach (var beat in snippet.Beats)
-        {
-            string textToNormalize = "";
-            if (beat is DinkLine line)
-            {
-                textToNormalize = line.Text;
-            }
-            else if (beat is DinkAction action)
-            {
-                textToNormalize = action.Text;
-            }
-            
-            if (!string.IsNullOrEmpty(textToNormalize))
-            {
-                beatTexts.Add(NormalizeBeatText(textToNormalize));
-            }
-        }
-        return beatTexts;
+        return snippet.Beats
+            .Where(b => !string.IsNullOrEmpty(b.LineID))
+            .Select(b => b.LineID)
+            .ToHashSet();
     }
 
     private static string GenerateID()
@@ -405,11 +390,11 @@ public class DinkParser
             return null;
         }
 
-        HashSet<string> newSnippetBeatTexts = GetNormalizedBeatTexts(newSnippet);
+        HashSet<string> newLineIDs = GetBeatLineIDs(newSnippet);
 
-        if (!newSnippetBeatTexts.Any())
+        if (!newLineIDs.Any())
         {
-            return null;
+            return null; // Cannot match a snippet with no line IDs
         }
 
         string? bestMatchId = null;
@@ -422,15 +407,15 @@ public class DinkParser
                 continue;
             }
 
-            HashSet<string> oldSnippetBeatTexts = GetNormalizedBeatTexts(oldSnippet);
-            if (!oldSnippetBeatTexts.Any())
+            HashSet<string> oldLineIDs = GetBeatLineIDs(oldSnippet);
+            if (!oldLineIDs.Any())
             {
                 continue;
             }
 
             // Calculate Jaccard Index
-            double intersection = newSnippetBeatTexts.Intersect(oldSnippetBeatTexts).Count();
-            double union = newSnippetBeatTexts.Union(oldSnippetBeatTexts).Count();
+            double intersection = newLineIDs.Intersect(oldLineIDs).Count();
+            double union = newLineIDs.Union(oldLineIDs).Count();
             double score = union == 0 ? 0 : intersection / union;
 
             if (score > bestScore)
@@ -447,7 +432,6 @@ public class DinkParser
 
         return null;
     }
-
 
     private static readonly Regex _rxInkGroup = new Regex(
         @"^\s*\{\s*(\w+)\s*:\s*$",
