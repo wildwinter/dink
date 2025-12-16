@@ -22,9 +22,9 @@ Option<string> destFolderOption = new("--destFolder")
 };
 command.Options.Add(destFolderOption);
 
-Option<bool> locActionBeatsOption = new("--locActionBeatText")
+Option<bool> locActionBeatsOption = new("--locActions")
 {
-    Description = "If true, include action beat text in the string exports. If false, keeps it in Dink minimal export."
+    Description = "If true, include action text in the string exports. If false, keeps it in Dink minimal export."
 };
 command.Options.Add(locActionBeatsOption);
 
@@ -108,7 +108,7 @@ command.SetAction(parseResult =>
     settings.Source = parseResult.GetValue<string>(sourceOption)??settings.Source;
     settings.DestFolder = parseResult.GetValue<string>(destFolderOption)??settings.DestFolder;
     if (parseResult.GetValue<bool>(locActionBeatsOption))
-        settings.LocActionBeats = true;
+        settings.LocActions = true;
     if (parseResult.GetValue<bool>(dinkStructureOption))
         settings.OutputDinkStructure = true;
     if (parseResult.GetValue<bool>(stringsOption))

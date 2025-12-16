@@ -301,7 +301,7 @@ public class Compiler
             {
                 if (beat is DinkAction action)
                 {
-                    if (_env.LocActionBeats) {
+                    if (_env.LocActions) {
                         // Include action beat in the string table.
                         LocEntry entry = new LocEntry()
                         {
@@ -430,7 +430,7 @@ public class Compiler
 
         try
         {
-            string fileContents = DinkJson.WriteMinimal(dinkScenes, !_env.LocActionBeats);
+            string fileContents = DinkJson.WriteMinimal(dinkScenes, !_env.LocActions);
             File.WriteAllText(destDinkFile, fileContents, Encoding.UTF8);
         }
         catch (Exception ex)

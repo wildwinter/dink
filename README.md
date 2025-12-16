@@ -515,7 +515,7 @@ Or instead, grab all the settings from a project file:
    run to regenerate the output files based on your changes.\
    Type q then ENTER on the command line to stop it.
 
-* `--locActionBeats`
+* `--locActions`
 
     If present, includes the text of action beats as something that
     needs to be localised by including it in `-strings` and `-loc` files.\
@@ -981,7 +981,7 @@ A JSON or JSONC file (i.e. JSON with comments) having all or some of the require
     // Localise actions?
     // Default is false, which means no text in Action beats
     // will be localised
-    "locActionBeats":false,
+    "locActions":false,
 
     // Don't strip the text from the compiled Ink
     "nostrip":true,

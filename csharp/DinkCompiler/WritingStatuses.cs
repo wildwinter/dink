@@ -79,7 +79,7 @@ public class WritingStatuses
                 if (wsTag==null || GetStatus(beat.LineID).WsTag == wsTag)
                     count++;
             } 
-            else if (_env.LocActionBeats && beat is DinkAction action)
+            else if (_env.LocActions && beat is DinkAction action)
             {
                 if (wsTag==null || GetStatus(beat.LineID).WsTag == wsTag)
                     count++;
@@ -120,7 +120,7 @@ public class WritingStatuses
 
                     Set(line.LineID, statusTag);
                 } 
-                else if (_env.LocActionBeats && beat is DinkAction action)
+                else if (_env.LocActions && beat is DinkAction action)
                 {
                     string statusTag = action.GetTagsFor(["ws"]).FirstOrDefault() ?? "";
                     if (statusTag.StartsWith("ws:"))

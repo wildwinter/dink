@@ -54,7 +54,7 @@ public class ProjectSettings
     // but will be in the Dink minimal. 
     // If true, includes the text of action beats in the string tables
     // to be localised, and not in the Dink minimal
-    public bool LocActionBeats = false;
+    public bool LocActions = false;
 
     // If true, doesn't strip out the text from the compiled JSON.
     public bool NoStrip = false;
@@ -159,7 +159,7 @@ public class ProjectEnvironment
     public string ProjectFolder {get;private set;}
     public string DestFolder {get; private set;}
     public string DefaultLocaleCode {get {return _settings.DefaultLocaleCode;}}
-    public bool LocActionBeats {get{return _settings.LocActionBeats;}}
+    public bool LocActions {get{return _settings.LocActions;}}
     public bool NoStrip {get{return _settings.NoStrip;}}
     public bool OutputDinkStructure {get{return _settings.OutputDinkStructure;}}
     public bool OutputLocalization {get{return _settings.OutputLocalization;}}
@@ -264,7 +264,7 @@ public class ProjectEnvironment
             Directory.CreateDirectory(DestFolder);
         Console.WriteLine($"Using destination folder: '{DestFolder}'");
 
-        if (LocActionBeats)
+        if (LocActions)
             Console.WriteLine($"Including action beat text in localization output.");
 
         string audioFolderRoot = ProjectFolder;
