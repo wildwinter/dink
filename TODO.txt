@@ -1,5 +1,9 @@
 TODO:
 -----
+Viewer:
+- Scene/Block comments
+- Script format
+
 Actor estimates?
 Script flow doc
 Dink editor

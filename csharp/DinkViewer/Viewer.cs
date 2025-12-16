@@ -106,7 +106,7 @@ public class Viewer
             details > summary { cursor: pointer; font-weight: bold; padding: 5px; background: #f0f0f0; border-radius: 4px; margin-bottom: 5px; }
             details > summary:hover { background: #e0e0e0; }
             .comments { font-style: italic; color: #666; margin-left: 10px; display:inline; }
-            .snippet { background: #f9f9f9; border-radius: 4px; padding: 15px; margin-bottom: 15px; }
+            .snippet { background: #f9f9f9; border-radius: 4px; padding: 10px; margin-bottom: 5px; }
             .snippet:hover { background: #f0f0f0; }
             .snippet > .comments { display: block; margin-left: 0; margin-bottom: 10px; }
             .beat { border-left: 3px solid #ddd; padding-left: 15px; margin: 10px 0; }
@@ -122,49 +122,49 @@ public class Viewer
 
     private static string GetJavascript(bool locActions)
     {
-        return $@"
-const dinkConfig = {{ locActions: {locActions.ToString().ToLower()} }};
-document.addEventListener('DOMContentLoaded', () => {{
+        var settings = $"const dinkConfig = {{ locActions: {locActions.ToString().ToLower()} }};\n";
+        return settings+@"
+    document.addEventListener('DOMContentLoaded', () => {
     const jsonText = document.getElementById('dink-data').textContent;
     const scenes = JSON.parse(jsonText);
     const rootElement = document.getElementById('dink-root');
 
-    function createCommentElement(comments) {{
+    function createCommentElement(comments) {
         if (!comments || comments.length === 0) return null;
         const container = document.createElement('div');
         container.className = 'comments';
-        container.textContent = `// ${{comments.join(', ')}}`;
+        container.textContent = `// ${comments.join(', ')}`;
         return container;
-    }}
+    }
 
-    function createIdElement(id) {{
+    function createIdElement(id) {
         const idElement = document.createElement('span');
         idElement.className = 'identifier';
-        idElement.textContent = `🔗 ID: ${{id}}`;
+        idElement.textContent = `🔗 ID: ${id}`;
         idElement.title = 'Copy ID';
 
-        idElement.addEventListener('click', (e) => {{
+        idElement.addEventListener('click', (e) => {
             e.preventDefault();
-            navigator.clipboard.writeText(id).then(() => {{
+            navigator.clipboard.writeText(id).then(() => {
                 const originalText = idElement.textContent;
                 idElement.textContent = 'Copied!';
-                setTimeout(() => {{
+                setTimeout(() => {
                     idElement.textContent = originalText;
-                }}, 1000);
-            }}, (err) => {{
+                }, 1000);
+            }, (err) => {
                 console.error('Could not copy text: ', err);
                 alert('Could not copy ID.');
-            }});
-        }});
+            });
+        });
         return idElement;
-    }}
+    }
 
-    function createBeatElement(beat) {{
+    function createBeatElement(beat) {
         const beatDiv = document.createElement('div');
         beatDiv.className = 'beat';
-        if (beat.LineID) {{
+        if (beat.LineID) {
             beatDiv.dataset.lineid = beat.LineID;
-        }}
+        }
 
         const comments = createCommentElement(beat.Comments);
         if (comments) beatDiv.appendChild(comments);
@@ -173,31 +173,31 @@ document.addEventListener('DOMContentLoaded', () => {{
         content.className = 'beat-content';
 
         const isAction = !beat.hasOwnProperty('CharacterID');
-        if (isAction) {{ // It's an action
+        if (isAction) { // It's an action
             beatDiv.classList.add('action-beat');
-        }} else {{ // It's a line
+        } else { // It's a line
             const char = document.createElement('div');
             char.className = 'character';
-            char.textContent = beat.CharacterID + (beat.Qualifier ? ` (${{beat.Qualifier}})` : '');
+            char.textContent = beat.CharacterID + (beat.Qualifier ? ` (${beat.Qualifier})` : '');
             content.appendChild(char);
-        }}
+        }
 
         const text = document.createElement('div');
         text.className = 'text';
         text.textContent = beat.Text;
-        if (beat.LineID) {{
-            if (!isAction || dinkConfig.locActions) {{
+        if (beat.LineID) {
+            if (!isAction || dinkConfig.locActions) {
                 text.appendChild(createIdElement(beat.LineID));
-            }}
-        }}
+            }
+        }
         content.appendChild(text);
         
         beatDiv.appendChild(content);
         
         return beatDiv;
-    }}
+    }
 
-    function createSnippetElement(snippet) {{
+    function createSnippetElement(snippet) {
         const snippetDiv = document.createElement('div');
         snippetDiv.className = 'snippet';
 
@@ -207,12 +207,12 @@ document.addEventListener('DOMContentLoaded', () => {{
         snippet.Beats.forEach(beat => snippetDiv.appendChild(createBeatElement(beat)));
 
         return snippetDiv;
-    }}
+    }
     
-    function createSnippetGroupElement(snippets) {{
-        if (snippets.length === 1 && snippets[0].Group === 0) {{
+    function createSnippetGroupElement(snippets) {
+        if (snippets.length === 1 && snippets[0].Group === 0) {
             return createSnippetElement(snippets[0]);
-        }}
+        }
 
         const details = document.createElement('details');
         details.className = 'snippet-group';
@@ -220,7 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {{
         
         const summary = document.createElement('summary');
         const first = snippets[0];
-        summary.textContent = `Group (${{first.GroupCount}} snippets)`;
+        summary.textContent = `Group (${first.GroupCount} snippets)`;
         const comments = createCommentElement(first.GroupComments);
         if (comments) summary.appendChild(comments);
 
@@ -232,14 +232,14 @@ document.addEventListener('DOMContentLoaded', () => {{
         details.appendChild(content);
 
         return details;
-    }}
+    }
 
-    function createBlockElement(block) {{
+    function createBlockElement(block) {
         const details = document.createElement('details');
         details.className = 'block';
 
         const summary = document.createElement('summary');
-        summary.textContent = `Block: ${{block.BlockID || '(main)'}}`;
+        summary.textContent = `Block: ${block.BlockID || '(main)'}`;
         const comments = createCommentElement(block.Comments);
         if (comments) summary.appendChild(comments);
         
@@ -249,29 +249,29 @@ document.addEventListener('DOMContentLoaded', () => {{
         content.className = 'dink-indent';
         details.appendChild(content);
 
-        const groupedSnippets = {{}};
-        block.Snippets.forEach(snippet => {{
+        const groupedSnippets = {};
+        block.Snippets.forEach(snippet => {
             // Use SnippetID for non-grouped snippets to give them a unique group
             const groupId = snippet.Group > 0 ? snippet.Group : snippet.SnippetID;
-            if (!groupedSnippets[groupId]) {{
+            if (!groupedSnippets[groupId]) {
                 groupedSnippets[groupId] = [];
-            }}
+            }
             groupedSnippets[groupId].push(snippet);
-        }});
+        });
         
-        Object.values(groupedSnippets).forEach(group => {{
+        Object.values(groupedSnippets).forEach(group => {
             content.appendChild(createSnippetGroupElement(group));
-        }});
+        });
 
         return details;
-    }}
+    }
 
-    function createSceneElement(scene) {{
+    function createSceneElement(scene) {
         const details = document.createElement('details');
         details.className = 'scene';
 
         const summary = document.createElement('summary');
-        summary.textContent = `Scene: ${{scene.SceneID}}`;
+        summary.textContent = `Scene: ${scene.SceneID}`;
         const comments = createCommentElement(scene.Comments);
         if (comments) summary.appendChild(comments);
         
@@ -283,7 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {{
         details.appendChild(content);
 
         return details;
-    }}
+    }
 
     scenes.forEach(scene => rootElement.appendChild(createSceneElement(scene)));
     
@@ -291,40 +291,40 @@ document.addEventListener('DOMContentLoaded', () => {{
     const lineIdInput = document.getElementById('lineIdInput');
     let lastHighlight = null;
 
-    function search() {{
-        if (lastHighlight) {{
+    function search() {
+        if (lastHighlight) {
             lastHighlight.style.backgroundColor = '';
-        }}
+        }
 
         const lineId = lineIdInput.value.trim();
         if (!lineId) return;
 
-        const target = document.querySelector(`[data-lineid=""${{lineId}}""]`);
-        if (target) {{
+        const target = document.querySelector(`[data-lineid=""${lineId}""]`);
+        if (target) {
             let parent = target.parentElement;
-            while(parent) {{
-                if(parent.tagName === 'DETAILS') {{
+            while(parent) {
+                if(parent.tagName === 'DETAILS') {
                     parent.open = true;
-                }}
+                }
                 parent = parent.parentElement;
-            }}
+            }
 
             target.style.backgroundColor = '#fff3cd';
-            target.scrollIntoView({{ behavior: 'smooth', block: 'center' }});
+            target.scrollIntoView({ behavior: 'smooth', block: 'center' });
             
             lastHighlight = target;
-        }} else {{
+        } else {
             alert('LineID not found.');
-        }}
-    }}
+        }
+    }
 
     searchButton.addEventListener('click', search);
-    lineIdInput.addEventListener('keydown', (e) => {{
-        if (e.key === 'Enter') {{
+    lineIdInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
             search();
-        }}
-    }});
-}});
+        }
+    });
+});
 ";
     }
 }
