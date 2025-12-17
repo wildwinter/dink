@@ -311,10 +311,18 @@ public class Viewer
         if (first.Origin) {
             summary.title = `${first.Origin.SourceFilePath}, line ${first.Origin.LineNum}`;
         }
-        const comments = createCommentElement(first.GroupComments);
-        if (comments) summary.appendChild(comments);
-
         details.appendChild(summary);
+
+        if (first.GroupComments && first.GroupComments.length > 0) {
+            const commentsContainer = document.createElement('div');
+            commentsContainer.className = 'header-comments';
+            first.GroupComments.forEach(commentText => {
+                const commentLine = document.createElement('div');
+                commentLine.textContent = `// ${commentText}`;
+                commentsContainer.appendChild(commentLine);
+            });
+            details.appendChild(commentsContainer);
+        }
 
         const content = document.createElement('div');
         content.className = 'dink-indent';
