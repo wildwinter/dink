@@ -79,16 +79,20 @@ public class Viewer
     <style>{GetCss()}</style>
 </head>
 <body>
-    <h1>Dink Viewer: {_env.RootFilename}</h1>
-    <div class=""search-container"">
-        <input type=""text"" id=""lineIdInput"" placeholder=""Enter LineID..."">
-        <button id=""searchButton"">Find</button>
-        <div class=""view-controls"">
-            <button id=""expandAllButton"" title=""Expand All"">▼</button>
-            <button id=""collapseAllButton"" title=""Collapse All"">▶</button>
+    <header class=""main-header"">
+        <h1>Dink Viewer: {_env.RootFilename}</h1>
+        <div class=""search-container"">
+            <input type=""text"" id=""lineIdInput"" placeholder=""Enter LineID..."">
+            <button id=""searchButton"">Find</button>
+            <div class=""view-controls"">
+                <button id=""expandAllButton"" title=""Expand All"">▼</button>
+                <button id=""collapseAllButton"" title=""Collapse All"">▶</button>
+            </div>
         </div>
-    </div>
-    <div id=""dink-root""></div>
+    </header>
+    <main class=""main-content"">
+        <div id=""dink-root""></div>
+    </main>
 
     <script id=""dink-data"" type=""application/json"">{jsonContent}</script>
     <script>{GetJavascript(_env.LocActions)}</script>
@@ -100,9 +104,36 @@ public class Viewer
     private static string GetCss()
     {
         return @"
-            body { font-family: 'Segoe UI', sans-serif; padding: 20px; color: #333; }
-            h1 { border-bottom: 2px solid #eee; padding-bottom: 10px; }
-            .search-container { margin-bottom: 20px; display: flex; align-items: center; }
+            html {
+                height: 100%;
+                overflow: hidden;
+            }
+            body { 
+                height: 100%;
+                margin: 0;
+                font-family: 'Segoe UI', sans-serif; 
+                color: #333; 
+                display: flex;
+                flex-direction: column;
+            }
+            .main-header {
+                padding: 20px;
+                border-bottom: 2px solid #eee;
+            }
+            .main-content {
+                flex-grow: 1;
+                overflow-y: auto;
+                padding: 20px;
+            }
+            h1 { 
+                border-bottom: none;
+                padding-bottom: 10px; 
+                margin: 0 0 10px 0;
+            }
+            .search-container { 
+                display: flex; 
+                align-items: center; 
+            }
             .view-controls { margin-left: auto; }
             .view-controls button {
                 padding: 4px 8px;
