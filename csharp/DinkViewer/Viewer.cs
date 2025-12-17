@@ -87,6 +87,7 @@ public class Viewer
             <div class=""view-controls"">
                 <button id=""expandAllButton"" title=""Expand All"">▼</button>
                 <button id=""collapseAllButton"" title=""Collapse All"">▶</button>
+                <button id=""printButton"" title=""Print"">🖨️</button>
             </div>
         </div>
     </header>
@@ -168,6 +169,35 @@ public class Viewer
             .beat .text { white-space: pre-wrap; }
             .identifier { color: grey; margin-left: 10px; font-size: 0.8em; display: inline; cursor: pointer; }
             .identifier:hover { color: black; }
+
+            @media print {
+                html, body {
+                    height: auto;
+                    overflow: visible;
+                }
+                body {
+                    display: block;
+                }
+                .main-header {
+                    display: none;
+                }
+                .main-content {
+                    overflow: visible;
+                    padding: 0;
+                }
+                details > summary::-webkit-details-marker {
+                    display: none;
+                }
+                details > summary {
+                    list-style: none;
+                }
+                .snippet, .beat, details {
+                    page-break-inside: avoid;
+                }
+                [data-lineid] {
+                    background-color: transparent !important;
+                }
+            }
         ";
     }
 
@@ -414,6 +444,7 @@ public class Viewer
 
     const expandAllButton = document.getElementById('expandAllButton');
     const collapseAllButton = document.getElementById('collapseAllButton');
+    const printButton = document.getElementById('printButton');
 
     expandAllButton.addEventListener('click', () => {
         document.querySelectorAll('details').forEach(d => d.open = true);
@@ -421,6 +452,31 @@ public class Viewer
 
     collapseAllButton.addEventListener('click', () => {
         document.querySelectorAll('details').forEach(d => d.open = false);
+    });
+
+    printButton.addEventListener('click', () => {
+        window.print();
+    });
+
+    let originalOpenState;
+
+    window.addEventListener('beforeprint', () => {
+        originalOpenState = new Map();
+        document.querySelectorAll('details').forEach((d, i) => {
+            originalOpenState.set(i, d.open);
+            d.open = true;
+        });
+    });
+
+    window.addEventListener('afterprint', () => {
+        if (originalOpenState) {
+            document.querySelectorAll('details').forEach((d, i) => {
+                if (originalOpenState.has(i)) {
+                    d.open = originalOpenState.get(i);
+                }
+            });
+            originalOpenState = null;
+        }
     });
 });
 ";
