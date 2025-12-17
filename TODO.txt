@@ -1,8 +1,9 @@
 TODO:
 -----
 Viewer:
-- Scene/Block comments
 - Script format
+- Info on file/line
+- Run as Ink?
 
 Actor estimates?
 Script flow doc
@@ -11,6 +12,7 @@ TTS web demo
 Templating
 Fountain
 FDX
+Merge in Ink tester?
 
 DONE:
 -----
@@ -42,7 +44,6 @@ Track line numbers and file names for error reporting
 Clean up summary
 Explain web demo
 Add line numbers and files for Stats file
-DinkVoiceExport: Export all lines with specific character, scene, tags.
 Stats doc: Estimates
 Add speaker to stats file.
 Live builder
@@ -51,3 +52,9 @@ Strip out text from compiled version
 Allow dialogue in options.
 Allow options without [].
 Test different expression layouts.
+
+DinkVoiceExport
+- Export all lines with specific character, scene, tags.
+
+Viewer:
+- Scene/Block comments
