@@ -83,6 +83,10 @@ public class Viewer
     <div class=""search-container"">
         <input type=""text"" id=""lineIdInput"" placeholder=""Enter LineID..."">
         <button id=""searchButton"">Find</button>
+        <div class=""view-controls"">
+            <button id=""expandAllButton"" title=""Expand All"">▼</button>
+            <button id=""collapseAllButton"" title=""Collapse All"">▶</button>
+        </div>
     </div>
     <div id=""dink-root""></div>
 
@@ -98,7 +102,20 @@ public class Viewer
         return @"
             body { font-family: 'Segoe UI', sans-serif; padding: 20px; color: #333; }
             h1 { border-bottom: 2px solid #eee; padding-bottom: 10px; }
-            .search-container { margin-bottom: 20px; }
+            .search-container { margin-bottom: 20px; display: flex; align-items: center; }
+            .view-controls { margin-left: auto; }
+            .view-controls button {
+                padding: 4px 8px;
+                border: 1px solid #ccc;
+                background-color: #f0f0f0;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 1rem;
+                margin-left: 5px;
+            }
+            .view-controls button:hover {
+                background-color: #e0e0e0;
+            }
             #lineIdInput { padding: 8px; width: 300px; border: 1px solid #ccc; border-radius: 4px; }
             #searchButton { padding: 8px 12px; border: none; background-color: #007bff; color: white; border-radius: 4px; cursor: pointer; }
             #searchButton:hover { background-color: #0056b3; }
@@ -362,6 +379,17 @@ public class Viewer
         if (e.key === 'Enter') {
             search();
         }
+    });
+
+    const expandAllButton = document.getElementById('expandAllButton');
+    const collapseAllButton = document.getElementById('collapseAllButton');
+
+    expandAllButton.addEventListener('click', () => {
+        document.querySelectorAll('details').forEach(d => d.open = true);
+    });
+
+    collapseAllButton.addEventListener('click', () => {
+        document.querySelectorAll('details').forEach(d => d.open = false);
     });
 });
 ";
