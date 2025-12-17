@@ -106,6 +106,8 @@ public class Viewer
             details > summary { cursor: pointer; font-weight: bold; padding: 5px; background: #f0f0f0; border-radius: 4px; margin-bottom: 5px; }
             details > summary:hover { background: #e0e0e0; }
             .header-comments { margin-left: 25px; margin-bottom: 5px; font-style: italic; color: #666; }
+            .dink-indent > .comments { display: block; margin-left: 0; margin-bottom: 5px; }
+            summary > .comments { display: inline-block; vertical-align: middle; }
             .comments { font-style: italic; color: #666; margin-left: 10px; display:inline; }
             .snippet { background: #f9f9f9; border-radius: 4px; padding: 10px; margin-bottom: 5px; }
             .snippet:hover { background: #f0f0f0; }
@@ -134,7 +136,7 @@ public class Viewer
         if (!comments || comments.length === 0) return null;
         const container = document.createElement('div');
         container.className = 'comments';
-        container.textContent = `// ${comments.join(', ')}`;
+        container.innerHTML = comments.map(c => `// ${c}`).join('<br>');
         return container;
     }
 
@@ -235,45 +237,50 @@ public class Viewer
         return details;
     }
 
-        function createBlockElement(block) {
-            const details = document.createElement('details');
-            details.className = 'block';
-    
-            const summary = document.createElement('summary');
-            summary.textContent = `Block: ${block.BlockID || '(main)'}`;
-            details.appendChild(summary);
-    
-            if (block.Comments && block.Comments.length > 0) {
-                const commentsContainer = document.createElement('div');
-                commentsContainer.className = 'header-comments';
-                block.Comments.forEach(commentText => {
-                    const commentLine = document.createElement('div');
-                    commentLine.textContent = `// ${commentText}`;
-                    commentsContainer.appendChild(commentLine);
-                });
-                details.appendChild(commentsContainer);
+    function addSnippetElementsTo(snippets, parentElement) {
+        const groupedSnippets = {};
+        snippets.forEach(snippet => {
+            // Use SnippetID for non-grouped snippets to give them a unique group
+            const groupId = snippet.Group > 0 ? snippet.Group : snippet.SnippetID;
+            if (!groupedSnippets[groupId]) {
+                groupedSnippets[groupId] = [];
             }
-    
-            const content = document.createElement('div');
-            content.className = 'dink-indent';
-            details.appendChild(content);
-    
-            const groupedSnippets = {};
-            block.Snippets.forEach(snippet => {
-                // Use SnippetID for non-grouped snippets to give them a unique group
-                const groupId = snippet.Group > 0 ? snippet.Group : snippet.SnippetID;
-                if (!groupedSnippets[groupId]) {
-                    groupedSnippets[groupId] = [];
-                }
-                groupedSnippets[groupId].push(snippet);
+            groupedSnippets[groupId].push(snippet);
+        });
+        
+        Object.values(groupedSnippets).forEach(group => {
+            parentElement.appendChild(createSnippetGroupElement(group));
+        });
+    }
+
+    function createBlockElement(block) {
+        const details = document.createElement('details');
+        details.className = 'block';
+
+        const summary = document.createElement('summary');
+        summary.textContent = `Block: ${block.BlockID}`;
+        details.appendChild(summary);
+
+        if (block.Comments && block.Comments.length > 0) {
+            const commentsContainer = document.createElement('div');
+            commentsContainer.className = 'header-comments';
+            block.Comments.forEach(commentText => {
+                const commentLine = document.createElement('div');
+                commentLine.textContent = `// ${commentText}`;
+                commentsContainer.appendChild(commentLine);
             });
-            
-            Object.values(groupedSnippets).forEach(group => {
-                content.appendChild(createSnippetGroupElement(group));
-            });
-    
-            return details;
+            details.appendChild(commentsContainer);
         }
+
+        const content = document.createElement('div');
+        content.className = 'dink-indent';
+        details.appendChild(content);
+
+        addSnippetElementsTo(block.Snippets, content);
+
+        return details;
+    }
+
     function createSceneElement(scene) {
         const details = document.createElement('details');
         details.className = 'scene';
@@ -295,7 +302,23 @@ public class Viewer
 
         const content = document.createElement('div');
         content.className = 'dink-indent';
-        scene.Blocks.forEach(block => content.appendChild(createBlockElement(block)));
+
+        scene.Blocks.forEach(block => {
+            if (!block.BlockID) { // main block
+                if (block.Comments && block.Comments.length > 0) {
+                    block.Comments.forEach(commentText => {
+                        const commentDiv = document.createElement('div');
+                        commentDiv.className = 'comments';
+                        commentDiv.textContent = `// ${commentText}`;
+                        content.appendChild(commentDiv);
+                    });
+                }
+                addSnippetElementsTo(block.Snippets, content);
+            } else {
+                content.appendChild(createBlockElement(block));
+            }
+        });
+        
         details.appendChild(content);
 
         return details;
