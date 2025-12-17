@@ -246,6 +246,9 @@ public class Viewer
         if (beat.LineID) {
             beatDiv.dataset.lineid = beat.LineID;
         }
+        if (beat.Origin) {
+            beatDiv.title = `${beat.Origin.SourceFilePath}, line ${beat.Origin.LineNum}`;
+        }
 
         const comments = createCommentElement(beat.Comments);
         if (comments) beatDiv.appendChild(comments);
@@ -281,6 +284,9 @@ public class Viewer
     function createSnippetElement(snippet) {
         const snippetDiv = document.createElement('div');
         snippetDiv.className = 'snippet';
+        if (snippet.Origin) {
+            snippetDiv.title = `${snippet.Origin.SourceFilePath}, line ${snippet.Origin.LineNum}`;
+        }
 
         const comments = createCommentElement(snippet.Comments);
         if (comments) snippetDiv.appendChild(comments);
@@ -302,6 +308,9 @@ public class Viewer
         const summary = document.createElement('summary');
         const first = snippets[0];
         summary.textContent = `Group (${first.GroupCount} snippets)`;
+        if (first.Origin) {
+            summary.title = `${first.Origin.SourceFilePath}, line ${first.Origin.LineNum}`;
+        }
         const comments = createCommentElement(first.GroupComments);
         if (comments) summary.appendChild(comments);
 
@@ -337,6 +346,9 @@ public class Viewer
 
         const summary = document.createElement('summary');
         summary.textContent = `Block: ${block.BlockID}`;
+        if (block.Origin) {
+            summary.title = `${block.Origin.SourceFilePath}, line ${block.Origin.LineNum}`;
+        }
         details.appendChild(summary);
 
         if (block.Comments && block.Comments.length > 0) {
@@ -365,6 +377,9 @@ public class Viewer
 
         const summary = document.createElement('summary');
         summary.textContent = `Scene: ${scene.SceneID}`;
+        if (scene.Origin) {
+            summary.title = `${scene.Origin.SourceFilePath}, line ${scene.Origin.LineNum}`;
+        }
         details.appendChild(summary);
         
         if (scene.Comments && scene.Comments.length > 0) {
