@@ -7,6 +7,7 @@ using System.Text;
 public class ViewerSettings
 {
     public string DestFolder {get; set;} = "";
+    public bool Silent { get; set; } = false;
     public bool Export {get; private set;} = true;
 
     public bool Init()
@@ -49,8 +50,14 @@ public class Viewer
         
         string html = GenerateViewDoc(jsonContent);
         File.WriteAllText(destFile, html, Encoding.UTF8);
-
-        BrowserUtils.OpenURL(destFile);
+    
+        Console.WriteLine($"Wrote {destFile}");
+    
+        if (!_viewerSettings.Silent)
+        {
+            Console.WriteLine($"Opening in browser...");
+            BrowserUtils.OpenURL(destFile);
+        }
 
         return true;
     }

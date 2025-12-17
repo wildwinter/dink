@@ -2,7 +2,7 @@ using DinkTool;
 using DinkViewer;
 using System.CommandLine;
 
-RootCommand command = new("Voice export for Dink.");
+RootCommand command = new("A viewer for dink story files.");
 
 Option<string> projectOption = new("--project")
 {
@@ -15,6 +15,12 @@ Option<string> destFolderOption = new("--destFolder")
     Description = "The destination folder to write out the viewable file."
 };
 command.Options.Add(destFolderOption);
+
+Option<bool> silentOption = new("--silent")
+{
+    Description = "If specified, will skip opening the html file in a browser."
+};
+command.Options.Add(silentOption);
 
 command.Validators.Add(result =>
 {
@@ -34,6 +40,7 @@ command.SetAction(parseResult =>
 
     ViewerSettings viewerSettings = new ViewerSettings();
     viewerSettings.DestFolder = parseResult.GetValue<string>(destFolderOption)??"";
+    viewerSettings.Silent = parseResult.GetValue<bool>(silentOption);
 
     ProjectEnvironment env = new ProjectEnvironment(projectSettings);
     if (!env.Init()||!viewerSettings.Init())

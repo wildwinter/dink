@@ -4,12 +4,14 @@ This tool outputs the Dink structure as an HTML page that is searchable and
 viewable, showing clearly how the Dink is structured. It's typically more
 readable than the Ink itself for non-programmers.
 
+![Dink Viewer](../../doc/DinkViewer.png)
+
 Everything is bundled into one HTML file so you can share it with people
 via messages or email.
 
 It's also printable in an easy-to-read format.
 
-For example:
+## Usage
 
 ```text
 DinkViewer --project dink.jsonc --destFolder some/folder
