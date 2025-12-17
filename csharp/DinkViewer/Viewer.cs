@@ -83,7 +83,7 @@ public class Viewer
         <h1>Dink Viewer: {_env.RootFilename}</h1>
         <div class=""search-container"">
             <input type=""text"" id=""lineIdInput"" placeholder=""Enter LineID..."">
-            <button id=""searchButton"">Find</button>
+            <button id=""searchButton"">Find ID</button>
             <div class=""view-controls"">
                 <button id=""expandAllButton"" title=""Expand All"">▼</button>
                 <button id=""collapseAllButton"" title=""Collapse All"">▶</button>
