@@ -7,7 +7,7 @@ public static class WebExporter
 {
     public static bool ExportToWebPage(string jsonContent, ProjectEnvironment env, ViewerSettings settings)
     {
-        string destFile = Path.Combine(settings.DestFolder, env.RootFilename + "-viewer.html");
+        string destFile = Path.Combine(settings.DestFolder, env.RootFilename + "-readable.html");
 
         string html = GenerateViewDoc(jsonContent, env.RootFilename, env.LocActions);
         File.WriteAllText(destFile, html, Encoding.UTF8);

@@ -11,7 +11,7 @@ public static class WordExporter
 {
     public static bool ExportToWord(string jsonContent, ProjectEnvironment env, ViewerSettings settings)
     {
-        string destFile = Path.Combine(settings.DestFolder, env.RootFilename + "-viewer.docx");
+        string destFile = Path.Combine(settings.DestFolder, env.RootFilename + "-readable.docx");
         var scenes = DinkJson.ReadScenes(jsonContent);
 
         if (!GenerateWordDoc(scenes, env.RootFilename, destFile))
@@ -36,6 +36,9 @@ public static class WordExporter
             {
                 MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
                 mainPart.Document = new Document();
+
+                AddStylesPartToPackage(wordDocument);
+
                 Body body = mainPart.Document.AppendChild(new Body());
 
                 bool wasLastOperationASeparator = false;
@@ -52,9 +55,9 @@ public static class WordExporter
                     }
                     ParagraphProperties scenePPr;
                     if (isFirstScene)
-                        scenePPr = new ParagraphProperties(new SpacingBetweenLines() { After = "0" });
+                        scenePPr = new ParagraphProperties(new ParagraphStyleId() { Val = "Heading1" }, new SpacingBetweenLines() { After = "0" });
                     else
-                        scenePPr = new ParagraphProperties(new SpacingBetweenLines() { Before = "240", After = "0" });
+                        scenePPr = new ParagraphProperties(new ParagraphStyleId() { Val = "Heading1" }, new SpacingBetweenLines() { Before = "240", After = "0" });
                     isFirstScene = false;
 
                     AddParagraph(body, string.IsNullOrEmpty(scene.SceneID) ? "Scene" : scene.SceneID, scenePPr, new RunProperties(new Bold(), new FontSize() { Val = "28" }));
@@ -72,7 +75,7 @@ public static class WordExporter
 
                         if (!string.IsNullOrEmpty(block.BlockID))
                         {
-                            AddParagraph(body, block.BlockID, new ParagraphProperties(), new RunProperties(new Bold(), new FontSize() { Val = "22" }));
+                            AddParagraph(body, block.BlockID, new ParagraphProperties(new ParagraphStyleId() { Val = "Heading2" }), new RunProperties(new Bold(), new FontSize() { Val = "22" }));
                             wasLastOperationASeparator = false;
                         }
 
@@ -173,6 +176,50 @@ public static class WordExporter
         }
 
         return true;
+    }
+
+    private static void AddStylesPartToPackage(WordprocessingDocument doc)
+    {
+        StyleDefinitionsPart part;
+        part = doc.MainDocumentPart!.AddNewPart<StyleDefinitionsPart>();
+        Styles root = new Styles();
+        root.Save(part);
+
+        // Create a new "Heading 1" style
+        Style styleHeading1 = new Style() { Type = StyleValues.Paragraph, StyleId = "Heading1" };
+        styleHeading1.Append(new Name() { Val = "heading 1" });
+        styleHeading1.Append(new BasedOn() { Val = "Normal" });
+        styleHeading1.Append(new NextParagraphStyle() { Val = "Normal" });
+        styleHeading1.Append(new UIPriority() { Val = 9 });
+        styleHeading1.Append(new PrimaryStyle());
+        styleHeading1.Append(new Rsid() { Val = "00F258AE" });
+        styleHeading1.Append(new StyleParagraphProperties(new KeepNext(), new KeepLines(), new SpacingBetweenLines() { Before = "240", After = "0" }, new OutlineLevel() { Val = 0 }));
+        styleHeading1.Append(new StyleRunProperties(new RunFonts() { Ascii = "Calibri Light", HighAnsi = "Calibri Light" }, new Color() { Val = "2F5496", ThemeColor = ThemeColorValues.Accent1, ThemeShade = "BF" }, new FontSize() { Val = "32" }, new FontSizeComplexScript() { Val = "32" }));
+        root.Append(styleHeading1);
+
+        // Create a new "Heading 2" style
+        Style styleHeading2 = new Style() { Type = StyleValues.Paragraph, StyleId = "Heading2" };
+        styleHeading2.Append(new Name() { Val = "heading 2" });
+        styleHeading2.Append(new BasedOn() { Val = "Normal" });
+        styleHeading2.Append(new NextParagraphStyle() { Val = "Normal" });
+        styleHeading2.Append(new UIPriority() { Val = 9 });
+        styleHeading2.Append(new UnhideWhenUsed());
+        styleHeading2.Append(new PrimaryStyle());
+        styleHeading2.Append(new Rsid() { Val = "00F258AE" });
+        styleHeading2.Append(new StyleParagraphProperties(new KeepNext(), new KeepLines(), new SpacingBetweenLines() { Before = "40", After = "0" }, new OutlineLevel() { Val = 1 }));
+        styleHeading2.Append(new StyleRunProperties(new RunFonts() { Ascii = "Calibri Light", HighAnsi = "Calibri Light" }, new Color() { Val = "2F5496", ThemeColor = ThemeColorValues.Accent1, ThemeShade = "BF" }, new FontSize() { Val = "26" }, new FontSizeComplexScript() { Val = "26" }));
+        root.Append(styleHeading2);
+
+        // Create a new "Normal" style (required for "BasedOn")
+        Style styleNormal = new Style() { Type = StyleValues.Paragraph, StyleId = "Normal", Default = true };
+        styleNormal.Append(new Name() { Val = "Normal" });
+        styleNormal.Append(new PrimaryStyle());
+        styleNormal.Append(new Rsid() { Val = "00F258AE" });
+        styleNormal.Append(new StyleParagraphProperties(new SpacingBetweenLines() { After = "160", Line = "259", LineRule = LineSpacingRuleValues.Auto }));
+        styleNormal.Append(new StyleRunProperties(new RunFonts() { Ascii = "Calibri", HighAnsi = "Calibri" }, new FontSize() { Val = "22" }, new FontSizeComplexScript() { Val = "22" }));
+        root.Append(styleNormal);
+
+        root.Save(part);
     }
 
     private static void AddParagraph(Body body, string text, ParagraphProperties pPr, RunProperties rPr)
