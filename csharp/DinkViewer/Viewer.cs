@@ -6,7 +6,7 @@ public class ViewerSettings
 {
     public string DestFolder {get; set;} = "";
     public bool Silent { get; set; } = false;
-    public bool ExportToWord {get;private set;} = false;
+    public bool ExportToWord {get; set;} = false;
 
     public bool Init()
     {

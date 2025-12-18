@@ -4,23 +4,23 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-public class BrowserUtils 
+public class SystemUtils 
 {
-    public static void OpenURL(string url)
+    public static void OpenUsingDefaultApp(string pathName)
     {
         try
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+                Process.Start(new ProcessStartInfo(pathName) { UseShellExecute = true });
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                Process.Start("xdg-open", url);
+                Process.Start("xdg-open", pathName);
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                Process.Start("open", url);
+                Process.Start("open", pathName);
             }
             else
             {

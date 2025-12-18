@@ -65,6 +65,8 @@ command.SetAction(parseResult =>
     ViewerSettings viewerSettings = new ViewerSettings();
     viewerSettings.DestFolder = parseResult.GetValue<string>(destFolderOption)??"";
     viewerSettings.Silent = parseResult.GetValue<bool>(silentOption);
+    viewerSettings.ExportToWord = parseResult.GetValue<bool>(wordOption);
+
 
     ProjectEnvironment env = new ProjectEnvironment(projectSettings);
     if (!env.Init()||!viewerSettings.Init())

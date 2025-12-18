@@ -17,7 +17,7 @@ public static class WebExporter
         if (!settings.Silent)
         {
             System.Console.WriteLine($"Opening in browser...");
-            BrowserUtils.OpenURL(destFile);
+            SystemUtils.OpenUsingDefaultApp(destFile);
         }
 
         return true;
