@@ -1,15 +1,14 @@
 # DinkViewer
 
-This tool outputs the Dink structure as an HTML page that is searchable and
-viewable, showing clearly how the Dink is structured in a movie-script-like format.
-It's typically more readable than the Ink itself for non-programmers.
-
 ![Dink Viewer](../../doc/DinkViewer.png)
 
-Everything is bundled into one HTML file so you can share it with people
-via messages or email.
+This tool can output the Dink structure as several formats that are more readable than Ink for non-programmers:
 
-It's also printable in an easy-to-read format.
+* An HTML page that is searchable and viewable, showing
+ clearly how the Dink is structured in a movie-script-like format. Everything is bundled into one HTML file so you can share it with others without dependencies. (This is the default.) It's also printable in an easy-to-read format.
+
+* A Word file in a movie-script-like format. (Option `--word`)
+
 
 ## Usage
 
@@ -22,6 +21,12 @@ An HTML file named after your main Ink file will be created.
 If you don't specify `--destFolder` then the file will be created in a temp folder.
 
 The resulting HTML file will be automatically displayed in your system browser unless you pass `--silent`.
+
+```text
+DinkViewer --project dink.jsonc --destFolder some/folder --word
+```
+
+This will produce a `.docx` file instead.
 
 **IMPORTANT:** This utility relies on the Dink Structure
 file (e.g. `myproject-dink.json`) having been
@@ -45,7 +50,11 @@ the project file.
 
     If supplied, don't open the system browser.
 
-## Features
+* `--word`
+
+    If supplied, the tool exports a Word document instead of an HTML page.
+
+## HTML Page Features
 
 ### Copying IDs
 
