@@ -10,6 +10,12 @@ Option<string> projectOption = new("--project")
 };
 command.Options.Add(projectOption);
 
+Option<string> sourceOption = new("--source")
+{
+    Description = "The entrypoint Ink file to use if --project doesn't specify it."
+};
+command.Options.Add(sourceOption);
+
 Option<string> destFolderOption = new("--destFolder")
 {
     Description = "The destination folder to write out the viewable file."
@@ -37,6 +43,18 @@ command.SetAction(parseResult =>
     string? projectFile = parseResult.GetValue<string>(projectOption);
     if (projectFile!=null)
         projectSettings = ProjectSettings.LoadFromProjectFile(projectFile)??projectSettings;
+
+    if (string.IsNullOrWhiteSpace(projectSettings.Source))
+    {
+        var sourceFile = parseResult.GetValue<string>(sourceOption);
+        if (sourceFile==null)
+        {
+            Console.Error.WriteLine("No source file specified in project or as an argument.");
+            return -1;
+        }
+
+        projectSettings.Source = sourceFile;
+    }
 
     ViewerSettings viewerSettings = new ViewerSettings();
     viewerSettings.DestFolder = parseResult.GetValue<string>(destFolderOption)??"";

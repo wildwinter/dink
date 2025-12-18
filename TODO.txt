@@ -2,6 +2,8 @@ TODO:
 -----
 Viewer:
 - Run as Ink?
+- Output as docx
+- Output as PDF
 
 Actor estimates?
 Script flow doc

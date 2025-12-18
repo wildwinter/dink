@@ -185,6 +185,9 @@ public class Viewer
                 margin-left: 180px;
             }
             .beat .text {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
                 white-space: pre-wrap;
                 margin-left: 120px;
             }
@@ -192,10 +195,10 @@ public class Viewer
                 margin-left: 0;
             }
             .identifier {
+                flex-shrink: 0;
+                margin-left: 20px;
                 color: grey;
-                margin-left: 10px;
                 font-size: 0.8em;
-                display: inline;
                 cursor: pointer;
                 font-family: 'Segoe UI', sans-serif;
                 opacity: 0.5;
@@ -257,7 +260,7 @@ public class Viewer
     function createIdElement(id) {
         const idElement = document.createElement('span');
         idElement.className = 'identifier';
-        idElement.textContent = `🔗 ID: ${id}`;
+        idElement.textContent = id;
         idElement.title = 'Copy ID';
 
         idElement.addEventListener('click', (e) => {
@@ -294,7 +297,11 @@ public class Viewer
             beatDiv.classList.add('action-beat');
             const text = document.createElement('div');
             text.className = 'text';
-            text.textContent = beat.Text;
+            
+            const dialogueSpan = document.createElement('span');
+            dialogueSpan.textContent = beat.Text;
+            text.appendChild(dialogueSpan);
+
             if (beat.LineID && dinkConfig.locActions) {
                 text.appendChild(createIdElement(beat.LineID));
             }
@@ -314,7 +321,11 @@ public class Viewer
             
             const text = document.createElement('div');
             text.className = 'text';
-            text.textContent = beat.Text;
+            
+            const dialogueSpan = document.createElement('span');
+            dialogueSpan.textContent = beat.Text;
+            text.appendChild(dialogueSpan);
+
             if (beat.LineID) {
                 text.appendChild(createIdElement(beat.LineID));
             }
