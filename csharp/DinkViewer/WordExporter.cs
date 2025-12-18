@@ -57,8 +57,7 @@ public static class WordExporter
                         scenePPr = new ParagraphProperties(new SpacingBetweenLines() { Before = "240", After = "0" });
                     isFirstScene = false;
 
-                    scenePPr.Append(new ParagraphStyleId() { Val = "Heading1" });
-                    AddParagraph(body, string.IsNullOrEmpty(scene.SceneID) ? "Scene" : scene.SceneID, scenePPr, new RunProperties());
+                    AddParagraph(body, string.IsNullOrEmpty(scene.SceneID) ? "Scene" : scene.SceneID, scenePPr, new RunProperties(new Bold(), new FontSize() { Val = "28" }));
                     wasLastOperationASeparator = false;
                     
                     if (scene.Comments != null && scene.Comments.Count > 0)
@@ -73,9 +72,7 @@ public static class WordExporter
 
                         if (!string.IsNullOrEmpty(block.BlockID))
                         {
-                            var pPr = new ParagraphProperties();
-                            pPr.Append(new ParagraphStyleId() { Val = "Heading2" });
-                            AddParagraph(body, block.BlockID, pPr, new RunProperties());
+                            AddParagraph(body, block.BlockID, new ParagraphProperties(), new RunProperties(new Bold(), new FontSize() { Val = "22" }));
                             wasLastOperationASeparator = false;
                         }
 
