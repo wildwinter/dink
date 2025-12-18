@@ -1116,7 +1116,7 @@ A JSON or JSONC file (i.e. JSON with comments) having all or some of the require
 
 ![Dink Viewer](doc/DinkViewer.png)
 
-This tool can output the Dink structure as several formats that are more readable than Ink for non-programmers - a bundled HTML page allowing interactive searching and folding, or as a Word document.
+This tool can output the Dink structure as several formats that are more readable than Ink for non-programmers - a bundled HTML page allowing interactive searching and folding, as a PDF document, or as a Word document.
 
 The documentation is [here - DinkViewer](csharp/DinkViewer/README.md).
 

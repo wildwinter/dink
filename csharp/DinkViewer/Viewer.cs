@@ -7,6 +7,7 @@ public class ViewerSettings
     public string DestFolder {get; set;} = "";
     public bool Silent { get; set; } = false;
     public bool ExportToWord {get; set;} = false;
+    public bool ExportToPdf {get; set;} = false;
 
     public bool Init()
     {
@@ -47,6 +48,10 @@ public class Viewer
         if (_viewerSettings.ExportToWord)
         {
             return WordExporter.ExportToWord(jsonContent, _env, _viewerSettings);
+        }
+        if (_viewerSettings.ExportToPdf)
+        {
+            return PDFExporter.ExportToPdf(jsonContent, _env, _viewerSettings);
         }
         return WebExporter.ExportToWebPage(jsonContent, _env, _viewerSettings);
     }

@@ -9,6 +9,7 @@ This tool can output the Dink structure as several formats that are more readabl
 
 * A Word file in a movie-script-like format. (Option `--word`)
 
+* A PDF in a movie-script-like format. (Option `--pdf`)
 
 ## Usage
 
@@ -27,6 +28,12 @@ DinkViewer --project dink.jsonc --destFolder some/folder --word
 ```
 
 This will produce a `.docx` file instead.
+
+```text
+DinkViewer --project dink.jsonc --destFolder some/folder --pdf
+```
+
+This will produce a `.pdf` file instead.
 
 **IMPORTANT:** This utility relies on the Dink Structure
 file (e.g. `myproject-dink.json`) having been
@@ -53,6 +60,10 @@ the project file.
 * `--word`
 
     If supplied, the tool exports a Word document instead of an HTML page.
+
+* `--pdf`
+
+    If supplied, the tool exports a PDF instead of an HTML page.
 
 ## HTML Page Features
 

@@ -34,6 +34,12 @@ Option<bool> wordOption = new("--word")
 };
 command.Options.Add(wordOption);
 
+Option<bool> pdfOption = new("--pdf")
+{
+    Description = "Export a PDF version of the structure instead of HTML."
+};
+command.Options.Add(pdfOption);
+
 command.Validators.Add(result =>
 {
     // Is a project file specified?
@@ -66,6 +72,7 @@ command.SetAction(parseResult =>
     viewerSettings.DestFolder = parseResult.GetValue<string>(destFolderOption)??"";
     viewerSettings.Silent = parseResult.GetValue<bool>(silentOption);
     viewerSettings.ExportToWord = parseResult.GetValue<bool>(wordOption);
+    viewerSettings.ExportToPdf = parseResult.GetValue<bool>(pdfOption);
 
 
     ProjectEnvironment env = new ProjectEnvironment(projectSettings);
