@@ -28,6 +28,12 @@ Option<bool> silentOption = new("--silent")
 };
 command.Options.Add(silentOption);
 
+Option<bool> wordOption = new("--word")
+{
+    Description = "Export a Word version of the structure instead of HTML."
+};
+command.Options.Add(wordOption);
+
 command.Validators.Add(result =>
 {
     // Is a project file specified?
