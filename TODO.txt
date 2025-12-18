@@ -2,8 +2,7 @@ TODO:
 -----
 Viewer:
 - Run as Ink?
-- Output as docx
-- Output as PDF
+- Migrate away from QuestPDF? 
 
 Actor estimates?
 Script flow doc
@@ -60,3 +59,5 @@ Viewer:
 - Scene/Block comments
 - Info on file/line
 - Script format
+- Output as docx
+- Output as PDF

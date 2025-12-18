@@ -14,7 +14,7 @@ public static class PDFExporter
         // Note: For commercial use, a license key is required.
         QuestPDF.Settings.License = LicenseType.Community;
 
-        string destFile = Path.Combine(settings.DestFolder, env.RootFilename + "-viewer.pdf");
+        string destFile = Path.Combine(settings.DestFolder, env.RootFilename + "-readable.pdf");
         var scenes = DinkJson.ReadScenes(jsonContent);
 
         if (!GeneratePdfDoc(scenes, env.RootFilename, destFile))
