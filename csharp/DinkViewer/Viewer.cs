@@ -166,16 +166,45 @@ public class Viewer
             summary > .comments { display: inline-block; vertical-align: middle; }
             .comments { font-style: italic; color: #666; margin-left: 10px; display:inline; }
             .snippet { background: #f9f9f9; border-radius: 4px; padding: 10px; margin-bottom: 5px; }
-            .snippet:hover { background: #f0f0f0; }
+            .snippet:hover { background: #ffffff; }
             .snippet > .comments { display: block; margin-left: 0; margin-bottom: 10px; }
-            .beat { border-left: 3px solid #ddd; padding-left: 15px; margin: 10px 0; }
+            .beat {
+                font-family: 'Courier New', Courier, monospace;
+                border-left: 3px solid #ddd;
+                padding-left: 15px;
+                margin: 10px 0;
+            }
             .beat > .comments { display: block; margin-left: 0; margin-bottom: 5px; }
-            .beat-content { display: grid; grid-template-columns: 120px 1fr; gap: 10px; }
-            .action-beat .beat-content { grid-template-columns: 1fr; }
-            .beat .character { font-weight: bold; text-align: right; }
-            .beat .text { white-space: pre-wrap; }
-            .identifier { color: grey; margin-left: 10px; font-size: 0.8em; display: inline; cursor: pointer; }
-            .identifier:hover { color: black; }
+            .beat .character {
+                font-weight: normal;
+                text-align: left;
+                text-transform: uppercase;
+                margin-left: 240px;
+            }
+            .beat .direction {
+                margin-left: 180px;
+            }
+            .beat .text {
+                white-space: pre-wrap;
+                margin-left: 120px;
+            }
+            .action-beat .text {
+                margin-left: 0;
+            }
+            .identifier {
+                color: grey;
+                margin-left: 10px;
+                font-size: 0.8em;
+                display: inline;
+                cursor: pointer;
+                font-family: 'Segoe UI', sans-serif;
+                opacity: 0.5;
+                transition: opacity 0.2s;
+            }
+            .identifier:hover {
+                color: black;
+                opacity: 1;
+            }
 
             @media print {
                 html, body {
@@ -260,30 +289,37 @@ public class Viewer
         const comments = createCommentElement(beat.Comments);
         if (comments) beatDiv.appendChild(comments);
 
-        const content = document.createElement('div');
-        content.className = 'beat-content';
-
         const isAction = !beat.hasOwnProperty('CharacterID');
         if (isAction) { // It's an action
             beatDiv.classList.add('action-beat');
+            const text = document.createElement('div');
+            text.className = 'text';
+            text.textContent = beat.Text;
+            if (beat.LineID && dinkConfig.locActions) {
+                text.appendChild(createIdElement(beat.LineID));
+            }
+            beatDiv.appendChild(text);
         } else { // It's a line
             const char = document.createElement('div');
             char.className = 'character';
             char.textContent = beat.CharacterID + (beat.Qualifier ? ` (${beat.Qualifier})` : '');
-            content.appendChild(char);
-        }
+            beatDiv.appendChild(char);
 
-        const text = document.createElement('div');
-        text.className = 'text';
-        text.textContent = beat.Text;
-        if (beat.LineID) {
-            if (!isAction || dinkConfig.locActions) {
+            if (beat.Direction) {
+                const direction = document.createElement('div');
+                direction.className = 'direction';
+                direction.textContent = `(${beat.Direction})`;
+                beatDiv.appendChild(direction);
+            }
+            
+            const text = document.createElement('div');
+            text.className = 'text';
+            text.textContent = beat.Text;
+            if (beat.LineID) {
                 text.appendChild(createIdElement(beat.LineID));
             }
+            beatDiv.appendChild(text);
         }
-        content.appendChild(text);
-        
-        beatDiv.appendChild(content);
         
         return beatDiv;
     }

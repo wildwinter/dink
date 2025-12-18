@@ -1,8 +1,8 @@
 # DinkViewer
 
 This tool outputs the Dink structure as an HTML page that is searchable and
-viewable, showing clearly how the Dink is structured. It's typically more
-readable than the Ink itself for non-programmers.
+viewable, showing clearly how the Dink is structured in a movie-script-like format. 
+It's typically more readable than the Ink itself for non-programmers.
 
 ![Dink Viewer](../../doc/DinkViewer.png)
 

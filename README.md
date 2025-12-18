@@ -1117,8 +1117,8 @@ A JSON or JSONC file (i.e. JSON with comments) having all or some of the require
 ![Dink Viewer](doc/DinkViewer.png)
 
 This tool outputs the Dink structure as an HTML page that is searchable and
-viewable, showing clearly how the Dink is structured. It's typically more
-readable than the Ink itself for non-programmers.
+viewable, showing clearly how the Dink is structured in a movie-script-like format. 
+It's typically more readable than the Ink itself for non-programmers.
 
 Everything is bundled into one HTML file so you can share it with people
 via messages or email.

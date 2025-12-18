@@ -1,8 +1,6 @@
 TODO:
 -----
 Viewer:
-- Script format
-- Info on file/line
 - Run as Ink?
 
 Actor estimates?
@@ -58,3 +56,5 @@ DinkVoiceExport
 
 Viewer:
 - Scene/Block comments
+- Info on file/line
+- Script format
