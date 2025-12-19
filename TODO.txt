@@ -2,7 +2,6 @@ TODO:
 -----
 Viewer:
 - Run as Ink?
-- Migrate away from QuestPDF? 
 
 Actor estimates?
 Script flow doc
@@ -61,3 +60,4 @@ Viewer:
 - Script format
 - Output as docx
 - Output as PDF
+- Migrate away from QuestPDF
