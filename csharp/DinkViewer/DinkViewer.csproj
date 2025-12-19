@@ -24,7 +24,11 @@
   <ItemGroup>
     <PackageReference Include="System.CommandLine" Version="2.0.0" />
     <PackageReference Include="DocumentFormat.OpenXml" Version="3.0.2" />
-    <PackageReference Include="QuestPDF" Version="2023.12.0" />
+    <PackageReference Include="PDFsharp-MigraDoc" Version="6.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="fonts\**" />
   </ItemGroup>
 
 </Project>

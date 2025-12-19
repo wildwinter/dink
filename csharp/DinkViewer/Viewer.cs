@@ -51,7 +51,7 @@ public class Viewer
         }
         if (_viewerSettings.ExportToPdf)
         {
-            return PDFExporter.ExportToPdf(jsonContent, _env, _viewerSettings);
+            return PDFExporter.ExportToPDF(jsonContent, _env, _viewerSettings);
         }
         return WebExporter.ExportToWebPage(jsonContent, _env, _viewerSettings);
     }
