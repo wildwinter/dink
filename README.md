@@ -51,6 +51,7 @@ But there's a lot to manage behind the scenes when dealing with dialogue:
 * How do I make sure the writers didn't misspell a character name on some of the lines?
 * What if the localisers mistype the markup?
 * Can I pass comments to the localisation team and the voice actors? Where do I put those comments?
+* How do I send my script to an editor or an IP holder to look over it and propose edits?
 * Production really want to know how much there is left to do!
 
 So with a simple bit of markup, Dink is targeted at helping out with the production pipeline.
