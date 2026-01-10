@@ -488,7 +488,7 @@ Use the file `main.ink` (and any included ink files) as the source, and output t
 ```./DinkCompiler --source ../../tests/test1/main.ink --destFolder ../somewhere```
 
 Or instead, grab all the settings from a project file:
-`./DinkCompiler --project dink.jsonc`
+`./DinkCompiler --project dink.dinkproj`
 
 #### Arguments
 
@@ -503,7 +503,7 @@ Or instead, grab all the settings from a project file:
     e.g. `--destFolder gameInkFiles/`\
     Default is the current working dir.
 
-* `--project project/config.jsonc`
+* `--project project/config.dinkproj`
 
     If supplied, configuration will be read from the given JSON file, instead
     of just given as command-line options. This also means that the folder that the
@@ -968,7 +968,7 @@ To specify the voice to use for each character, specify the Google Voice ID in t
 
 ### Config File
 
-A JSON or JSONC file (i.e. JSON with comments) having all or some of the required options:
+A JSON or JSONC file (i.e. JSON with comments), by convention with extension .dinkproj, having all or some of the required options:
 
 ```jsonc
 {
