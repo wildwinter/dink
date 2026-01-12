@@ -33,7 +33,7 @@ bool RunCompiler(TArray<FString>& args)
     void* PipeRead = nullptr;
     void* PipeWrite = nullptr;
 
-    if (!FPlatformProcess::CreatePipe(PipeRead, PipeWrite)) // <--- IMPORTANT
+    if (!FPlatformProcess::CreatePipe(PipeRead, PipeWrite)) 
     {
         UE_LOG(LogDinkEditor, Error, TEXT("Failed to create pipes for compiler output!"));
         return false;
@@ -83,6 +83,9 @@ bool RunCompiler(TArray<FString>& args)
         {
             UE_LOG(LogDinkEditor, Error, TEXT("Dink Compiler failed with code %d"), ReturnCode);
             UE_LOG(LogDinkEditor, Error, TEXT("Output: %s"), *StdOutput);
+
+            UDinkEditor::Get()->ReportIssues(TEXT("Dink Compilation Failed"), StdOutput);
+
             return false;
         }
     }

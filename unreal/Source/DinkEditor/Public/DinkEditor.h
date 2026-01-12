@@ -15,8 +15,7 @@ public:
 	virtual void Initialize(FSubsystemCollectionBase&) override;
 	void Register();
 	static UDinkEditor* Get();
-
-
+	void ReportIssues(const FString& Title, const FString& LogContent);
 
 private:
 };

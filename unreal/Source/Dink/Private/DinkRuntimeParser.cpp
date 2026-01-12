@@ -37,7 +37,6 @@ static FDinkBeat ParseMinimalBeat(const FName& LineID, TSharedPtr<FJsonObject> J
 
     // Qualifier
     JsonBeat->TryGetStringField(TEXT("Qualifier"), Beat.Qualifier);
-
     return Beat;
 }
 

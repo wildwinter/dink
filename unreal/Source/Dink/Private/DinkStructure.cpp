@@ -58,5 +58,52 @@ FString FDinkStructureScene::ToString() const
     {
         dump += FString::Printf(TEXT("\n%s"), *block.ToString());
     }
+    if (Tags.Num() > 0)
+    {
+        dump += TEXT(" | Tags:");
+        for (const FString& tag : Tags)
+            dump += FString::Printf(TEXT(" #%s"), *tag);
+    }
     return dump;
+}
+
+FString GetDinkTagValue(const TArray<FString>& Tags, const FString& Key)
+{
+    // Build the prefix to look for (e.g., "type" becomes "type:")
+    const FString SearchPrefix = Key + TEXT(":");
+
+    for (const FString& Tag : Tags)
+    {
+        // Check if this tag starts with our prefix (Default is Case Insensitive)
+        if (Tag.StartsWith(SearchPrefix, ESearchCase::IgnoreCase))
+        {
+            // Return everything after the prefix length
+            return Tag.RightChop(SearchPrefix.Len());
+        }
+    }
+
+    // Return empty string if not found
+    return FString();
+}
+
+bool HasDinkTag(const TArray<FString>& Tags, const FString& Key)
+{
+    const FString SearchPrefix = Key + TEXT(":");
+
+    for (const FString& Tag : Tags)
+    {
+        // Check for Exact Match (e.g. "type")
+        if (Tag.Equals(Key, ESearchCase::IgnoreCase))
+        {
+            return true;
+        }
+
+        // Check for Key+Colon Start (e.g. "type:conversation")
+        if (Tag.StartsWith(SearchPrefix, ESearchCase::IgnoreCase))
+        {
+            return true;
+        }
+    }
+
+    return false;
 }

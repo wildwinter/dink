@@ -28,9 +28,10 @@ static FDinkStructureBeat ParseBeat(TSharedPtr<FJsonObject> JsonBeat)
     const TArray<TSharedPtr<FJsonValue>>* TagsArray;
     if (JsonBeat->TryGetArrayField(TEXT("Tags"), TagsArray))
     {
+        Beat.Tags.Reserve(TagsArray->Num());
         for (const auto& TagVal : *TagsArray)
         {
-            Beat.Tags.Add(TagVal->AsString());
+            Beat.Tags.Emplace(TagVal->AsString());
         }
     }
 
@@ -54,12 +55,13 @@ static FDinkStructureSnippet ParseSnippet(TSharedPtr<FJsonObject> JsonSnippet)
     const TArray<TSharedPtr<FJsonValue>>* BeatsArray;
     if (JsonSnippet->TryGetArrayField(TEXT("Beats"), BeatsArray))
     {
+        Snippet.Beats.Reserve(BeatsArray->Num());
         for (const auto& BeatVal : *BeatsArray)
         {
             TSharedPtr<FJsonObject> BeatObj = BeatVal->AsObject();
             if (BeatObj.IsValid())
             {
-                Snippet.Beats.Add(ParseBeat(BeatObj));
+                Snippet.Beats.Emplace(ParseBeat(BeatObj));
             }
         }
     }
@@ -80,12 +82,13 @@ static FDinkStructureBlock ParseBlock(TSharedPtr<FJsonObject> JsonBlock)
     const TArray<TSharedPtr<FJsonValue>>* SnippetsArray;
     if (JsonBlock->TryGetArrayField(TEXT("Snippets"), SnippetsArray))
     {
+        Block.Snippets.Reserve(SnippetsArray->Num());
         for (const auto& SnippetVal : *SnippetsArray)
         {
             TSharedPtr<FJsonObject> SnippetObj = SnippetVal->AsObject();
             if (SnippetObj.IsValid())
             {
-                Block.Snippets.Add(ParseSnippet(SnippetObj));
+                Block.Snippets.Emplace(ParseSnippet(SnippetObj));
             }
         }
     }
@@ -101,13 +104,24 @@ static FDinkStructureScene ParseScene(TSharedPtr<FJsonObject> JsonScene)
     const TArray<TSharedPtr<FJsonValue>>* BlocksArray;
     if (JsonScene->TryGetArrayField(TEXT("Blocks"), BlocksArray))
     {
+        Scene.Blocks.Reserve(BlocksArray->Num());
         for (const auto& BlockVal : *BlocksArray)
         {
             TSharedPtr<FJsonObject> BlockObj = BlockVal->AsObject();
             if (BlockObj.IsValid())
             {
-                Scene.Blocks.Add(ParseBlock(BlockObj));
+                Scene.Blocks.Emplace(ParseBlock(BlockObj));
             }
+        }
+    }
+
+    const TArray<TSharedPtr<FJsonValue>>* TagsArray;
+    if (JsonScene->TryGetArrayField(TEXT("Tags"), TagsArray))
+    {
+        Scene.Tags.Reserve(TagsArray->Num());
+        for (const auto& TagVal : *TagsArray)
+        {
+            Scene.Tags.Emplace(TagVal->AsString());
         }
     }
     return Scene;
@@ -120,12 +134,13 @@ bool UDinkStructureParser::ParseJSON(const FString& JsonRaw, TArray<FDinkStructu
 
     if (FJsonSerializer::Deserialize(Reader, JsonRootArray))
     {
+        OutScenes.Reserve(OutScenes.Num()+JsonRootArray.Num());
         for (const auto& SceneVal : JsonRootArray)
         {
             TSharedPtr<FJsonObject> SceneObj = SceneVal->AsObject();
             if (SceneObj.IsValid())
             {
-                OutScenes.Add(ParseScene(SceneObj));
+                OutScenes.Emplace(ParseScene(SceneObj));
             }
         }
         return true;

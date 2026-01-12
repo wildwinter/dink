@@ -84,5 +84,13 @@ public:
     UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
     TArray<FDinkStructureBlock> Blocks;
 
+    UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
+    TArray<FString> Tags;
+
     FString ToString() const;
 };
+
+// Finds a tag starting with "Key:" and returns the value after the colon.
+FString DINK_API GetDinkTagValue(const TArray<FString>& Tags, const FString& Key);
+// Returns true if "Key" exists exactly, or if a tag starts with "Key:"
+bool DINK_API HasDinkTag(const FString& Key);
