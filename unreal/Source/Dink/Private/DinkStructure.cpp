@@ -37,6 +37,7 @@ void FDinkStructureBeat::ToRuntime(FDinkBeat& Beat) const
     Beat.Type = Type;
     Beat.LineID = LineID;
     Beat.Text = Text;
+    Beat.CharacterID = CharacterID;
     Beat.Qualifier = Qualifier;
 }
 
