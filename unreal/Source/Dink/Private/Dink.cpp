@@ -22,6 +22,18 @@ UDink* UDink::Get()
     return dink;
 }
 
+FName UDink::GetLineID(const TArray<FString>& storyTags)
+{
+	for (FString storyTag : storyTags)
+	{
+		if (storyTag.StartsWith("id:"))
+		{
+			return FName(storyTag.Mid(3));
+		}
+	}
+	return FName();
+}
+
 UDink::UDink()
 {
 	

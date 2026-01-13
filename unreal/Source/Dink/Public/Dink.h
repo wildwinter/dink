@@ -23,6 +23,7 @@ public:
 	virtual void Initialize(FSubsystemCollectionBase&) override;
 	void Register();
 	static UDink* Get();
+	static FName GetLineID(const TArray<FString>& storyTags);
 
 private:
 };
