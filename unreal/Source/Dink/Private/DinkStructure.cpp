@@ -1,4 +1,5 @@
 #include "DinkStructure.h"
+#include "DinkRuntime.h"
 
 FString FDinkStructureBeat::ToString() const
 {
@@ -29,6 +30,14 @@ FString FDinkStructureBeat::ToString() const
     }
 
     return dump;
+}
+
+void FDinkStructureBeat::ToRuntime(FDinkBeat& Beat) const
+{
+    Beat.Type = Type;
+    Beat.LineID = LineID;
+    Beat.Text = Text;
+    Beat.Qualifier = Qualifier;
 }
 
 FString FDinkStructureSnippet::ToString() const

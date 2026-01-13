@@ -4,6 +4,8 @@
 #include "Dink.h"
 #include "DinkStructure.generated.h"
 
+struct FDinkBeat;
+
 USTRUCT(BlueprintType)
 struct DINK_API FDinkStructureBeat
 {
@@ -37,6 +39,7 @@ public:
     // END LINE TYPE
 
     FString ToString() const;
+    void ToRuntime(FDinkBeat& Beat) const;
 };
 
 // Equivalent of an Ink flow fragment
