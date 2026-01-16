@@ -486,6 +486,7 @@ public class DinkParser
         DinkSnippet? snippet = null;
         List<string> comments = new List<string>();
         bool parsing = false;
+        bool fileParsing = false;
         BraceContainer? currentBraceContainer = null;
         bool inOptions = false;
 
@@ -693,6 +694,8 @@ public class DinkParser
                 {
                     parsing = true;
                     tags.Remove("dink");
+                    if (!hitFirstFileContent)
+                        fileParsing = true;
                 }
                 if (!hitFirstFileContent)
                 {
@@ -829,7 +832,7 @@ public class DinkParser
                 addBlock();
                 addScene();
                 
-                parsing = false;
+                parsing = fileParsing;
 
                 hitFirstKnotContent = false;
                 knotTags.Clear();

@@ -69,8 +69,10 @@ public class GoogleTTS
                 continue;
             }
 
-            GenerateAudio(client, line.Line, ttsVoice, fullPath);
-            WriteHashToWAV(fullPath, hash);
+            if (GenerateAudio(client, line.Line, ttsVoice, fullPath))
+            {
+                WriteHashToWAV(fullPath, hash);
+            }
         }
         return true;
     }
