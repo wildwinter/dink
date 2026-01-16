@@ -449,6 +449,10 @@ VAR testString = ""
 
 Just lay things out cleanly and it should be fine!
 
+#### File-level Dink
+
+Instead of specify `#dink` on each knot, you can specify it right at the top of the Ink file, then every entry will be treated and parsed as Dink!
+
 #### Internally
 
 A Dink **scene** is the equivalent of an Ink **knot**.
