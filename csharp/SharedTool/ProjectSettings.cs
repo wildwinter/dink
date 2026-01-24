@@ -300,7 +300,7 @@ public class ProjectEnvironment
 
         GoogleTTS = _settings.GoogleTTS;
         string ttsAuthFile = GoogleTTS.Authentication;
-        if (!string.IsNullOrEmpty(ttsAuthFile))
+        if (!string.IsNullOrEmpty(ttsAuthFile) && GoogleTTS.Generate)
         {
             var lookForFile = ttsAuthFile;
             if (!Path.IsPathFullyQualified(lookForFile))
