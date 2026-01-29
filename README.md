@@ -122,8 +122,8 @@ each line of text, giving filename, line number, knot, and stitch.
 *(Optional)* An Excel file containing an entry for every string in Ink that needs localisation. When they are Dink lines, will include helpful data such as comments, the character speaking.
 * **Recording Script File (`myproject-recording.xslx`)**:\
 *(Optional)* An Excel file containing an entry for every line of dialogue that needs to be recorded, along with helpful comments and direction, and if you have provided a `characters.json` file, the Actor associated with the character.
-* **POT Translation Template (`myproject.pot`)**:\
-*(Optional)* A [PO/POT](#popot-localisation-files) template file containing all source strings for translation. This is a standard format understood by most translation tools and services.
+* **POT Translation Template (`myproject-strings.pot`)**:\
+*(Optional)* A [PO/POT](#popot-localisation-files) template file, useful for translation tools.
 * **PO Translation Files (`fr.po`, `de.po`, ...)**:\
 *(Optional)* [PO/POT](#popot-localisation-files) translation files, one per target language. When re-exported, existing translations are preserved and removed strings are marked obsolete.
 * **Temp Audio Files** (`id_of_a_line_XXXX.wav`):\
@@ -180,11 +180,11 @@ LAURA: There, awake, okay?
 
 ```
 
-4. **Run the [Dink Compiler](#command-line-tool)** which will take your ink file and anything it includes, decorate it with `#id:` tags so each line has a unique identifier, compile it to JSON like Inky normally does, and then produce a whole pile of other useful things - runtime files you can use in your game, and lots of production files like a [recording script](#recording-script) for use in the booth, a [stats overview file](#stats-file), a localisation file and so on.
-5. **Load the Ink JSON file** into your game.
-6. **Load the extra Dink runtime JSON file** into your game.
-7. **Load the Dink strings file** and any other copies you've made in other languages into your game.
-8. **Step through Ink at Runtime** using standard Ink calls such as `story.Continue()`.
+1. **Run the [Dink Compiler](#command-line-tool)** which will take your ink file and anything it includes, decorate it with `#id:` tags so each line has a unique identifier, compile it to JSON like Inky normally does, and then produce a whole pile of other useful things - runtime files you can use in your game, and lots of production files like a [recording script](#recording-script) for use in the booth, a [stats overview file](#stats-file), a localisation file and so on.
+2. **Load the Ink JSON file** into your game.
+3. **Load the extra Dink runtime JSON file** into your game.
+4. **Load the Dink strings file** and any other copies you've made in other languages into your game.
+5. **Step through Ink at Runtime** using standard Ink calls such as `story.Continue()`.
     * Each Ink line will have an `#id` tag.
     * You can use that ID to grab extra line data from the Dink runtime file (like who is speaking).
     * Instead of using the text that Ink gives you, instead you can use the ID to grab the string from whichever strings file you are using for localisation.
@@ -564,10 +564,9 @@ Or instead, grab all the settings from a project file:
     Use Google TTS to generate temp audio for your spoken lines.
     You need to [configure it](#google-tts) first in the config file.
 
-* `--pot <file>`
+* `--outputPot`
 
-    Path to a POT (translation template) file to export. See [PO/POT Localisation Files](#popot-localisation-files).\
-    e.g. `--pot loc/messages.pot`
+    Output the strings POT file. See [PO/POT Localisation Files](#popot-localisation-files).
 
 * `--po-dir <folder>`
 
@@ -892,12 +891,12 @@ The exported entries use the same strings and the same [Writing Status](#writing
 
 #### Exporting a POT File
 
-Use `--pot <file>` on the command line, or `"potFile"` in the [Config File](#config-file).
+Use `--outputPot` on the command line, or `"outputPot": true` in the [Config File](#config-file).
 
 The POT file is overwritten on each export.
 
 ```text
-./DinkCompiler --project dink.dinkproj --pot loc/messages.pot
+./DinkCompiler --project dink.dinkproj --outputPot
 ```
 
 #### Exporting PO Files
@@ -929,8 +928,8 @@ msgstr ""
 
 ```jsonc
 {
-    // Path to the POT file to export (relative to project file)
-    "potFile": "loc/messages.pot",
+    // If true, outputs the strings POT file
+    "outputPot": true,
 
     // Folder for PO files (relative to project file)
     "poDir": "loc",
@@ -1183,8 +1182,8 @@ A JSON or JSONC file (i.e. JSON with comments), by convention with extension .di
 
     // PO/POT localisation file export
     // See the PO/POT Localisation Files section for details.
-    // Path to the POT (translation template) file to export
-    "potFile": "loc/messages.pot",
+    // If true, outputs the strings POT file
+    "outputPot": true,
     // Folder for PO (translation) files
     "poDir": "loc",
     // Target language codes for PO files

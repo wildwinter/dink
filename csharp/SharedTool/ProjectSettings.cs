@@ -78,8 +78,8 @@ public class ProjectSettings
     // Output the line origins as a JSON document
     public bool OutputOrigins = false;
 
-    // Path to the POT (translation template) file to export.
-    public string PotFile = "";
+    // If true, outputs the POT (translation template) file.
+    public bool OutputPot = false;
 
     // Folder for PO (translation) files.
     public string PoDir = "";
@@ -182,10 +182,9 @@ public class ProjectEnvironment
     public Dictionary<string, List<string>> TagFilters {get {return _settings.TagFilters;}}
     public GoogleTTSSettings GoogleTTS {get; private set;}
     public List<Estimate> Estimates {get {return _settings.Estimates;}}
-    public string PotFile {get; private set;} = "";
     public string PoDir {get; private set;} = "";
     public List<string> PoLangs {get; private set;} = new();
-    public bool OutputPot => !string.IsNullOrEmpty(PotFile);
+    public bool OutputPot {get{return _settings.OutputPot;}}
     public bool OutputPo => !string.IsNullOrEmpty(PoDir) && PoLangs.Count > 0;
 
     public ProjectEnvironment(ProjectSettings settings)
@@ -335,16 +334,11 @@ public class ProjectEnvironment
             GoogleTTS.OutputFolder = Path.GetFullPath(Path.Combine(audioFolderRoot,GoogleTTS.OutputFolder));
 
         // POT/PO settings
-        PotFile = _settings.PotFile;
-        if (!string.IsNullOrEmpty(PotFile) && !Path.IsPathFullyQualified(PotFile))
-            PotFile = Path.GetFullPath(Path.Combine(ProjectFolder, PotFile));
-
         PoDir = _settings.PoDir;
         if (!string.IsNullOrEmpty(PoDir) && !Path.IsPathFullyQualified(PoDir))
             PoDir = Path.GetFullPath(Path.Combine(ProjectFolder, PoDir));
 
         PoLangs = new List<string>(_settings.PoLangs);
-
         return true;
     }
 
@@ -378,6 +372,7 @@ public class ProjectEnvironment
     public string DestCompiledInkFile {get{return MakeDestFile(".json");}}
     public string DestDinkStructureFile {get{return MakeDestFile("-dink-structure.json");}}
     public string DestRecordingScriptFile {get{return MakeDestFile("-recording.xlsx");}}
+    public string DestPotFile {get{return MakeDestFile("-strings.pot");}}
     public string DestRuntimeStringsFile {get{return MakeDestFile($"-strings-{DefaultLocaleCode}.json");}}
     public string DestLocFile {get{return MakeDestFile("-loc.xlsx");}}
     public string DestStatsFile {get{return MakeDestFile("-stats.xlsx");}}

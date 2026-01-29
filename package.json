@@ -1,20 +1,17 @@
 {
   "name": "dink",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "Dink tools.",
   "scripts": {
     "clean": "npm run clean:all",
     "clean:csharp": "cd csharp && npm run clean",
     "clean:all": "npm run clean:csharp",
-
     "build": "npm run build:all",
     "build:csharp": "cd csharp && npm run build",
     "build:all": "npm run build:csharp",
-
     "test": "npm run test:all",
     "test:csharp": "cd csharp && npm run test",
     "test:all": "npm run test:csharp",
-
     "pack": "npm run pack:all",
     "pack:csharp": "cd csharp && npm run pack",
     "pack:all": "rm -rf ./dist/v$npm_package_version && npm run pack:csharp && mkdir -p ./dist/v$npm_package_version && cp ./csharp/dist/*.zip ./dist/v$npm_package_version"

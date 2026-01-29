@@ -116,7 +116,7 @@ public class Compiler
         // ----- Output POT file -----
         if (_env.OutputPot)
         {
-            if (!WritePotFile(inkStrings, writingStatuses, _env.PotFile))
+            if (!WritePotFile(inkStrings, writingStatuses, _env.DestPotFile))
                 return false;
         }
 

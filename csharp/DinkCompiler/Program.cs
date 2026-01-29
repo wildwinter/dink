@@ -82,11 +82,11 @@ Option<bool> nostripOption = new("--nostrip")
 };
 command.Options.Add(nostripOption);
 
-Option<string> potOption = new("--pot")
-{
-    Description = "Path to the POT (translation template) file to export."
-};
-command.Options.Add(potOption);
+    Option<bool> outputPotOption = new("--outputPot")
+    {
+        Description = "Output the strings POT file."
+    };
+    command.Options.Add(outputPotOption);
 
 Option<string> poDirOption = new("--po-dir")
 {
@@ -144,9 +144,8 @@ command.SetAction(parseResult =>
     if (parseResult.GetValue<bool>(nostripOption))
         settings.NoStrip = true;
 
-    var potValue = parseResult.GetValue<string>(potOption);
-    if (!string.IsNullOrEmpty(potValue))
-        settings.PotFile = potValue;
+    if (parseResult.GetValue<bool>(outputPotOption))
+        settings.OutputPot = true;
 
     var poDirValue = parseResult.GetValue<string>(poDirOption);
     if (!string.IsNullOrEmpty(poDirValue))
