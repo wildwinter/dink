@@ -104,6 +104,57 @@ public class LocStrings
         return true;
     }
 
+    private List<PoEntry> GetPoEntries(WritingStatuses writingStatuses, bool ignoreWritingStatus)
+    {
+        bool useWritingStatus = writingStatuses.HasDefinitions() && !ignoreWritingStatus;
+
+        return OrderedEntries
+            .Where(v => (!useWritingStatus) || writingStatuses.GetStatus(v.ID).Loc)
+            .Select(v =>
+            {
+                var entry = new PoEntry
+                {
+                    Context = v.ID,
+                    MsgId = v.Text,
+                    MsgStr = ""
+                };
+                if (!string.IsNullOrEmpty(v.Speaker))
+                    entry.ExtractedComments.Add("Speaker: " + v.Speaker);
+                string comments = string.Join(" ", v.Comments);
+                if (!string.IsNullOrEmpty(comments))
+                    entry.ExtractedComments.Add(comments);
+                return entry;
+            }).ToList();
+    }
+
+    public bool WriteToPot(string rootName, WritingStatuses writingStatuses, bool ignoreWritingStatus, string destPotFile)
+    {
+        Console.WriteLine("Writing POT file: " + destPotFile);
+        var entries = GetPoEntries(writingStatuses, ignoreWritingStatus);
+        return PoUtils.WritePotFile(rootName, entries, destPotFile);
+    }
+
+    public bool WriteToPo(string rootName, WritingStatuses writingStatuses, bool ignoreWritingStatus, string lang, string destPoFile)
+    {
+        Console.WriteLine("Writing PO file: " + destPoFile);
+
+        var newEntries = GetPoEntries(writingStatuses, ignoreWritingStatus);
+
+        List<PoEntry> entriesToWrite;
+        if (File.Exists(destPoFile))
+        {
+            string existingContent = File.ReadAllText(destPoFile);
+            var (_, existingEntries) = PoUtils.ParsePoFile(existingContent);
+            entriesToWrite = PoUtils.MergeEntries(newEntries, existingEntries);
+        }
+        else
+        {
+            entriesToWrite = newEntries;
+        }
+
+        return PoUtils.WritePoFile(rootName, lang, entriesToWrite, destPoFile);
+    }
+
     public string WriteMinimal()
     {
         var options = new JsonSerializerOptions { WriteIndented = false };

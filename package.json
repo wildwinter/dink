@@ -1,6 +1,6 @@
 {
   "name": "dink",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Dink tools.",
   "scripts": {
     "clean": "npm run clean:all",

@@ -82,6 +82,24 @@ Option<bool> nostripOption = new("--nostrip")
 };
 command.Options.Add(nostripOption);
 
+Option<string> potOption = new("--pot")
+{
+    Description = "Path to the POT (translation template) file to export."
+};
+command.Options.Add(potOption);
+
+Option<string> poDirOption = new("--po-dir")
+{
+    Description = "Folder for PO (translation) files."
+};
+command.Options.Add(poDirOption);
+
+Option<string> poLangsOption = new("--po-langs")
+{
+    Description = "Comma-separated target language codes for PO files."
+};
+command.Options.Add(poLangsOption);
+
 command.Validators.Add(result =>
 {
     // Is a project file specified?
@@ -125,6 +143,18 @@ command.SetAction(parseResult =>
         settings.OutputOrigins = true;
     if (parseResult.GetValue<bool>(nostripOption))
         settings.NoStrip = true;
+
+    var potValue = parseResult.GetValue<string>(potOption);
+    if (!string.IsNullOrEmpty(potValue))
+        settings.PotFile = potValue;
+
+    var poDirValue = parseResult.GetValue<string>(poDirOption);
+    if (!string.IsNullOrEmpty(poDirValue))
+        settings.PoDir = poDirValue;
+
+    var poLangsValue = parseResult.GetValue<string>(poLangsOption);
+    if (!string.IsNullOrEmpty(poLangsValue))
+        settings.PoLangs = poLangsValue.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToList();
 
     ProjectEnvironment env = new ProjectEnvironment(settings);
     if (!env.Init())

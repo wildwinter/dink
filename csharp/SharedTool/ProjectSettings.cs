@@ -78,6 +78,14 @@ public class ProjectSettings
     // Output the line origins as a JSON document
     public bool OutputOrigins = false;
 
+    // Path to the POT (translation template) file to export.
+    public string PotFile = "";
+
+    // Folder for PO (translation) files.
+    public string PoDir = "";
+
+    // Target language codes for PO files.
+    public List<string> PoLangs { get; set; } = new();
 
     // This is where the game will look for
     // audio files that start with the ID names of the lines.
@@ -174,6 +182,11 @@ public class ProjectEnvironment
     public Dictionary<string, List<string>> TagFilters {get {return _settings.TagFilters;}}
     public GoogleTTSSettings GoogleTTS {get; private set;}
     public List<Estimate> Estimates {get {return _settings.Estimates;}}
+    public string PotFile {get; private set;} = "";
+    public string PoDir {get; private set;} = "";
+    public List<string> PoLangs {get; private set;} = new();
+    public bool OutputPot => !string.IsNullOrEmpty(PotFile);
+    public bool OutputPo => !string.IsNullOrEmpty(PoDir) && PoLangs.Count > 0;
 
     public ProjectEnvironment(ProjectSettings settings)
     {
@@ -320,7 +333,18 @@ public class ProjectEnvironment
         }
         if (!Path.IsPathFullyQualified(GoogleTTS.OutputFolder))
             GoogleTTS.OutputFolder = Path.GetFullPath(Path.Combine(audioFolderRoot,GoogleTTS.OutputFolder));
-        
+
+        // POT/PO settings
+        PotFile = _settings.PotFile;
+        if (!string.IsNullOrEmpty(PotFile) && !Path.IsPathFullyQualified(PotFile))
+            PotFile = Path.GetFullPath(Path.Combine(ProjectFolder, PotFile));
+
+        PoDir = _settings.PoDir;
+        if (!string.IsNullOrEmpty(PoDir) && !Path.IsPathFullyQualified(PoDir))
+            PoDir = Path.GetFullPath(Path.Combine(ProjectFolder, PoDir));
+
+        PoLangs = new List<string>(_settings.PoLangs);
+
         return true;
     }
 

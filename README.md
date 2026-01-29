@@ -66,7 +66,7 @@ for lines of dialogue and helps you manage the production.
 * **The `DinkCompiler`**:
 
   * Compiles your Ink as normal, but also extracts text lines for localisation, and parses out extra information such as who is saying which line and bundles it all up for your runtime.
-  * Optionally exports recording scripts, localisation files, and lists of where lines came from.
+  * Optionally exports recording scripts, localisation files (Excel and/or PO/POT), and lists of where lines came from.
   * Helps you manage the status of each individual line - is it first draft? Has it been recorded? And produces overview statistics - how many lines are still to be completed? How many lines still need to be recorded by a particular actor?
   * Can generate a placeholder audio file for each line for testing.
   * Can run in [live mode](#live-mode) which means it'll keep re-exporting your data every time you edit the Ink files.
@@ -87,6 +87,7 @@ for lines of dialogue and helps you manage the production.
   * [Audio File Status](#audio-file-status)
   * [Comment and Tag Filtering](#comment-and-tag-filtering)
   * [Recording Script](#recording-script)
+  * [PO/POT Localisation Files](#popot-localisation-files)
   * [Stats File](#stats-file)
   * [Google TTS](#google-tts)
   * [Live Mode](#live-mode)
@@ -121,6 +122,10 @@ each line of text, giving filename, line number, knot, and stitch.
 *(Optional)* An Excel file containing an entry for every string in Ink that needs localisation. When they are Dink lines, will include helpful data such as comments, the character speaking.
 * **Recording Script File (`myproject-recording.xslx`)**:\
 *(Optional)* An Excel file containing an entry for every line of dialogue that needs to be recorded, along with helpful comments and direction, and if you have provided a `characters.json` file, the Actor associated with the character.
+* **POT Translation Template (`myproject.pot`)**:\
+*(Optional)* A [PO/POT](#popot-localisation-files) template file containing all source strings for translation. This is a standard format understood by most translation tools and services.
+* **PO Translation Files (`fr.po`, `de.po`, ...)**:\
+*(Optional)* [PO/POT](#popot-localisation-files) translation files, one per target language. When re-exported, existing translations are preserved and removed strings are marked obsolete.
 * **Temp Audio Files** (`id_of_a_line_XXXX.wav`):\
 *(Optional)* Dink can use Google TTS to generate a temp WAV file for each line; and to regenerate them if you change your text.
 
@@ -559,6 +564,22 @@ Or instead, grab all the settings from a project file:
     Use Google TTS to generate temp audio for your spoken lines.
     You need to [configure it](#google-tts) first in the config file.
 
+* `--pot <file>`
+
+    Path to a POT (translation template) file to export. See [PO/POT Localisation Files](#popot-localisation-files).\
+    e.g. `--pot loc/messages.pot`
+
+* `--po-dir <folder>`
+
+    Folder for PO translation files, one per target language. Used together with `--po-langs`.\
+    e.g. `--po-dir loc/`
+
+* `--po-langs <codes>`
+
+    Comma-separated list of target language codes for PO file export. Used together with `--po-dir`.\
+    e.g. `--po-langs fr,de,ja`\
+    The source language is taken from `defaultLocaleCode` (set via the [Config File](#config-file) or defaulting to `en-GB`).
+
 * `--nostrip`
 
     By default, any Ink lines which have been given and ID and exported as a string in the string table (for localisation) will be stripped from the compiled Ink JSON file. Instead,
@@ -857,6 +878,68 @@ or may not be useful to your recording setup, but amongst other things it shows:
 * **Snippet ID** - Lines which have the same snippet ID are a *run* of lines that don't have any branching or alternatives in it. That's useful for the actor and director to know. It's also highlighted by the file colouring.
 * **Audio Status** - Which tracks the [Audio Status](#audio-file-status) so that you know if a line still needs to be recorded or not!
 
+### PO/POT Localisation Files
+
+As an alternative (or addition) to the Excel localisation file, Dink can export strings in the industry-standard **PO/POT** format used by most translation tools and services.
+
+**POT** (Portable Object Template) is a template file containing all the source-language strings. You send this to translators or import it into a translation management system. **PO** (Portable Object) files are per-language translation files derived from the template. For a full reference on the format, see the [GNU gettext manual](https://www.gnu.org/software/gettext/manual/html_node/PO-Files.html).
+
+The exported entries use the same strings and the same [Writing Status](#writing-status) filtering as the Excel localisation file. Each entry includes:
+
+* The line's unique ID as the message context (`msgctxt`)
+* The source text as the message ID (`msgid`)
+* The speaker and any comments as extracted comments (`#.`)
+
+#### Exporting a POT File
+
+Use `--pot <file>` on the command line, or `"potFile"` in the [Config File](#config-file).
+
+The POT file is overwritten on each export.
+
+```text
+./DinkCompiler --project dink.dinkproj --pot loc/messages.pot
+```
+
+#### Exporting PO Files
+
+Use `--po-dir <folder>` and `--po-langs <codes>` together on the command line, or `"poDir"` and `"poLangs"` in the [Config File](#config-file). One `.po` file is created per language code (e.g. `fr.po`, `de.po`).
+
+```text
+./DinkCompiler --project dink.dinkproj --po-dir loc/ --po-langs fr,de,ja
+```
+
+When PO files already exist, Dink **merges** the new source strings with the existing translations:
+
+* Existing translations are preserved.
+* If the source text of a line has changed, the entry is marked `#, fuzzy` so the translator knows to review it.
+* Strings that no longer exist in the source are marked obsolete with the `#~` prefix, as per the PO standard.
+* New strings are added with an empty translation.
+
+#### Example PO Entry
+
+```text
+#. Speaker: DAVE
+#. VO: Dave could be convinced
+msgctxt "main_MyScene_XC5r"
+msgid "Not sure I believe you."
+msgstr ""
+```
+
+#### Config File Example
+
+```jsonc
+{
+    // Path to the POT file to export (relative to project file)
+    "potFile": "loc/messages.pot",
+
+    // Folder for PO files (relative to project file)
+    "poDir": "loc",
+
+    // Target language codes
+    "poLangs": ["fr", "de", "ja"]
+}
+```
+
 ### Stats File
 
 The **Stats File** is output as Excel format, and gives you a bunch of hopefully useful information about the project!
@@ -1097,6 +1180,15 @@ A JSON or JSONC file (i.e. JSON with comments), by convention with extension .di
         // This passes tags such as #vo:loud or #vo:soft
         "record": ["vo"]
     },
+
+    // PO/POT localisation file export
+    // See the PO/POT Localisation Files section for details.
+    // Path to the POT (translation template) file to export
+    "potFile": "loc/messages.pot",
+    // Folder for PO (translation) files
+    "poDir": "loc",
+    // Target language codes for PO files
+    "poLangs": ["fr", "de", "ja"],
 
     // GoogleTTS parameters
     "googleTTS": {

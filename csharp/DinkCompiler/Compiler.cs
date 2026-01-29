@@ -113,6 +113,20 @@ public class Compiler
                 return false;
         }
 
+        // ----- Output POT file -----
+        if (_env.OutputPot)
+        {
+            if (!WritePotFile(inkStrings, writingStatuses, _env.PotFile))
+                return false;
+        }
+
+        // ----- Output PO files -----
+        if (_env.OutputPo)
+        {
+            if (!WritePoFiles(inkStrings, writingStatuses, _env.PoDir, _env.PoLangs))
+                return false;
+        }
+
         // ----- Output general stats (Excel) -----
         if (_env.OutputStats)
         {
@@ -470,6 +484,27 @@ public class Compiler
     {
         if (!inkStrings.WriteToExcel(_env.RootFilename, writingStatuses, _env.IgnoreWritingStatus, destLocFile))
             return false;
+        return true;
+    }
+
+    private bool WritePotFile(LocStrings inkStrings, WritingStatuses writingStatuses, string destPotFile)
+    {
+        if (!inkStrings.WriteToPot(_env.RootFilename, writingStatuses, _env.IgnoreWritingStatus, destPotFile))
+            return false;
+        return true;
+    }
+
+    private bool WritePoFiles(LocStrings inkStrings, WritingStatuses writingStatuses, string poDir, List<string> langs)
+    {
+        if (!Directory.Exists(poDir))
+            Directory.CreateDirectory(poDir);
+
+        foreach (var lang in langs)
+        {
+            string poFile = Path.Combine(poDir, lang + ".po");
+            if (!inkStrings.WriteToPo(_env.RootFilename, writingStatuses, _env.IgnoreWritingStatus, lang, poFile))
+                return false;
+        }
         return true;
     }
 
