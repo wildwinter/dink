@@ -501,7 +501,7 @@ public class Compiler
 
         foreach (var lang in langs)
         {
-            string poFile = Path.Combine(poDir, lang + ".po");
+            string poFile = Path.Combine(poDir, _env.RootFilename + "-" + lang + ".po");
             if (!inkStrings.WriteToPo(_env.RootFilename, writingStatuses, _env.IgnoreWritingStatus, lang, poFile))
                 return false;
         }
