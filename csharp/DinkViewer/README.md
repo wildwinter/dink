@@ -29,7 +29,7 @@ Alternatively, you can specify the exact output file using `--destFile`:
 DinkViewer --project dink.jsonc --destFile output/my-script.html
 ```
 
- ### Word
+### Word
 
 ```text
 DinkViewer --project dink.jsonc --destFolder some/folder --word
