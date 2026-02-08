@@ -1,4 +1,4 @@
-﻿INCLUDE scene1.ink
+INCLUDE scene1.ink
 
 Pick a thing to do... #id:main_Main_S72S
 
