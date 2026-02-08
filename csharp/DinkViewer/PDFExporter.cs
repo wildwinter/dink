@@ -27,7 +27,9 @@ public static class PDFExporter
 
     public static bool ExportToPDF(string jsonContent, ProjectEnvironment env, ViewerSettings settings)
     {
-        string destFile = Path.Combine(settings.DestFolder, env.RootFilename + "-readable.pdf");
+        string destFile = !string.IsNullOrEmpty(settings.DestFile)
+            ? settings.DestFile
+            : Path.Combine(settings.DestFolder, env.RootFilename + "-readable.pdf");
         var scenes = DinkJson.ReadScenes(jsonContent);
 
         if (!GeneratePDFDoc(scenes, env.RootFilename, destFile))

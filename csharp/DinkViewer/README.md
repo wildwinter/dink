@@ -19,15 +19,25 @@ DinkViewer --project dink.jsonc --destFolder some/folder
 
 An HTML file named after your main Ink file will be created.
 
-If you don't specify `--destFolder` then the file will be created in a temp folder.
+If you don't specify `--destFolder` or `--destFile`, then the file will be created in a temp folder.
 
 The resulting HTML file will be automatically displayed in your system browser unless you pass `--silent`.
+
+Alternatively, you can specify the exact output file using `--destFile`:
+
+```text
+DinkViewer --project dink.jsonc --destFile output/my-script.html
+```
+
+ ### Word
 
 ```text
 DinkViewer --project dink.jsonc --destFolder some/folder --word
 ```
 
 This will produce a `.docx` file instead.
+
+### PDF
 
 ```text
 DinkViewer --project dink.jsonc --destFolder some/folder --pdf
@@ -50,8 +60,16 @@ the project file.
 
 * `--destFolder <folder>`
 
-    The place to copy the resulting HTML file\
+    The place to copy the resulting HTML file.\
+    If neither `--destFolder` nor `--destFile` is specified, a temporary folder will be used.\
     e.g. `--destFolder some/output/folder`
+
+* `--destFile <filename>`
+
+    The destination file path for the output. If not fully qualified, it will be relative to the current working directory.\
+    e.g. `--destFile output/my-script.html`\
+    \
+    When `--destFile` is specified, you don't need `--destFolder`.
 
 * `--silent`
 

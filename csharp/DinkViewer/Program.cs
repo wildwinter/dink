@@ -22,6 +22,12 @@ Option<string> destFolderOption = new("--destFolder")
 };
 command.Options.Add(destFolderOption);
 
+Option<string> destFileOption = new("--destFile")
+{
+    Description = "The destination file path for the output. If not fully qualified, it will be relative to the current working directory. The extension will be adjusted based on the export format."
+};
+command.Options.Add(destFileOption);
+
 Option<bool> silentOption = new("--silent")
 {
     Description = "If specified, will skip opening the html file in a browser."
@@ -70,6 +76,7 @@ command.SetAction(parseResult =>
 
     ViewerSettings viewerSettings = new ViewerSettings();
     viewerSettings.DestFolder = parseResult.GetValue<string>(destFolderOption)??"";
+    viewerSettings.DestFile = parseResult.GetValue<string>(destFileOption)??"";
     viewerSettings.Silent = parseResult.GetValue<bool>(silentOption);
     viewerSettings.ExportToWord = parseResult.GetValue<bool>(wordOption);
     viewerSettings.ExportToPdf = parseResult.GetValue<bool>(pdfOption);

@@ -10,7 +10,9 @@ public static class WordExporter
 {
     public static bool ExportToWord(string jsonContent, ProjectEnvironment env, ViewerSettings settings)
     {
-        string destFile = Path.Combine(settings.DestFolder, env.RootFilename + "-readable.docx");
+        string destFile = !string.IsNullOrEmpty(settings.DestFile)
+            ? settings.DestFile
+            : Path.Combine(settings.DestFolder, env.RootFilename + "-readable.docx");
         var scenes = DinkJson.ReadScenes(jsonContent);
 
         if (!GenerateWordDoc(scenes, env.RootFilename, destFile))
