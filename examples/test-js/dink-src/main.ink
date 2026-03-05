@@ -4,6 +4,15 @@ Pick a thing to do... #id:main_Main_S72S
 
 -> Main
 
+=== Boom
+#dink
+LAURA: Test #id:main_Boom_3GVZ
+{shuffle:
+- LAURA: Test #id:main_Boom_AN5A
+}
+* [DAVE: is over the moon #id:main_Boom_SJYJ]
+->DONE
+
 === Main
 
 + [Trigger a Bark for Fred #id:main_Main_QU2R]

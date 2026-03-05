@@ -1,7 +1,22 @@
 [
-    {"ID":"FRED", "Actor":"David"},
-    {"ID":"LAURA", "Actor":""},
-    {"ID":"DAVE", "Actor":"David"},
-    {"ID":"GEORGE", "Actor":""},
-    {"ID":"JIM", "Actor":""}
+    {
+        "ID": "FRED",
+        "Actor": "David"
+    },
+    {
+        "ID": "LAURA",
+        "Actor": ""
+    },
+    {
+        "ID": "DAVE",
+        "Actor": "David"
+    },
+    {
+        "ID": "GEORGE",
+        "Actor": ""
+    },
+    {
+        "ID": "JIM",
+        "Actor": ""
+    }
 ]
