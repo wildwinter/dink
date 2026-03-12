@@ -6,7 +6,7 @@ Pick a thing to do... #id:main_Main_S72S
 
 === Boom
 #dink
-LAURA: Test #id:main_Boom_3GVZ
+LAURA: Test #id:main_Boom_SDUD
 {shuffle:
 - LAURA: Test #id:main_Boom_AN5A
 }
