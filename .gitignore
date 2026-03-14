@@ -13,3 +13,4 @@ pip-dist
 tmp
 google-tts-key.json
 tests/**/Audio/*
+.gemini
