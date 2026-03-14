@@ -95,6 +95,7 @@ for lines of dialogue and helps you manage the production.
 * [Utilites](#utilities)
   * [Dink Viewer](#dinkviewer)
   * [Dink Voice Export](#dinkvoiceexport)
+* [Security Issues](#security-issues)
 * [Contributors](#contributors)
 * [Acknowledgements](#acknowledgements)
 * [License](#license)
@@ -498,6 +499,9 @@ Use the file `main.ink` (and any included ink files) as the source, and output t
 
 Or instead, grab all the settings from a project file:
 `./DinkCompiler --project dink.dinkproj`
+
+*Is the utility failing to run on Windows? Check the [security issues](#security-issues) note here.*
+
 
 #### Arguments
 
@@ -1216,11 +1220,35 @@ This tool can output the Dink structure as several formats that are more readabl
 
 The documentation is [here - DinkViewer](csharp/DinkViewer/README.md).
 
+*Is the utility failing to run on Windows? Check the [security issues](#security-issues) note here.*
+
 ### DinkVoiceExport
 
 This was created to help out the audio team. You give it a spec of particular Dink lines, and it collects the corresponding WAV files and copies them to a destination.
 
 The documentation is [here - DinkVoiceExport](csharp/DinkVoiceExport/README.md).
+
+*Is the utility failing to run on Windows? Check the [security issues](#security-issues) note here.*
+
+## Security Issues
+
+### Note on Windows Security
+
+Because this is a hobbyist project, this app is **currently not digitally signed*** for Windows. If you receive an "Access Denied" or "Unauthorized" error when running this tool in PowerShell/CMD:
+
+1. Right-click the EXE in File Explorer.
+
+2. Select Properties.
+
+3. At the bottom, check the Unblock box and click OK.
+
+Try running the command again.
+
+\* *Because it costs a lot and seems to be impossible outside North America right now for individual developers. Thanks Microsoft!*
+
+### Note on Mac Security
+
+The app is signed. Because it's easier on Mac.
 
 ## Contributors
 
