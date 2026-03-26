@@ -14,7 +14,8 @@
     "test:all": "npm run test:csharp",
     "pack": "npm run pack:all",
     "pack:csharp": "cd csharp && npm run pack",
-    "pack:all": "rm -rf ./dist/v$npm_package_version && npm run pack:csharp && mkdir -p ./dist/v$npm_package_version && cp ./csharp/dist/*.zip ./dist/v$npm_package_version"
+    "pack:unreal": "./pack-unreal.sh",
+    "pack:all": "rm -rf ./dist/v$npm_package_version && npm run pack:csharp && mkdir -p ./dist/v$npm_package_version && cp ./csharp/dist/*.zip ./dist/v$npm_package_version && npm run pack:unreal"
   },
   "keywords": [],
   "author": "Ian Thomas",

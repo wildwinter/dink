@@ -14,3 +14,4 @@ tmp
 google-tts-key.json
 tests/**/Audio/*
 .gemini
+.claude
