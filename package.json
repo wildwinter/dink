@@ -1,7 +1,7 @@
 {
   "name": "dink",
-  "version": "0.0.16",
-  "description": "Dink tools.",
+  "version": "0.0.17",
+  "description": "Dink compiler and tools.",
   "scripts": {
     "clean": "npm run clean:all",
     "clean:csharp": "cd csharp && npm run clean",
