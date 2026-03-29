@@ -138,6 +138,18 @@ The source can be found on [Github](https://github.com/wildwinter/dink), and is 
 
 Releases are available in the releases area in [Github](https://github.com/wildwinter/dink/releases).
 
+## Version Control
+
+Dink is designed to play well with version-control systems used in game development — Git, Perforce, Plastic SCM, and SVN are all supported.
+
+All file writes performed by `DinkCompiler`, `DinkViewer`, and `DinkVoiceExport` go through [simple-vc-lib](https://github.com/wildwinter/simple-vc-lib), which automatically detects the VCS in use and handles checkout/lock before writing and add/mark for tracking after writing. In practical terms this means:
+
+* New output files (compiled JSON, recording scripts, PO files, etc.) are automatically added to version control.
+* Existing output files that are locked or checked out exclusively by another user will produce a clear error rather than silently failing or corrupting the workspace.
+* On systems with no VCS (or when run outside a repo), the tools fall back to plain filesystem writes with no change in behaviour.
+
+Detection is automatic — no configuration is needed for Git. For Perforce or other systems, refer to the [simple-vc-lib documentation](https://github.com/wildwinter/simple-vc-lib) for any required environment setup.
+
 ## Usage
 
 ### Overview
