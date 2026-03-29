@@ -3,6 +3,7 @@ using DinkTool;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
+using SimpleVCLib;
 
 namespace DinkViewer;
 
@@ -33,6 +34,13 @@ public static class WordExporter
     {
         try
         {
+            var prepResult = VCLib.PrepareToWrite(destFile);
+            if (!prepResult.Success)
+            {
+                Console.WriteLine($"Error generating Word doc: {prepResult.Message}");
+                return false;
+            }
+
             using (WordprocessingDocument wordDocument = WordprocessingDocument.Create(destFile, WordprocessingDocumentType.Document))
             {
                 MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
@@ -175,6 +183,10 @@ public static class WordExporter
             Console.WriteLine($"Error generating Word doc: {e.Message}");
             return false;
         }
+
+        var finishResult = VCLib.FinishedWrite(destFile);
+        if (!finishResult.Success)
+            Console.WriteLine($"Warning: VC notification failed for '{destFile}': {finishResult.Message}");
 
         return true;
     }

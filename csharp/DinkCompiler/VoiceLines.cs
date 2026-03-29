@@ -1,6 +1,7 @@
 namespace DinkCompiler;
 
-using ClosedXML.Excel; 
+using ClosedXML.Excel;
+using SimpleVCLib;
 public struct VoiceEntry
 {
     public required string ID { get; set; }
@@ -89,6 +90,13 @@ public class VoiceLines
 
         try
         {
+            var prepResult = VCLib.PrepareToWrite(destVoiceFile);
+            if (!prepResult.Success)
+            {
+                Console.Error.WriteLine($"Error writing out voice lines Excel file {destVoiceFile}: {prepResult.Message}");
+                return false;
+            }
+
             XLColor lineColor1 = XLColor.White;
             XLColor lineColor2 = XLColor.LightBlue;
 
@@ -108,7 +116,7 @@ public class VoiceLines
                 {
                     var snippet = row.Cell(snippetHeading); // SnippetID column
                     if (snippet.GetString() != lastSnippet)
-                    {   
+                    {
                         lastSnippet = snippet.GetString();
                         if (snippetCcolor == lineColor2)
                             snippetCcolor = lineColor1;
@@ -116,11 +124,15 @@ public class VoiceLines
                             snippetCcolor = lineColor2;
                     }
                     row.Style.Fill.BackgroundColor = snippetCcolor;
-                }   
+                }
 
                 ExcelUtils.AdjustSheet(worksheet);
                 workbook.SaveAs(destVoiceFile);
             }
+
+            var finishResult = VCLib.FinishedWrite(destVoiceFile);
+            if (!finishResult.Success)
+                Console.Error.WriteLine($"Warning: VC notification failed for '{destVoiceFile}': {finishResult.Message}");
         }
         catch (Exception ex)
         {

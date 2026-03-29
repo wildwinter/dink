@@ -19,9 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../Dink/Dink.csproj" />
-    <Reference Include="InkLocaliser">
-      <HintPath>../lib/LocaliserLib.dll</HintPath>
-    </Reference>
+    <PackageReference Include="wildwinter.LocaliserLib" Version="0.0.4.1" />
     <Reference Include="ink_compiler">
       <HintPath>../lib/Inklecate/ink_compiler.dll</HintPath>
     </Reference>

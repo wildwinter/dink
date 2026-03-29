@@ -2,6 +2,7 @@ namespace DinkVoiceExport;
 
 using DinkTool;
 using Dink;
+using SimpleVCLib;
 
 public class ExportSettings
 {
@@ -164,8 +165,19 @@ public class VoiceExport
                 skipped++;
                 continue;
             }
+            string destFile = Path.Combine(destFolder, Path.GetFileName(sourceFile));
+            var prepResult = VCLib.PrepareToWrite(destFile);
+            if (!prepResult.Success)
+            {
+                Console.WriteLine($"Warning: Could not prepare '{destFile}' for writing: {prepResult.Message}. Skipping.");
+                skipped++;
+                continue;
+            }
+            File.Copy(sourceFile, destFile, overwrite: true);
+            var finishResult = VCLib.FinishedWrite(destFile);
+            if (!finishResult.Success)
+                Console.WriteLine($"Warning: VC notification failed for '{destFile}': {finishResult.Message}");
             copied++;
-            File.Copy(sourceFile, Path.Combine(destFolder, Path.GetFileName(sourceFile)), overwrite: true);
         }
         Console.WriteLine($"VoiceExport complete. Copied {copied} files.");
         if (skipped>0)

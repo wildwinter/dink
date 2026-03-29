@@ -5,6 +5,7 @@ using System.IO;
 using Google.Cloud.TextToSpeech.V1;
 using System.Text;
 using DinkTool;
+using SimpleVCLib;
 
 // Quite pleased with this - I store a hash of the line's text inside the WAV file, and so
 // only regenerate the file if the line's text has changed.
@@ -53,7 +54,12 @@ public class GoogleTTS
 
             if (prevFileExists)
             {
-                File.Delete(fullPath);
+                var deleteResult = VCLib.DeleteFile(fullPath);
+                if (!deleteResult.Success)
+                {
+                    Console.WriteLine($"Warning: Could not delete existing file '{fullPath}': {deleteResult.Message}. Skipping.");
+                    continue;
+                }
             }
             
             string ttsVoice;
@@ -113,11 +119,20 @@ public class GoogleTTS
             };
 
             var response = client.SynthesizeSpeech(input, voiceSelection, audioConfig);
+            var prepResult = VCLib.PrepareToWrite(outputFile);
+            if (!prepResult.Success)
+            {
+                Console.WriteLine($"FAILED on {outputFile}: {prepResult.Message}");
+                return false;
+            }
             using (var output = File.Create(outputFile))
             {
                 response.AudioContent.WriteTo(output);
             }
-            
+            var finishResult = VCLib.FinishedWrite(outputFile);
+            if (!finishResult.Success)
+                Console.WriteLine($"Warning: VC notification failed for '{outputFile}': {finishResult.Message}");
+
             Console.WriteLine($"Generated TTS: {outputFile}");
             return true;
         }

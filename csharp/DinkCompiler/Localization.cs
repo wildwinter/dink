@@ -3,6 +3,7 @@ namespace DinkCompiler;
 using System.Text.Json;
 using ClosedXML.Excel;
 using Dink;
+using SimpleVCLib;
 
 public struct LocEntry
 {
@@ -82,8 +83,15 @@ public class LocStrings
 
         try
         {
+            var prepResult = VCLib.PrepareToWrite(destLocFile);
+            if (!prepResult.Success)
+            {
+                Console.Error.WriteLine($"Error writing out localisation Excel file {destLocFile}: {prepResult.Message}");
+                return false;
+            }
+
             XLColor headerColor = XLColor.LightGreen;
-            
+
             using (var workbook = new XLWorkbook())
             {
                 var worksheet = workbook.Worksheets.Add("Text Lines - " + rootName);
@@ -92,9 +100,13 @@ public class LocStrings
 
                 ExcelUtils.FormatTableSheet(worksheet, table);
                 ExcelUtils.AdjustSheet(worksheet);
-                
+
                 workbook.SaveAs(destLocFile);
             }
+
+            var finishResult = VCLib.FinishedWrite(destLocFile);
+            if (!finishResult.Success)
+                Console.Error.WriteLine($"Warning: VC notification failed for '{destLocFile}': {finishResult.Message}");
         }
         catch (Exception ex)
         {

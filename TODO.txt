@@ -3,10 +3,8 @@ TODO:
 Viewer:
 - Run as Ink?
 
-#Dink at top of file?
 Actor estimates?
 Script flow doc
-Check support with VC/P4V
 TTS web demo
 Templating
 Fountain
@@ -52,6 +50,8 @@ Allow dialogue in options.
 Allow options without [].
 Test different expression layouts.
 Dink editor
+Check support with VC/P4V
+#Dink at top of file?
 
 DinkVoiceExport
 - Export all lines with specific character, scene, tags.

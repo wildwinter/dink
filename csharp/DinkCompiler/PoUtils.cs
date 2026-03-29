@@ -1,6 +1,7 @@
 namespace DinkCompiler;
 
 using System.Text;
+using SimpleVCLib;
 
 public class PoEntry
 {
@@ -116,44 +117,38 @@ public static class PoUtils
 
     public static bool WritePotFile(string rootName, List<PoEntry> entries, string destFile)
     {
-        try
+        var sb = new StringBuilder();
+        sb.Append(WritePotHeader(rootName));
+        foreach (var entry in entries)
         {
-            var sb = new StringBuilder();
-            sb.Append(WritePotHeader(rootName));
-            foreach (var entry in entries)
-            {
-                sb.AppendLine();
-                WriteEntry(sb, entry);
-            }
-            File.WriteAllText(destFile, sb.ToString(), Encoding.UTF8);
-            return true;
+            sb.AppendLine();
+            WriteEntry(sb, entry);
         }
-        catch (Exception ex)
+        var result = VCLib.WriteTextFile(destFile, sb.ToString(), Encoding.UTF8);
+        if (!result.Success)
         {
-            Console.Error.WriteLine($"Error writing POT file {destFile}: " + ex.Message);
+            Console.Error.WriteLine($"Error writing POT file {destFile}: {result.Message}");
             return false;
         }
+        return true;
     }
 
     public static bool WritePoFile(string rootName, string lang, List<PoEntry> entries, string destFile)
     {
-        try
+        var sb = new StringBuilder();
+        sb.Append(WritePoHeader(rootName, lang));
+        foreach (var entry in entries)
         {
-            var sb = new StringBuilder();
-            sb.Append(WritePoHeader(rootName, lang));
-            foreach (var entry in entries)
-            {
-                sb.AppendLine();
-                WriteEntry(sb, entry);
-            }
-            File.WriteAllText(destFile, sb.ToString(), Encoding.UTF8);
-            return true;
+            sb.AppendLine();
+            WriteEntry(sb, entry);
         }
-        catch (Exception ex)
+        var result = VCLib.WriteTextFile(destFile, sb.ToString(), Encoding.UTF8);
+        if (!result.Success)
         {
-            Console.Error.WriteLine($"Error writing PO file {destFile}: " + ex.Message);
+            Console.Error.WriteLine($"Error writing PO file {destFile}: {result.Message}");
             return false;
         }
+        return true;
     }
 
     private static string ExtractQuotedString(string s)

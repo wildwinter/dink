@@ -6,6 +6,7 @@ namespace DinkCompiler;
 using System.Text;
 using Dink;
 using Ink;
+using SimpleVCLib;
 using InkLocaliser;
 using DinkTool;
 using System.Text.Json;
@@ -250,13 +251,10 @@ public class Compiler
         {
             Console.WriteLine("Compilation succeeded.");
             var jsonStr = story?.ToJson();
-            try
+            var writeResult = VCLib.WriteTextFile(destFile, jsonStr ?? "", Encoding.UTF8);
+            if (!writeResult.Success)
             {
-                File.WriteAllText(destFile, jsonStr, Encoding.UTF8);
-            }
-            catch
-            {
-                Console.WriteLine("Could not write to output file '" + destFile + "'");
+                Console.WriteLine($"Could not write to output file '{destFile}': {writeResult.Message}");
                 success = false;
             }
         }
@@ -425,14 +423,11 @@ public class Compiler
     {
         Console.WriteLine("Writing structured dink file: " + destDinkFile);
 
-        try
+        string fileContents = DinkJson.WriteScenes(dinkScenes);
+        var result = VCLib.WriteTextFile(destDinkFile, fileContents, Encoding.UTF8);
+        if (!result.Success)
         {
-            string fileContents = DinkJson.WriteScenes(dinkScenes);
-            File.WriteAllText(destDinkFile, fileContents, Encoding.UTF8);
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Error writing out Dink JSON file {destDinkFile}: " + ex.Message);
+            Console.Error.WriteLine($"Error writing out Dink JSON file {destDinkFile}: {result.Message}");
             return false;
         }
         return true;
@@ -442,14 +437,11 @@ public class Compiler
     {
         Console.WriteLine("Writing minimal dink file: " + destDinkFile);
 
-        try
+        string fileContents = DinkJson.WriteMinimal(dinkScenes, !_env.LocActions);
+        var result = VCLib.WriteTextFile(destDinkFile, fileContents, Encoding.UTF8);
+        if (!result.Success)
         {
-            string fileContents = DinkJson.WriteMinimal(dinkScenes, !_env.LocActions);
-            File.WriteAllText(destDinkFile, fileContents, Encoding.UTF8);
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Error writing out Dink JSON file {destDinkFile}: " + ex.Message);
+            Console.Error.WriteLine($"Error writing out Dink JSON file {destDinkFile}: {result.Message}");
             return false;
         }
         return true;
@@ -459,14 +451,11 @@ public class Compiler
     {
         Console.WriteLine("Writing strings file: " + destStringsFile);
 
-        try
+        string fileContents = inkStrings.WriteMinimal();
+        var result = VCLib.WriteTextFile(destStringsFile, fileContents, Encoding.UTF8);
+        if (!result.Success)
         {
-            string fileContents = inkStrings.WriteMinimal();
-            File.WriteAllText(destStringsFile, fileContents, Encoding.UTF8);
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Error writing out JSON file {destStringsFile}: " + ex.Message);
+            Console.Error.WriteLine($"Error writing out JSON file {destStringsFile}: {result.Message}");
             return false;
         }
         return true;
@@ -512,14 +501,12 @@ public class Compiler
     {
         Console.WriteLine("Writing origins file: " + destOriginsFile);
 
-        try {
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string fileContents = JsonSerializer.Serialize(origins, options);
-
-            File.WriteAllText(destOriginsFile, fileContents, Encoding.UTF8);
-        }
-        catch (Exception ex) {
-                Console.Error.WriteLine($"Error writing out origins JSON file {destOriginsFile}: " + ex.Message);
+        var options = new JsonSerializerOptions { WriteIndented = true };
+        string fileContents = JsonSerializer.Serialize(origins, options);
+        var result = VCLib.WriteTextFile(destOriginsFile, fileContents, Encoding.UTF8);
+        if (!result.Success)
+        {
+            Console.Error.WriteLine($"Error writing out origins JSON file {destOriginsFile}: {result.Message}");
             return false;
         }
         return true;

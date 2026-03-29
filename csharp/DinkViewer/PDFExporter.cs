@@ -4,6 +4,7 @@ using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
 using PdfSharp.Fonts;
 using System.Reflection;
+using SimpleVCLib;
 
 namespace DinkViewer;
 
@@ -191,7 +192,17 @@ public static class PDFExporter
             var renderer = new PdfDocumentRenderer();
             renderer.Document = document;
             renderer.RenderDocument();
+
+            var prepResult = VCLib.PrepareToWrite(destFile);
+            if (!prepResult.Success)
+            {
+                Console.WriteLine($"Error generating PDF doc: {prepResult.Message}");
+                return false;
+            }
             renderer.PdfDocument.Save(destFile);
+            var finishResult = VCLib.FinishedWrite(destFile);
+            if (!finishResult.Success)
+                Console.WriteLine($"Warning: VC notification failed for '{destFile}': {finishResult.Message}");
         }
         catch (Exception e)
         {

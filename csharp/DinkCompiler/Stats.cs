@@ -1,6 +1,7 @@
 namespace DinkCompiler;
 using Dink;
 using ClosedXML.Excel;
+using SimpleVCLib;
 
 class Stats
 {
@@ -16,7 +17,13 @@ class Stats
         Console.WriteLine("Writing stats file: " + destStatsFile);
         try
         {
-            // Optimization: Disable event tracking for faster massive writes
+            var prepResult = VCLib.PrepareToWrite(destStatsFile);
+            if (!prepResult.Success)
+            {
+                Console.Error.WriteLine($"Error writing out stats Excel file {destStatsFile}: {prepResult.Message}");
+                return false;
+            }
+
             using (var workbook = new XLWorkbook())
             {
                 WriteSceneSummary(rootName, dinkScenes, nonDinkLines, writingStatuses, audioStatuses,
@@ -33,6 +40,10 @@ class Stats
 
                 ExcelUtils.SuppressNumberStoredAsTextWarning(destStatsFile, "Scenes - " + rootName);
             }
+
+            var finishResult = VCLib.FinishedWrite(destStatsFile);
+            if (!finishResult.Success)
+                Console.Error.WriteLine($"Warning: VC notification failed for '{destStatsFile}': {finishResult.Message}");
         }
         catch (Exception ex)
         {

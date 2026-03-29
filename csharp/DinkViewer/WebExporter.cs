@@ -1,5 +1,6 @@
 using DinkTool;
 using System.Text;
+using SimpleVCLib;
 
 namespace DinkViewer;
 
@@ -12,7 +13,12 @@ public static class WebExporter
             : Path.Combine(settings.DestFolder, env.RootFilename + "-readable.html");
 
         string html = GenerateViewDoc(jsonContent, env.RootFilename, env.LocActions);
-        File.WriteAllText(destFile, html, Encoding.UTF8);
+        var result = VCLib.WriteTextFile(destFile, html, Encoding.UTF8);
+        if (!result.Success)
+        {
+            System.Console.Error.WriteLine($"Error writing {destFile}: {result.Message}");
+            return false;
+        }
 
         System.Console.WriteLine($"Wrote {destFile}");
 
