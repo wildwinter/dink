@@ -9,10 +9,6 @@ targets=("osx-arm64" "osx-x64" "win-x86" "win-x64")
 #   export APPLE_CODESIGN_ID="Developer ID Application: Your Name (TEAMID)"
 APPLE_CODESIGN_ID=${APPLE_CODESIGN_ID:-""}
 
-cd Dink
-dotnet publish -c Release -o ../dist/dll
-cd ..
-
 for target in "${targets[@]}"; do
     cd DinkCompiler
     dotnet publish -c Release -r ${target} -o ../dist/${target}
@@ -27,7 +23,6 @@ for target in "${targets[@]}"; do
     cd ..
 
     rm ./dist/${target}/*.pdb
-    cp ./dist/dll/Dink.dll ./dist/${target}
     cp ../LICENSE ./dist/${target}
     cp ../README.md ./dist/${target}
 
