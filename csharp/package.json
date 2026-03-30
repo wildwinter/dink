@@ -6,6 +6,7 @@
         "clean:dve": "cd DinkVoiceExport && dotnet clean",
         "clean:dv": "cd DinkViewer && dotnet clean",
         "clean": "npm run clean:di && npm run clean:dc && npm run clean:dv && npm run clean:dve",
+        "prebuild": "node sync-version.js",
         "build:di": "cd Dink && dotnet build",
         "build:dc": "cd DinkCompiler && dotnet build",
         "build:dve": "cd DinkVoiceExport && dotnet build",

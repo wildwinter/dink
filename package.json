@@ -1,6 +1,6 @@
 {
   "name": "dink",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "description": "Dink compiler and tools.",
   "scripts": {
     "clean": "npm run clean:all",
