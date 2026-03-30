@@ -116,7 +116,8 @@ internal static class VCTestHelpers
     public static (ProjectEnvironment env, bool success) PrepareAndRun(
         string sourceDir, string outputDir, bool enablePoOutput = true)
     {
-        var testDataDir = Path.GetFullPath("../../../../../tests/test1");
+        string getThisDir([System.Runtime.CompilerServices.CallerFilePath] string p = "") => Path.GetDirectoryName(p)!;
+        var testDataDir = Path.GetFullPath(Path.Combine(getThisDir(), "../../tests/test1"));
 
         // Copy all ink source files and the characters file into the source directory.
         foreach (var file in Directory.GetFiles(testDataDir, "*.ink"))
