@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <Version>0.0.20</Version>
+    <Version>0.0.21</Version>
     <TargetFramework>net8.0</TargetFramework>
     <RuntimeIdentifiers>osx-arm64;osx-x64;win-x64;win-x86</RuntimeIdentifiers>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../Dink/Dink.csproj" />
-    <PackageReference Include="wildwinter.LocaliserLib" Version="0.0.4.3"/>
+    <PackageReference Include="wildwinter.LocaliserLib" Version="0.0.4.4"/>
     <Reference Include="ink_compiler">
       <HintPath>../lib/Inklecate/ink_compiler.dll</HintPath>
     </Reference>
