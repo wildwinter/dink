@@ -6,6 +6,7 @@ Viewer:
 Actor estimates?
 Script flow doc
 TTS web demo
+In compile, track which audio files are relevant.
 Templating
 Fountain
 FDX
