@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <Version>0.0.21</Version>
+    <Version>0.0.22</Version>
     <TargetFramework>net8.0</TargetFramework>
     <RuntimeIdentifiers>osx-arm64;osx-x64;win-x64;win-x86</RuntimeIdentifiers>
     <ImplicitUsings>enable</ImplicitUsings>

@@ -1,6 +1,6 @@
 {
   "name": "dink",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "description": "Dink compiler and tools.",
   "scripts": {
     "clean": "npm run clean:all",
@@ -15,7 +15,8 @@
     "pack": "npm run pack:all",
     "pack:csharp": "cd csharp && npm run pack",
     "pack:unreal": "./pack-unreal.sh",
-    "pack:all": "rm -rf ./dist/v$npm_package_version && npm run pack:csharp && mkdir -p ./dist/v$npm_package_version && cp ./csharp/dist/*.zip ./dist/v$npm_package_version && npm run pack:unreal"
+    "pack:all": "rm -rf ./dist/v$npm_package_version && npm run pack:csharp && mkdir -p ./dist/v$npm_package_version && cp ./csharp/dist/*.zip ./dist/v$npm_package_version && npm run pack:unreal",
+    "upgrade-nuget": "cd csharp && npm run upgrade-nuget"
   },
   "keywords": [],
   "author": "Ian Thomas",

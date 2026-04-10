@@ -5,7 +5,7 @@
         "clean:dc": "cd DinkCompiler && dotnet clean",
         "clean:dve": "cd DinkVoiceExport && dotnet clean",
         "clean:dv": "cd DinkViewer && dotnet clean",
-        "clean": "npm run clean:di && npm run clean:dc && npm run clean:dv && npm run clean:dve",
+        "clean": "npm run clean:nuget && npm run clean:di && npm run clean:dc && npm run clean:dv && npm run clean:dve",
         "prebuild": "node sync-version.js",
         "build:di": "cd Dink && dotnet build",
         "build:dc": "cd DinkCompiler && dotnet build",
@@ -17,6 +17,10 @@
         "try:dvx": "npm run build:di && npm run build:dv && DinkViewer/bin/Debug/net8.0/osx-arm64/DinkViewer --project ../examples/test-js/dink-src/dink.dinkproj --pdf",
         "try:dct": "npm run build:di && npm run build:dc && DinkCompiler/bin/Debug/net8.0/osx-arm64/DinkCompiler --project ../tests/test1/dink.dinkproj --ignoreWritingStatus --dinkStructure --stats --localization --recordingScript --origins",
         "try:dvt": "npm run build:di && npm run build:dv && DinkViewer/bin/Debug/net8.0/osx-arm64/DinkViewer --project ../tests/test1/dink.dinkproj",
+  
+        "upgrade:simplevclib": "dotnet package search wildwinter.SimpleVCLib --exact-match --format json | node -e \"const d=JSON.parse(require('fs').readFileSync('/dev/stdin','utf8')); const pkgs=d.searchResult[0].packages; const v=pkgs[pkgs.length-1].version; ['Directory.Build.props'].forEach(f=>{const s=require('fs').readFileSync(f,'utf8'); require('fs').writeFileSync(f,s.replace(/wildwinter\\.SimpleVCLib\\\" Version=\\\"[^\\\"]+\\\"/,'wildwinter.SimpleVCLib\\\" Version=\\\"'+v+'\\\"'));console.log(f+' -> '+v);})\"",
+        "upgrade:localiserlib": "dotnet package search wildwinter.LocaliserLib --exact-match --format json | node -e \"const d=JSON.parse(require('fs').readFileSync('/dev/stdin','utf8')); const pkgs=d.searchResult[0].packages; const v=pkgs[pkgs.length-1].version; ['DinkCompiler/DinkCompiler.csproj'].forEach(f=>{const s=require('fs').readFileSync(f,'utf8'); require('fs').writeFileSync(f,s.replace(/wildwinter\\.LocaliserLib\\\" Version=\\\"[^\\\"]+\\\"/,'wildwinter.LocaliserLib\\\" Version=\\\"'+v+'\\\"'));console.log(f+' -> '+v);})\"",
+        "upgrade-nuget": "dotnet nuget locals http-cache --clear && npm run upgrade:simplevclib && npm run upgrade:localiserlib && cd DinkCompiler && dotnet restore",
 
         "pack": "./build.sh"
     }
