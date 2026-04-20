@@ -29,6 +29,8 @@ public:
 	virtual void ShutdownModule() override;
 
 private:
+	void RegisterMenus();
+	static void OpenDinky();
 };
 
 DECLARE_LOG_CATEGORY_EXTERN(LogDinkEditor, Log, All);

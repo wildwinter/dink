@@ -1,6 +1,10 @@
 #include "DinkEditor.h"
 #include "Modules/ModuleManager.h"
 #include "Logging/LogMacros.h"
+#include "DinkEditorSettings.h"
+#include "ToolMenus.h"
+#include "Misc/Paths.h"
+#include "HAL/PlatformProcess.h"
 
 #define LOCTEXT_NAMESPACE "FDinkEditorModule"
 
@@ -94,10 +98,73 @@ void UDinkEditor::ReportIssues(const FString& Title, const FString& LogContent)
 void FDinkEditorModule::StartupModule()
 {
     UE_LOG(LogDinkEditor, Log, TEXT("DinkEditor module has started."));
+
+    UToolMenus::RegisterStartupCallback(
+        FSimpleMulticastDelegate::FDelegate::CreateRaw(this, &FDinkEditorModule::RegisterMenus));
 }
 
 void FDinkEditorModule::ShutdownModule()
 {
+    UToolMenus::UnRegisterStartupCallback(this);
+    if (UObjectInitialized())
+    {
+        UToolMenus::Get()->RemoveSection("MainFrame.MainMenu.Tools", "Dink");
+    }
+}
+
+void FDinkEditorModule::RegisterMenus()
+{
+    FToolMenuOwnerScoped OwnerScoped(this);
+
+    UToolMenu* ToolsMenu = UToolMenus::Get()->ExtendMenu("MainFrame.MainMenu.Tools");
+    FToolMenuSection& Section = ToolsMenu->FindOrAddSection("Dink");
+    Section.Label = LOCTEXT("DinkSectionLabel", "Dink");
+
+    Section.AddSubMenu(
+        "DinkSubMenu",
+        LOCTEXT("DinkSubMenuLabel", "Dink"),
+        LOCTEXT("DinkSubMenuTooltip", "Dink tools"),
+        FNewMenuDelegate::CreateLambda([](FMenuBuilder& MenuBuilder)
+        {
+            MenuBuilder.AddMenuEntry(
+                LOCTEXT("OpenDinky", "Open Dinky"),
+                LOCTEXT("OpenDinkyTooltip", "Open the Dinky editor with the project's .dinkproj file"),
+                FSlateIcon(),
+                FUIAction(FExecuteAction::CreateStatic(&FDinkEditorModule::OpenDinky))
+            );
+        })
+    );
+}
+
+void FDinkEditorModule::OpenDinky()
+{
+    const UDinkEditorSettings* Settings = GetDefault<UDinkEditorSettings>();
+    if (!Settings || Settings->ProjectFilePath.IsEmpty())
+    {
+        UE_LOG(LogDinkEditor, Warning, TEXT("OpenDinky: No project file path set in Dink Editor Settings."));
+        return;
+    }
+
+    FString AbsolutePath = FPaths::IsRelative(Settings->ProjectFilePath)
+        ? FPaths::ConvertRelativePathToFull(FPaths::ProjectDir(), Settings->ProjectFilePath)
+        : Settings->ProjectFilePath;
+
+    // Open the file with its OS-registered default application
+#if PLATFORM_WINDOWS
+    FPlatformProcess::CreateProc(
+        TEXT("cmd.exe"),
+        *FString::Printf(TEXT("/c start \"\" \"%s\""), *AbsolutePath),
+        true, true, false, nullptr, 0, nullptr, nullptr
+    );
+#elif PLATFORM_MAC
+    FPlatformProcess::CreateProc(
+        TEXT("/usr/bin/open"),
+        *FString::Printf(TEXT("\"%s\""), *AbsolutePath),
+        true, false, false, nullptr, 0, nullptr, nullptr
+    );
+#else
+    UE_LOG(LogDinkEditor, Warning, TEXT("OpenDinky: unsupported platform"));
+#endif
 }
 
 IMPLEMENT_MODULE(FDinkEditorModule, DinkEditor)
