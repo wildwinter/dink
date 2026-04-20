@@ -28,7 +28,8 @@ public class DinkEditor : ModuleRules
                 "EditorSubsystem",
                 "Engine",
                 "Slate",
-                "SlateCore"
+                "SlateCore",
+                "ToolMenus"
             }
             );
 
