@@ -149,12 +149,22 @@ void FDinkEditorModule::OpenDinky()
         ? FPaths::ConvertRelativePathToFull(FPaths::ProjectDir(), Settings->ProjectFilePath)
         : Settings->ProjectFilePath;
 
-    // Use cmd /c start to open the file with its OS-registered default application
+    // Open the file with its OS-registered default application
+#if PLATFORM_WINDOWS
     FPlatformProcess::CreateProc(
         TEXT("cmd.exe"),
         *FString::Printf(TEXT("/c start \"\" \"%s\""), *AbsolutePath),
         true, true, false, nullptr, 0, nullptr, nullptr
     );
+#elif PLATFORM_MAC
+    FPlatformProcess::CreateProc(
+        TEXT("/usr/bin/open"),
+        *FString::Printf(TEXT("\"%s\""), *AbsolutePath),
+        true, false, false, nullptr, 0, nullptr, nullptr
+    );
+#else
+    UE_LOG(LogDinkEditor, Warning, TEXT("OpenDinky: unsupported platform"));
+#endif
 }
 
 IMPLEMENT_MODULE(FDinkEditorModule, DinkEditor)
