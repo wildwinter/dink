@@ -52,16 +52,6 @@ public class GoogleTTS
                     continue; 
             }
 
-            if (prevFileExists)
-            {
-                var deleteResult = VCLib.DeleteFile(fullPath);
-                if (!deleteResult.Success)
-                {
-                    Console.WriteLine($"Warning: Could not delete existing file '{fullPath}': {deleteResult.Message}. Skipping.");
-                    continue;
-                }
-            }
-            
             string ttsVoice;
             Character? character = _characters.Get(line.Character);
             if (character==null)
@@ -119,19 +109,12 @@ public class GoogleTTS
             };
 
             var response = client.SynthesizeSpeech(input, voiceSelection, audioConfig);
-            var prepResult = VCLib.PrepareToWrite(outputFile);
-            if (!prepResult.Success)
+            var writeResult = VCLib.WriteBinaryFile(outputFile, response.AudioContent.ToByteArray(), forceWrite: true);
+            if (!writeResult.Success)
             {
-                Console.WriteLine($"FAILED on {outputFile}: {prepResult.Message}");
+                Console.WriteLine($"FAILED on {outputFile}: {writeResult.Message}");
                 return false;
             }
-            using (var output = File.Create(outputFile))
-            {
-                response.AudioContent.WriteTo(output);
-            }
-            var finishResult = VCLib.FinishedWrite(outputFile);
-            if (!finishResult.Success)
-                Console.WriteLine($"Warning: VC notification failed for '{outputFile}': {finishResult.Message}");
 
             Console.WriteLine($"Generated TTS: {outputFile}");
             return true;
@@ -176,47 +159,40 @@ public class GoogleTTS
     /// </summary>
     private static void WriteHashToWAV(string filePath, string hashCode)
     {
-        // Open the file to append metadata and fix the header size
-        using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.ReadWrite))
-        using (var bw = new BinaryWriter(fs))
-        {
-            fs.Seek(0, SeekOrigin.End);
+        byte[] original = File.ReadAllBytes(filePath);
+        using var ms = new MemoryStream(original.Length + 32);
+        ms.Write(original, 0, original.Length);
+        using var bw = new BinaryWriter(ms, Encoding.UTF8, leaveOpen: true);
 
-            // Prepare the hash data
-            byte[] hashBytes = Encoding.UTF8.GetBytes(hashCode);
-            // RIFF chunks must be word-aligned (even number of bytes). 
-            // If the string is odd, we need a pad byte.
-            bool needsPadding = hashBytes.Length % 2 != 0;
-            int dataSize = hashBytes.Length + (needsPadding ? 1 : 0);
+        // Prepare the hash data
+        byte[] hashBytes = Encoding.UTF8.GetBytes(hashCode);
+        // RIFF chunks must be word-aligned (even number of bytes).
+        bool needsPadding = hashBytes.Length % 2 != 0;
+        int dataSize = hashBytes.Length + (needsPadding ? 1 : 0);
 
-            // --- Construct the LIST Chunk ---
-            // Structure: 'LIST' + (TotalListSize) + 'INFO' + 'DINK' + (StrSize) + String + [Pad]
-            
-            int dinkChunkSize = 4 + 4 + dataSize; // DINK + Size + Data
-            int listChunkSize = 4 + dinkChunkSize; // INFO + the DINK chunk
+        // Structure: 'LIST' + (TotalListSize) + 'INFO' + 'DINK' + (StrSize) + String + [Pad]
+        int dinkChunkSize = 4 + 4 + dataSize;
+        int listChunkSize = 4 + dinkChunkSize;
 
-            bw.Write(IdList);
-            bw.Write(listChunkSize);
-            bw.Write(IdInfo);
-            
-            // Write the Dink Hash Chunk
-            bw.Write(IdDink);
-            bw.Write(hashBytes.Length); // Write actual string length, not padded length here
-            bw.Write(hashBytes);
-            
-            if (needsPadding)
-            {
-                bw.Write((byte)0); // Pad with null byte
-            }
+        bw.Write(IdList);
+        bw.Write(listChunkSize);
+        bw.Write(IdInfo);
+        bw.Write(IdDink);
+        bw.Write(hashBytes.Length);
+        bw.Write(hashBytes);
+        if (needsPadding)
+            bw.Write((byte)0);
 
-            // Update the main RIFF Header Size
-            // The RIFF size is (FileLength - 8 bytes)
-            fs.Seek(4, SeekOrigin.Begin);
-            int totalFileSize = (int)fs.Length;
-            bw.Write(totalFileSize - 8);
+        // Update the main RIFF header size (FileLength - 8 bytes)
+        ms.Seek(4, SeekOrigin.Begin);
+        bw.Write((int)ms.Length - 8);
 
+        bw.Flush();
+        var result = VCLib.WriteBinaryFile(filePath, ms.ToArray(), forceWrite: true);
+        if (!result.Success)
+            Console.WriteLine($"Warning: Could not write hash to '{filePath}': {result.Message}");
+        else
             Console.WriteLine("Write successful.");
-        }
     }
 
     /// <summary>
