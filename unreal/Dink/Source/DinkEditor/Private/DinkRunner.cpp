@@ -21,7 +21,7 @@ bool FindExePath(FString& outPath)
 	return true;
 }
 
-bool RunCompiler(TArray<FString>& args)
+bool RunCompiler(TArray<FString>& args, const FString& DisplayName = FString())
 {
     FString AbsoluteExePath;
     if (!FindExePath(AbsoluteExePath))
@@ -34,7 +34,7 @@ bool RunCompiler(TArray<FString>& args)
     void* PipeRead = nullptr;
     void* PipeWrite = nullptr;
 
-    if (!FPlatformProcess::CreatePipe(PipeRead, PipeWrite)) 
+    if (!FPlatformProcess::CreatePipe(PipeRead, PipeWrite))
     {
         UE_LOG(LogDinkEditor, Error, TEXT("Failed to create pipes for compiler output!"));
         return false;
@@ -50,7 +50,7 @@ bool RunCompiler(TArray<FString>& args)
         NULL,   // PriorityModifier
         0,      // ProcessID (out)
         nullptr, // Working Directory (nullptr = same as executable)
-        PipeWrite, // PipeWriteChild 
+        PipeWrite, // PipeWriteChild
         nullptr // PipeReadChild (nullptr = don't pipe input)
     );
 
@@ -59,7 +59,10 @@ bool RunCompiler(TArray<FString>& args)
         FString StdOutput;
         FString LatestOutput;
 
-        FScopedSlowTask SlowTask(0, FText::FromString(TEXT("Dink: Compiling...")));
+        FString Title = DisplayName.IsEmpty()
+            ? TEXT("Dink: Compiling...")
+            : FString::Printf(TEXT("Dink: Compiling %s..."), *DisplayName);
+        FScopedSlowTask SlowTask(0, FText::FromString(Title));
         SlowTask.MakeDialog(/*bShowCancelButton=*/false);
 
         while (FPlatformProcess::IsProcRunning(Handle))
@@ -102,49 +105,53 @@ bool RunCompiler(TArray<FString>& args)
     return true;
 }
 
+static bool GetProjectFilePath(FString& OutFullPath)
+{
+    const UDinkEditorSettings* Settings = GetDefault<UDinkEditorSettings>();
+    if (!Settings || Settings->ProjectFilePath.IsEmpty())
+    {
+        UE_LOG(LogDinkEditor, Error, TEXT("No Dink project file set up in Project Settings."));
+        return false;
+    }
+    OutFullPath = FPaths::ConvertRelativePathToFull(
+        FPaths::Combine(FPaths::ProjectDir(), Settings->ProjectFilePath));
+    if (!FPaths::FileExists(OutFullPath))
+    {
+        UE_LOG(LogDinkEditor, Error, TEXT("Couldn't find Dink project file: %s"), *OutFullPath);
+        return false;
+    }
+    return true;
+}
+
 bool UDinkRunner::CompileMinimal(const FString& sourceFile, const FString& destFolder)
 {
     TArray<FString> args;
     args.Add(FString::Printf(TEXT("--source \"%s\""), *sourceFile));
     args.Add(FString::Printf(TEXT("--destFolder \"%s\""), *destFolder));
-    if (RunCompiler(args))
-        return true;
-	return false;
+	return RunCompiler(args);
 }
-
 
 bool UDinkRunner::CompileProject(TArray<FString> additionalArgs)
 {
-    const UDinkEditorSettings* Settings = GetDefault<UDinkEditorSettings>();
-    if (!Settings||Settings->ProjectFilePath.IsEmpty())
-    {
-        UE_LOG(LogDinkEditor, Error, TEXT("No Dink project file set up in Project Settings."));
-        return false;
-    }
-
-    FString projectFile = Settings->ProjectFilePath;
-    FString fullProjectPath = FPaths::Combine(FPaths::ProjectDir(), projectFile);
-    fullProjectPath = FPaths::ConvertRelativePathToFull(fullProjectPath);
-    if (!FPaths::FileExists(fullProjectPath))
-    {
-        UE_LOG(LogDinkEditor, Error, TEXT("Couldn't find Dink project file: %s"), *fullProjectPath);
-        return false;
-    }
+    FString fullProjectPath;
+    if (!GetProjectFilePath(fullProjectPath)) return false;
 
     TArray<FString> args;
     args.Add(FString::Printf(TEXT("--project \"%s\""), *fullProjectPath));
     args.Append(additionalArgs);
-    if (RunCompiler(args))
-        return true;
-    return false;
+    return RunCompiler(args);
 }
 
 bool UDinkRunner::CompileWithProject(const FString& sourceFile, const FString& destFolder, bool withStructure)
 {
+    FString fullProjectPath;
+    if (!GetProjectFilePath(fullProjectPath)) return false;
+
     TArray<FString> args;
+    args.Add(FString::Printf(TEXT("--project \"%s\""), *fullProjectPath));
     args.Add(FString::Printf(TEXT("--source \"%s\""), *sourceFile));
     args.Add(FString::Printf(TEXT("--destFolder \"%s\""), *destFolder));
     if (withStructure)
         args.Add(TEXT("--dinkStructure"));
-    return CompileProject(args);
+    return RunCompiler(args, FPaths::GetBaseFilename(sourceFile));
 }
