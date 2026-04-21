@@ -4,6 +4,7 @@
 #include "DinkEditor.h"
 #include "HAL/PlatformProcess.h"
 #include "DinkEditorSettings.h"
+#include "Misc/ScopedSlowTask.h"
 
 bool FindExePath(FString& outPath)
 {
@@ -58,8 +59,12 @@ bool RunCompiler(TArray<FString>& args)
         FString StdOutput;
         FString LatestOutput;
 
+        FScopedSlowTask SlowTask(0, FText::FromString(TEXT("Dink: Compiling...")));
+        SlowTask.MakeDialog(/*bShowCancelButton=*/false);
+
         while (FPlatformProcess::IsProcRunning(Handle))
         {
+            SlowTask.EnterProgressFrame(0);
             LatestOutput = FPlatformProcess::ReadPipe(PipeRead);
             StdOutput += LatestOutput;
             if (!LatestOutput.IsEmpty())
