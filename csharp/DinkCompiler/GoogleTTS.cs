@@ -65,9 +65,10 @@ public class GoogleTTS
                 continue;
             }
 
-            if (GenerateAudio(client, line.Line, ttsVoice, fullPath))
+            byte[]? audioBytes = GenerateAudio(client, line.Line, ttsVoice);
+            if (audioBytes != null)
             {
-                WriteHashToWAV(fullPath, hash);
+                WriteAudioWithHash(fullPath, audioBytes, hash);
             }
         }
         return true;
@@ -86,15 +87,11 @@ public class GoogleTTS
         return "en-US";
     }
 
-    private bool GenerateAudio(TextToSpeechClient client, string text, 
-            string voiceName, string outputFile)
+    private static byte[]? GenerateAudio(TextToSpeechClient client, string text, string voiceName)
     {
         try
         {
-            var input = new SynthesisInput
-            {
-                Text = text
-            };
+            var input = new SynthesisInput { Text = text };
 
             var voiceSelection = new VoiceSelectionParams
             {
@@ -109,20 +106,12 @@ public class GoogleTTS
             };
 
             var response = client.SynthesizeSpeech(input, voiceSelection, audioConfig);
-            var writeResult = VCLib.WriteBinaryFile(outputFile, response.AudioContent.ToByteArray(), forceWrite: true);
-            if (!writeResult.Success)
-            {
-                Console.WriteLine($"FAILED on {outputFile}: {writeResult.Message}");
-                return false;
-            }
-
-            Console.WriteLine($"Generated TTS: {outputFile}");
-            return true;
+            return response.AudioContent.ToByteArray();
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"FAILED on {outputFile}: {ex.Message}");
-            return false;
+            Console.WriteLine($"TTS generation failed: {ex.Message}");
+            return null;
         }
     }
 
@@ -155,25 +144,21 @@ public class GoogleTTS
     private static readonly int IdDink = BitConverter.ToInt32(Encoding.ASCII.GetBytes("DINK"), 0); // Custom tag
 
     /// <summary>
-    /// Writes the Google TTS audio to disk and appends the hash code as metadata.
+    /// Combines raw TTS audio bytes with the hash metadata and writes to disk in a single operation.
     /// </summary>
-    private static void WriteHashToWAV(string filePath, string hashCode)
+    private static void WriteAudioWithHash(string filePath, byte[] audioBytes, string hashCode)
     {
-        byte[] original = File.ReadAllBytes(filePath);
-        using var ms = new MemoryStream(original.Length + 32);
-        ms.Write(original, 0, original.Length);
-        using var bw = new BinaryWriter(ms, Encoding.UTF8, leaveOpen: true);
-
-        // Prepare the hash data
         byte[] hashBytes = Encoding.UTF8.GetBytes(hashCode);
-        // RIFF chunks must be word-aligned (even number of bytes).
         bool needsPadding = hashBytes.Length % 2 != 0;
         int dataSize = hashBytes.Length + (needsPadding ? 1 : 0);
-
-        // Structure: 'LIST' + (TotalListSize) + 'INFO' + 'DINK' + (StrSize) + String + [Pad]
         int dinkChunkSize = 4 + 4 + dataSize;
         int listChunkSize = 4 + dinkChunkSize;
 
+        using var ms = new MemoryStream(audioBytes.Length + 8 + listChunkSize);
+        ms.Write(audioBytes, 0, audioBytes.Length);
+        using var bw = new BinaryWriter(ms, Encoding.UTF8, leaveOpen: true);
+
+        // Structure: 'LIST' + (TotalListSize) + 'INFO' + 'DINK' + (StrSize) + String + [Pad]
         bw.Write(IdList);
         bw.Write(listChunkSize);
         bw.Write(IdInfo);
@@ -190,9 +175,9 @@ public class GoogleTTS
         bw.Flush();
         var result = VCLib.WriteBinaryFile(filePath, ms.ToArray(), forceWrite: true);
         if (!result.Success)
-            Console.WriteLine($"Warning: Could not write hash to '{filePath}': {result.Message}");
+            Console.WriteLine($"Warning: Could not write TTS to '{filePath}': {result.Message}");
         else
-            Console.WriteLine("Write successful.");
+            Console.WriteLine($"Generated TTS: {filePath}");
     }
 
     /// <summary>
