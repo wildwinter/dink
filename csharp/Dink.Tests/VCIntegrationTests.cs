@@ -22,6 +22,14 @@ internal static class VCTestHelpers
         return dir;
     }
 
+    // On Windows, git marks object files read-only; Directory.Delete fails without this.
+    public static void DeleteDirectory(string path)
+    {
+        foreach (var file in Directory.GetFiles(path, "*", SearchOption.AllDirectories))
+            File.SetAttributes(file, FileAttributes.Normal);
+        Directory.Delete(path, recursive: true);
+    }
+
     public static bool SvnAvailable()
     {
         static int ExitCode(string exe, string args)
@@ -214,7 +222,7 @@ public class GitVCIntegrationTests : IDisposable
     {
         VCLib.ClearProvider();
         if (Directory.Exists(_repoDir))
-            Directory.Delete(_repoDir, recursive: true);
+            VCTestHelpers.DeleteDirectory(_repoDir);
     }
 
     [Fact]
@@ -306,7 +314,7 @@ public class GitVCIntegrationTests : IDisposable
         {
             VCLib.SetProvider(new GitProvider()); // Restore for Dispose.
             if (Directory.Exists(dir))
-                Directory.Delete(dir, recursive: true);
+                VCTestHelpers.DeleteDirectory(dir);
         }
     }
 }
@@ -346,7 +354,7 @@ public class SvnVCIntegrationTests : IDisposable
     {
         VCLib.ClearProvider();
         if (_wcDir != string.Empty && Directory.Exists(_wcDir))
-            Directory.Delete(_wcDir, recursive: true);
+            VCTestHelpers.DeleteDirectory(_wcDir);
     }
 
     [Fact]
@@ -413,7 +421,7 @@ public class SvnVCIntegrationTests : IDisposable
         {
             VCLib.SetProvider(new SvnProvider()); // Restore for Dispose.
             if (Directory.Exists(wcDir))
-                Directory.Delete(wcDir, recursive: true);
+                VCTestHelpers.DeleteDirectory(wcDir);
         }
     }
 }

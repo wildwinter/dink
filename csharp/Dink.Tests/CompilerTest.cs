@@ -6,6 +6,7 @@ using DinkTool;
 using System.IO;
 using DinkCompiler;
 
+[Collection("VCIntegration")]
 public class ParserTest
 {
     private string loadTestFile(string fileName) {
