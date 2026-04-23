@@ -43,6 +43,14 @@ static FDinkStructureBeat ParseBeat(TSharedPtr<FJsonObject> JsonBeat)
         Beat.Direction = JsonBeat->GetStringField(TEXT("Direction"));
     }
 
+    const TArray<TSharedPtr<FJsonValue>>* CommentsArray;
+    if (JsonBeat->TryGetArrayField(TEXT("Comments"), CommentsArray))
+    {
+        Beat.Comments.Reserve(CommentsArray->Num());
+        for (const auto& CommentVal : *CommentsArray)
+            Beat.Comments.Emplace(CommentVal->AsString());
+    }
+
     return Beat;
 }
 
@@ -51,6 +59,14 @@ static FDinkStructureSnippet ParseSnippet(TSharedPtr<FJsonObject> JsonSnippet)
 {
     FDinkStructureSnippet Snippet;
     Snippet.SnippetID = FName(*JsonSnippet->GetStringField(TEXT("SnippetID")));
+
+    const TArray<TSharedPtr<FJsonValue>>* SnippetCommentsArray;
+    if (JsonSnippet->TryGetArrayField(TEXT("Comments"), SnippetCommentsArray))
+    {
+        Snippet.Comments.Reserve(SnippetCommentsArray->Num());
+        for (const auto& CommentVal : *SnippetCommentsArray)
+            Snippet.Comments.Emplace(CommentVal->AsString());
+    }
 
     const TArray<TSharedPtr<FJsonValue>>* BeatsArray;
     if (JsonSnippet->TryGetArrayField(TEXT("Beats"), BeatsArray))
@@ -77,6 +93,14 @@ static FDinkStructureBlock ParseBlock(TSharedPtr<FJsonObject> JsonBlock)
     if (JsonBlock->TryGetStringField(TEXT("BlockID"), BlockIDStr))
     {
         Block.BlockID = FName(*BlockIDStr);
+    }
+
+    const TArray<TSharedPtr<FJsonValue>>* BlockCommentsArray;
+    if (JsonBlock->TryGetArrayField(TEXT("Comments"), BlockCommentsArray))
+    {
+        Block.Comments.Reserve(BlockCommentsArray->Num());
+        for (const auto& CommentVal : *BlockCommentsArray)
+            Block.Comments.Emplace(CommentVal->AsString());
     }
 
     const TArray<TSharedPtr<FJsonValue>>* SnippetsArray;

@@ -5,6 +5,17 @@
 #include "HAL/PlatformProcess.h"
 #include "DinkEditorSettings.h"
 #include "Misc/ScopedSlowTask.h"
+#include "Misc/FileHelper.h"
+#include "HAL/FileManager.h"
+#include "Misc/Crc.h"
+#include "Dom/JsonObject.h"
+#include "Serialization/JsonReader.h"
+#include "Serialization/JsonSerializer.h"
+#include "Internationalization/StringTable.h"
+#include "Internationalization/StringTableCore.h"
+#include "AssetRegistry/AssetRegistryModule.h"
+#include "UObject/Package.h"
+#include "FileHelpers.h"
 
 bool FindExePath(FString& outPath)
 {
@@ -154,4 +165,101 @@ bool UDinkRunner::CompileWithProject(const FString& sourceFile, const FString& d
     if (withStructure)
         args.Add(TEXT("--dinkStructure"));
     return RunCompiler(args, FPaths::GetBaseFilename(sourceFile));
+}
+
+bool UDinkRunner::ImportStringTable(const FString& OutputDir, const FString& InkRootName,
+    const FString& DestPackagePath, uint32& InOutHash, TArray<UPackage*>& OutPackagesToSave)
+{
+    // The compiler always emits {InkRootName}-strings-{LocaleCode}.json.
+    // We glob for it so we don't hard-code the locale.
+    TArray<FString> MatchingFiles;
+    IFileManager::Get().FindFiles(MatchingFiles,
+        *(OutputDir / (InkRootName + TEXT("-strings-*.json"))), true, false);
+
+    if (MatchingFiles.IsEmpty())
+    {
+        UE_LOG(LogDinkEditor, Warning,
+            TEXT("ImportStringTable: No strings file found in '%s' for '%s'"),
+            *OutputDir, *InkRootName);
+        return false;
+    }
+
+    FString StringsFilePath = OutputDir / MatchingFiles[0];
+
+    FString JsonContent;
+    if (!FFileHelper::LoadFileToString(JsonContent, *StringsFilePath))
+    {
+        UE_LOG(LogDinkEditor, Warning,
+            TEXT("ImportStringTable: Could not load '%s'"), *StringsFilePath);
+        return false;
+    }
+
+    // Fingerprint: skip reimport if file content unchanged.
+    uint32 NewHash = FCrc::StrCrc32(*JsonContent);
+    if (NewHash == InOutHash)
+    {
+        UE_LOG(LogDinkEditor, Log,
+            TEXT("ImportStringTable: Strings unchanged for '%s', skipping."), *InkRootName);
+        return true;
+    }
+
+    // Parse flat JSON: { "lineId": "text", ... }
+    TSharedPtr<FJsonObject> JsonObj;
+    TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(JsonContent);
+    if (!FJsonSerializer::Deserialize(Reader, JsonObj) || !JsonObj.IsValid())
+    {
+        UE_LOG(LogDinkEditor, Warning,
+            TEXT("ImportStringTable: Failed to parse JSON from '%s'"), *StringsFilePath);
+        return false;
+    }
+
+    TMap<FString, FString> Strings;
+    for (const auto& Pair : JsonObj->Values)
+    {
+        FString Value;
+        if (Pair.Value->TryGetString(Value))
+            Strings.Add(Pair.Key, Value);
+    }
+
+    // Create or find the UStringTable asset at DestPackagePath/DinkStrings_{InkRootName}
+    FString AssetName = FString::Printf(TEXT("DinkStrings_%s"), *InkRootName);
+    FString FullPackagePath = DestPackagePath / AssetName;
+
+    UPackage* Package = CreatePackage(*FullPackagePath);
+    Package->FullyLoad();
+
+    UStringTable* StringTable = FindObject<UStringTable>(Package, *AssetName);
+    bool bNewAsset = (StringTable == nullptr);
+    if (bNewAsset)
+    {
+        StringTable = NewObject<UStringTable>(Package, FName(*AssetName),
+            RF_Public | RF_Standalone | RF_Transactional);
+    }
+
+    // Clear existing entries then repopulate
+    FStringTableRef ST = StringTable->GetMutableStringTable();
+    TArray<FString> ExistingKeys;
+    ST->EnumerateSourceStrings([&](const FString& Key, const FString&) -> bool {
+        ExistingKeys.Add(Key);
+        return true;
+    });
+    for (const FString& Key : ExistingKeys)
+        ST->RemoveSourceString(FTextKey(Key));
+
+    for (const auto& Pair : Strings)
+        ST->SetSourceString(FTextKey(Pair.Key), Pair.Value);
+
+    StringTable->MarkPackageDirty();
+    OutPackagesToSave.AddUnique(Package);
+
+    if (bNewAsset)
+    {
+        FAssetRegistryModule::AssetCreated(StringTable);
+    }
+
+    InOutHash = NewHash;
+
+    UE_LOG(LogDinkEditor, Log,
+        TEXT("ImportStringTable: Updated '%s' with %d entries."), *AssetName, Strings.Num());
+    return true;
 }

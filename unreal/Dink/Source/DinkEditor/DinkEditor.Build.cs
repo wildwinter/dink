@@ -45,7 +45,8 @@ public class DinkEditor : ModuleRules
                 "Projects",
                 "Json",
                 "JsonUtilities",
-                "DeveloperSettings"
+                "DeveloperSettings",
+                "PropertyEditor"
             }
             );
 

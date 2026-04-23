@@ -38,6 +38,9 @@ public:
 
     // END LINE TYPE
 
+    UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
+    TArray<FString> Comments;
+
     FString ToString() const;
     void ToRuntime(FDinkBeat& Beat) const;
 };
@@ -51,6 +54,9 @@ struct DINK_API FDinkStructureSnippet
 public:
     UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
     FName SnippetID;
+
+    UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
+    TArray<FString> Comments;
 
     UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
     TArray<FDinkStructureBeat> Beats;
@@ -67,6 +73,9 @@ struct DINK_API FDinkStructureBlock
 public:
     UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
     FName BlockID;
+
+    UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
+    TArray<FString> Comments;
 
     UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
     TArray<FDinkStructureSnippet> Snippets;

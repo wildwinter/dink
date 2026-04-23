@@ -5,6 +5,9 @@
 #include "ToolMenus.h"
 #include "Misc/Paths.h"
 #include "HAL/PlatformProcess.h"
+#include "PropertyEditorModule.h"
+#include "Internationalization/StringTable.h"
+#include "DinkStringTableCustomization.h"
 
 #define LOCTEXT_NAMESPACE "FDinkEditorModule"
 
@@ -101,6 +104,14 @@ void FDinkEditorModule::StartupModule()
 
     UToolMenus::RegisterStartupCallback(
         FSimpleMulticastDelegate::FDelegate::CreateRaw(this, &FDinkEditorModule::RegisterMenus));
+
+    FPropertyEditorModule& PropertyModule =
+        FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");
+    PropertyModule.RegisterCustomClassLayout(
+        UStringTable::StaticClass()->GetFName(),
+        FOnGetDetailCustomizationInstance::CreateStatic(&FDinkStringTableCustomization::MakeInstance)
+    );
+    PropertyModule.NotifyCustomizationModuleChanged();
 }
 
 void FDinkEditorModule::ShutdownModule()
@@ -109,6 +120,13 @@ void FDinkEditorModule::ShutdownModule()
     if (UObjectInitialized())
     {
         UToolMenus::Get()->RemoveSection("MainFrame.MainMenu.Tools", "Dink");
+    }
+
+    if (FModuleManager::Get().IsModuleLoaded("PropertyEditor"))
+    {
+        FPropertyEditorModule& PropertyModule =
+            FModuleManager::GetModuleChecked<FPropertyEditorModule>("PropertyEditor");
+        PropertyModule.UnregisterCustomClassLayout(UStringTable::StaticClass()->GetFName());
     }
 }
 

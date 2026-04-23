@@ -16,4 +16,11 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "Dink")
     static bool CompileWithProject(const FString& sourceFile, const FString& destFolder, bool withStructure = false);
+
+    // Finds the compiler-output strings JSON in OutputDir, parses it, and creates/updates
+    // a UStringTable asset named "DinkStrings_{InkRootName}" inside DestPackagePath.
+    // InOutHash is compared against the file's CRC32; if unchanged the asset is left alone.
+    // On change, InOutHash is updated and the dirty package is appended to OutPackagesToSave.
+    static bool ImportStringTable(const FString& OutputDir, const FString& InkRootName,
+        const FString& DestPackagePath, uint32& InOutHash, TArray<UPackage*>& OutPackagesToSave);
 };
