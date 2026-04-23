@@ -756,13 +756,14 @@ public class DinkParser
             }
             else if (IsFlowBreakingLine(trimmedLine))
             {
-                comments.Clear();
                 if (IsFlowBreakingDinkLine(trimmedLine) && parsing)
                 {
+                    // Keep comments — ParseLine below will attach them to the DinkLine.
                     addAndCreateSnippet();
                 }
                 else
                 {
+                    comments.Clear();
                     if (ParseOption(trimmedLine) is string option)
                     {
                         inOptions = true;
