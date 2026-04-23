@@ -8,6 +8,7 @@ public class AudioStatuses
     // id, Status
     private Dictionary<string, string> _entries = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
     private List<string> _ids = new List<string>();
+    private HashSet<string> _idSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
     private ProjectEnvironment _env;
 
@@ -18,10 +19,8 @@ public class AudioStatuses
 
     private void Set(string id, string status)
     {
-        if (!_ids.Contains(id))
-        {
+        if (_idSet.Add(id))
             _ids.Add(id);
-        }
         _entries[id] = status;
     }
 
@@ -82,14 +81,14 @@ public class AudioStatuses
     public bool Build(VoiceLines voiceLines)
     {
         var idArray = voiceLines.OrderedEntries.Select(v => v.ID).ToArray();
-        foreach (var id in idArray)
-        {
-            Set(id, "Unknown");
-        }
+        var idSet = new HashSet<string>(idArray, StringComparer.OrdinalIgnoreCase);
 
-        for (var i=_env.AudioStatusSettings.Count-1;i>=0;i--)
+        foreach (var id in idArray)
+            Set(id, "Unknown");
+
+        for (var i = _env.AudioStatusSettings.Count - 1; i >= 0; i--)
         {
-            var audioStatusDef=_env.AudioStatusSettings[i];
+            var audioStatusDef = _env.AudioStatusSettings[i];
             string audioFolderRoot = audioStatusDef.Folder;
 
             if (string.IsNullOrWhiteSpace(audioFolderRoot) || !Directory.Exists(audioFolderRoot))
@@ -98,12 +97,23 @@ public class AudioStatuses
             foreach (var filePath in Directory.EnumerateFiles(audioFolderRoot, "*", SearchOption.AllDirectories))
             {
                 var nameWithoutExt = Path.GetFileNameWithoutExtension(filePath);
+
+                // Fast path: filename matches an ID exactly (the common case).
+                if (idSet.Contains(nameWithoutExt))
+                {
+                    if (_entries[nameWithoutExt] == "Unknown")
+                        _entries[nameWithoutExt] = audioStatusDef.Status;
+                    continue;
+                }
+
+                // Slow path: filename is a variant like "id_retake" — check
+                // prefix match. Only hit for files that aren't exact-ID names.
                 foreach (var id in idArray)
                 {
                     if (nameWithoutExt.StartsWith(id, StringComparison.OrdinalIgnoreCase))
                     {
-                        if (_entries[id]=="Unknown")
-                            _entries[id]=audioStatusDef.Status;
+                        if (_entries[id] == "Unknown")
+                            _entries[id] = audioStatusDef.Status;
                     }
                 }
             }

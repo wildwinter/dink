@@ -601,6 +601,30 @@ Or instead, grab all the settings from a project file:
     you'll get back an ID e.g. `someFilename_someKnot_someStitch_XXZZ`. Passing this param
     will leave the strings during compilation.
 
+* `--clean`
+
+    Delete the incremental build cache (`.dink-cache/`) before compiling, forcing a full rebuild. Useful when you suspect the cache is stale or after making changes to project settings. See [Incremental Builds](#incremental-builds).
+
+### Incremental Builds
+
+To speed up iterative work, `DinkCompiler` maintains a build cache in a `.dink-cache/` folder next to the project file (or next to the source Ink file when using `--source` directly). On each run it checks whether the inputs to each expensive step have changed, and skips the step if they haven't:
+
+* **Ink compilation and scene parsing** are skipped when none of the Ink source files have changed since the last successful build. The compiled JSON and parsed scene data are loaded from cache instead.
+* **The recording script Excel** is skipped when the voice line content and audio statuses haven't changed.
+* **The stats Excel** is skipped when the scene structure and line statuses haven't changed.
+
+Output files that are written as plain text or JSON (minimal Dink, runtime strings, origins, PO files, etc.) already skip writing when their content is unchanged, so they are unaffected by the cache.
+
+#### VCS / `.gitignore`
+
+The `.dink-cache/` folder is local scratch data and **should not be committed to version control**. Add it to your `.gitignore`, `.p4ignore`, or equivalent:
+
+```
+.dink-cache/
+```
+
+The cache is safe to delete at any time — the next build will simply do a full rebuild and recreate it. You can also delete it via the command line with `--clean`.
+
 ### Live Mode
 
 If you call the compiler on the command line with `--live` it will start waiting for changes to your Ink files. Any changes will cause the compiler to rebuild and reexport everything (according to the [project config](#config-file)). This means your scripts and stats will always be up to date!

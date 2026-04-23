@@ -4,12 +4,12 @@
 namespace DinkCompiler;
 
 using System.Text;
+using System.Text.Json;
 using Dink;
 using Ink;
 using SimpleVCLib;
 using InkLocaliser;
 using DinkTool;
-using System.Text.Json;
 
 public class Compiler
 {
@@ -23,42 +23,68 @@ public class Compiler
     }
     public bool Run()
     {
-        // Steps:
+        var cache = DinkCache.ForProject(_env.ProjectFolder);
 
         // ----- Process Ink files for string data and IDs -----
-        bool success = ProcessInkStrings(_env.SourceInkFile, out LocStrings inkStrings, 
-            out List<string> usedInkFiles, out Dictionary<string, Localiser.Origin> origins);
+        if (!ProcessInkStrings(_env.SourceInkFile, out LocStrings inkStrings,
+            out List<string> usedInkFiles, out Dictionary<string, Localiser.Origin> origins))
+            return false;
         UsedInkFiles = usedInkFiles;
-        if (!success)
-            return false;
-
-        // ----- Compile to json -----
-        if (!CompileToJson(_env.SourceInkFile, inkStrings, !_env.NoStrip, _env.DestCompiledInkFile))
-            return false;
 
         // ----- Read characters -----
         string? charFile = _env.FindFileInSource("characters.json");
-        // Character list is optional.
         ReadCharacters(charFile, out Characters? characters);
 
-        // ----- Does a previous structure file exist? -----
-        List<DinkScene>? previousScenes = null;
-        if (File.Exists(_env.DestDinkStructureFile))
-        {
-            string fileText = File.ReadAllText(_env.DestDinkStructureFile);
-            previousScenes = DinkJson.ReadScenes(fileText);
-        }
+        // ----- Compile + Parse — two-level incremental cache -----
+        // strippedHash: hash of ink content after text-stripping (what Ink.Compiler
+        //   sees).  Changing only dialogue text leaves this unchanged → skip compile.
+        // rawHash: hash of raw file bytes (what DinkParser sees).  Any file change
+        //   invalidates the parse cache.  rawCurrent ⟹ strippedCurrent.
+        var rawHash = DinkCache.HashFiles(usedInkFiles);
+        bool rawCurrent = cache.IsCurrent("ink-raw", rawHash);
+        bool strippedCurrent = rawCurrent
+            || cache.IsCurrent("ink-stripped", ComputeStrippedInkHash(usedInkFiles, inkStrings));
 
-        // ----- Parse ink files, extract Dink beats -----
-        if (!ParseDinkScenes(usedInkFiles, characters, previousScenes,
-            out List<DinkScene> dinkScenes, out List<NonDinkLine> nonDinkLines))
-            return false;
+        List<DinkScene> dinkScenes;
+        List<NonDinkLine> nonDinkLines;
+
+        if (rawCurrent
+            && File.Exists(_env.DestCompiledInkFile)
+            && cache.Load("scenes") is string cachedScenes
+            && cache.Load("ndlines") is string cachedNdLines)
+        {
+            Console.WriteLine("Ink source unchanged — loading from cache.");
+            dinkScenes = DinkJson.ReadScenes(cachedScenes);
+            nonDinkLines = JsonSerializer.Deserialize<List<NonDinkLine>>(cachedNdLines) ?? new();
+        }
+        else
+        {
+            // Need previousScenes only when re-parsing, to preserve snippet IDs.
+            List<DinkScene>? previousScenes = null;
+            if (File.Exists(_env.DestDinkStructureFile))
+                previousScenes = DinkJson.ReadScenes(File.ReadAllText(_env.DestDinkStructureFile));
+
+            if (!strippedCurrent || !File.Exists(_env.DestCompiledInkFile))
+            {
+                if (!CompileToJson(_env.SourceInkFile, inkStrings, !_env.NoStrip, _env.DestCompiledInkFile))
+                    return false;
+            }
+            else
+                Console.WriteLine("Ink structure unchanged — skipping compilation.");
+
+            if (!ParseDinkScenes(usedInkFiles, characters, previousScenes,
+                    out dinkScenes, out nonDinkLines))
+                return false;
+
+            cache.Save("scenes", DinkJson.WriteScenes(dinkScenes));
+            cache.Save("ndlines", JsonSerializer.Serialize(nonDinkLines));
+        }
 
         // ---- Remove any action and character references from the localisation -----
         if (!FixLoc(dinkScenes, nonDinkLines, inkStrings))
             return false;
 
-        // ---- Build writing statuses for lines. This might affect localisation and recording -----
+        // ---- Build writing statuses for lines -----
         var writingStatuses = new WritingStatuses(_env);
         if (!writingStatuses.Build(dinkScenes, nonDinkLines, inkStrings))
             return false;
@@ -70,13 +96,12 @@ public class Compiler
         // ----- Create TTS audio if desired -----
         if (_env.GoogleTTS.Generate)
         {
-            if (characters==null)
+            if (characters == null)
             {
                 Console.Error.WriteLine("Request to generate Google TTS but character file doesn't exist.");
                 return false;
             }
-            GoogleTTS tts = new GoogleTTS(characters, _env.GoogleTTS);
-            if (!tts.Generate(voiceLines))
+            if (!new GoogleTTS(characters, _env.GoogleTTS).Generate(voiceLines))
                 return false;
         }
 
@@ -88,8 +113,26 @@ public class Compiler
         // ----- Output Voice Lines -----
         if (_env.OutputRecordingScript)
         {
-            if (!WriteRecordingScript(voiceLines, writingStatuses, audioStatuses, characters, _env.DestRecordingScriptFile))
-                return false;
+            // Skip regenerating the Excel when neither the voice lines nor the
+            // audio statuses have changed since the last build.  Serialize the
+            // full VoiceEntry so that changes to comments, tags, snippet
+            // comments, brace comments, and group indicator are all captured.
+            var scriptHash = DinkCache.HashString(
+                JsonSerializer.Serialize(voiceLines.OrderedEntries
+                    .Select(v => new {
+                        v.ID, v.Character, v.Line, v.Qualifier, v.Direction,
+                        v.SnippetID, v.GroupIndicator,
+                        v.Comments, v.SnippetComments, v.BraceComments, v.Tags,
+                        AudioStatus = audioStatuses.GetStatus(v.ID).Status
+                    }).ToList())
+            );
+            if (!cache.IsCurrent("recording-script", scriptHash))
+            {
+                if (!WriteRecordingScript(voiceLines, writingStatuses, audioStatuses, characters, _env.DestRecordingScriptFile))
+                    return false;
+            }
+            else
+                Console.WriteLine("Recording script unchanged — skipping.");
         }
 
         // ----- Output Dink Structure -----
@@ -131,11 +174,21 @@ public class Compiler
         // ----- Output general stats (Excel) -----
         if (_env.OutputStats)
         {
-            if (!Stats.WriteExcelFile(_env.RootFilename, dinkScenes, nonDinkLines, 
-                        inkStrings, voiceLines, writingStatuses, audioStatuses,
-                        characters,
-                        _env.DestStatsFile))
-                return false;
+            // Skip when scenes, voice lines and statuses are all unchanged.
+            var statsHash = DinkCache.HashString(
+                DinkJson.WriteScenes(dinkScenes) +
+                string.Join("|", voiceLines.OrderedEntries.Select(v =>
+                    $"{v.ID}:{writingStatuses.GetStatus(v.ID).Status}:{audioStatuses.GetStatus(v.ID).Status}"))
+            );
+            if (!cache.IsCurrent("stats", statsHash))
+            {
+                if (!Stats.WriteExcelFile(_env.RootFilename, dinkScenes, nonDinkLines,
+                            inkStrings, voiceLines, writingStatuses, audioStatuses,
+                            characters, _env.DestStatsFile))
+                    return false;
+            }
+            else
+                Console.WriteLine("Stats unchanged — skipping.");
         }
 
         // ----- Output origins (JSON) -----
@@ -510,6 +563,23 @@ public class Compiler
             return false;
         }
         return true;
+    }
+
+    private string ComputeStrippedInkHash(List<string> inkFiles, LocStrings inkStrings)
+    {
+        var cwd = Directory.GetCurrentDirectory();
+        Directory.SetCurrentDirectory(Path.GetDirectoryName(_env.SourceInkFile) ?? cwd);
+        try
+        {
+            var handler = new InkFileHandler(inkStrings, !_env.NoStrip);
+            return DinkCache.HashStrings(
+                inkFiles.OrderBy(f => f, StringComparer.Ordinal)
+                        .Select(f => handler.LoadInkFileContents(f)));
+        }
+        finally
+        {
+            Directory.SetCurrentDirectory(cwd);
+        }
     }
 
     public class InkFileHandler : IFileHandler

@@ -76,6 +76,12 @@ Option<bool> liveOption = new("--live")
 };
 command.Options.Add(liveOption);
 
+Option<bool> cleanOption = new("--clean")
+{
+    Description = "Delete the incremental build cache before compiling, forcing a full rebuild."
+};
+command.Options.Add(cleanOption);
+
 Option<bool> nostripOption = new("--nostrip")
 {
     Description = "Don't strip the text out of the compiled Ink."
@@ -158,6 +164,17 @@ command.SetAction(parseResult =>
     ProjectEnvironment env = new ProjectEnvironment(settings);
     if (!env.Init())
         return -1;
+
+    if (parseResult.GetValue<bool>(cleanOption))
+    {
+        var cacheDir = Path.Combine(env.ProjectFolder, ".dink-cache");
+        if (Directory.Exists(cacheDir))
+        {
+            Directory.Delete(cacheDir, recursive: true);
+            Console.WriteLine("Build cache cleared.");
+        }
+    }
+
     var compiler = new Compiler(env);
 
     if (parseResult.GetValue<bool>(liveOption))
