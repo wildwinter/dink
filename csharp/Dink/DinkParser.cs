@@ -283,6 +283,17 @@ public class DinkParser
         return null;
     }
 
+    // Strip Ink conditions ({...} blocks) and stray bracket characters from a raw
+    // option string so only the human-readable display text remains.
+    private static readonly Regex _rxOptionConditions = new Regex(
+        @"^\s*(?:\{[^}]*\}\s*)+",
+        RegexOptions.Compiled);
+    internal static string CleanOptionText(string raw)
+    {
+        var s = _rxOptionConditions.Replace(raw, "");
+        return s.Replace("[", "").Replace("]", "").Trim();
+    }
+
     public static bool ParseGather(string line)
     {
         return line.Trim()=="-";
@@ -844,7 +855,7 @@ public class DinkParser
                             // go to the snippet that follows the player's choice.
                             if (optionSnippetComment != null)
                                 snippetComments.Add(optionSnippetComment);
-                            snippetComments.Add($"OPTION \"{option}\"");
+                            snippetComments.Add($"OPTION \"{CleanOptionText(option)}\"");
                             addAndCreateSnippet();
                         }
                     }
