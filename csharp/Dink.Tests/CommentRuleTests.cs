@@ -386,4 +386,24 @@ public class CommentRuleTests
         Assert.True(responseSnippet.Comments.Any(c => c.Contains("My Choice")),
             "OPTION label should be in snippet comments");
     }
+
+    [Fact]
+    public void OptionComment_ConditionOnOption_StrippedFromOptionLabel()
+    {
+        var (scenes, _) = Parse("""
+            === TestScene
+            #dink
+            * {seenBefore} [My Choice] // Option note
+            FRED: Response. #id:t1
+            -
+            FRED: Done. #id:t2
+            """);
+        var responseSnippet = scenes[0].Blocks[0].Snippets
+            .First(s => s.Beats.Any(b => b.LineID == "t1"));
+        var optionComment = responseSnippet.Comments.FirstOrDefault(c => c.StartsWith("OPTION"));
+        Assert.NotNull(optionComment);
+        Assert.Contains("My Choice", optionComment);
+        Assert.DoesNotContain("{", optionComment);
+        Assert.DoesNotContain("seenBefore", optionComment);
+    }
 }
