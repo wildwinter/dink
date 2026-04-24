@@ -8,6 +8,7 @@
 #include "PropertyEditorModule.h"
 #include "Internationalization/StringTable.h"
 #include "DinkStringTableCustomization.h"
+#include "Toolkits/AssetEditorToolkitMenuContext.h"
 
 #define LOCTEXT_NAMESPACE "FDinkEditorModule"
 
@@ -120,6 +121,7 @@ void FDinkEditorModule::ShutdownModule()
     if (UObjectInitialized())
     {
         UToolMenus::Get()->RemoveSection("MainFrame.MainMenu.Tools", "Dink");
+        UToolMenus::Get()->RemoveSection("AssetEditor.StringTableEditor.ToolBar", "DinkBanner");
     }
 
     if (FModuleManager::Get().IsModuleLoaded("PropertyEditor"))
@@ -152,6 +154,42 @@ void FDinkEditorModule::RegisterMenus()
             );
         })
     );
+
+    UToolMenu* STToolbar = UToolMenus::Get()->ExtendMenu(TEXT("AssetEditor.StringTableEditor.ToolBar"));
+    STToolbar->AddDynamicSection(TEXT("DinkBanner"), FNewToolMenuDelegate::CreateLambda([](UToolMenu* InMenu)
+    {
+        UAssetEditorToolkitMenuContext* Context = InMenu->FindContext<UAssetEditorToolkitMenuContext>();
+        if (!Context) return;
+
+        bool bIsDinkTable = false;
+        for (UObject* Obj : Context->GetEditingObjects())
+        {
+            if (UStringTable* ST = Cast<UStringTable>(Obj))
+            {
+                if (ST->GetName().StartsWith(TEXT("DinkStrings_")))
+                {
+                    bIsDinkTable = true;
+                    break;
+                }
+            }
+        }
+        if (!bIsDinkTable) return;
+
+        FToolMenuSection& BannerSection = InMenu->FindOrAddSection(TEXT("DinkBanner"));
+        BannerSection.AddEntry(FToolMenuEntry::InitWidget(
+            "DinkBannerWidget",
+            SNew(SBorder)
+                .BorderImage(FAppStyle::GetBrush("NoBorder"))
+                .Padding(FMargin(6.f, 2.f))
+                [
+                    SNew(STextBlock)
+                    .Text(FText::FromString("Managed by Dink - do not edit manually."))
+                    .ColorAndOpacity(FSlateColor(FLinearColor(1.f, 0.85f, 0.3f)))
+                ],
+            FText::GetEmpty(),
+            true
+        ));
+    }));
 }
 
 void FDinkEditorModule::OpenDinky()
