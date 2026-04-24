@@ -23,7 +23,6 @@ static FDinkStructureBeat ParseBeat(TSharedPtr<FJsonObject> JsonBeat)
     Beat.Type = ParseBeatType(TypeStr);
     
     Beat.LineID = FName(*JsonBeat->GetStringField(TEXT("LineID")));
-    Beat.Text = JsonBeat->GetStringField(TEXT("Text"));
 
     const TArray<TSharedPtr<FJsonValue>>* TagsArray;
     if (JsonBeat->TryGetArrayField(TEXT("Tags"), TagsArray))

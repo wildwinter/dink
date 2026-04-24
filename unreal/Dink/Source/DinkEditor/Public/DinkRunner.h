@@ -23,4 +23,8 @@ public:
     // On change, InOutHash is updated and the dirty package is appended to OutPackagesToSave.
     static bool ImportStringTable(const FString& OutputDir, const FString& InkRootName,
         const FString& DestPackagePath, uint32& InOutHash, TArray<UPackage*>& OutPackagesToSave);
+
+    // Reads the locActions setting from the configured .dinkproj file.
+    // Returns false if the project file cannot be found or parsed; OutLocActions defaults to false.
+    static bool ReadLocActions(bool& OutLocActions);
 };

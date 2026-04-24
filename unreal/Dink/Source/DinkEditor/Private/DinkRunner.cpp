@@ -167,6 +167,28 @@ bool UDinkRunner::CompileWithProject(const FString& sourceFile, const FString& d
     return RunCompiler(args, FPaths::GetBaseFilename(sourceFile));
 }
 
+bool UDinkRunner::ReadLocActions(bool& OutLocActions)
+{
+    OutLocActions = false;
+    FString ProjPath;
+    if (!GetProjectFilePath(ProjPath))
+        return false;
+
+    FString JsonContent;
+    if (!FFileHelper::LoadFileToString(JsonContent, *ProjPath))
+        return false;
+
+    TSharedPtr<FJsonObject> JsonObj;
+    TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(JsonContent);
+    if (!FJsonSerializer::Deserialize(Reader, JsonObj) || !JsonObj.IsValid())
+        return false;
+
+    bool bVal = false;
+    if (JsonObj->TryGetBoolField(TEXT("locActions"), bVal))
+        OutLocActions = bVal;
+    return true;
+}
+
 bool UDinkRunner::ImportStringTable(const FString& OutputDir, const FString& InkRootName,
     const FString& DestPackagePath, uint32& InOutHash, TArray<UPackage*>& OutPackagesToSave)
 {

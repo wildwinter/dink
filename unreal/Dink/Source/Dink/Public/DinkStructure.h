@@ -21,9 +21,6 @@ public:
     UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
     TArray<FString> Tags;
 
-    UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
-    FString Text;
-
     // These apply only to Line type
     // BEGIN LINE TYPE
 

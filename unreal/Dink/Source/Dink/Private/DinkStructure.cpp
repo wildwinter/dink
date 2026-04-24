@@ -20,8 +20,6 @@ FString FDinkStructureBeat::ToString() const
         dump += FString::Printf(TEXT("Action"), *LineID.ToString());
     }
 
-    dump += FString::Printf(TEXT(" | Text: \"%s\""), *Text);
-
     if (Tags.Num() > 0)
     {
         dump += TEXT(" | Tags:");
@@ -36,7 +34,6 @@ void FDinkStructureBeat::ToRuntime(FDinkBeat& Beat) const
 {
     Beat.Type = Type;
     Beat.LineID = LineID;
-    Beat.Text = Text;
     Beat.CharacterID = CharacterID;
     Beat.Qualifier = Qualifier;
 }
