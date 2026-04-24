@@ -270,22 +270,78 @@ Just keep your scripts clean and straightforward and all should work fine!
 Comments will be read from your script by Dink and copied
 into recording scripts and localisation documents.
 
-Comments use `//` to make them meaningful to Dink, but any content in block-style comments
-(e.g. `/* */`) will be skipped, like in normal Ink.
+`//` marks a comment that Dink will capture. Block-style comments (`/* */`) are stripped
+entirely and never captured — use them to comment out Ink you don't want compiled.
 
-Comments *above* a block (i.e. above the knot or the stitch) will appear in the comments for that block.
+There are four places a comment can live, each with a different target:
 
-Comments above a beat will appear in the comments for that beat, and so will comments on the end of a beat.
+**Scene comments** — on or immediately above a knot header (at most one blank line gap):
 
 ```text
-// This comment will appear in the comments for MyScene's main block
-// And so will this comment.
-== MyScene
+// This note describes the whole scene.
+=== MyScene // This inline note also describes the scene.
 #dink
-// This comment will appear in the comments for this next beat
-DAVE (V.O.): It was a quiet morning in May... #id:intro_R6Sg // And so will this comment.
--> DONE
 ```
+
+Both end up in `scene.Comments`.
+
+**Block comments** — on or immediately above a stitch header (at most one blank line gap):
+
+```text
+// This note describes the block.
+= MyBlock // This inline note also describes the block.
+DAVE: Hello. #id:dave_1
+```
+
+Both end up in `block.Comments`. A comment separated from the header by more than one blank
+line is dropped rather than accidentally attaching to the wrong thing.
+
+**Group comments** — on or immediately above a `{shuffle:` / `{once:` / `{stopping:` opener:
+
+```text
+// This applies to all choices in the shuffle.
+{shuffle: // So does this inline note.
+- DAVE: Option A. #id:dave_2
+- DAVE: Option B. #id:dave_3
+}
+```
+
+Both end up in `snippet.GroupComments` on every snippet in the group, so they appear on
+every row in the recording script for that shuffle.
+
+**Beat comments** — on or immediately above any dialogue line or action beat:
+
+```text
+// This note is for the voice actor on the next line.
+DAVE (V.O.): It was a quiet morning in May... #id:dave_4 // And so is this inline note.
+```
+
+Both end up in `dinkLine.Comments`. Beat comments float freely — any number of blank lines
+between the comment and the beat is fine.
+
+Inside a shuffle, a `//` comment above a `-` entry goes to that **line**, not the snippet:
+
+```text
+{shuffle:
+// Voice note for this specific bark.
+- DAVE: Bark A. #id:dave_5 // Also a voice note.
+}
+```
+
+**Snippet comments** — use the `- //` form (a dash followed only by a comment) to attach a
+note to the whole snippet rather than any individual line. This is useful for multi-line
+exchanges:
+
+```text
+{shuffle:
+- // Both lines below are part of this choice — note applies to the snippet.
+DAVE: Have you met my friend? #id:dave_6
+LAURA: Not yet! #id:laura_1
+}
+```
+
+The `- //` line ends the previous snippet and starts a new one with the note in
+`snippet.Comments`. It works the same way at a gather point (after options).
 
 See also [Comment and Tag Filtering](#comment-and-tag-filtering) to find out how you can control which comment gets output where!
 

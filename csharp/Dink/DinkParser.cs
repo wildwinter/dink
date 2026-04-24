@@ -485,6 +485,8 @@ public class DinkParser
         DinkBlock? block = null;
         DinkSnippet? snippet = null;
         List<string> comments = new List<string>();
+        List<string> snippetComments = new List<string>();
+        int blankLinesSinceLastComment = 0;
         bool parsing = false;
         bool fileParsing = false;
         BraceContainer? currentBraceContainer = null;
@@ -522,8 +524,8 @@ public class DinkParser
             {
                 snippet.GroupComments.AddRange(currentBraceContainer.GetComments());
             }
-            snippet.Comments.AddRange(comments);
-            comments.Clear();
+            snippet.Comments.AddRange(snippetComments);
+            snippetComments.Clear();
         }
 
         void addSnippet()
@@ -571,6 +573,7 @@ public class DinkParser
             block.Origin = origin;
             block.Comments.AddRange(comments);
             comments.Clear();
+            snippetComments.Clear();
 
             activeGroupLevel = 0;
             activeGroup = 0;
@@ -620,6 +623,7 @@ public class DinkParser
             scene.Origin = origin;
             scene.Comments.AddRange(comments);
             comments.Clear();
+            snippetComments.Clear();
         }
 
         void addScene()
@@ -676,17 +680,55 @@ public class DinkParser
         {
             var trimmedLine = line.Text.Trim();
 
-            // Check for comment at end.
+            // "- // text" form: snippet-level note that also acts as a snippet boundary.
+            // The leading dash ends the previous snippet and opens a new one whose
+            // Comments will carry this note.  At a gather point (inOptions==true) we
+            // also inject the auto-generated MERGE marker so downstream tooling can
+            // tell that the snippets were joined.
+            if (trimmedLine.StartsWith("-"))
+            {
+                var afterDash = trimmedLine.Substring(1).TrimStart();
+                if (afterDash.StartsWith("//"))
+                {
+                    var snippetNote = afterDash.Substring(2).Trim();
+                    if (!string.IsNullOrEmpty(snippetNote))
+                        snippetComments.Add(snippetNote);
+                    if (inOptions) { snippetComments.Add("MERGE"); inOptions = false; }
+                    addAndCreateSnippet();
+                    blankLinesSinceLastComment = 0;
+                    continue;
+                }
+            }
+
+            // Option lines (* / +): extract any inline comment before the general
+            // inline-extraction pass so it can be routed to the following snippet
+            // rather than the beat that preceded it.
+            string? optionSnippetComment = null;
+            if (trimmedLine.StartsWith("*") || trimmedLine.StartsWith("+"))
+            {
+                int optCI = trimmedLine.LastIndexOf("//");
+                if (optCI > 0)
+                {
+                    optionSnippetComment = trimmedLine.Substring(optCI + 2).Trim();
+                    trimmedLine = trimmedLine.Substring(0, optCI).TrimEnd();
+                }
+            }
+
+            // General inline comment extraction (beat-level).
             int commentIndex = trimmedLine.LastIndexOf("//");
             if (commentIndex > 0)
             {
                 string comment = trimmedLine.Substring(commentIndex + 2).Trim();
                 comments.Add(comment);
+                blankLinesSinceLastComment = 0;
                 trimmedLine = trimmedLine.Substring(0, commentIndex).TrimEnd();
             }
 
             if (string.IsNullOrEmpty(trimmedLine))
+            {
+                blankLinesSinceLastComment++;
                 continue;
+            }
 
             if (ParseTagLine(trimmedLine) is List<string> tags)
             {
@@ -724,6 +766,8 @@ public class DinkParser
                 {
                     Parent = currentBraceContainer,
                 };
+                if (blankLinesSinceLastComment > 1)
+                    comments.Clear();
                 currentBraceContainer.Comments.AddRange(comments);
                 comments.Clear();
                 currentBraceLevel++;
@@ -748,7 +792,7 @@ public class DinkParser
                 {
                     activeGroupLevel = 0;
                     inOptions = true;
-                    comments.Add("MERGE");
+                    snippetComments.Add("MERGE");
                 }
                 if (currentBraceContainer!=null)
                     currentBraceContainer = currentBraceContainer?.Parent;
@@ -779,8 +823,12 @@ public class DinkParser
 
                             if (!CheckID(dinkLine.LineID,line.Origin))
                                 return false;
-                                
+
                             addAndCreateSnippet();
+                            // For a dialogue option, the inline comment (if any) is a
+                            // voice note for that line; the OPTION label is structural.
+                            if (optionSnippetComment != null)
+                                comments.Add(optionSnippetComment);
                             comments.Add($"OPTION \"{dinkLine.Text}\"");
                             dinkLine.Origin = line.Origin;
                             dinkLine.Comments.AddRange(comments);
@@ -792,13 +840,17 @@ public class DinkParser
                         }
                         else
                         {
-                            comments.Add($"OPTION \"{option}\"");
+                            // For a plain option, the inline comment and OPTION label
+                            // go to the snippet that follows the player's choice.
+                            if (optionSnippetComment != null)
+                                snippetComments.Add(optionSnippetComment);
+                            snippetComments.Add($"OPTION \"{option}\"");
                             addAndCreateSnippet();
                         }
                     }
                     else if (ParseGather(trimmedLine) && inOptions)
                     {
-                        comments.Add("MERGE");
+                        snippetComments.Add("MERGE");
                         inOptions = false;
                         addAndCreateSnippet();
                     }
@@ -832,12 +884,14 @@ public class DinkParser
                 addSnippet();
                 addBlock();
                 addScene();
-                
+
                 parsing = fileParsing;
 
                 hitFirstKnotContent = false;
                 knotTags.Clear();
 
+                if (blankLinesSinceLastComment > 1)
+                    comments.Clear();
                 createScene(line.Origin, knot);
                 createBlock(line.Origin);
                 createSnippet();
@@ -853,6 +907,8 @@ public class DinkParser
                 hitFirstStitchContent = false;
                 stitchTags.Clear();
 
+                if (blankLinesSinceLastComment > 1)
+                    comments.Clear();
                 createBlock(line.Origin, stitch);
                 createSnippet();
 
@@ -862,6 +918,7 @@ public class DinkParser
             else if (ParseComment(trimmedLine) is string comment)
             {
                 comments.Add(comment);
+                blankLinesSinceLastComment = 0;
                 continue;
             }
             else if (ParseLine(trimmedLine) is DinkLine dinkLine)
@@ -911,6 +968,7 @@ public class DinkParser
                 }
             }
             comments.Clear();
+            snippetComments.Clear();
         }
 
         addAndCreateSnippet();
