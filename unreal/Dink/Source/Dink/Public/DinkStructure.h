@@ -55,6 +55,10 @@ public:
     UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
     FName SnippetID;
 
+    // Comments that apply to the whole group this snippet belongs to (from "GroupComments" in JSON)
+    UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
+    TArray<FString> GroupComments;
+
     UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
     TArray<FString> Comments;
 
@@ -92,6 +96,9 @@ struct DINK_API FDinkStructureScene
 public:
     UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
     FName SceneID;
+
+    UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
+    TArray<FString> Comments;
 
     UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
     TArray<FDinkStructureBlock> Blocks;

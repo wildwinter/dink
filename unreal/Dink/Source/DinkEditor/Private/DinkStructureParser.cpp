@@ -60,6 +60,14 @@ static FDinkStructureSnippet ParseSnippet(TSharedPtr<FJsonObject> JsonSnippet)
     FDinkStructureSnippet Snippet;
     Snippet.SnippetID = FName(*JsonSnippet->GetStringField(TEXT("SnippetID")));
 
+    const TArray<TSharedPtr<FJsonValue>>* GroupCommentsArray;
+    if (JsonSnippet->TryGetArrayField(TEXT("GroupComments"), GroupCommentsArray))
+    {
+        Snippet.GroupComments.Reserve(GroupCommentsArray->Num());
+        for (const auto& CommentVal : *GroupCommentsArray)
+            Snippet.GroupComments.Emplace(CommentVal->AsString());
+    }
+
     const TArray<TSharedPtr<FJsonValue>>* SnippetCommentsArray;
     if (JsonSnippet->TryGetArrayField(TEXT("Comments"), SnippetCommentsArray))
     {
@@ -137,6 +145,14 @@ static FDinkStructureScene ParseScene(TSharedPtr<FJsonObject> JsonScene)
                 Scene.Blocks.Emplace(ParseBlock(BlockObj));
             }
         }
+    }
+
+    const TArray<TSharedPtr<FJsonValue>>* SceneCommentsArray;
+    if (JsonScene->TryGetArrayField(TEXT("Comments"), SceneCommentsArray))
+    {
+        Scene.Comments.Reserve(SceneCommentsArray->Num());
+        for (const auto& CommentVal : *SceneCommentsArray)
+            Scene.Comments.Emplace(CommentVal->AsString());
     }
 
     const TArray<TSharedPtr<FJsonValue>>* TagsArray;
