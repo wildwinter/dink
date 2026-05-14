@@ -11,6 +11,8 @@ public struct VoiceEntry
     public required string Line { get; set; }
     public required string Direction { get; set; }
     public required string SnippetID { get; set; }
+    public required List<string> SceneComments { get; set; }
+    public required List<string> BlockComments { get; set; }
     public required List<string> SnippetComments { get; set; }
     public required List<string> BraceComments { get; set; }
     public required string GroupIndicator { get; set; }
@@ -80,8 +82,10 @@ public class VoiceLines
                 Actor = (characters != null) ? characters.Get(v.Character)?.Actor ?? "" : "", 
                 Line = v.Line,
                 Direction = v.Direction,
-                Comments = (v.BraceComments.Count>0 ? string.Join("\n", v.BraceComments) + "\n" : "") + 
-                        (v.SnippetComments.Count>0 ? string.Join("\n", v.SnippetComments) + "\n" : "") + 
+                Comments = (v.SceneComments.Count>0 ? string.Join("\n", v.SceneComments) + "\n" : "") +
+                        (v.BlockComments.Count>0 ? string.Join("\n", v.BlockComments) + "\n" : "") +
+                        (v.BraceComments.Count>0 ? string.Join("\n", v.BraceComments) + "\n" : "") +
+                        (v.SnippetComments.Count>0 ? string.Join("\n", v.SnippetComments) + "\n" : "") +
                         (v.GroupIndicator != "" ? v.GroupIndicator + " " : "") +
                         string.Join("\n", v.Comments),
                 Tags = string.Join(", ", v.Tags),

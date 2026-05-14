@@ -122,7 +122,8 @@ public class Compiler
                     .Select(v => new {
                         v.ID, v.Character, v.Line, v.Qualifier, v.Direction,
                         v.SnippetID, v.GroupIndicator,
-                        v.Comments, v.SnippetComments, v.BraceComments, v.Tags,
+                        v.Comments, v.SnippetComments, v.BraceComments,
+                        v.SceneComments, v.BlockComments, v.Tags,
                         AudioStatus = audioStatuses.GetStatus(v.ID).Status
                     }).ToList())
             );
@@ -360,43 +361,59 @@ public class Compiler
     {
         Console.WriteLine("Fixing localisation entries...");
 
+        var locFilters = _env.GetCommentFilters("loc");
+
         foreach (var scene in dinkScenes)
         {
-            foreach( var beat in scene.IterateBeats())
+            var sceneComments = scene.GetCommentsFor(locFilters);
+            foreach (var block in scene.Blocks)
             {
-                if (beat is DinkAction action)
+                var blockComments = block.GetCommentsFor(locFilters);
+                foreach (var snippet in block.Snippets)
                 {
-                    if (_env.LocActions) {
-                        // Include action beat in the string table.
-                        LocEntry entry = new LocEntry()
+                    var groupComments = snippet.GetGroupCommentsFor(locFilters);
+                    var snippetComments = snippet.GetCommentsFor(locFilters);
+                    foreach (var beat in snippet.Beats)
+                    {
+                        if (beat is DinkAction action)
                         {
-                            ID = action.LineID,
-                            Text = action.Text,
-                            Comments = action.GetCommentsFor(_env.GetCommentFilters("loc")),
-                            Speaker = "",
-                            Origin = action.Origin,
-                            IsDink = true
-                        };
-                        inkStrings.Set(entry);
+                            if (_env.LocActions) {
+                                // Include action beat in the string table.
+                                LocEntry entry = new LocEntry()
+                                {
+                                    ID = action.LineID,
+                                    Text = action.Text,
+                                    Comments = CombineLocComments(sceneComments, blockComments,
+                                                                  groupComments, snippetComments,
+                                                                  action.GetCommentsFor(locFilters)),
+                                    Speaker = "",
+                                    Origin = action.Origin,
+                                    IsDink = true
+                                };
+                                inkStrings.Set(entry);
+                            }
+                            else
+                            {
+                                // Remove action beats from the string table.
+                                inkStrings.Remove(action.LineID);
+                            }
+                        }
+                        else if (beat is DinkLine line)
+                        {
+                            LocEntry entry = new LocEntry()
+                            {
+                                ID = line.LineID,
+                                Text = line.Text,
+                                Comments = CombineLocComments(sceneComments, blockComments,
+                                                              groupComments, snippetComments,
+                                                              line.GetCommentsFor(locFilters)),
+                                Speaker = line.CharacterID,
+                                Origin = line.Origin,
+                                IsDink = true
+                            };
+                            inkStrings.Set(entry);
+                        }
                     }
-                    else
-                    {
-                        // Remove action beats from the string table.
-                        inkStrings.Remove(action.LineID);
-                    }
-                }
-                else if (beat is DinkLine line)
-                {
-                    LocEntry entry = new LocEntry()
-                    {
-                        ID = line.LineID,
-                        Text = line.Text,
-                        Comments = line.GetCommentsFor(_env.GetCommentFilters("loc")),
-                        Speaker = line.CharacterID,
-                        Origin = line.Origin,
-                        IsDink = true
-                    };
-                    inkStrings.Set(entry);
                 }
             }
         }
@@ -408,17 +425,29 @@ public class Compiler
         return true;
     }
 
+    private static List<string> CombineLocComments(params List<string>[] sources)
+    {
+        var combined = new List<string>();
+        foreach (var src in sources)
+            combined.AddRange(src);
+        return combined;
+    }
+
     private bool BuildVoiceLines(List<DinkScene> dinkScenes, out VoiceLines voiceLines)
     {
         voiceLines = new VoiceLines();
         Console.WriteLine("Extracting voice lines...");
 
+        var recordFilters = _env.GetCommentFilters("record");
+
         foreach (var scene in dinkScenes)
         {
+            bool sceneFirstLine = true;
             foreach (var block in scene.Blocks)
             {
+                bool blockFirstLine = true;
                 foreach (var snippet in block.Snippets)
-                { 
+                {
                     string groupIndicator = "";
                     if (snippet.Group!=0)
                     {
@@ -439,9 +468,11 @@ public class Compiler
                             Direction = line.Direction,
                             SnippetID = snippet.SnippetID,
                             GroupIndicator = "",
+                            SceneComments = sceneFirstLine ? scene.GetCommentsFor(recordFilters) : new List<string>(),
+                            BlockComments = blockFirstLine ? block.GetCommentsFor(recordFilters) : new List<string>(),
                             BraceComments = new List<string>(),
-                            SnippetComments = snippet.GetCommentsFor(_env.GetCommentFilters("record")),
-                            Comments = line.GetCommentsFor(_env.GetCommentFilters("record")),
+                            SnippetComments = snippet.GetCommentsFor(recordFilters),
+                            Comments = line.GetCommentsFor(recordFilters),
                             Tags = line.GetTagsFor(_env.GetTagFilters("record"))
                         };
 
@@ -449,19 +480,22 @@ public class Compiler
                         {
                             entry.SnippetComments.Clear();
                         }
-                        
+
                         if (snippet.GroupIndex==1)
                         {
-                            entry.BraceComments = snippet.GetGroupCommentsFor(_env.GetCommentFilters("record"));
+                            entry.BraceComments = snippet.GetGroupCommentsFor(recordFilters);
                         }
 
                         if (snippet.Group>0)
                         {
                             if (lineIndex==1)
                                 entry.GroupIndicator = groupIndicator;
-                            else 
+                            else
                                 entry.GroupIndicator = "(...)";
                         }
+
+                        sceneFirstLine = false;
+                        blockFirstLine = false;
 
                         voiceLines.Set(entry);
                     }

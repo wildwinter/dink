@@ -985,6 +985,11 @@ The exported entries use the same strings and the same [Writing Status](#writing
 * The source text as the message ID (`msgid`)
 * The speaker and any comments as extracted comments (`#.`)
 
+Comments on the surrounding scene (knot), block (stitch), group (`{shuffle:}` etc.) and
+snippet are included alongside any line-level comments, so each entry carries the full
+context a translator needs without having to look elsewhere. This applies to both the
+Excel localisation file and the PO/POT files.
+
 #### Exporting a POT File
 
 Use `--outputPot` on the command line, or `"outputPot": true` in the [Config File](#config-file).
@@ -1014,11 +1019,15 @@ When PO files already exist, Dink **merges** the new source strings with the exi
 
 ```text
 #. Speaker: DAVE
+#. The morning-after scene in Dave's flat.
 #. VO: Dave could be convinced
 msgctxt "main_MyScene_XC5r"
 msgid "Not sure I believe you."
 msgstr ""
 ```
+
+The first `#.` comment line is the speaker; the rest are the comments from the line
+itself plus any inherited from the scene, block, group, or snippet around it.
 
 #### Config File Example
 
