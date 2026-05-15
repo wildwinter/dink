@@ -22,6 +22,6 @@
         "upgrade:localiserlib": "dotnet package search wildwinter.LocaliserLib --exact-match --format json | node upgrade-package.js wildwinter.LocaliserLib DinkCompiler/DinkCompiler.csproj",
         "upgrade-nuget": "dotnet nuget locals http-cache --clear && npm run upgrade:simplevclib && npm run upgrade:localiserlib && cd DinkCompiler && dotnet restore",
 
-        "pack": "node build.js"
+        "pack": "npm run prebuild && node build.js"
     }
 }
