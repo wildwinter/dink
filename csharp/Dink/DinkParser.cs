@@ -230,14 +230,17 @@ public class DinkParser
     // \s* - Optional whitespace
     // (?:\(\s*(?<Direction>.*?)\s*\})?     - Optional Direction group: ( optional space, Capture 'Direction' (non-greedy), optional space )
     // \s* - Optional whitespace
-    // (?<Text>[\w].*?)                      - Capture Text non-greedily (everything until the tags start)
+    // (?<Text>[^\s#].*?)                    - Capture Text non-greedily; first char must be
+    //                                         non-whitespace and not '#' (so a tag-only suffix
+    //                                         isn't swallowed as text). Allows lines that start
+    //                                         with punctuation like '...', '"', '?' etc.
     // (?:\s+\#(?<TagValue>\S+))* - Zero or more tags: (whitespace, #, Capture 'TagValue' without #)
     // $                                      - End of the string
     private static readonly Regex _rxLine = new Regex(
-        @"^\s*[-]?\s*(?<CharacterID>[A-Z0-9_]+)\s*(?:\(\s*(?<Qualifier>.*?)\s*\))?\s*:\s*(?:\(\s*(?<Direction>.*?)\s*\))?\s*(?<Text>[\w].*?)(?:\s+\#(?<TagValue>\S+))+$", 
+        @"^\s*[-]?\s*(?<CharacterID>[A-Z0-9_]+)\s*(?:\(\s*(?<Qualifier>.*?)\s*\))?\s*:\s*(?:\(\s*(?<Direction>.*?)\s*\))?\s*(?<Text>[^\s#].*?)(?:\s+\#(?<TagValue>\S+))+$",
         RegexOptions.Compiled | RegexOptions.Singleline);
     private static readonly Regex _rxLineInner = new Regex(
-        @"^\s*[-]?\s*(?<CharacterID>[A-Z0-9_]+)\s*(?:\(\s*(?<Qualifier>.*?)\s*\))?\s*:\s*(?:\(\s*(?<Direction>.*?)\s*\))?\s*(?<Text>[\w].*?)\s*$", 
+        @"^\s*[-]?\s*(?<CharacterID>[A-Z0-9_]+)\s*(?:\(\s*(?<Qualifier>.*?)\s*\))?\s*:\s*(?:\(\s*(?<Direction>.*?)\s*\))?\s*(?<Text>[^\s#].*?)\s*$",
         RegexOptions.Compiled | RegexOptions.Singleline);
 
     public static DinkLine? ParseLine(string line, bool inner=false)
