@@ -159,6 +159,21 @@ public class DinkParserTest
     }
 
     [Theory]
+    [InlineData("CAT: ...oh.", "CAT", "...oh.")]
+    [InlineData("CAT: \"Hello there\"", "CAT", "\"Hello there\"")]
+    [InlineData("CAT: ?!", "CAT", "?!")]
+    [InlineData("CAT: «whispering»", "CAT", "«whispering»")]
+    [InlineData("CAT: (sadly) ...oh.", "CAT", "...oh.")]
+    public void ParseLine_TextStartingWithPunctuation_ShouldReturnDinkLine(string line, string expectedChar, string expectedText)
+    {
+        var result = DinkParser.ParseLine(line, inner: true);
+
+        Assert.NotNull(result);
+        Assert.Equal(expectedChar, result.CharacterID);
+        Assert.Equal(expectedText, result.Text);
+    }
+
+    [Theory]
     [InlineData("* [Option text]", "Option text")]
     [InlineData("+ [Option text]", "Option text")]
     [InlineData("* Option text", "Option text")]
