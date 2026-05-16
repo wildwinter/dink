@@ -79,9 +79,11 @@ public class VoiceLines
                 BlockID = v.BlockID,
                 SnippetID = v.SnippetID,
                 Character = v.Character,
-                Actor = (characters != null) ? characters.Get(v.Character)?.Actor ?? "" : "", 
+                Actor = (characters != null) ? characters.Get(v.Character)?.Actor ?? "" : "",
                 Line = v.Line,
-                Direction = v.Direction,
+                Direction = string.Join(" ",
+                    new[] { v.Qualifier != "" ? $"({v.Qualifier})" : "", v.Direction }
+                        .Where(s => s != "")),
                 Comments = (v.SceneComments.Count>0 ? string.Join("\n", v.SceneComments) + "\n" : "") +
                         (v.BlockComments.Count>0 ? string.Join("\n", v.BlockComments) + "\n" : "") +
                         (v.BraceComments.Count>0 ? string.Join("\n", v.BraceComments) + "\n" : "") +
