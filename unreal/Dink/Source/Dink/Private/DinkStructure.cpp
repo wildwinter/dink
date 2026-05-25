@@ -114,3 +114,19 @@ bool HasDinkTag(const TArray<FString>& Tags, const FString& Key)
 
     return false;
 }
+
+FName UDinkTagLibrary::GetLineID(const TArray<FString>& Tags)
+{
+    const FString Value = ::GetDinkTagValue(Tags, TEXT("id"));
+    return Value.IsEmpty() ? FName() : FName(*Value);
+}
+
+FString UDinkTagLibrary::GetDinkTagValue(const TArray<FString>& Tags, const FString& Key)
+{
+    return ::GetDinkTagValue(Tags, Key);
+}
+
+bool UDinkTagLibrary::HasDinkTag(const TArray<FString>& Tags, const FString& Key)
+{
+    return ::HasDinkTag(Tags, Key);
+}
