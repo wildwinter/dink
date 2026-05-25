@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Kismet/BlueprintFunctionLibrary.h"
 #include "Dink.h"
 #include "DinkStructure.generated.h"
 
@@ -109,4 +110,27 @@ public:
 // Finds a tag starting with "Key:" and returns the value after the colon.
 FString DINK_API GetDinkTagValue(const TArray<FString>& Tags, const FString& Key);
 // Returns true if "Key" exists exactly, or if a tag starts with "Key:"
-bool DINK_API HasDinkTag(const FString& Key);
+bool DINK_API HasDinkTag(const TArray<FString>& Tags, const FString& Key);
+
+/**
+ * Blueprint-accessible helpers for reading Dink tags from an array of Ink tags.
+ * Thin wrappers around the free functions above (which remain the C++ entry points).
+ */
+UCLASS()
+class DINK_API UDinkTagLibrary : public UBlueprintFunctionLibrary
+{
+    GENERATED_BODY()
+
+public:
+    /** Returns the Dink line ID - the value of the "id:" tag - or None if there isn't one. */
+    UFUNCTION(BlueprintPure, Category = "Dink|Tags")
+    static FName GetLineID(const TArray<FString>& Tags);
+
+    /** Returns the value of a tag by key, e.g. key "type" returns the value of "type:...". Empty if absent. Case-insensitive. */
+    UFUNCTION(BlueprintPure, Category = "Dink|Tags")
+    static FString GetDinkTagValue(const TArray<FString>& Tags, const FString& Key);
+
+    /** True if the key exists exactly, or a tag starts with "Key:". */
+    UFUNCTION(BlueprintPure, Category = "Dink|Tags")
+    static bool HasDinkTag(const TArray<FString>& Tags, const FString& Key);
+};
