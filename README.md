@@ -1385,4 +1385,4 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-This distribution includes components from [Ink](https://github.com/inkle/ink) by inkle Ltd., also licensed under the MIT License.
+Third-party licenses for all bundled components (Ink/Inklecate, Ink-Localiser, Google Cloud TTS, and other dependencies) are documented in [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md).
