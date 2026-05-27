@@ -1384,3 +1384,5 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
+
+This distribution includes components from [Ink](https://github.com/inkle/ink) by inkle Ltd., also licensed under the MIT License.
