@@ -42,6 +42,13 @@ for (const platform of platforms) {
 
     fs.cpSync(unrealDir, platformTemp, { recursive: true });
 
+    // Place the README inside the plugin folder rather than a level above it,
+    // so it extracts into Plugins/Dink/ alongside the .uplugin.
+    const tempReadme = path.join(platformTemp, 'README.md');
+    if (fs.existsSync(tempReadme)) {
+        fs.renameSync(tempReadme, path.join(platformTemp, 'Dink', 'README.md'));
+    }
+
     const thirdPartyDir = path.join(platformTemp, 'Dink', 'ThirdParty', 'Dink');
     fs.mkdirSync(thirdPartyDir, { recursive: true });
 
