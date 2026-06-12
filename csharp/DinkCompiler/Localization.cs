@@ -1,5 +1,6 @@
 namespace DinkCompiler;
 
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using ClosedXML.Excel;
 using Dink;
@@ -169,15 +170,29 @@ public class LocStrings
 
     public string WriteMinimal()
     {
-        var options = new JsonSerializerOptions { WriteIndented = false };
-        var lines = new List<string>();
+        // Previously this method built JSON via string interpolation, which
+        // left any '"' in entry.Text unescaped — producing broken JSON for
+        // any line of dialogue containing a literal double-quote. Hand it
+        // off to JsonSerializer so escapes are correct.
+        //
+        // UnsafeRelaxedJsonEscaping keeps the output readable (no & for
+        // '&', < for '<' etc.) — safe here because this file is a game
+        // runtime asset, never embedded in an HTML context.
+        var options = new JsonSerializerOptions
+        {
+            WriteIndented = true,
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+        };
 
+        // Dictionary<string,string> preserves insertion order on enumeration
+        // in modern .NET, and JsonSerializer enumerates it for output — so
+        // the resulting JSON keys come out in OrderedEntries order.
+        var entries = new Dictionary<string, string>(_ids.Count);
         foreach (var entry in OrderedEntries)
         {
-            lines.Add($"\t\"{entry.ID}\": \"{entry.Text}\"");  
+            entries[entry.ID] = entry.Text;
         }
-
-        return "{\n"+string.Join(",\n", lines)+"\n}";
+        return JsonSerializer.Serialize(entries, options);
     }
 
 }
