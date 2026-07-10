@@ -154,21 +154,21 @@ public class Compiler
         // ----- Output lines for localisation (Excel) -----
         if (_env.OutputLocalization)
         {
-            if (!WriteLocalizationFile(inkStrings, writingStatuses, _env.DestLocFile))
+            if (!WriteLocalizationFile(inkStrings, characters, writingStatuses, _env.DestLocFile))
                 return false;
         }
 
         // ----- Output POT file -----
         if (_env.OutputPot)
         {
-            if (!WritePotFile(inkStrings, writingStatuses, _env.DestPotFile))
+            if (!WritePotFile(inkStrings, characters, writingStatuses, _env.DestPotFile))
                 return false;
         }
 
         // ----- Output PO files -----
         if (_env.OutputPo)
         {
-            if (!WritePoFiles(inkStrings, writingStatuses, _env.PoDir, _env.PoLangs))
+            if (!WritePoFiles(inkStrings, characters, writingStatuses, _env.PoDir, _env.PoLangs))
                 return false;
         }
 
@@ -556,21 +556,21 @@ public class Compiler
         return true;
     }
 
-    private bool WriteLocalizationFile(LocStrings inkStrings, WritingStatuses writingStatuses, string destLocFile)
+    private bool WriteLocalizationFile(LocStrings inkStrings, Characters? characters, WritingStatuses writingStatuses, string destLocFile)
     {
-        if (!inkStrings.WriteToExcel(_env.RootFilename, writingStatuses, _env.IgnoreWritingStatus, destLocFile))
+        if (!inkStrings.WriteToExcel(_env.RootFilename, characters, writingStatuses, _env.IgnoreWritingStatus, destLocFile))
             return false;
         return true;
     }
 
-    private bool WritePotFile(LocStrings inkStrings, WritingStatuses writingStatuses, string destPotFile)
+    private bool WritePotFile(LocStrings inkStrings, Characters? characters, WritingStatuses writingStatuses, string destPotFile)
     {
-        if (!inkStrings.WriteToPot(_env.RootFilename, writingStatuses, _env.IgnoreWritingStatus, destPotFile))
+        if (!inkStrings.WriteToPot(_env.RootFilename, characters, writingStatuses, _env.IgnoreWritingStatus, destPotFile))
             return false;
         return true;
     }
 
-    private bool WritePoFiles(LocStrings inkStrings, WritingStatuses writingStatuses, string poDir, List<string> langs)
+    private bool WritePoFiles(LocStrings inkStrings, Characters? characters, WritingStatuses writingStatuses, string poDir, List<string> langs)
     {
         if (!Directory.Exists(poDir))
             Directory.CreateDirectory(poDir);
@@ -578,7 +578,7 @@ public class Compiler
         foreach (var lang in langs)
         {
             string poFile = Path.Combine(poDir, _env.RootFilename + "-" + lang + ".po");
-            if (!inkStrings.WriteToPo(_env.RootFilename, writingStatuses, _env.IgnoreWritingStatus, lang, poFile))
+            if (!inkStrings.WriteToPo(_env.RootFilename, characters, writingStatuses, _env.IgnoreWritingStatus, lang, poFile))
                 return false;
         }
         return true;

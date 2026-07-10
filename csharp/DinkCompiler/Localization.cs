@@ -60,16 +60,18 @@ public class LocStrings
     
     class LocEntryExport
     {
+        // Property declaration order determines column order in the sheet.
         public required string ID { get; set; }
         public required string Text { get; set; }
         public required string Speaker { get; set; }
+        public required string Gender { get; set; }
         public required string Comments { get; set; }
     }
 
-    public bool WriteToExcel(string rootName, WritingStatuses writingStatuses, bool ignoreWritingStatus, string destLocFile)
+    public bool WriteToExcel(string rootName, Characters? characters, WritingStatuses writingStatuses, bool ignoreWritingStatus, string destLocFile)
     {
         Console.WriteLine("Writing localisation file: " + destLocFile);
-        
+
         bool useWritingStatus = writingStatuses.HasDefinitions()&&!ignoreWritingStatus;
 
         var recordsToExport = OrderedEntries
@@ -78,6 +80,9 @@ public class LocStrings
             {
                 ID = v.ID,
                 Speaker = v.Speaker,
+                // Grammatical gender of the speaker as M/F/N, blank when
+                // unspecified or the speaker isn't a known character.
+                Gender = (characters != null) ? characters.GenderCodeFor(v.Speaker) : "",
                 Text = v.Text,
                 Comments = string.Join(" ", v.Comments)
             }).ToList();
@@ -102,6 +107,17 @@ public class LocStrings
                 ExcelUtils.FormatTableSheet(worksheet, table);
                 ExcelUtils.AdjustSheet(worksheet);
 
+                // AdjustSheet sizes every column to its contents, which would
+                // make the single-letter Gender column as wide as its heading.
+                // Pin it narrow and centre the codes.
+                string? genderCol = ExcelUtils.FindColumnByHeading(worksheet, "Gender");
+                if (genderCol != null)
+                {
+                    var column = worksheet.Column(genderCol);
+                    column.Width = 8;
+                    column.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                }
+
                 workbook.SaveAs(destLocFile);
             }
 
@@ -117,7 +133,7 @@ public class LocStrings
         return true;
     }
 
-    private List<PoEntry> GetPoEntries(WritingStatuses writingStatuses, bool ignoreWritingStatus)
+    private List<PoEntry> GetPoEntries(Characters? characters, WritingStatuses writingStatuses, bool ignoreWritingStatus)
     {
         bool useWritingStatus = writingStatuses.HasDefinitions() && !ignoreWritingStatus;
 
@@ -133,6 +149,15 @@ public class LocStrings
                 };
                 if (!string.IsNullOrEmpty(v.Speaker))
                     entry.ExtractedComments.Add("Speaker: " + v.Speaker);
+
+                // Spelled out rather than the M/F/N used in the spreadsheet —
+                // PO comments have no width constraint, and "Grammatical" is
+                // worth stating so translators don't read it as the character's
+                // gender identity. Omitted entirely when non-specified.
+                string gender = (characters != null) ? characters.GenderNameFor(v.Speaker) : "";
+                if (!string.IsNullOrEmpty(gender))
+                    entry.ExtractedComments.Add("Grammatical gender: " + gender);
+
                 string comments = string.Join(" ", v.Comments);
                 if (!string.IsNullOrEmpty(comments))
                     entry.ExtractedComments.Add(comments);
@@ -140,18 +165,18 @@ public class LocStrings
             }).ToList();
     }
 
-    public bool WriteToPot(string rootName, WritingStatuses writingStatuses, bool ignoreWritingStatus, string destPotFile)
+    public bool WriteToPot(string rootName, Characters? characters, WritingStatuses writingStatuses, bool ignoreWritingStatus, string destPotFile)
     {
         Console.WriteLine("Writing POT file: " + destPotFile);
-        var entries = GetPoEntries(writingStatuses, ignoreWritingStatus);
+        var entries = GetPoEntries(characters, writingStatuses, ignoreWritingStatus);
         return PoUtils.WritePotFile(rootName, entries, destPotFile);
     }
 
-    public bool WriteToPo(string rootName, WritingStatuses writingStatuses, bool ignoreWritingStatus, string lang, string destPoFile)
+    public bool WriteToPo(string rootName, Characters? characters, WritingStatuses writingStatuses, bool ignoreWritingStatus, string lang, string destPoFile)
     {
         Console.WriteLine("Writing PO file: " + destPoFile);
 
-        var newEntries = GetPoEntries(writingStatuses, ignoreWritingStatus);
+        var newEntries = GetPoEntries(characters, writingStatuses, ignoreWritingStatus);
 
         List<PoEntry> entriesToWrite;
         if (File.Exists(destPoFile))
