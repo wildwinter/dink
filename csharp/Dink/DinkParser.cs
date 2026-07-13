@@ -816,7 +816,7 @@ public class DinkParser
             {
                 if (IsFlowBreakingDinkLine(trimmedLine) && parsing)
                 {
-                    // Keep comments — ParseLine below will attach them to the DinkLine.
+                    // Keep comments - ParseLine below will attach them to the DinkLine.
                     addAndCreateSnippet();
                 }
                 else

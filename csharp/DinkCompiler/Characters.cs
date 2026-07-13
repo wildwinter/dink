@@ -45,8 +45,8 @@ public class Characters
 
     /// <summary>
     /// Map a character's grammatical gender to the single-letter code used in
-    /// the localisation spreadsheet. Anything unrecognised — including null,
-    /// empty, and "Non-specified" — yields an empty string, so the column is
+    /// the localisation spreadsheet. Anything unrecognised - including null,
+    /// empty, and "Non-specified" - yields an empty string, so the column is
     /// simply left blank rather than guessing.
     /// </summary>
     public static string GenderCode(string? gender)

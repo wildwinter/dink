@@ -55,9 +55,10 @@ class Stats
 
     private static void WriteSceneSummary(string rootName, List<DinkScene> dinkScenes, List<NonDinkLine> nonDinkLines, WritingStatuses writingStatuses, AudioStatuses audioStatuses, XLWorkbook workbook)
     {
-        // Cache definitions to avoid repeated getter calls
+        // Cache definitions to avoid repeated getter calls. Reporting defs add a
+        // synthetic "Re-record" column when any line is flagged for re-record.
         var wsDefs = writingStatuses.GetDefinitions();
-        var asDefs = audioStatuses.GetDefinitions();
+        var asDefs = audioStatuses.GetReportingDefinitions();
         int writingStatusDefCount = wsDefs.Count;
         int audioStatusDefCount = asDefs.Count;
 
@@ -292,7 +293,8 @@ class Stats
         worksheet.Cell(row, 3).Value = "In Draft";
         worksheet.Cell(row, 4).Value = "Ready To Record";
         worksheet.Cell(row, 5).Value = "Recorded";
-        worksheet.Cell(row, 6).Value = "Total";
+        worksheet.Cell(row, 6).Value = "Re-record";
+        worksheet.Cell(row, 7).Value = "Total";
 
         row++;
 
@@ -305,19 +307,21 @@ class Stats
             int total = characterLines.Count;
 
             int recorded = audioStatuses.CountRecorded(characterLines);
+            int reRecord = audioStatuses.CountReRecord(characterLines);
             int readyToRecord = audioStatuses.CountReadyToRecord(writingStatuses, characterLines);
             int inDraft = audioStatuses.CountInDraft(writingStatuses, characterLines);
 
             worksheet.Cell(row, 3).Value = inDraft;
             worksheet.Cell(row, 4).Value = readyToRecord;
             worksheet.Cell(row, 5).Value = recorded;
-            worksheet.Cell(row, 6).Value = total;
-            worksheet.Cell(row, 6).Style.Font.Bold = true;
+            worksheet.Cell(row, 6).Value = reRecord;
+            worksheet.Cell(row, 7).Value = total;
+            worksheet.Cell(row, 7).Style.Font.Bold = true;
             row++;
         }
 
         row--;
-        IXLTable table = worksheet.Range(1, 1, row, 6).CreateTable();
+        IXLTable table = worksheet.Range(1, 1, row, 7).CreateTable();
         ExcelUtils.FormatStatLine(table.FirstColumn().AsRange());
 
         ExcelUtils.FormatTableSheet(worksheet, table);
@@ -331,8 +335,10 @@ class Stats
         AudioStatuses audioStatuses, XLWorkbook workbook)
     {
         var wsDefs = writingStatuses.GetDefinitions();
-        var asDefs = audioStatuses.GetDefinitions();
-        
+        // Reporting defs add a synthetic "Re-record" column when any line is
+        // flagged, so flagged lines are marked here instead of showing blank.
+        var asDefs = audioStatuses.GetReportingDefinitions();
+
         int writingStatusDefCount = wsDefs.Count;
         int audioStatusDefCount = asDefs.Count;
 

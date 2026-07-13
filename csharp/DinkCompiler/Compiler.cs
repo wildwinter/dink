@@ -35,7 +35,11 @@ public class Compiler
         string? charFile = _env.FindFileInSource("characters.json");
         ReadCharacters(charFile, out Characters? characters);
 
-        // ----- Compile + Parse — two-level incremental cache -----
+        // ----- Read re-record list (line IDs flagged to be re-recorded) -----
+        string? reRecordFile = _env.FindFileInSource("rerecord.json");
+        var reRecordIds = ReadReRecordIds(reRecordFile);
+
+        // ----- Compile + Parse - two-level incremental cache -----
         // strippedHash: hash of ink content after text-stripping (what Ink.Compiler
         //   sees).  Changing only dialogue text leaves this unchanged → skip compile.
         // rawHash: hash of raw file bytes (what DinkParser sees).  Any file change
@@ -53,7 +57,7 @@ public class Compiler
             && cache.Load("scenes") is string cachedScenes
             && cache.Load("ndlines") is string cachedNdLines)
         {
-            Console.WriteLine("Ink source unchanged — loading from cache.");
+            Console.WriteLine("Ink source unchanged - loading from cache.");
             dinkScenes = DinkJson.ReadScenes(cachedScenes);
             nonDinkLines = JsonSerializer.Deserialize<List<NonDinkLine>>(cachedNdLines) ?? new();
         }
@@ -70,7 +74,7 @@ public class Compiler
                     return false;
             }
             else
-                Console.WriteLine("Ink structure unchanged — skipping compilation.");
+                Console.WriteLine("Ink structure unchanged - skipping compilation.");
 
             if (!ParseDinkScenes(usedInkFiles, characters, previousScenes,
                     out dinkScenes, out nonDinkLines))
@@ -109,6 +113,9 @@ public class Compiler
         var audioStatuses = new AudioStatuses(_env);
         if (!audioStatuses.Build(voiceLines))
             return false;
+        // Apply the re-record flags before any consumer (including the
+        // incremental-build hashes below) reads GetStatus.
+        audioStatuses.SetReRecordIds(reRecordIds);
 
         // ----- Output Voice Lines -----
         if (_env.OutputRecordingScript)
@@ -133,7 +140,7 @@ public class Compiler
                     return false;
             }
             else
-                Console.WriteLine("Recording script unchanged — skipping.");
+                Console.WriteLine("Recording script unchanged - skipping.");
         }
 
         // ----- Output Dink Structure -----
@@ -189,7 +196,7 @@ public class Compiler
                     return false;
             }
             else
-                Console.WriteLine("Stats unchanged — skipping.");
+                Console.WriteLine("Stats unchanged - skipping.");
         }
 
         // ----- Output origins (JSON) -----
@@ -215,6 +222,38 @@ public class Compiler
         Console.WriteLine($"{charFile} not found - won't check characters.");
         outCharacters = null;
         return false;
+    }
+
+    // Read rerecord.json - a plain JSON array of line IDs the writer has flagged
+    // for re-recording. Missing file is normal (returns empty). A malformed file
+    // is logged and ignored rather than failing the build.
+    private HashSet<string> ReadReRecordIds(string? reRecordFile)
+    {
+        var ids = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        if (reRecordFile == null || !File.Exists(reRecordFile))
+            return ids;
+
+        try
+        {
+            string fileText = File.ReadAllText(reRecordFile);
+            var list = JsonSerializer.Deserialize<List<string>>(fileText, new JsonSerializerOptions
+            {
+                ReadCommentHandling = JsonCommentHandling.Skip,
+                AllowTrailingCommas = true
+            });
+            if (list != null)
+            {
+                foreach (var id in list)
+                    if (!string.IsNullOrWhiteSpace(id))
+                        ids.Add(id.Trim());
+            }
+            Console.WriteLine($"Read {reRecordFile} ({ids.Count} re-record ID(s)).");
+        }
+        catch (Exception e)
+        {
+            Console.Error.WriteLine($"Warning: could not read {reRecordFile}: {e.Message}. Ignoring re-record list.");
+        }
+        return ids;
     }
 
     private bool ProcessInkStrings(string inkFile, out LocStrings inkStrings, 

@@ -118,7 +118,7 @@ internal static class VCTestHelpers
     /// <param name="sourceDir">Where ink source files are copied (must be inside a VC repo).</param>
     /// <param name="outputDir">Where compiled outputs are written (must also be inside the repo).</param>
     /// <param name="enablePoOutput">
-    /// Set false for SVN tests — plain <c>svn add</c> doesn't handle new subdirectories,
+    /// Set false for SVN tests - plain <c>svn add</c> doesn't handle new subdirectories,
     /// so PO output (which creates a <c>po/</c> subfolder) is skipped.
     /// </param>
     public static (ProjectEnvironment env, bool success) PrepareAndRun(
@@ -201,7 +201,7 @@ internal static class VCTestHelpers
 /// </summary>
 /// <remarks>
 /// Placed in the "VCIntegration" collection alongside <see cref="SvnVCIntegrationTests"/>
-/// so xUnit runs the two classes sequentially — VCLib.SetProvider is global state.
+/// so xUnit runs the two classes sequentially - VCLib.SetProvider is global state.
 /// </remarks>
 [Collection("VCIntegration")]
 public class GitVCIntegrationTests : IDisposable
