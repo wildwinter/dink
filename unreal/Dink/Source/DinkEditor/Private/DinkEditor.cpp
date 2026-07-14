@@ -2,6 +2,7 @@
 #include "Modules/ModuleManager.h"
 #include "Logging/LogMacros.h"
 #include "DinkEditorSettings.h"
+#include "DinkyUserSettings.h"
 #include "ToolMenus.h"
 #include "Misc/Paths.h"
 #include "HAL/PlatformProcess.h"
@@ -13,6 +14,46 @@
 #define LOCTEXT_NAMESPACE "FDinkEditorModule"
 
 DEFINE_LOG_CATEGORY(LogDinkEditor);
+
+namespace
+{
+    // Best-effort guess at a standard Dinky install location, used only when
+    // Editor Preferences -> Plugins -> Dinky -> Dinky Executable Path is blank
+    // or stale. Not authoritative - an explicitly configured path always wins,
+    // and this is just a fallback so a fresh install works with zero setup.
+    bool FindDefaultDinkyExecutable(FString& OutPath)
+    {
+#if PLATFORM_WINDOWS
+        const FString ProgramFiles = FPlatformMisc::GetEnvironmentVariable(TEXT("ProgramFiles"));
+        const FString ProgramFilesX86 = FPlatformMisc::GetEnvironmentVariable(TEXT("ProgramFiles(x86)"));
+        const FString LocalAppData = FPlatformMisc::GetEnvironmentVariable(TEXT("LOCALAPPDATA"));
+
+        const TArray<FString> Candidates = {
+            FPaths::Combine(ProgramFiles, TEXT("Dinky"), TEXT("Dinky.exe")),
+            FPaths::Combine(ProgramFilesX86, TEXT("Dinky"), TEXT("Dinky.exe")),
+            // electron-builder's default per-user install location.
+            FPaths::Combine(LocalAppData, TEXT("Programs"), TEXT("dinky"), TEXT("Dinky.exe")),
+            FPaths::Combine(LocalAppData, TEXT("Programs"), TEXT("Dinky"), TEXT("Dinky.exe")),
+        };
+#elif PLATFORM_MAC
+        const TArray<FString> Candidates = {
+            TEXT("/Applications/Dinky.app"),
+            FPaths::Combine(FPlatformProcess::UserHomeDir(), TEXT("Applications"), TEXT("Dinky.app")),
+        };
+#else
+        const TArray<FString> Candidates;
+#endif
+        for (const FString& Candidate : Candidates)
+        {
+            if (!Candidate.IsEmpty() && (FPaths::FileExists(Candidate) || FPaths::DirectoryExists(Candidate)))
+            {
+                OutPath = Candidate;
+                return true;
+            }
+        }
+        return false;
+    }
+}
 
 static FDelayedAutoRegisterHelper DelayedAutoRegister(
 	EDelayedRegisterRunPhase::EndOfEngineInit,
@@ -150,7 +191,7 @@ void FDinkEditorModule::RegisterMenus()
                 LOCTEXT("OpenDinky", "Open Dinky"),
                 LOCTEXT("OpenDinkyTooltip", "Open the Dinky editor with the project's .dinkproj file"),
                 FSlateIcon(),
-                FUIAction(FExecuteAction::CreateStatic(&FDinkEditorModule::OpenDinky))
+                FUIAction(FExecuteAction::CreateStatic(&FDinkEditorModule::OpenDinky, FString()))
             );
         })
     );
@@ -192,7 +233,7 @@ void FDinkEditorModule::RegisterMenus()
     }));
 }
 
-void FDinkEditorModule::OpenDinky()
+void FDinkEditorModule::OpenDinky(FString GotoTarget)
 {
     const UDinkEditorSettings* Settings = GetDefault<UDinkEditorSettings>();
     if (!Settings || Settings->ProjectFilePath.IsEmpty())
@@ -201,23 +242,110 @@ void FDinkEditorModule::OpenDinky()
         return;
     }
 
-    FString AbsolutePath = FPaths::IsRelative(Settings->ProjectFilePath)
-        ? FPaths::ConvertRelativePathToFull(FPaths::ProjectDir(), Settings->ProjectFilePath)
-        : Settings->ProjectFilePath;
+    auto ResolveAbsolute = [](const FString& InPath) -> FString
+    {
+        return FPaths::IsRelative(InPath)
+            ? FPaths::ConvertRelativePathToFull(FPaths::ProjectDir(), InPath)
+            : InPath;
+    };
 
-    // Open the file with its OS-registered default application
+    const FString AbsoluteProjectPath = ResolveAbsolute(Settings->ProjectFilePath);
+
+    // Navigating to a target requires launching Dinky directly, since the OS
+    // "open with" verb used below has no way to pass it "--goto". Dinky is a
+    // normal installed app (not on the system PATH), so that means knowing
+    // where its executable actually is.
+    FString AbsoluteExePath;
+    if (!GotoTarget.IsEmpty())
+    {
+        // Per-user Editor Preference, not a Project Setting - where Dinky is
+        // installed varies machine to machine, so it must not live in the
+        // shared, source-controlled project config (see UDinkyUserSettings).
+        const UDinkyUserSettings* UserSettings = GetDefault<UDinkyUserSettings>();
+        if (UserSettings && !UserSettings->DinkyExecutablePath.IsEmpty())
+        {
+            AbsoluteExePath = ResolveAbsolute(UserSettings->DinkyExecutablePath);
+            if (!FPaths::FileExists(AbsoluteExePath))
+            {
+                UE_LOG(LogDinkEditor, Warning,
+                    TEXT("OpenDinky: Dinky executable not found at '%s' (Editor Preferences -> Plugins -> Dinky) - trying a default install location instead."),
+                    *AbsoluteExePath);
+                AbsoluteExePath.Reset();
+            }
+        }
+
+        // Nothing explicitly configured (or it didn't exist) - fall back to a
+        // best-effort guess at a standard install location so this works with
+        // zero setup on a fresh machine. Never overrides an explicit setting.
+        if (AbsoluteExePath.IsEmpty())
+        {
+            FString DefaultPath;
+            if (FindDefaultDinkyExecutable(DefaultPath))
+            {
+                UE_LOG(LogDinkEditor, Log,
+                    TEXT("OpenDinky: Using auto-detected Dinky install at '%s'. Set Editor Preferences -> Plugins -> Dinky -> Dinky Executable Path to override."),
+                    *DefaultPath);
+                AbsoluteExePath = DefaultPath;
+            }
+        }
+
+        if (AbsoluteExePath.IsEmpty())
+        {
+            UE_LOG(LogDinkEditor, Warning,
+                TEXT("OpenDinky: Couldn't find a Dinky install (set Editor Preferences -> Plugins -> Dinky -> Dinky Executable Path), so '--goto %s' can't be applied - opening the project normally instead."),
+                *GotoTarget);
+            GotoTarget.Reset();
+        }
+    }
+
+    if (GotoTarget.IsEmpty())
+    {
+        // Open the file with its OS-registered default application.
+#if PLATFORM_WINDOWS
+        FPlatformProcess::CreateProc(
+            TEXT("cmd.exe"),
+            *FString::Printf(TEXT("/c start \"\" \"%s\""), *AbsoluteProjectPath),
+            true, true, false, nullptr, 0, nullptr, nullptr
+        );
+#elif PLATFORM_MAC
+        FPlatformProcess::CreateProc(
+            TEXT("/usr/bin/open"),
+            *FString::Printf(TEXT("\"%s\""), *AbsoluteProjectPath),
+            true, false, false, nullptr, 0, nullptr, nullptr
+        );
+#else
+        UE_LOG(LogDinkEditor, Warning, TEXT("OpenDinky: unsupported platform"));
+#endif
+        return;
+    }
+
+    // Dinky is single-instance, so if it's already running this just focuses
+    // it and navigates, rather than opening a second copy.
+    UE_LOG(LogDinkEditor, Log, TEXT("OpenDinky: Launching '%s' \"%s\" --goto \"%s\""), *AbsoluteExePath, *AbsoluteProjectPath, *GotoTarget);
 #if PLATFORM_WINDOWS
     FPlatformProcess::CreateProc(
-        TEXT("cmd.exe"),
-        *FString::Printf(TEXT("/c start \"\" \"%s\""), *AbsolutePath),
-        true, true, false, nullptr, 0, nullptr, nullptr
-    );
-#elif PLATFORM_MAC
-    FPlatformProcess::CreateProc(
-        TEXT("/usr/bin/open"),
-        *FString::Printf(TEXT("\"%s\""), *AbsolutePath),
+        *AbsoluteExePath,
+        *FString::Printf(TEXT("\"%s\" --goto \"%s\""), *AbsoluteProjectPath, *GotoTarget),
         true, false, false, nullptr, 0, nullptr, nullptr
     );
+#elif PLATFORM_MAC
+    // Support both a raw executable and a .app bundle in the settings path.
+    if (AbsoluteExePath.EndsWith(TEXT(".app")))
+    {
+        FPlatformProcess::CreateProc(
+            TEXT("/usr/bin/open"),
+            *FString::Printf(TEXT("-a \"%s\" --args \"%s\" --goto \"%s\""), *AbsoluteExePath, *AbsoluteProjectPath, *GotoTarget),
+            true, false, false, nullptr, 0, nullptr, nullptr
+        );
+    }
+    else
+    {
+        FPlatformProcess::CreateProc(
+            *AbsoluteExePath,
+            *FString::Printf(TEXT("\"%s\" --goto \"%s\""), *AbsoluteProjectPath, *GotoTarget),
+            true, false, false, nullptr, 0, nullptr, nullptr
+        );
+    }
 #else
     UE_LOG(LogDinkEditor, Warning, TEXT("OpenDinky: unsupported platform"));
 #endif
