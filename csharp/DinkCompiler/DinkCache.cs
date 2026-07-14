@@ -73,7 +73,7 @@ class DinkCache
     }
 
     // SHA-256 of the concatenated UTF-8 bytes of the given strings (in the
-    // order supplied — sort before calling if order independence is needed).
+    // order supplied - sort before calling if order independence is needed).
     public static string HashStrings(IEnumerable<string> parts)
     {
         using var sha = SHA256.Create();

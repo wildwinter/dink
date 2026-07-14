@@ -150,7 +150,7 @@ public class LocStrings
                 if (!string.IsNullOrEmpty(v.Speaker))
                     entry.ExtractedComments.Add("Speaker: " + v.Speaker);
 
-                // Spelled out rather than the M/F/N used in the spreadsheet —
+                // Spelled out rather than the M/F/N used in the spreadsheet -
                 // PO comments have no width constraint, and "Grammatical" is
                 // worth stating so translators don't read it as the character's
                 // gender identity. Omitted entirely when non-specified.
@@ -196,12 +196,12 @@ public class LocStrings
     public string WriteMinimal()
     {
         // Previously this method built JSON via string interpolation, which
-        // left any '"' in entry.Text unescaped — producing broken JSON for
+        // left any '"' in entry.Text unescaped - producing broken JSON for
         // any line of dialogue containing a literal double-quote. Hand it
         // off to JsonSerializer so escapes are correct.
         //
         // UnsafeRelaxedJsonEscaping keeps the output readable (no & for
-        // '&', < for '<' etc.) — safe here because this file is a game
+        // '&', < for '<' etc.) - safe here because this file is a game
         // runtime asset, never embedded in an HTML context.
         var options = new JsonSerializerOptions
         {
@@ -210,7 +210,7 @@ public class LocStrings
         };
 
         // Dictionary<string,string> preserves insertion order on enumeration
-        // in modern .NET, and JsonSerializer enumerates it for output — so
+        // in modern .NET, and JsonSerializer enumerates it for output - so
         // the resulting JSON keys come out in OrderedEntries order.
         var entries = new Dictionary<string, string>(_ids.Count);
         foreach (var entry in OrderedEntries)

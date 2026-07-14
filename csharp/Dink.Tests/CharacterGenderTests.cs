@@ -9,8 +9,8 @@ using DinkCompiler;
 /// Grammatical gender on characters:
 ///   - "Male"/"Female"/"Neuter" map to the M/F/N codes used in the
 ///     localisation spreadsheet column.
-///   - Anything else — empty, "Non-specified", typos, null, unknown
-///     characters — yields blank rather than guessing.
+///   - Anything else - empty, "Non-specified", typos, null, unknown
+///     characters - yields blank rather than guessing.
 ///   - Casing and stray whitespace from hand-edited characters.json are
 ///     tolerated and normalised.
 /// </summary>
