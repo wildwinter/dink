@@ -60,6 +60,21 @@ for (const platform of platforms) {
 
     unzip(platformZip, thirdPartyDir);
 
+    // The Unreal plugin only ever invokes DinkCompiler (see DinkRunner.cpp).
+    // DinkViewer and DinkVoiceExport are shipped in the general platform bundle
+    // but are never used here, and each is a ~80MB self-contained executable, so
+    // strip them from the plugin's ThirdParty folder.
+    const exeSuffix = platform.startsWith('win-') ? '.exe' : '';
+    for (const tool of ['DinkViewer', 'DinkVoiceExport']) {
+        const toolPath = path.join(thirdPartyDir, tool + exeSuffix);
+        if (fs.existsSync(toolPath)) {
+            fs.rmSync(toolPath);
+            console.log(`  Removed unused ${tool + exeSuffix} from ThirdParty`);
+        } else {
+            console.warn(`  Warning: expected ${tool + exeSuffix} not found in ThirdParty (nothing removed)`);
+        }
+    }
+
     const outputZip = path.join(distDir, `Dink-unreal-${platform}-${version}.zip`);
     zip(platformTemp, outputZip);
     console.log(`Created: ${path.basename(outputZip)}`);
