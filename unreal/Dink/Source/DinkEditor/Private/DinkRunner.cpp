@@ -8,6 +8,7 @@
 #include "Misc/FileHelper.h"
 #include "HAL/FileManager.h"
 #include "Misc/Crc.h"
+#include "Misc/EngineVersionComparison.h"
 #include "Dom/JsonObject.h"
 #include "Serialization/JsonReader.h"
 #include "Serialization/JsonSerializer.h"
@@ -240,7 +241,7 @@ bool UDinkRunner::ImportStringTable(const FString& OutputDir, const FString& Ink
     {
         FString Value;
         if (Pair.Value->TryGetString(Value))
-            Strings.Add(Pair.Key, Value);
+            Strings.Add(FString(*Pair.Key), Value);
     }
 
     // Create or find the UStringTable asset at DestPackagePath/DinkStrings_{InkRootName}
@@ -269,7 +270,12 @@ bool UDinkRunner::ImportStringTable(const FString& OutputDir, const FString& Ink
         ST->RemoveSourceString(FTextKey(Key));
 
     for (const auto& Pair : Strings)
+        // UE 5.8 editor builds require the InDevNotes argument; 5.7 and earlier only had the 2-arg form.
+#if !UE_VERSION_OLDER_THAN(5, 8, 0) && WITH_EDITORONLY_DATA
+        ST->SetSourceString(FTextKey(Pair.Key), Pair.Value, FString());
+#else
         ST->SetSourceString(FTextKey(Pair.Key), Pair.Value);
+#endif
 
     StringTable->MarkPackageDirty();
     OutPackagesToSave.AddUnique(Package);

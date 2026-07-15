@@ -49,7 +49,7 @@ bool UDinkRuntimeParser::ParseJSON(const FString& JsonRaw, TMap<FName, FDinkBeat
     {
         for (auto It = JsonRootObject->Values.CreateConstIterator(); It; ++It)
         {
-            const FString& KeyLineID = It.Key();
+            const FString KeyLineID = *It.Key();
             const TSharedPtr<FJsonValue>& Value = It.Value();
 
             TSharedPtr<FJsonObject> BeatObj = Value->AsObject();

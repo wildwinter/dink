@@ -14,7 +14,7 @@ FString FDinkBeat::ToString() const
     }
     else if (Type == EDinkBeatType::Action)
     {
-        dump += FString::Printf(TEXT("Action"), *LineID.ToString());
+        dump += TEXT("Action");
         dump += FString::Printf(TEXT(" | Text: \"%s\""), *Text);
     }
 

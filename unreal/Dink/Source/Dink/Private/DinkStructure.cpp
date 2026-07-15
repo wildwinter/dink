@@ -17,7 +17,7 @@ FString FDinkStructureBeat::ToString() const
     }
     else if (Type == EDinkBeatType::Action)
     {
-        dump += FString::Printf(TEXT("Action"), *LineID.ToString());
+        dump += TEXT("Action");
     }
 
     if (Tags.Num() > 0)
