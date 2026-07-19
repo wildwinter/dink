@@ -44,38 +44,45 @@ public class Characters
     }
 
     /// <summary>
-    /// Map a character's grammatical gender to the single-letter code used in
-    /// the localisation spreadsheet. Anything unrecognised - including null,
-    /// empty, and "Non-specified" - yields an empty string, so the column is
-    /// simply left blank rather than guessing.
+    /// Normalise a grammatical gender for display. The canonical values are
+    /// snapped to consistent casing ("male" -> "Male"). Grammatical gender is a
+    /// free-text field - some languages need genders beyond masculine/feminine/
+    /// neuter (common, animate, inanimate...) - so any other non-empty value is
+    /// passed through verbatim rather than discarded. Blank, and the legacy
+    /// "Non-specified" dropdown label, mean "no gender set" and yield "".
     /// </summary>
-    public static string GenderCode(string? gender)
+    public static string GenderName(string? gender)
     {
         if (string.IsNullOrWhiteSpace(gender))
             return "";
 
-        return gender.Trim().ToLowerInvariant() switch
+        var trimmed = gender.Trim();
+        return trimmed.ToLowerInvariant() switch
         {
-            "male" => "M",
-            "female" => "F",
-            "neuter" => "N",
-            _ => ""
+            "male" => "Male",
+            "female" => "Female",
+            "neuter" => "Neuter",
+            // Was the fixed dropdown's label for "no value" before the field
+            // became free text; treat it as blank rather than a gender.
+            "non-specified" => "",
+            _ => trimmed
         };
     }
 
     /// <summary>
-    /// Canonical display name of a grammatical gender ("Male" / "Female" /
-    /// "Neuter"), or "" when non-specified or unrecognised. Derived from
-    /// GenderCode so that hand-edited casing is normalised.
+    /// Map a character's grammatical gender to the value used in the
+    /// localisation spreadsheet column. The canonical three abbreviate to
+    /// M/F/N; any other value passes through as written (see GenderName).
     /// </summary>
-    public static string GenderName(string? gender)
+    public static string GenderCode(string? gender)
     {
-        return GenderCode(gender) switch
+        var name = GenderName(gender);
+        return name switch
         {
-            "M" => "Male",
-            "F" => "Female",
-            "N" => "Neuter",
-            _ => ""
+            "Male" => "M",
+            "Female" => "F",
+            "Neuter" => "N",
+            _ => name
         };
     }
 

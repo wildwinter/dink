@@ -34,15 +34,32 @@ public class CharacterGenderTests
         Assert.Equal(expected, Characters.GenderCode(gender));
     }
 
+    // Blank means "no gender set". "Non-specified" was the old fixed-dropdown
+    // label for that, so it is still treated as blank rather than a gender.
     [Theory]
     [InlineData("")]
     [InlineData("   ")]
     [InlineData("Non-specified")]
-    [InlineData("Nonsense")]
+    [InlineData("non-specified")]
     [InlineData(null)]
-    public void GenderCode_IsBlankForAnythingUnrecognised(string? gender)
+    public void GenderCode_IsBlankWhenNoGenderIsSet(string? gender)
     {
         Assert.Equal("", Characters.GenderCode(gender));
+        Assert.Equal("", Characters.GenderName(gender));
+    }
+
+    // The field is free text: some languages need genders beyond the three
+    // suggested values, so anything else passes through verbatim rather than
+    // being dropped. Whatever the writer entered is what localisers receive.
+    [Theory]
+    [InlineData("Common", "Common")]
+    [InlineData("Inanimate", "Inanimate")]
+    [InlineData("  Animate  ", "Animate")]
+    [InlineData("Man", "Man")]
+    public void GenderCode_PassesThroughNonCanonicalValues(string gender, string expected)
+    {
+        Assert.Equal(expected, Characters.GenderCode(gender));
+        Assert.Equal(expected, Characters.GenderName(gender));
     }
 
     [Theory]

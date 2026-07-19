@@ -107,14 +107,16 @@ public class LocStrings
                 ExcelUtils.FormatTableSheet(worksheet, table);
                 ExcelUtils.AdjustSheet(worksheet);
 
-                // AdjustSheet sizes every column to its contents, which would
-                // make the single-letter Gender column as wide as its heading.
-                // Pin it narrow and centre the codes.
+                // Keep the Gender column narrow for the usual M/F/N codes, but
+                // don't clip it: grammatical gender is free text, so a project
+                // using a longer value ("Common", "Inanimate") still needs to be
+                // readable. AdjustSheet has already sized it to its contents, so
+                // only enforce a minimum.
                 string? genderCol = ExcelUtils.FindColumnByHeading(worksheet, "Gender");
                 if (genderCol != null)
                 {
                     var column = worksheet.Column(genderCol);
-                    column.Width = 8;
+                    if (column.Width < 8) column.Width = 8;
                     column.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                 }
 
