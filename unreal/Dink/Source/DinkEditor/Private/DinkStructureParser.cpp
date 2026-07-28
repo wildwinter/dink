@@ -21,8 +21,15 @@ static FDinkStructureBeat ParseBeat(TSharedPtr<FJsonObject> JsonBeat)
     // Common Fields
     FString TypeStr = JsonBeat->GetStringField(TEXT("Type"));
     Beat.Type = ParseBeatType(TypeStr);
-    
-    Beat.LineID = FName(*JsonBeat->GetStringField(TEXT("LineID")));
+
+    // A line need not have an "#id:" tag - unlocalisable / work-in-progress lines legitimately
+    // have none (never in #dink scenes, but possible elsewhere in a project's ink). Read it
+    // tolerantly so an absent OR empty LineID both yield NAME_None quietly: the non-Try
+    // GetStringField would log a LogJson Warning plus an Error per beat if the field were
+    // omitted. A missing id is not an error here - downstream code checks LineID.IsNone().
+    FString LineIDStr;
+    JsonBeat->TryGetStringField(TEXT("LineID"), LineIDStr);
+    Beat.LineID = LineIDStr.IsEmpty() ? FName() : FName(*LineIDStr);
 
     const TArray<TSharedPtr<FJsonValue>>* TagsArray;
     if (JsonBeat->TryGetArrayField(TEXT("Tags"), TagsArray))
@@ -37,9 +44,14 @@ static FDinkStructureBeat ParseBeat(TSharedPtr<FJsonObject> JsonBeat)
     // Line-specific Fields
     if (Beat.Type == EDinkBeatType::Line)
     {
-        Beat.CharacterID = FName(*JsonBeat->GetStringField(TEXT("CharacterID")));
-        Beat.Qualifier = JsonBeat->GetStringField(TEXT("Qualifier"));
-        Beat.Direction = JsonBeat->GetStringField(TEXT("Direction"));
+        // Also read tolerantly - Qualifier and Direction are optional in authoring, and an
+        // omitted field (rather than an empty one) must not log.
+        FString CharacterIDStr;
+        JsonBeat->TryGetStringField(TEXT("CharacterID"), CharacterIDStr);
+        Beat.CharacterID = CharacterIDStr.IsEmpty() ? FName() : FName(*CharacterIDStr);
+
+        JsonBeat->TryGetStringField(TEXT("Qualifier"), Beat.Qualifier);
+        JsonBeat->TryGetStringField(TEXT("Direction"), Beat.Direction);
     }
 
     const TArray<TSharedPtr<FJsonValue>>* CommentsArray;
