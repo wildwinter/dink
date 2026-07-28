@@ -59,6 +59,14 @@ public class ProjectSettings
     // If true, doesn't strip out the text from the compiled JSON.
     public bool NoStrip = false;
 
+    // Strict localisation (default). When true, a line the localiser can't
+    // handle - one split into multiple chunks by inline logic, e.g.
+    // "Test {value} Again" - is a hard error that fails the compile. When
+    // false, such lines are warned about and skipped: left untagged in the
+    // Ink and excluded from localisation, so in-development scripts still
+    // compile.
+    public bool Strict = true;
+
     // If true, outputs the structured dink file (json)
     public bool OutputDinkStructure = false;
 
@@ -169,6 +177,7 @@ public class ProjectEnvironment
     public string DefaultLocaleCode {get {return _settings.DefaultLocaleCode;}}
     public bool LocActions {get{return _settings.LocActions;}}
     public bool NoStrip {get{return _settings.NoStrip;}}
+    public bool Strict {get{return _settings.Strict;}}
     public bool OutputDinkStructure {get{return _settings.OutputDinkStructure;}}
     public bool OutputLocalization {get{return _settings.OutputLocalization;}}
     public bool OutputRecordingScript {get{return _settings.OutputRecordingScript;}}

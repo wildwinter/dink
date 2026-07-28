@@ -88,6 +88,22 @@ Option<bool> nostripOption = new("--nostrip")
 };
 command.Options.Add(nostripOption);
 
+// Localisation strictness. Strict is the default; --lenient turns it off so
+// lines that can't be localised (split by inline logic, e.g. "Test {value}
+// Again") are warned about and skipped rather than failing the compile.
+// --strict forces it back on if the project file set it lenient.
+Option<bool> lenientOption = new("--lenient")
+{
+    Description = "Warn about and skip lines that can't be localised (split by inline logic) instead of failing."
+};
+command.Options.Add(lenientOption);
+
+Option<bool> strictOption = new("--strict")
+{
+    Description = "Force strict localisation (the default): fail if a line can't be localised."
+};
+command.Options.Add(strictOption);
+
     Option<bool> outputPotOption = new("--outputPot")
     {
         Description = "Output the strings POT file."
@@ -149,6 +165,14 @@ command.SetAction(parseResult =>
         settings.OutputOrigins = true;
     if (parseResult.GetValue<bool>(nostripOption))
         settings.NoStrip = true;
+
+    // Strict defaults to true (from the project file, or the field default).
+    // --lenient turns it off; --strict forces it on. If both are given, strict
+    // wins because it's applied last.
+    if (parseResult.GetValue<bool>(lenientOption))
+        settings.Strict = false;
+    if (parseResult.GetValue<bool>(strictOption))
+        settings.Strict = true;
 
     if (parseResult.GetValue<bool>(outputPotOption))
         settings.OutputPot = true;

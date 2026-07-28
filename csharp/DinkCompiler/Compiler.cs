@@ -266,7 +266,8 @@ public class Compiler
         Console.WriteLine("Processing Ink for IDs and string content... " + inkFile);
         var localiser = new Localiser(new Localiser.Options()
         {
-            file = inkFile
+            file = inkFile,
+            strict = _env.Strict
         });
         if (!localiser.Run())
         {
