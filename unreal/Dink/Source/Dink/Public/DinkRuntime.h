@@ -10,8 +10,13 @@ struct DINK_API FDinkBeat
     GENERATED_BODY()
 
 public:
+    // Explicitly initialised: a bare enum member is raw memory, so UE's
+    // uninitialised-property validation reports it as an error at load. Line is the
+    // zero value, which is what already sits in serialised beat sheets - do not
+    // introduce a None sentinel here, as renumbering would reinterpret every
+    // existing Line beat as an Action.
     UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
-    EDinkBeatType Type;
+    EDinkBeatType Type = EDinkBeatType::Line;
 
     UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
     FName LineID;

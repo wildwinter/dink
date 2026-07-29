@@ -13,8 +13,9 @@ struct DINK_API FDinkStructureBeat
     GENERATED_BODY()
 
 public:
+    // Explicitly initialised - see the note on FDinkBeat::Type in DinkRuntime.h.
     UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
-    EDinkBeatType Type;
+    EDinkBeatType Type = EDinkBeatType::Line;
 
     UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
     FName LineID;
