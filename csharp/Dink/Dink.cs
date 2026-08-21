@@ -192,6 +192,25 @@ public class DinkScene : DinkBase
     public string SceneID { get; set; } = string.Empty;
     public List<DinkBlock> Blocks { get; set; } = new List<DinkBlock>();
 
+    // Distinct speaking CharacterIDs across this scene - the knot body and all
+    // of its stitches - in order of first appearance. Computed from the lines,
+    // so it serializes into the structured scene JSON (WriteScenes) and stays
+    // correct after edits/caching; get-only, so ReadScenes ignores it on load.
+    public List<string> Characters
+    {
+        get
+        {
+            var seen = new HashSet<string>();
+            var result = new List<string>();
+            foreach (var line in IterateLines())
+            {
+                if (!string.IsNullOrEmpty(line.CharacterID) && seen.Add(line.CharacterID))
+                    result.Add(line.CharacterID);
+            }
+            return result;
+        }
+    }
+
     public IEnumerable<DinkBeat> IterateBeats()
     {
         foreach (var block in Blocks)
