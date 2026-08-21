@@ -1,5 +1,5 @@
 <Project>
   <ItemGroup>
-    <PackageReference Include="wildwinter.SimpleVCLib" Version="0.2.0" />
+    <PackageReference Include="wildwinter.SimpleVCLib" Version="0.4.1" />
   </ItemGroup>
 </Project>

@@ -9,6 +9,10 @@ Entries before 0.1.8 are not documented here - see the [git history](https://git
 
 ## [Unreleased]
 
+## [0.2.1]
+- Forgot to add the Unreal changes.
+- Update simple-vc-lib.
+
 ## [0.2.0]
 
 ### Added
