@@ -9,5 +9,7 @@ Entries before 0.1.8 are not documented here - see the [git history](https://git
 
 ## [Unreleased]
 
+## [0.2.0]
+
 ### Added
 - Structured scene JSON (`-dink-structure.json`) now includes a `Characters` list on each scene: the distinct speaking CharacterIDs across the knot and all its stitches, in order of first appearance. The minimal runtime file is unchanged.
