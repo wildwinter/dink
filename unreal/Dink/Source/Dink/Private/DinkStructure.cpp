@@ -65,6 +65,12 @@ FString FDinkStructureScene::ToString() const
     {
         dump += FString::Printf(TEXT("\n%s"), *block.ToString());
     }
+    if (Characters.Num() > 0)
+    {
+        dump += TEXT(" | Characters:");
+        for (const FName& character : Characters)
+            dump += FString::Printf(TEXT(" %s"), *character.ToString());
+    }
     if (Tags.Num() > 0)
     {
         dump += TEXT(" | Tags:");

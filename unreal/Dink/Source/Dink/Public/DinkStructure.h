@@ -102,6 +102,20 @@ public:
     UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
     TArray<FDinkStructureBlock> Blocks;
 
+    /**
+     * The characters who speak in this scene, as the compiler gathered them - the distinct set of
+     * CharacterID across the scene's own beats. FName to match FDinkStructureBeat::CharacterID, so
+     * a consumer can compare the two without converting.
+     *
+     * Two things to know before using this as a cast list. It is **per knot, not reachability**:
+     * a scene that diverts into another scene says nothing here about who speaks over there, and
+     * Ink permits divert targets held in variables, so no compiler could promise otherwise. And it
+     * includes reserved pseudo-characters - notably SFX - which are lines in the story but not
+     * actors in the world, so anything binding these to actors has to filter first.
+     */
+    UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
+    TArray<FName> Characters;
+
     UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Dink")
     TArray<FString> Tags;
 

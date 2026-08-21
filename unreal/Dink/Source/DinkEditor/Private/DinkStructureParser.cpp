@@ -166,6 +166,22 @@ static FDinkStructureScene ParseScene(TSharedPtr<FJsonObject> JsonScene)
             Scene.Comments.Emplace(CommentVal->AsString());
     }
 
+    // Optional: absent from a structure file written by an older Dink, in which case the scene
+    // simply reports no characters rather than failing to parse.
+    const TArray<TSharedPtr<FJsonValue>>* CharactersArray;
+    if (JsonScene->TryGetArrayField(TEXT("Characters"), CharactersArray))
+    {
+        Scene.Characters.Reserve(CharactersArray->Num());
+        for (const auto& CharacterVal : *CharactersArray)
+        {
+            const FString CharacterID = CharacterVal->AsString();
+            if (!CharacterID.IsEmpty())
+            {
+                Scene.Characters.AddUnique(FName(*CharacterID));
+            }
+        }
+    }
+
     const TArray<TSharedPtr<FJsonValue>>* TagsArray;
     if (JsonScene->TryGetArrayField(TEXT("Tags"), TagsArray))
     {
