@@ -9,8 +9,15 @@ Entries before 0.1.8 are not documented here - see the [git history](https://git
 
 ## [Unreleased]
 
+## [0.3.0]
+
 ### Added
-- Google TTS settings can be overridden from the command line. `--noTts` turns generation off for a run even if the project file enables it (and wins over `--tts`); `--ttsAuth`, `--ttsOutputFolder`, `--ttsReplaceExisting` and `--ttsSkipUnchanged` override the other `googleTTS` values.
+- Command-line overrides for the project file's Google TTS (`googleTTS`) settings, applied for a single run:
+  - `--noTts`: don't generate TTS, even if the project file enables it. It wins over `--tts`, so a machine without the Google key can still build the project.
+  - `--ttsAuth <file>`: use a different Google TTS authentication (JSON key) file.
+  - `--ttsOutputFolder <folder>`: write generated TTS audio to a different folder.
+  - `--ttsReplaceExisting`: regenerate every line, even where the existing audio is up to date.
+  - `--ttsSkipUnchanged`: only regenerate lines whose text has changed. It wins over `--ttsReplaceExisting`.
 
 ## [0.2.1]
 - Forgot to add the Unreal changes.
