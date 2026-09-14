@@ -140,7 +140,7 @@ Releases are available in the releases area in [Github](https://github.com/wildw
 
 ## Version Control
 
-Dink is designed to play well with version-control systems used in game development — Git, Perforce, Plastic SCM, and SVN are all supported.
+Dink is designed to play well with version-control systems used in game development. Git, Perforce, Plastic SCM, and SVN are all supported.
 
 All file writes performed by `DinkCompiler`, `DinkViewer`, and `DinkVoiceExport` go through [simple-vc-lib](https://github.com/wildwinter/simple-vc-lib), which automatically detects the VCS in use and handles checkout/lock before writing and add/mark for tracking after writing. In practical terms this means:
 
@@ -148,7 +148,7 @@ All file writes performed by `DinkCompiler`, `DinkViewer`, and `DinkVoiceExport`
 * Existing output files that are locked or checked out exclusively by another user will produce a clear error rather than silently failing or corrupting the workspace.
 * On systems with no VCS (or when run outside a repo), the tools fall back to plain filesystem writes with no change in behaviour.
 
-Detection is automatic — no configuration is needed for Git. For Perforce or other systems, refer to the [simple-vc-lib documentation](https://github.com/wildwinter/simple-vc-lib) for any required environment setup.
+Detection is automatic, and no configuration is needed for Git. For Perforce or other systems, refer to the [simple-vc-lib documentation](https://github.com/wildwinter/simple-vc-lib) for any required environment setup.
 
 ## Usage
 
@@ -271,11 +271,11 @@ Comments will be read from your script by Dink and copied
 into recording scripts and localisation documents.
 
 `//` marks a comment that Dink will capture. Block-style comments (`/* */`) are stripped
-entirely and never captured — use them to comment out Ink you don't want compiled.
+entirely and never captured, so you can use them to comment out Ink you don't want compiled.
 
 There are four places a comment can live, each with a different target:
 
-**Scene comments** — on or immediately above a knot header (at most one blank line gap):
+**Scene comments** go on or immediately above a knot header (at most one blank line gap):
 
 ```text
 // This note describes the whole scene.
@@ -285,7 +285,7 @@ There are four places a comment can live, each with a different target:
 
 Both end up in `scene.Comments`.
 
-**Block comments** — on or immediately above a stitch header (at most one blank line gap):
+**Block comments** go on or immediately above a stitch header (at most one blank line gap):
 
 ```text
 // This note describes the block.
@@ -296,7 +296,7 @@ DAVE: Hello. #id:dave_1
 Both end up in `block.Comments`. A comment separated from the header by more than one blank
 line is dropped rather than accidentally attaching to the wrong thing.
 
-**Group comments** — on or immediately above a `{shuffle:` / `{once:` / `{stopping:` opener:
+**Group comments** go on or immediately above a `{shuffle:` / `{once:` / `{stopping:` opener:
 
 ```text
 // This applies to all choices in the shuffle.
@@ -309,14 +309,14 @@ line is dropped rather than accidentally attaching to the wrong thing.
 Both end up in `snippet.GroupComments` on every snippet in the group, so they appear on
 every row in the recording script for that shuffle.
 
-**Beat comments** — on or immediately above any dialogue line or action beat:
+**Beat comments** go on or immediately above any dialogue line or action beat:
 
 ```text
 // This note is for the voice actor on the next line.
 DAVE (V.O.): It was a quiet morning in May... #id:dave_4 // And so is this inline note.
 ```
 
-Both end up in `dinkLine.Comments`. Beat comments float freely — any number of blank lines
+Both end up in `dinkLine.Comments`. Beat comments float freely: any number of blank lines
 between the comment and the beat is fine.
 
 Inside a shuffle, a `//` comment above a `-` entry goes to that **line**, not the snippet:
@@ -328,13 +328,13 @@ Inside a shuffle, a `//` comment above a `-` entry goes to that **line**, not th
 }
 ```
 
-**Snippet comments** — use the `- //` form (a dash followed only by a comment) to attach a
+**Snippet comments** use the `- //` form (a dash followed only by a comment) to attach a
 note to the whole snippet rather than any individual line. This is useful for multi-line
 exchanges:
 
 ```text
 {shuffle:
-- // Both lines below are part of this choice — note applies to the snippet.
+- // Both lines below are part of this choice, so the note applies to the snippet.
 DAVE: Have you met my friend? #id:dave_6
 LAURA: Not yet! #id:laura_1
 }
@@ -702,7 +702,7 @@ The `.dink-cache/` folder is local scratch data and **should not be committed to
 .dink-cache/
 ```
 
-The cache is safe to delete at any time — the next build will simply do a full rebuild and recreate it. You can also delete it via the command line with `--clean`.
+The cache is safe to delete at any time. The next build will simply do a full rebuild and recreate it. You can also delete it via the command line with `--clean`.
 
 ### Live Mode
 
