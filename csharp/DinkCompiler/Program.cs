@@ -64,6 +64,39 @@ Option<bool> googleTTSOption = new("--tts")
 };
 command.Options.Add(googleTTSOption);
 
+// Google TTS overrides. Each replaces the matching "googleTTS" value from the
+// project file for this run only. --noTts switches generation off even if the
+// project file (or --tts) switches it on.
+Option<bool> noTTSOption = new("--noTts")
+{
+    Description = "Don't generate text-to-speech, even if the project file enables it. Overrides --tts."
+};
+command.Options.Add(noTTSOption);
+
+Option<string> ttsAuthOption = new("--ttsAuth")
+{
+    Description = "Google TTS authentication (JSON key) file. Overrides the project file."
+};
+command.Options.Add(ttsAuthOption);
+
+Option<string> ttsOutputFolderOption = new("--ttsOutputFolder")
+{
+    Description = "Folder to write generated TTS audio into. Overrides the project file."
+};
+command.Options.Add(ttsOutputFolderOption);
+
+Option<bool> ttsReplaceExistingOption = new("--ttsReplaceExisting")
+{
+    Description = "Regenerate TTS audio for every line, even where the existing file is up to date."
+};
+command.Options.Add(ttsReplaceExistingOption);
+
+Option<bool> ttsSkipUnchangedOption = new("--ttsSkipUnchanged")
+{
+    Description = "Only regenerate TTS audio for lines whose text has changed, even if the project file says to replace existing. Overrides --ttsReplaceExisting."
+};
+command.Options.Add(ttsSkipUnchangedOption);
+
 Option<bool> outputOriginsOption = new("--origins")
 {
     Description = "Generate origins JSON file, showing which file/line number is the source of a line."
@@ -159,8 +192,16 @@ command.SetAction(parseResult =>
         settings.IgnoreWritingStatus = true;
     if (parseResult.GetValue<bool>(outputStatsOption))
         settings.OutputStats = true;
-    if (parseResult.GetValue<bool>(googleTTSOption))
-        settings.GoogleTTS.Generate = true;
+    bool ttsWasOn = settings.GoogleTTS.Generate;
+    settings.GoogleTTS.ApplyCommandLine(
+        tts: parseResult.GetValue<bool>(googleTTSOption),
+        noTts: parseResult.GetValue<bool>(noTTSOption),
+        authentication: parseResult.GetValue<string>(ttsAuthOption),
+        outputFolder: parseResult.GetValue<string>(ttsOutputFolderOption),
+        replaceExisting: parseResult.GetValue<bool>(ttsReplaceExistingOption),
+        skipUnchanged: parseResult.GetValue<bool>(ttsSkipUnchangedOption));
+    if (ttsWasOn && !settings.GoogleTTS.Generate)
+        Console.WriteLine("Google TTS generation disabled by --noTts.");
     if (parseResult.GetValue<bool>(outputOriginsOption))
         settings.OutputOrigins = true;
     if (parseResult.GetValue<bool>(nostripOption))

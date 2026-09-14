@@ -26,6 +26,31 @@ public class GoogleTTSSettings
     public string Authentication {get;set;} = "";
     public string OutputFolder {get;set;} = "";
     public bool ReplaceExisting {get;set;} = false;
+
+    // Apply command-line overrides on top of the values loaded from the
+    // project file. Anything not given on the command line keeps its project
+    // value. Where a setting has an "on" and an "off" switch and both are given,
+    // the "off" switch wins, so --noTts is a dependable kill switch (no API
+    // calls) even if the project file or --tts turns generation on.
+    public void ApplyCommandLine(bool tts, bool noTts,
+        string? authentication, string? outputFolder,
+        bool replaceExisting, bool skipUnchanged)
+    {
+        if (tts)
+            Generate = true;
+        if (noTts)
+            Generate = false;
+
+        if (!string.IsNullOrEmpty(authentication))
+            Authentication = authentication;
+        if (!string.IsNullOrEmpty(outputFolder))
+            OutputFolder = outputFolder;
+
+        if (replaceExisting)
+            ReplaceExisting = true;
+        if (skipUnchanged)
+            ReplaceExisting = false;
+    }
 }
 
 public class Estimate

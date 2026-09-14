@@ -9,6 +9,9 @@ Entries before 0.1.8 are not documented here - see the [git history](https://git
 
 ## [Unreleased]
 
+### Added
+- Google TTS settings can be overridden from the command line. `--noTts` turns generation off for a run even if the project file enables it (and wins over `--tts`); `--ttsAuth`, `--ttsOutputFolder`, `--ttsReplaceExisting` and `--ttsSkipUnchanged` override the other `googleTTS` values.
+
 ## [0.2.1]
 - Forgot to add the Unreal changes.
 - Update simple-vc-lib.

@@ -636,6 +636,29 @@ Or instead, grab all the settings from a project file:
     Use Google TTS to generate temp audio for your spoken lines.
     You need to [configure it](#google-tts) first in the config file.
 
+* `--noTts`
+
+    Don't generate Google TTS audio for this run, even if the config file has `"generate":true`.
+    Useful on a machine without the Google key, or for a quick build. Overrides `--tts`.
+
+* `--ttsAuth <file>`
+
+    Google TTS authentication (JSON key) file, overriding `authentication` in the config file.\
+    e.g. `--ttsAuth keys/google-tts-key.json`
+
+* `--ttsOutputFolder <folder>`
+
+    Folder to write generated TTS audio into, overriding `outputFolder` in the config file.\
+    Relative paths are resolved against the project folder, as in the config file.
+
+* `--ttsReplaceExisting`
+
+    Regenerate TTS audio for every line, even where the existing file is already up to date.
+
+* `--ttsSkipUnchanged`
+
+    Only regenerate TTS audio for lines whose text has changed, even if the config file sets `replaceExisting`. Overrides `--ttsReplaceExisting`.
+
 * `--outputPot`
 
     Output the strings POT file. See [PO/POT Localisation Files](#popot-localisation-files).
@@ -1133,11 +1156,14 @@ To do that, provide Google TTS config settings in the project file.
 ```jsonc
     // GoogleTTS parameters
     "googleTTS": {
-        "generate":true, // If false, you'll need to use --tts on the command-line
+        "generate":true, // If false, you'll need to use --tts on the command-line. --noTts turns it off for a run.
         "authentication":"google-tts-key.json",
-        "outputFolder":"Audio/TTS"
+        "outputFolder":"Audio/TTS",
+        "replaceExisting":false // If true, regenerates every line rather than just lines whose text changed
     }
 ```
+
+Any of these can be overridden for a single run from the [command line](#arguments): `--tts`, `--noTts`, `--ttsAuth`, `--ttsOutputFolder`, `--ttsReplaceExisting` and `--ttsSkipUnchanged`.
 
 If you make sure your `outputFolder` matches a folder in your [Audio Status](#audio-file-status) config then the generated TTS will appear in your audio status results.
 
@@ -1296,7 +1322,7 @@ A JSON or JSONC file (i.e. JSON with comments), by convention with extension .di
 
     // GoogleTTS parameters
     "googleTTS": {
-        "generate":true, // If false, you'll need to use --tts on the command-line
+        "generate":true, // If false, you'll need to use --tts on the command-line. --noTts turns it off for a run.
         "authentication":"google-tts-key.json",
         "outputFolder":"Audio/TTS"
     },
