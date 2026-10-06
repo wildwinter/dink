@@ -362,7 +362,14 @@ public class DinkParser
         return new string(buffer);
     }
 
-    private static string GenerateSnippetID(DinkSnippet snippet)
+    // IDs are derived from the snippet's text so they stay stable across
+    // rebuilds. Identical text is legitimate (four "*crying*" barks in one
+    // shuffle, or repeated "..." lines), so when the hash collides with one
+    // already used in this block we salt the text and rehash until the ID is
+    // free. IDs stay deterministic for a given source while being distinct: a
+    // snippet ID marks a run of lines, and duplicates merge unrelated snippets
+    // in the exporters and at runtime.
+    private static string GenerateSnippetID(DinkSnippet snippet, ICollection<string>? usedIds = null)
     {
         var content = new StringBuilder();
         foreach (var beat in snippet.Beats)
@@ -377,17 +384,28 @@ public class DinkParser
             }
         }
 
-        if (content.Length == 0)
-            return GenerateID();
-
-        string normalized = NormalizeBeatText(content.ToString());
+        string normalized = content.Length == 0 ? "" : NormalizeBeatText(content.ToString());
 
         if (string.IsNullOrWhiteSpace(normalized))
-            return GenerateID(); 
+            return GenerateUnusedRandomID(usedIds);
 
+        // Attempt 0 is the plain text hash, so a snippet that doesn't collide
+        // keeps exactly the ID it had before this disambiguation existed.
+        for (int attempt = 0; attempt < 1000; attempt++)
+        {
+            string candidate = HashToID(attempt == 0 ? normalized : $"{normalized}\u0000{attempt}");
+            if (usedIds == null || !usedIds.Contains(candidate))
+                return candidate;
+        }
+
+        return GenerateUnusedRandomID(usedIds);
+    }
+
+    private static string HashToID(string text)
+    {
         using (MD5 md5 = MD5.Create())
         {
-            byte[] hashBytes = md5.ComputeHash(Encoding.UTF8.GetBytes(normalized));
+            byte[] hashBytes = md5.ComputeHash(Encoding.UTF8.GetBytes(text));
             var resultChars = new char[6];
             for (int i = 0; i < 6; i++)
             {
@@ -395,6 +413,17 @@ public class DinkParser
             }
             return new string(resultChars);
         }
+    }
+
+    private static string GenerateUnusedRandomID(ICollection<string>? usedIds)
+    {
+        for (int attempt = 0; attempt < 1000; attempt++)
+        {
+            string candidate = GenerateID();
+            if (usedIds == null || !usedIds.Contains(candidate))
+                return candidate;
+        }
+        return GenerateID();
     }
 
     public static string? FindBestMatchSnippetID(DinkSnippet newSnippet, IEnumerable<DinkSnippet> oldSnippets, ICollection<string>? usedIds = null, double similarityThreshold = 0.25)
@@ -495,6 +524,7 @@ public class DinkParser
     {
         List<string> IDs = new();
         HashSet<string> usedOldSnippetIDs = new();
+        HashSet<string> usedSnippetIDsInBlock = new();
         DinkScene? scene = null;
         DinkBlock? block = null;
         DinkSnippet? snippet = null;
@@ -568,7 +598,14 @@ public class DinkParser
                         }
                     }
 
-                    snippet.SnippetID = existingId ?? GenerateSnippetID(snippet);
+                    // A preserved ID can itself be a duplicate, because a
+                    // previous structure file may have been written before
+                    // collisions were disambiguated. Regenerate in that case.
+                    if (existingId != null && usedSnippetIDsInBlock.Contains(existingId))
+                        existingId = null;
+
+                    snippet.SnippetID = existingId ?? GenerateSnippetID(snippet, usedSnippetIDsInBlock);
+                    usedSnippetIDsInBlock.Add(snippet.SnippetID);
                     block.Snippets.Add(snippet);
                 }
             }
@@ -593,6 +630,7 @@ public class DinkParser
             activeGroup = 0;
             currentBraceContainer = null;
             currentBraceLevel = 0;
+            usedSnippetIDsInBlock.Clear();
         }
 
         void addBlock()

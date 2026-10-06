@@ -9,6 +9,9 @@ Entries before 0.1.8 are not documented here - see the [git history](https://git
 
 ## [Unreleased]
 
+### Fixed
+- Snippets with identical text in the same block no longer share a `SnippetID`. IDs are still derived from the snippet's text, so snippets that don't collide keep the ID they already had, but a collision (for example four identical `*crying*` barks in one shuffle) is salted and rehashed until it is unique. A structure file that already contains duplicates is healed on the next build.
+
 ## [0.3.0]
 
 ### Added
