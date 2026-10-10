@@ -9,6 +9,11 @@ Entries before 0.1.8 are not documented here - see the [git history](https://git
 
 ## [Unreleased]
 
+## [0.3.2]
+
+### Fixed
+- Updated simple-vc-lib to 0.5.1, which fixes Plastic SCM: a file that is already checked out now saves again without needing a second checkout.
+
 ## [0.3.1]
 
 ### Fixed
