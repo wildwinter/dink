@@ -9,6 +9,11 @@ Entries before 0.1.8 are not documented here - see the [git history](https://git
 
 ## [Unreleased]
 
+## [0.3.3]
+
+### Fixed
+- Updated simple-vc-lib to 0.5.2, which fixes Plastic SCM status reporting: `cm status` output is now parsed in the format `cm` actually prints.
+
 ## [0.3.2]
 
 ### Fixed
