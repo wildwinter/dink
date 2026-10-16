@@ -242,11 +242,15 @@ void FDinkEditorModule::OpenDinky(FString GotoTarget)
         return;
     }
 
+    // The two-arg form only converts relative to ProjectDir, which can itself be relative
+    // (depending on how the editor was launched), leaving a relative path
+    // that Dinky cannot resolve. The single-arg form then makes it absolute against the
+    // process's base directory.
     auto ResolveAbsolute = [](const FString& InPath) -> FString
     {
-        return FPaths::IsRelative(InPath)
+        return FPaths::ConvertRelativePathToFull(FPaths::IsRelative(InPath)
             ? FPaths::ConvertRelativePathToFull(FPaths::ProjectDir(), InPath)
-            : InPath;
+            : InPath);
     };
 
     const FString AbsoluteProjectPath = ResolveAbsolute(Settings->ProjectFilePath);
