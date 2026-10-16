@@ -9,6 +9,8 @@ Entries before 0.1.8 are not documented here - see the [git history](https://git
 
 ## [Unreleased]
 
+## [0.3.4]
+
 ### Fixed
 - PDF export no longer fails with "'Rectangle' must not be null here" on larger scripts. The block and group separators were empty paragraphs carrying a bottom border, and MigraDoc cannot format one of those when it lands on a page boundary, so whether a script exported depended on where its pages happened to break. Page layout is unchanged.
 
