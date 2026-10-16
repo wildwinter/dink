@@ -260,7 +260,12 @@ public static class PDFExporter
 
     private static void AddBlockSeparator(Section section)
     {
-        var p = section.AddParagraph();
+        // The space is deliberate. MigraDoc 6.1.1 throws "'Rectangle' must not
+        // be null here" from ParagraphRenderer.StoreBottomBorderInformation when
+        // a paragraph that has a border formats no line box and lands at a page
+        // boundary. Giving the paragraph content avoids that path. It does not
+        // change the layout: page counts are identical either way.
+        var p = section.AddParagraph(" ");
         p.Format.Borders.Bottom.Width = 1;
         p.Format.Borders.Bottom.Color = Colors.DarkGray;
         p.Format.SpaceAfter = 12;
@@ -268,7 +273,12 @@ public static class PDFExporter
 
     private static void AddGroupSeparator(Section section)
     {
-        var p = section.AddParagraph();
+        // The space is deliberate. MigraDoc 6.1.1 throws "'Rectangle' must not
+        // be null here" from ParagraphRenderer.StoreBottomBorderInformation when
+        // a paragraph that has a border formats no line box and lands at a page
+        // boundary. Giving the paragraph content avoids that path. It does not
+        // change the layout: page counts are identical either way.
+        var p = section.AddParagraph(" ");
         p.Format.Borders.Bottom.Width = 0.5;
         p.Format.Borders.Bottom.Color = Colors.Gray;
         p.Format.SpaceAfter = 6;
