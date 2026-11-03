@@ -22,6 +22,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DinkCompiler\DinkCompiler.csproj" />
+    <Reference Include="ink-engine-runtime">
+      <HintPath>../lib/Inklecate/ink-engine-runtime.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

@@ -330,6 +330,9 @@ public class Compiler
         Ink.Compiler compiler = new Ink.Compiler(inputString, new Ink.Compiler.Options
         {
             sourceFilename = sourceInkFile,
+            // Same as inklecate -c: count visits to every knot and stitch, not only those
+            // read with a visit count, so game code can query any of them at runtime.
+            countAllVisits = true,
             errorHandler = OnCompileError,
             fileHandler = fileHandler
         });
