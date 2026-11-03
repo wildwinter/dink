@@ -9,6 +9,8 @@ Entries before 0.1.8 are not documented here - see the [git history](https://git
 
 ## [Unreleased]
 
+## [0.3.5]
+
 ### Changed
 - Ink is now compiled with "count all visits" switched on, the same as `inklecate -c`. Visit counts are recorded for every knot and stitch rather than only those the script itself reads, so game code can ask for the visit count of any of them at runtime.
 
