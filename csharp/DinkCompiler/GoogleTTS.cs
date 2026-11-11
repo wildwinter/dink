@@ -3,14 +3,20 @@ namespace DinkCompiler;
 using System;
 using System.IO;
 using Google.Cloud.TextToSpeech.V1;
+using System.Security.Cryptography;
 using System.Text;
 using DinkTool;
 using SimpleVCLib;
 
 // Quite pleased with this - I store a hash of the line's text inside the WAV file, and so
 // only regenerate the file if the line's text has changed.
+// A second hash, of the voice request (voice, language, encoding, sample rate), sits beside
+// it, so changing a character's TTS voice regenerates that character's lines too.
 public class GoogleTTS
 {
+    private const AudioEncoding Encoding16 = AudioEncoding.Linear16;
+    private const int SampleRate = 12000;
+
     private Characters _characters;
     private GoogleTTSSettings _config;
 
@@ -39,25 +45,23 @@ public class GoogleTTS
             string fileName = line.ID+".wav";
             string fullPath = Path.GetFullPath(Path.Combine(_config.OutputFolder, fileName));
 
-            // Create a hash based on the current line text.
-            string hash = GenerateHashFromText(line.Line);
-
-            // Does a previous file exist with the same hash?
-            // In which case, don't recreate!
-            bool prevFileExists = File.Exists(fullPath);
-            if (prevFileExists && !_config.ReplaceExisting)
-            {
-                string? existingHash = ReadHashFromWAV(fullPath);
-                if (existingHash == hash)
-                    continue; 
-            }
-
-            string ttsVoice;
             Character? character = _characters.Get(line.Character);
             if (character==null)
                 continue;
-            else
-                ttsVoice = character?.TTSVoice??"";
+            string ttsVoice = character?.TTSVoice??"";
+
+            // Hashes of the current line text and of the voice request.
+            string hash = GenerateHashFromText(line.Line);
+            string voiceHash = GenerateVoiceHash(ttsVoice);
+
+            // Does a previous file exist with the same hashes?
+            // In which case, don't recreate!
+            if (File.Exists(fullPath) && !_config.ReplaceExisting)
+            {
+                var (existingHash, existingVoiceHash) = ReadHashesFromWAV(fullPath);
+                if (IsUpToDate(existingHash, existingVoiceHash, hash, voiceHash))
+                    continue;
+            }
 
             if (string.IsNullOrWhiteSpace(ttsVoice))
             {
@@ -68,7 +72,7 @@ public class GoogleTTS
             byte[]? audioBytes = GenerateAudio(client, line.Line, ttsVoice);
             if (audioBytes != null)
             {
-                WriteAudioWithHash(fullPath, audioBytes, hash);
+                WriteAudioWithHash(fullPath, audioBytes, hash, voiceHash);
             }
         }
         return true;
@@ -101,8 +105,8 @@ public class GoogleTTS
 
             var audioConfig = new AudioConfig
             {
-                AudioEncoding = AudioEncoding.Linear16,
-                SampleRateHertz = 12000
+                AudioEncoding = Encoding16,
+                SampleRateHertz = SampleRate
             };
 
             var response = client.SynthesizeSpeech(input, voiceSelection, audioConfig);
@@ -120,7 +124,30 @@ public class GoogleTTS
         return CreateFiles(voiceLines.OrderedEntries);
     }
  
-    private static string GenerateHashFromText(string input)
+    /// <summary>
+    /// A clip is up to date when its text hash matches and its voice hash does too. A clip
+    /// with no voice hash (written by an older dink, or by Dinky's scratch recorder) counts as
+    /// matching, so upgrading doesn't regenerate, and bill, a whole project at once, and a
+    /// recorded scratch take isn't replaced by a voice change.
+    /// </summary>
+    internal static bool IsUpToDate(string? existingHash, string? existingVoiceHash, string hash, string voiceHash)
+    {
+        if (existingHash != hash) return false;
+        return existingVoiceHash == null || existingVoiceHash == voiceHash;
+    }
+
+    /// <summary>
+    /// Hash of everything sent to Google besides the text: voice name, language code,
+    /// encoding and sample rate. SHA-256, first 16 hex digits.
+    /// </summary>
+    internal static string GenerateVoiceHash(string voiceName)
+    {
+        string request = $"{voiceName}|{GetISOCode(voiceName)}|{Encoding16}|{SampleRate}";
+        byte[] digest = SHA256.HashData(Encoding.UTF8.GetBytes(request));
+        return Convert.ToHexString(digest).Substring(0, 16).ToLowerInvariant();
+    }
+
+    internal static string GenerateHashFromText(string input)
     {
         if (string.IsNullOrEmpty(input)) return "000000";
         uint hash = 2166136261;
@@ -141,39 +168,16 @@ public class GoogleTTS
     private static readonly int IdWave = BitConverter.ToInt32(Encoding.ASCII.GetBytes("WAVE"), 0);
     private static readonly int IdList = BitConverter.ToInt32(Encoding.ASCII.GetBytes("LIST"), 0);
     private static readonly int IdInfo = BitConverter.ToInt32(Encoding.ASCII.GetBytes("INFO"), 0);
-    private static readonly int IdDink = BitConverter.ToInt32(Encoding.ASCII.GetBytes("DINK"), 0); // Custom tag
+    private static readonly int IdDink = BitConverter.ToInt32(Encoding.ASCII.GetBytes("DINK"), 0); // Custom tag: text hash
+    private static readonly int IdDinkVoice = BitConverter.ToInt32(Encoding.ASCII.GetBytes("DNKV"), 0); // Custom tag: voice hash
 
     /// <summary>
     /// Combines raw TTS audio bytes with the hash metadata and writes to disk in a single operation.
     /// </summary>
-    private static void WriteAudioWithHash(string filePath, byte[] audioBytes, string hashCode)
+    private static void WriteAudioWithHash(string filePath, byte[] audioBytes, string hashCode, string voiceHash)
     {
-        byte[] hashBytes = Encoding.UTF8.GetBytes(hashCode);
-        bool needsPadding = hashBytes.Length % 2 != 0;
-        int dataSize = hashBytes.Length + (needsPadding ? 1 : 0);
-        int dinkChunkSize = 4 + 4 + dataSize;
-        int listChunkSize = 4 + dinkChunkSize;
-
-        using var ms = new MemoryStream(audioBytes.Length + 8 + listChunkSize);
-        ms.Write(audioBytes, 0, audioBytes.Length);
-        using var bw = new BinaryWriter(ms, Encoding.UTF8, leaveOpen: true);
-
-        // Structure: 'LIST' + (TotalListSize) + 'INFO' + 'DINK' + (StrSize) + String + [Pad]
-        bw.Write(IdList);
-        bw.Write(listChunkSize);
-        bw.Write(IdInfo);
-        bw.Write(IdDink);
-        bw.Write(hashBytes.Length);
-        bw.Write(hashBytes);
-        if (needsPadding)
-            bw.Write((byte)0);
-
-        // Update the main RIFF header size (FileLength - 8 bytes)
-        ms.Seek(4, SeekOrigin.Begin);
-        bw.Write((int)ms.Length - 8);
-
-        bw.Flush();
-        var result = VCLib.WriteBinaryFile(filePath, ms.ToArray(), forceWrite: true);
+        byte[] bytes = AppendHashes(audioBytes, hashCode, voiceHash);
+        var result = VCLib.WriteBinaryFile(filePath, bytes, forceWrite: true);
         if (!result.Success)
             Console.WriteLine($"Warning: Could not write TTS to '{filePath}': {result.Message}");
         else
@@ -181,69 +185,90 @@ public class GoogleTTS
     }
 
     /// <summary>
-    /// Minimally reads the file to find the ICMT hash without loading audio data.
+    /// Appends 'LIST' + size + 'INFO' + 'DINK' sub-chunk (text hash) + 'DNKV' sub-chunk
+    /// (voice hash) to a WAV, and fixes up the RIFF size. DINK stays first and unchanged:
+    /// Dinky's scratch recorder and Patterpad read it.
     /// </summary>
-    private static string? ReadHashFromWAV(string filePath)
+    internal static byte[] AppendHashes(byte[] audioBytes, string hashCode, string voiceHash)
     {
-        using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
-        using (var br = new BinaryReader(fs))
+        byte[] hashBytes = Encoding.UTF8.GetBytes(hashCode);
+        byte[] voiceBytes = Encoding.UTF8.GetBytes(voiceHash);
+        int SubChunkSize(byte[] data) => 4 + 4 + data.Length + (data.Length % 2);
+        int listChunkSize = 4 + SubChunkSize(hashBytes) + SubChunkSize(voiceBytes);
+
+        using var ms = new MemoryStream(audioBytes.Length + 8 + listChunkSize);
+        ms.Write(audioBytes, 0, audioBytes.Length);
+        using var bw = new BinaryWriter(ms, Encoding.UTF8, leaveOpen: true);
+
+        bw.Write(IdList);
+        bw.Write(listChunkSize);
+        bw.Write(IdInfo);
+        foreach (var (id, data) in new[] { (IdDink, hashBytes), (IdDinkVoice, voiceBytes) })
         {
-            // Read RIFF Header (12 bytes)
-            if (br.ReadInt32() != IdRiff) return null;
-            br.ReadInt32(); // Skip file size
-            if (br.ReadInt32() != IdWave) return null;
+            bw.Write(id);
+            bw.Write(data.Length);
+            bw.Write(data);
+            if (data.Length % 2 != 0)
+                bw.Write((byte)0);
+        }
 
-            // Iterate through chunks
-            while (fs.Position < fs.Length)
+        // Update the main RIFF header size (FileLength - 8 bytes)
+        ms.Seek(4, SeekOrigin.Begin);
+        bw.Write((int)ms.Length - 8);
+
+        bw.Flush();
+        return ms.ToArray();
+    }
+
+    /// <summary>
+    /// Minimally reads the file to find the DINK (text) and DNKV (voice) hashes without
+    /// loading audio data. Either is null when absent.
+    /// </summary>
+    internal static (string? hash, string? voiceHash) ReadHashesFromWAV(string filePath)
+    {
+        using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+        return ReadHashes(fs);
+    }
+
+    internal static (string? hash, string? voiceHash) ReadHashes(Stream fs)
+    {
+        string? hash = null, voiceHash = null;
+        using var br = new BinaryReader(fs, Encoding.UTF8, leaveOpen: true);
+
+        // Read RIFF Header (12 bytes)
+        if (fs.Length < 12) return (null, null);
+        if (br.ReadInt32() != IdRiff) return (null, null);
+        br.ReadInt32(); // Skip file size
+        if (br.ReadInt32() != IdWave) return (null, null);
+
+        // Iterate through chunks
+        while (fs.Position + 8 <= fs.Length)
+        {
+            int chunkId = br.ReadInt32();
+            int chunkSize = br.ReadInt32();
+            long chunkEnd = fs.Position + chunkSize + (chunkSize % 2);
+
+            if (chunkId == IdList && chunkSize >= 4 && br.ReadInt32() == IdInfo)
             {
-                int chunkId = br.ReadInt32();
-                int chunkSize = br.ReadInt32();
-
-                // If we find the LIST chunk
-                if (chunkId == IdList)
+                long listEnd = fs.Position - 4 + chunkSize;
+                while (fs.Position + 8 <= listEnd)
                 {
-                    int listType = br.ReadInt32();
-                    if (listType == IdInfo)
-                    {
-                        // We are inside the INFO list, look for ICMT
-                        long listEnd = fs.Position - 4 + chunkSize; // -4 because we read the type
-                        
-                        while (fs.Position < listEnd)
-                        {
-                            int subChunkId = br.ReadInt32();
-                            int subChunkSize = br.ReadInt32();
+                    int subChunkId = br.ReadInt32();
+                    int subChunkSize = br.ReadInt32();
+                    long subEnd = fs.Position + subChunkSize + (subChunkSize % 2);
 
-                            if (subChunkId == IdDink)
-                            {
-                                byte[] data = br.ReadBytes(subChunkSize);
-                                // Handle padding if we read past this loop, but here we just return
-                                return Encoding.UTF8.GetString(data).TrimEnd('\0');
-                            }
-                            else
-                            {
-                                // Skip unrelated metadata tags
-                                if (subChunkSize % 2 != 0) subChunkSize++;
-                                fs.Seek(subChunkSize, SeekOrigin.Current); 
-                            }
-                        }
-                    }
-                    else
+                    if (subChunkId == IdDink || subChunkId == IdDinkVoice)
                     {
-                        // Not an INFO list, skip it
-                        // (Usually shouldn't happen for metadata, but good safety)
-                        if (chunkSize % 2 != 0) chunkSize++;
-                        fs.Seek(chunkSize - 4, SeekOrigin.Current); 
+                        string value = Encoding.UTF8.GetString(br.ReadBytes(subChunkSize)).TrimEnd('\0');
+                        if (subChunkId == IdDink) hash ??= value;
+                        else voiceHash ??= value;
                     }
-                }
-                else
-                {
-                    // This is 'fmt ', 'data', or other chunks. 
-                    // SKIP THEM efficiently without reading into memory.
-                    if (chunkSize % 2 != 0) chunkSize++; // Word alignment padding
-                    fs.Seek(chunkSize, SeekOrigin.Current);
+                    fs.Seek(subEnd, SeekOrigin.Begin);
                 }
             }
+            // fmt, data and other chunks are skipped without reading into memory.
+            fs.Seek(chunkEnd, SeekOrigin.Begin);
         }
-        return null; // Not found
+        return (hash, voiceHash);
     }
 }

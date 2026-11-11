@@ -9,6 +9,10 @@ Entries before 0.1.8 are not documented here - see the [git history](https://git
 
 ## [Unreleased]
 
+### Changed
+- Changing a character's `TTSVoice` in characters.json now regenerates that character's Google TTS lines on the next build. Each generated WAV now records a hash of the voice request (voice, language, encoding and sample rate) alongside the existing text hash, and a clip is remade when either differs. Previously only a change of text did this, and the only way to pick up a new voice was `replaceExisting`, which remakes every line in the project.
+- Clips made by earlier versions carry no voice hash, and are treated as up to date until their text changes, so upgrading doesn't regenerate (and bill) a whole project at once. To catch voices you changed before upgrading, run one build with `replaceExisting` on. Scratch recordings made in Dinky are likewise left alone when a voice changes.
+
 ## [0.3.5]
 
 ### Changed
