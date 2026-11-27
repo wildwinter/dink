@@ -9,6 +9,9 @@ Entries before 0.1.8 are not documented here - see the [git history](https://git
 
 ## [Unreleased]
 
+### Fixed
+- A build now fails if one line ID is used on more than one line, and lists every file and line that uses it. This happens when a line is copied along with its `#id:` tag. Before, the build went through, and only one of those lines made it into the recording script, the localisation files and the runtime strings: the others were silently dropped, and the line that survived took the row of the first one, so the recording script looked out of order. To fix it, remove the `#id:` tag from every copy except the original and build again. Dinky does this for you when you save.
+
 ## [0.3.6]
 
 ### Changed

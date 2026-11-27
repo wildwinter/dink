@@ -84,6 +84,12 @@ public class Compiler
             cache.Save("ndlines", JsonSerializer.Serialize(nonDinkLines));
         }
 
+        // ---- Refuse to build if a line ID is used on more than one line -----
+        // Everything downstream is keyed by ID, so a shared ID would keep one
+        // line's text and silently drop the other's from every output.
+        if (!CheckForDuplicateIDs(dinkScenes, nonDinkLines))
+            return false;
+
         // ---- Remove any action and character references from the localisation -----
         if (!FixLoc(dinkScenes, nonDinkLines, inkStrings))
             return false;
@@ -398,6 +404,47 @@ public class Compiler
             dinkScenes.AddRange(scenes);
         }
         return true;
+    }
+
+    // Fails if any line ID appears on more than one line, listing every place
+    // each duplicated ID is used. Lines get copied with their IDs (in another
+    // editor, or by copying a file), and the compiler can't tell which one the
+    // ID really belongs to.
+    private bool CheckForDuplicateIDs(List<DinkScene> dinkScenes, List<NonDinkLine> ndLines)
+    {
+        var uses = new Dictionary<string, List<DinkOrigin>>();
+        void Record(string id, DinkOrigin origin)
+        {
+            if (string.IsNullOrEmpty(id))
+                return;
+            if (!uses.TryGetValue(id, out var list))
+                uses[id] = list = new List<DinkOrigin>();
+            list.Add(origin);
+        }
+
+        foreach (var scene in dinkScenes)
+            foreach (var block in scene.Blocks)
+                foreach (var snippet in block.Snippets)
+                    foreach (var beat in snippet.Beats)
+                        Record(beat.LineID, beat.Origin);
+        foreach (var ndLine in ndLines)
+            Record(ndLine.ID, ndLine.Origin);
+
+        var duplicates = uses.Where(kv => kv.Value.Count > 1).ToList();
+        if (duplicates.Count == 0)
+            return true;
+
+        foreach (var (id, origins) in duplicates)
+        {
+            Console.Error.WriteLine($"Error: line ID '{id}' is used on {origins.Count} lines:");
+            foreach (var origin in origins)
+                Console.Error.WriteLine($"    {origin}");
+        }
+        Console.Error.WriteLine("Each line needs its own ID, or all but one of these lines would be dropped from " +
+                                "the recording script, localisation and game strings. Remove the #id: tag from " +
+                                "every copy except the original and build again; a new ID is added automatically. " +
+                                "Dinky does this for you when you save.");
+        return false;
     }
 
     private bool FixLoc(List<DinkScene> dinkScenes, List<NonDinkLine> ndLines, LocStrings inkStrings)
