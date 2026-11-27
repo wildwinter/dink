@@ -803,9 +803,26 @@ public class DinkParser
                 {
                     stitchTags.AddRange(tags);
                 }
+                else if (parsing && tags.Count > 0)
+                {
+                    // Too late to be a file, knot or stitch tag, and Dink
+                    // doesn't attach a tag line to the line after it.
+                    Console.WriteLine($"Warning: tag line ignored at {line.Origin} - tags on a line of their own only count at the top of a file, knot or stitch, before any content.");
+                    Console.WriteLine($"    {trimmedLine}");
+                }
                 continue;
             }
-            
+
+            // A full-line comment isn't content: handle it here, like a blank
+            // line, so a knot or stitch tag line after it still counts as at
+            // the top of its knot or stitch (and braces in it aren't counted).
+            if (ParseComment(trimmedLine) is string fullLineComment)
+            {
+                comments.Add(fullLineComment);
+                blankLinesSinceLastComment = 0;
+                continue;
+            }
+
             if (ContainsCode(trimmedLine))
                 continue;
 
@@ -965,12 +982,6 @@ public class DinkParser
                 createSnippet();
 
                 Log($"Snippet: {snippet}");
-                continue;
-            }
-            else if (ParseComment(trimmedLine) is string comment)
-            {
-                comments.Add(comment);
-                blankLinesSinceLastComment = 0;
                 continue;
             }
             else if (ParseLine(trimmedLine) is DinkLine dinkLine)

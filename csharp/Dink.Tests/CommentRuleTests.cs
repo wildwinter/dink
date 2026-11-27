@@ -406,4 +406,49 @@ public class CommentRuleTests
         Assert.DoesNotContain("{", optionComment);
         Assert.DoesNotContain("seenBefore", optionComment);
     }
+
+    // A full-line comment at the top of a knot or stitch is not content: tag
+    // lines after it must still count as knot or stitch tags, not be dropped.
+    [Fact]
+    public void KnotTag_AfterComment_IsStillAKnotTag()
+    {
+        var (scenes, _) = Parse("""
+            === K2
+            #dink
+            // a comment
+            #ws:draft1
+            FRED: Tag is kept. #id:t1
+            """);
+        Assert.Contains("ws:draft1", scenes[0].Tags);
+        Assert.Contains("ws:draft1", scenes[0].Blocks[0].Snippets[0].Beats[0].Tags);
+    }
+
+    [Fact]
+    public void StitchTag_AfterComment_IsStillAStitchTag()
+    {
+        var (scenes, _) = Parse("""
+            === K
+            #dink
+            = St
+            // a comment
+            #type:conversation
+            FRED: Tag is kept. #id:t1
+            """);
+        var beat = scenes[0].Blocks.SelectMany(b => b.Snippets).SelectMany(s => s.Beats).Single();
+        Assert.Contains("type:conversation", beat.Tags);
+    }
+
+    [Fact]
+    public void Comment_BeforeKnotTag_StillReachesTheLine()
+    {
+        var (scenes, _) = Parse("""
+            === K
+            #dink
+            // Note for the line.
+            #ws:draft1
+            FRED: Hello. #id:t1
+            """);
+        Assert.Contains(scenes[0].Blocks[0].Snippets[0].Beats[0].Comments.Concat(scenes[0].Comments),
+            c => c == "Note for the line.");
+    }
 }
