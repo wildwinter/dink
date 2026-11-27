@@ -9,6 +9,8 @@ Entries before 0.1.8 are not documented here - see the [git history](https://git
 
 ## [Unreleased]
 
+## [0.3.7]
+
 ### Fixed
 - A build no longer fails with a false "two chunks of text" error when the last line of one included file and the first line of the next sit on the same line number. In lenient mode the same case left the second line without an ID. Fixed in the bundled localiser, which moves to 0.0.4.14.
 - A knot or stitch tag on its own line (such as `#ws:draft1` or `#type:conversation`) is no longer lost when a `//` comment line comes before it. The comment counted as the start of the knot's content, so the tag that followed was silently dropped, and the knot's lines fell back to the file's writing status.
